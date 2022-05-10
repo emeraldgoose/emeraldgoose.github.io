@@ -1,0 +1,826 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>데이터 제작 - gooooooooooose</title>
+<meta name="description" content="데이터 제작의 중요성">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="데이터 제작">
+<meta property="og:url" content="http://localhost:4000/boostcamp/creating-data/">
+
+
+  <meta property="og:description" content="데이터 제작의 중요성">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-11-08T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/creating-data/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="데이터 제작">
+    <meta itemprop="description" content="데이터 제작의 중요성">
+    <meta itemprop="datePublished" content="2021-11-08T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">데이터 제작
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-11-08T00:00:00+09:00">November 08, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#데이터-제작의-중요성">데이터 제작의 중요성</a><ul><li><a href="#인공지능-서비스-개발-과정과-데이터">인공지능 서비스 개발 과정과 데이터</a></li><li><a href="#데이터-구축-과정">데이터 구축 과정</a></li><li><a href="#ai-데이터-설계의-구성-요소">AI 데이터 설계의 구성 요소</a></li><li><a href="#데이터-설계">데이터 설계</a></li></ul></li><li><a href="#데이터-구축-과정과-설계-기초">데이터 구축 과정과 설계 기초</a><ul><li><a href="#원시-데이터-수집-방식">원시 데이터 수집 방식</a></li><li><a href="#작업자-선정">작업자 선정</a></li><li><a href="#구축-및-검수-설계">구축 및 검수 설계</a></li><li><a href="#데이터-구축-및-가공">데이터 구축 및 가공</a></li><li><a href="#데이터-검수-및-분석">데이터 검수 및 분석</a></li></ul></li><li><a href="#자연어-처리-데이터">자연어 처리 데이터</a><ul><li><a href="#자연어-vs-인공어">자연어 vs. 인공어</a></li><li><a href="#자연어처리nlp-natural-language-processing">자연어처리(NLP, Natural Language Processing)</a></li><li><a href="#데이터-분류-방식">데이터 분류 방식</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="데이터-제작의-중요성">데이터 제작의 중요성</h2>
+
+<h3 id="인공지능-서비스-개발-과정과-데이터">인공지능 서비스 개발 과정과 데이터</h3>
+
+<ul>
+  <li>서비스 기획 = 문제 정의</li>
+  <li>데이터 준비(수집, 정제) - 학습(train) 데이터</li>
+  <li>모델 학습 - 학습(train) 데이터</li>
+  <li>모델 검증 → 분석 → 다시 학습 - 검증(validation) 데이터, 개발(development) 데이터</li>
+  <li>모델 평가 - 평가(test) 데이터</li>
+  <li>배포</li>
+</ul>
+
+<h3 id="데이터-구축-과정">데이터 구축 과정</h3>
+
+<ul>
+  <li>원시 데이터 선정 및 확보(저작권, 태스크 적합성)
+    <ul>
+      <li>처음부터 만들지 말고 기존 데이터를 가지고 분석하는 것을 추천(너무 힘들다)</li>
+    </ul>
+  </li>
+  <li>구축 및 가공 프로세스 확립(구축 및 검수 절차, 작업자 선정)</li>
+  <li>구축 및 가공 지침 작성(플랫폼 소통 및 작업자 교육)</li>
+  <li>데이터 구축 및 가공(파일럿, 작업자 관리)
+    <ul>
+      <li>파일럿을 통해 테스트 후 프로세스 수정 혹은 지침 수정 등이 다시 이루어진다.</li>
+    </ul>
+  </li>
+  <li>데이터 검수(품질 평가 기준, 데이터 규격, 내용)</li>
+</ul>
+
+<h3 id="ai-데이터-설계의-구성-요소">AI 데이터 설계의 구성 요소</h3>
+
+<ul>
+  <li>데이터 설계
+    <ul>
+      <li>데이터 자체를 설계</li>
+      <li>데이터 형식, 데이터 표상 영역</li>
+    </ul>
+  </li>
+  <li>데이터 수집-가공 설계
+    <ul>
+      <li>원천 데이터 수집 방식: 전산화, 스크래핑, 작업자 작성, 모델 생성</li>
+      <li>주석 작업: 전문가 구축, 크라우드 소싱</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="데이터-설계">데이터 설계</h3>
+
+<ul>
+  <li>데이터 유형
+    <ul>
+      <li>소리, 텍스트, 이미지, 영상 → 2가지 이상의 데이터가 나오는 경우 멀티모달이라 한다.</li>
+    </ul>
+  </li>
+  <li>데이터 In/Out 형식
+    <ul>
+      <li>HTML, XML, CSV, JSON,…</li>
+      <li>JPG, PDF, …</li>
+      <li>wav, mp3, pcm, script, …</li>
+    </ul>
+  </li>
+  <li>데이터(train/dev(validation)/test)별 규모와 구분(split) 방식
+    <ul>
+      <li>규모 선정에 필요한 정보 : 확보 가능한 원시 데이터의 규모, 주석 작업 시간</li>
+      <li>구분 방식 : 데이터별 비율과 기준 정하기</li>
+      <li>랜덤(모든 데이터가 균등하다고 판단되는 경우) vs. 특정 조건(불균형한 경우)</li>
+    </ul>
+  </li>
+  <li>데이터의 주석(annotation) 유형
+    <ul>
+      <li>주석 유형(Annotation Type) → 주요 활용 용도
+        <ul>
+          <li>클래스 라벨(단일, 다중) → 텍스트 분류(Text Classification</li>
+          <li>단어(구문) 라벨 → 명명된 개체명(Entity) 인식(Named Entity Recognition)</li>
+          <li>텍스트 라벨 → 문장 번역, 문장 요약</li>
+          <li>단어(구문) 라벨링 및 두 단어 사이의 관계 → 관계-의존성 정의(Relation-Dependencies)</li>
+          <li>기타 → 그 밖의 용도</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="데이터-구축-과정과-설계-기초">데이터 구축 과정과 설계 기초</h2>
+
+<h3 id="원시-데이터-수집-방식">원시 데이터 수집 방식</h3>
+
+<ul>
+  <li>전산화(종이 형태로 있어서 타이핑이 필요한 경우), 스크래핑, 작업자 작성(대화작성), 모델 생성(generative model)</li>
+  <li>적합한 데이터란 무엇인지 기준 세우기</li>
+</ul>
+
+<h3 id="작업자-선정">작업자 선정</h3>
+
+<p>주석 작업의 난이도와 구축 규모에 맞는 작업자 선정 및 작업 관리</p>
+
+<ul>
+  <li>전문가 : 데이터의 품질이 높아질 수 있으나 단가가 높고 작업할 수 있는 양이 적음</li>
+  <li>크라우드 소싱 : 단순하고 직관적인 작업, 단순한 가이드라인을 보고 작업을 할 수 있는 경우</li>
+</ul>
+
+<h3 id="구축-및-검수-설계">구축 및 검수 설계</h3>
+
+<p>구축 작업의 난이도와 구축 규모, 태스크 특성에 맞는 구축 및 검수 방식(전문가, IAA) 설계</p>
+
+<ul>
+  <li>파일럿을 통해 구축 테스트 후 본 구축으로 넘어가는 방식을 사용</li>
+  <li>본 구축의 경우, 나눠서 할지 or 하나의 데이터를 한 사람이 볼지 혹은 여러 사람이 볼지 정해야 함</li>
+  <li>파일럿은 보통 1000개에서 2000개로 테스트하고 본 구축에서는 평균 10000개 이상의 데이터를 수집해야 함
+    <ul>
+      <li>보통 본 구축의 10%를 파일럿을 통해 테스트</li>
+      <li>100개정도의 샘플은 직접 해보는 것을 추천</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="데이터-구축-및-가공">데이터 구축 및 가공</h3>
+
+<ul>
+  <li>파일럿
+    <ul>
+      <li>설계 시 발견하지 못한 이슈 발굴 해결</li>
+      <li>가이드라인 보완 및 개정</li>
+      <li>작업자 선정</li>
+    </ul>
+  </li>
+  <li>본 구축
+    <ul>
+      <li>작업 일정 관리</li>
+      <li>작업자 관리 : 작업자의 구축할 수 있는 데이터 양을 관리, 작업물의 퀄리티 관리</li>
+      <li>중간 검수를 통한 데이터 품질 관리
+        <ul>
+          <li>본 구축을 1차, 2차, 3차로 나누어 중간 검수를 진행한다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="데이터-검수-및-분석">데이터 검수 및 분석</h3>
+
+<p>평가 지표 설정</p>
+
+<ul>
+  <li>전문가 평가 및 분석
+    <ul>
+      <li>샘플링 검사</li>
+      <li>가이드라인 적합도 분석</li>
+      <li>여기서의 전문가 = 프로젝트 설계한 사람, 의뢰 에이전시의 PM, 숙련된 작업자</li>
+    </ul>
+  </li>
+  <li>자동 평가 및 분석(기계적 검수)
+    <ul>
+      <li>데이터 형식</li>
+      <li>레이블 별 분포 파악</li>
+      <li>일괄 수정 사항 반영</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="자연어-처리-데이터">자연어 처리 데이터</h2>
+
+<h3 id="자연어-vs-인공어">자연어 vs. 인공어</h3>
+
+<ul>
+  <li>자연어(Natural Language)
+    <ul>
+      <li>일상적으로 사용하고 있는 언어 그 자체</li>
+      <li>한국어, 영어, 일본어, …</li>
+    </ul>
+  </li>
+  <li>인공어(Artificial Language)
+    <ul>
+      <li>여러 사람의 목적이나 의도에 따라 만든 언어</li>
+      <li>에스페란토어, 파이썬, C언어, …</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="자연어처리nlp-natural-language-processing">자연어처리(NLP, Natural Language Processing)</h3>
+
+<blockquote>
+  <p>인공지능의 한 분야, 사람의 언어를 컴퓨터가 알아듣도록 처리하는 인터페이스 역할. 자연어 이해(NLU, Natural Language Understanding)와 자연어 생성(NLG, Natural Language Generation)으로 구성</p>
+
+</blockquote>
+
+<ul>
+  <li>자연어 처리의 최종 목표:
+    <ul>
+      <li>컴퓨터가 사람의 언어를 이해하고 여러 가지 문제를 수행할 수 있도록 하는 것</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="데이터-분류-방식">데이터 분류 방식</h3>
+
+<ul>
+  <li>원천 데이터 장르(도메인) : 문어(뉴스, 도서 등), 구어(대화 등), 웹(메신저 대화, 게시판 등)</li>
+  <li>과제의 유형:
+    <ul>
+      <li>자연어 이해(형태 분석, 구문 분석, 문장 유사도 평가 등)</li>
+      <li>자연어 생성(기계 번역, 추상 요약 등)</li>
+      <li>혼합(챗봇 등)</li>
+    </ul>
+  </li>
+  <li>자연어처리 데이터를 만들 때는 복잡한 과제도 단순화하여 단계별로 구축</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#dataset" class="page__taxonomy-item p-category" rel="tag">dataset</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-11-08T00:00:00+09:00">November 8, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/OA-phrase-retrieval/" class="pagination--pager" title="QA with Phrase Retrieval
+">Previous</a>
+    
+    
+      <a href="/boostcamp/nlp-data/" class="pagination--pager" title="자연어 처리 데이터 기초
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

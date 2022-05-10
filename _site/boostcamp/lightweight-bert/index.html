@@ -1,0 +1,961 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>BERT 경량화 - gooooooooooose</title>
+<meta name="description" content="Overview">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="BERT 경량화">
+<meta property="og:url" content="http://localhost:4000/boostcamp/lightweight-bert/">
+
+
+  <meta property="og:description" content="Overview">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-03T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/lightweight-bert/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="BERT 경량화">
+    <meta itemprop="description" content="Overview">
+    <meta itemprop="datePublished" content="2021-12-03T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">BERT 경량화
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-12-03T00:00:00+09:00">December 03, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#overview">Overview</a><ul><li><a href="#cv-경량화와-nlp-경량화의-차이점">CV 경량화와 NLP 경량화의 차이점?</a></li><li><a href="#bert-profiling">BERT Profiling</a></li><li><a href="#profiling-model-size-and-computations">Profiling: Model size and computations</a></li></ul></li><li><a href="#paper">Paper</a><ul><li><a href="#are-sixteen-heads-really-better-than-oneneurips-2019">Are Sixteen Heads Really Better than One?(NeurIPS 2019)</a></li><li><a href="#movement-pruning-adaptive-sparsity-by-fine-tuningneurips-2019">Movement Pruning: Adaptive Sparsity by Fine-Tuning(NeurIPS 2019)</a></li><li><a href="#pruning-추천-논문">Pruning 추천 논문</a></li></ul></li><li><a href="#weight-factorizatino--weight-sharing">Weight Factorizatino &amp; Weight Sharing</a><ul><li><a href="#albert-a-lite-bert-for-self-supervised-learning-of-language-representationsiclr-2020">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations(ICLR 2020)</a></li><li><a href="#cross-layer-parameter-sharing">Cross-layer parameter sharing</a></li><li><a href="#sentence-ordering-objectives">Sentence Ordering Objectives</a></li><li><a href="#factorized-embedding-parameterization">Factorized Embedding Parameterization</a></li></ul></li><li><a href="#knowledge-distillation">Knowledge Distillation</a><ul><li><a href="#ditilbert-a-distilled-version-of-bert-smaller-faster-cheaper-and-lighter">DitilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter</a></li><li><a href="#tinybert-distilling-bert-for-natural-language-understanding">TinyBERT: Distilling BERT for Natural Language Understanding</a></li><li><a href="#기타-논문-추천">기타 논문 추천</a></li></ul></li><li><a href="#quantization">Quantization</a><ul><li><a href="#q-bert-hessian-based-ultra-low-precision-quantization-of-bert">Q-BERT: Hessian Based Ultra Low Precision Quantization of BERT</a></li></ul></li><li><a href="#정리">정리</a><ul><li><a href="#pruning">Pruning</a></li><li><a href="#kd">KD</a></li><li><a href="#weight">Weight</a></li><li><a href="#quantization-1">Quantization</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="overview">Overview</h2>
+
+<h3 id="cv-경량화와-nlp-경량화의-차이점">CV 경량화와 NLP 경량화의 차이점?</h3>
+
+<ul>
+  <li>Original task → Target task로의 fine tuning하는 방식이 주된 흐름</li>
+  <li>기본적으로 transforemer 구조</li>
+  <li>모델 구조가 거의 유사해서, 논문의 재현 가능성이 높고, 코드 재사용성도 높음</li>
+</ul>
+
+<h3 id="bert-profiling">BERT Profiling</h3>
+
+<h3 id="profiling-model-size-and-computations">Profiling: Model size and computations</h3>
+
+<ul>
+  <li>Embedding layer: look up table이므로, FLOPs는 없음</li>
+  <li>Linear before Attn: k, q, v mat 연산으로 linear after attn 대비 3배</li>
+  <li>MHA: matmul, softmax등의 연산, 별도 파라미터는 없음</li>
+  <li>FFN: 가장 많은 파라미터, 연산횟수</li>
+  <li>효율적인 GPU 연산을 위해 단독으로 CPU에서 사용하는 메모리보다 소비량이 더 큼(연산속도를 위해 CPU, GPU에 동일 텐서를 들고 있거나 등등)</li>
+  <li>MHA 파트는 이론 연산 횟수 대비 속도가 매우 느린데, 이는 여러 연산의 조합(matmul, softmax) 때문인 것으로 보여짐</li>
+  <li>Linear Layer에서는 GPU가 빠른 속도를 보여주나, CPU는 이론 연산 횟수와 유사한 경향을 보임</li>
+  <li>FFN 파트가 모델의 주된 bottleneck</li>
+</ul>
+
+<h2 id="paper">Paper</h2>
+
+<h3 id="are-sixteen-heads-really-better-than-oneneurips-2019">Are Sixteen Heads Really Better than One?(NeurIPS 2019)</h3>
+
+<ul>
+  <li>MHA는 구조상 복합적인 정보를 담아두기 위해 제안됨.</li>
+  <li>실험에서 많은 헤드가 지워지더라도 성능에 영향을 주지 않았음</li>
+  <li>Attn을 Pruning하여 17.5% 속도 향상을 이룸</li>
+  <li>Are All Attention Heads Important?
+    <ul>
+      <li>헤드를 하나만 남겨두고 나머지를 지운 후 성능 드랍을 기록하는 실험</li>
+      <li>눈에 띌 만큼 성능드랍이 없었음</li>
+    </ul>
+  </li>
+  <li>Are Important Heads the Same Across Datasets?
+    <ul>
+      <li>하지만 역할 수행에 꼭 필요한 헤드가 있다.</li>
+      <li>다른 데이터셋에서도 같은 헤드가 중요한가? → 중요한 헤드는 다른 데이터셋에서도 중요한 경우가 많다.</li>
+    </ul>
+  </li>
+  <li>지금까진 특정한 layer에서 head를 제거하여 효과를 확인했다. 여러 layer에 대한 여러 head를 제거했을 때는 어떤 현상이 발생하는가?</li>
+  <li>Iterative Pruning of Attention Heads
+    <ul>
+      <li>
+        <p>Attn 헤드를 중요도를 간접적으로 계산한다.</p>
+
+        <p><img src="https://drive.google.com/uc?export=view&amp;id=1FXNx3_Z0eG4_71XXIGdoKzy4fCphHvci" alt="" /></p>
+
+        <ul>
+          <li>$\xi_h$ : mask variables, 0: masked(removed), 1: unmaksed, $X$: data distribution</li>
+        </ul>
+      </li>
+      <li>
+        <p>데이터샘플에 대해서 특정 헤드를 살린 것에 대한 Loss와 해당 헤드를 지운 것에 대한 Loss의 차이를 뒤의 식으로 approximate하여 사용</p>
+
+        <p><img src="https://drive.google.com/uc?export=view&amp;id=1F2NzJc5-OPCYj16GcsYVlsQ6Rfu3XVJC" alt="" /></p>
+      </li>
+    </ul>
+  </li>
+  <li>Effect of Pruning on Efficiency
+    <ul>
+      <li>배치사이즈가 작은 경우 효과가 좋지 않지만 큰 경우 효과가 좋았음</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="movement-pruning-adaptive-sparsity-by-fine-tuningneurips-2019">Movement Pruning: Adaptive Sparsity by Fine-Tuning(NeurIPS 2019)</h3>
+
+<ul>
+  <li>Transfer learning에서는 Magnitude pruning의 효과가 좋지 않음
+    <ul>
+      <li>왜냐? original task에서 target task로 transfer learning 과정에서 Weight 값의 변화가 그리 크지 않음</li>
+    </ul>
+  </li>
+  <li>값이 큰 Weight은 그대로 값이 큼 → Weight 값은 많이 변하지 않음</li>
+  <li>Original model에서의 큰 Weight은 Original task에서 중요한 의미를 갖는 Weight일 가능성이 큼
+    <ul>
+      <li>Fine-tuned model에서 큰 Weight은 Target task에서 중요하지 않은 Weight일 수도 있음</li>
+    </ul>
+  </li>
+  <li>Magnitude Pruning에서는 Original task에서만 중요했던 Weight들이 살아남을 수 있음
+    <ul>
+      <li>→ Movement Pruning : Transfer Learning 과정에서, Weight의 움직임을 누적해가며 Pruning할 Weight를 결정하자!</li>
+    </ul>
+  </li>
+  <li>
+    <p>Background: Score-Based Pruning(Unstructured pruning formulation)</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=10-bcZLGMSOl1y9dQWwZyvf9tg7DQUWm_" alt="" /></p>
+
+    <ul>
+      <li>$S = (|W_{i,j}|)_{1&lt;i,j&lt;n}$</li>
+    </ul>
+  </li>
+  <li>Method Interpretation
+    <ul>
+      <li>0에서부터 멀어지는 weight를 고르는 방법</li>
+      <li>Movement Pruning의 score 유도
+        <ul>
+          <li>Masks are computed using the $M = Top_v(S)$</li>
+          <li>Learn both weights $W$, and importance score $S$ during training(fine-tuning)</li>
+          <li>Forward pass, we compute all $i, a_i = \sum_{k=1}^n W_{i,k}M_{i,k}x_k$</li>
+          <li>Forward 과정에서, Top에 속하지 못한 나머지는 masking이 0이 되어, gradient 값이 없어진다.</li>
+          <li>straight-through estimator(Quantization function의 back propagation에서 자주 사용되는 Technique)를 통하여 gradient를 계산</li>
+          <li>단순히, gradient가 “straight-through”하게 $S$로 전달($M$ → $S$)</li>
+          <li>$S$의 변화에 따른 Loss의 변화는 아래와 같이 정리</li>
+          <li>$\frac{\partial L}{\partial S_{i,j}} = \frac{\partial L}{\partial a_i} \frac{\partial a_i}{\partial S_{i,j}} = W_{i,j} x_{j}$</li>
+        </ul>
+      </li>
+      <li>Movement Pruning의 score 해석
+        <ul>
+          <li>Gradient descent를 생각해 볼 때($w = w - \alpha \frac{\partial L}{\partial w}$, $\alpha$ : lr rate)</li>
+          <li>$W_{i,j} &gt; 0, \frac{\partial L}{\partial W_{i,j}} &lt; 0$이면, $W_{i,j}$는 증가하는 방향(이미 양수에서 더 커짐)</li>
+          <li>$W_{i,j} &lt; 0, \frac{\partial L}{\partial W_{i,j}} &gt; 0$이면, $W_{i,j}$는 감소하는 방향(이미 음수에서 더 작아짐)</li>
+          <li>즉, $\frac{\partial L}{\partial S_{i,j}} &lt; 0$의 경우의 수 두 가지에 대해서 모두 $W_{i,j}$의 Magnitude가 커지는 방향</li>
+          <li>$W_{i,j}$가 0에서 멀어지는 것($\frac{\partial L}{\partial S_{i,j}} &lt; 0$) → $S_{i,j}$가 커지는 것($S_{i,j} = S_{i,j} - \alpha \frac{\partial L}{\partial S_{i,j}}$)</li>
+        </ul>
+      </li>
+      <li>Score는 Weight가 fine tuning 되면서 함께 학습
+        <ul>
+          <li>기존 score를 계산하는 방법에서는 잘못된 에러에 대해서 수정할 기회가 없었다.</li>
+          <li>여기에서는 학습되는 과정에서 score를 계산해서 학습이 진행되면서 일종의 self-correction하는 효과가 있다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pruning-추천-논문">Pruning 추천 논문</h3>
+
+<ul>
+  <li>Encoder의 각 위치별로 어떤 Knowledge를 가지고 있는가?
+    <ul>
+      <li>On the Effect of Dropping Layers of Pre-trained Transformer Models</li>
+      <li>Pretrained information(general linguistic knowledge)는 input에 가까운 encoder들에 저장되어 있고, head에 가까운 부분들은 task specific한 정보를 저장한다.</li>
+      <li>pretraining 모델에서 head 쪽 레이어를 없애도 fine-tuning 시의 성능이 크게 떨어지지 않는다.</li>
+    </ul>
+  </li>
+  <li>Pretraining fine-tuning paradigm이 왜 성능, generalization capability가 더 좋은가?
+    <ul>
+      <li>Visualizing and Understanding the Effectiveness of BERT</li>
+      <li>사전학습 모델을 fine-tuning하는 과정에서 loss surface가 평탄하기 때문에 학습이 더 잘되고 generalization capability가 더 좋다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="weight-factorizatino--weight-sharing">Weight Factorizatino &amp; Weight Sharing</h2>
+
+<h3 id="albert-a-lite-bert-for-self-supervised-learning-of-language-representationsiclr-2020">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations(ICLR 2020)</h3>
+
+<ul>
+  <li>큰 모델들이 SOTA 퍼포먼스를 얻게 되는데 메모리 한계때문에 사이즈를 크게 키우는 것에 한계가 있다.</li>
+  <li>또한, distributed training으로부터 Communication overhead가 존재한다.</li>
+  <li>이 논문에서 제안하는 세 가지 방법
+    <ul>
+      <li>Cross-layer parameter sharing : 파라미터 수 감소</li>
+      <li>Next Sentence Prediction → Sentence Order Prediction : 성능 향상</li>
+      <li>Factored Embedding Parameterization : 파라미터 수 감소</li>
+    </ul>
+  </li>
+  <li>ALBERT는 모델을 효율적으로 만들어서 더 큰 모델을 만들자는 목적</li>
+</ul>
+
+<h3 id="cross-layer-parameter-sharing">Cross-layer parameter sharing</h3>
+
+<ul>
+  <li>Weight sharing은 input, output embeddings의 L2 dist, Cosine similarity를 계산해봤을 때 network parameters를 stabilizing하는 효과가 있다.</li>
+</ul>
+
+<h3 id="sentence-ordering-objectives">Sentence Ordering Objectives</h3>
+
+<ul>
+  <li>Next Sentence Prediction(NSP)가 너무 쉽기 때문에 Sentence Ordering Object(SOP)를 수행하도록 함</li>
+  <li>NSP loss는 SOP 수행에 도움을 주지 않지만 SOP loss는 NSP 수행에 도움을 줄 수 있다.</li>
+</ul>
+
+<h3 id="factorized-embedding-parameterization">Factorized Embedding Parameterization</h3>
+
+<ul>
+  <li>WordPiece embeddings($E$)는 context-independent 표현을 학습한다.</li>
+  <li>Hidden layer embeddings($H$)는 context-dependent 표현을 학습한다.</li>
+  <li>BERT에서는 $E$와 $H$의 dimension이 같다. → BERT는 context-dependent 표현의 학습에 효과적인 구조.</li>
+  <li>그렇다면, 왜 BERT 레이어가 context-independent representation인 WordPiece embedding에 묶여야 할까?</li>
+  <li>WordPiece embedding 사이즈 $E$를 hidden layer 사이즈 $H$로부터 풀어내자.</li>
+  <li>Untying dimensions by using decomposition
+    <ul>
+      <li>원래 $O(V \times H)$를 $O(V \times E + E \times H)$로 파라미터 수를 줄임</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="knowledge-distillation">Knowledge Distillation</h2>
+
+<h3 id="ditilbert-a-distilled-version-of-bert-smaller-faster-cheaper-and-lighter">DitilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter</h3>
+
+<ul>
+  <li>세 가지 loss를 제안
+    <ul>
+      <li>기존 masked  language loss, distillation(Hinton) loss, cosine-similarity loss</li>
+    </ul>
+  </li>
+  <li>Triple loss = MLM($L_{mlm}$)+Hinton($L_{ce}$)+Cosine embedding($L_{cos}$)
+    <ul>
+      <li>Masked Language Modeling Loss : CE-loss</li>
+      <li>Distillation(Hinton) Loss : KL div of teacher, student softmax prob with temperature</li>
+      <li>Cosine embedding loss : between teacher, student hidden state vectors</li>
+    </ul>
+  </li>
+  <li>Student architecture &amp; initialization(paper)
+    <ul>
+      <li>token-type embedding, pooler 제거</li>
+      <li>레이어 개수를 절반으로 줄이고 hidden size dimension은 그대로 두었음(dimension을 줄이는 것이 computation에서 큰 효과가 없었다.)</li>
+      <li>초기화는 student의 첫 번째 레이어는 teacher의 두 번째, student의 두 번째 레이어는 teacher의 네 번째 레이어에서 가져오는 것으로 한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="tinybert-distilling-bert-for-natural-language-understanding">TinyBERT: Distilling BERT for Natural Language Understanding</h3>
+
+<ul>
+  <li>Transformer distillation method: 3 types of loss
+    <ul>
+      <li>From the output embedding layer</li>
+      <li>From the hidden states and attention matrices</li>
+      <li>From the logits output by the prediction layer</li>
+      <li>Teacher $N$ layers, student $M$ layers → N개에서 M개를 고른다.</li>
+      <li>Teacher와 student의 레이어 맵핑을 하는 $n = g(m)$이라는 함수를 정의한다.(논문에서는 g(m) = 3 *m으로 정의했고 1번 레이어를 3번 레이어로 맵핑한 의미이다.)</li>
+      <li>$L_{model} = \sum_{x \in \chi} \sum_{m=0}^{M+1} \lambda_m L_{layer}(f_m^S(x), f_{g(x)}^T(x))$
+        <ul>
+          <li>학습데이터 $x$에 대하여 Student layer $m$마다 각 레이어의 로스를 구하고 각 레이어의 중요도 가중치 $\lambda$를 곱한 것의 합</li>
+          <li>Layer loss는 $m$번째 student의 특정 output(Attn, hidden, logits), $g(m)$번째 teacher의 특정 output(Attn, hidden, logit)</li>
+          <li>$m = 0$ 일때, $L_{layer}$는 $L_{embd}$, $0&lt;m≤M$ 일때, $L_{layer}$는 $L_{hidden}+L_{attn}$, $m = M+1$ 일때, $L_{pred}$</li>
+        </ul>
+      </li>
+      <li>Transformer-layer Distillation(Attention based)
+        <ul>
+          <li>$L_{attn} = \frac{1}{h} \sum_{i=1}^{h} MSE(A_i^S, A_i^T)$</li>
+          <li>A는 teacher 또는 student의 attention matrix인데 이 논문에서는 unnormalized attention matrix로 설정함
+            <ul>
+              <li>unnormalized가 빠르고 성능이 더 좋았음</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Transformer-layer Distillation(Hidden state)
+        <ul>
+          <li>$L_{hidn} = MSE(H^SW_h,H^T)$</li>
+          <li>$H^T$, $H^S$ : teacher hidden state, student hidden state</li>
+          <li>$W_h$ : Learnable linear transformation(Student의 hidden state를 teacher의 dimension만큼 키워서 MSE를 계산하기 위함)</li>
+        </ul>
+      </li>
+      <li>Embedding-layer Distillation loss
+        <ul>
+          <li>$L_{embd} = MSE(E^SW_e,E^T)$</li>
+          <li>$W_e$는 $W_h$와 같은 역할을 한다.</li>
+        </ul>
+      </li>
+      <li>Prediction-layer Distillation loss
+        <ul>
+          <li>$L_{pred} = CE(z^T/t, z^S/t)$</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Two stage learning framework
+    <ul>
+      <li>General Distillation : Large-scale Text Corpus → General TinyBERT</li>
+      <li>Task-specific Distillation : General TinyBERT → Fine-tuned TinyBERT</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="기타-논문-추천">기타 논문 추천</h3>
+
+<ul>
+  <li>MobileBERT: a Compact Task-Agnostic BERT for Resource-Limited Devices</li>
+  <li>Exploring the Boundaries of Low-Resource BERT Distillation</li>
+  <li>AdaBERT: Task-Adaptive BERT Compression with Differentiable Neural Architecture Search</li>
+</ul>
+
+<h2 id="quantization">Quantization</h2>
+
+<ul>
+  <li>장점 : low memory footprint, inference speed(low precision operation 증가 추세)</li>
+  <li>주로 Quantization 과정에서 발생하는 accuracy drop을 줄이는 방향에 대한 연구</li>
+  <li>QAT(Quantizatino Aware Training), Quantization range 계산 방법 제안 등</li>
+</ul>
+
+<h3 id="q-bert-hessian-based-ultra-low-precision-quantization-of-bert">Q-BERT: Hessian Based Ultra Low Precision Quantization of BERT</h3>
+
+<ul>
+  <li>민감도가 높은 layer는 큰 precision, 낮은 layer는 작은 precision</li>
+  <li>group-wise quantization이라는 새로운 방법 제시</li>
+  <li>BERT의 bottleneck 조사</li>
+  <li>Hessian spectrum(eigenvalues)
+    <ul>
+      <li>Higher Hessian spectrum을 가지는 NN layer에서의 파라미터들은 더 민감함(Hessian의 top eigenvalues의 크기가 해당 레이어의 민감도와 연관이 있다)</li>
+      <li>Hessian spectrum 계산의 복잡성 → power iteration method로 해결(Large sparse matrix에서의 빠른 수렴)</li>
+      <li>같은 데이터셋이더라도 Hessian spectrum의 var이 매우 큼 → mean, std를 함께 고려하여 민감도를 정렬</li>
+    </ul>
+  </li>
+  <li>Group-wise Quantization method
+    <ul>
+      <li>key, query, value, output 모두 같은 Quantization range로 정했었는데 이 range가 커버해야 하는 matrices의 단위가 너무 크다.</li>
+      <li>query, key, value의 분포가 다를 수 있는데 이때 에러가 커진다.</li>
+      <li>따라서, Multi-head 별로 따로따로 quantization을 진행함</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="정리">정리</h2>
+
+<h3 id="pruning">Pruning</h3>
+
+<ul>
+  <li>Structured : 모델 사이즈 감소, 속도 향상, 성능 드랍</li>
+  <li>Unstructured : 모델 사이즈 감소, 적은 성능 드랍, 속도 향상 X(별도 처리가 없는 경우)</li>
+</ul>
+
+<h3 id="kd">KD</h3>
+
+<ul>
+  <li>파라미터 수 감소, 다양한 range 모델, 큰 속도 향상 여지(LSTM 등 다른 구조로 distillation), 비교적 복잡한 학습 구성, code maintain</li>
+</ul>
+
+<h3 id="weight">Weight</h3>
+
+<ul>
+  <li>Matrix decompostion(factorization) : 모델 사이즈 감소, 적은 성능 감소, 속도 향상(주로 CPU), 속도 변화 미미(GPU)</li>
+  <li>Param(weight) sharing : 모델 사이즈 감소, 학습 관련 이점, 적은 속도 개선</li>
+</ul>
+
+<h3 id="quantization-1">Quantization</h3>
+
+<ul>
+  <li>모델 사이즈 감소 탁월, 적은 성능 하락, 속도 향상 불투명(지원 증가 추세)</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#bert" class="page__taxonomy-item p-category" rel="tag">bert</a><span class="sep">, </span>
+    
+      <a href="/tags/#lightweight" class="page__taxonomy-item p-category" rel="tag">lightweight</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-03T00:00:00+09:00">December 3, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/pruning-and-KD/" class="pagination--pager" title="Pruning and Knowledge Distillation
+">Previous</a>
+    
+    
+      <a href="/boostcamp/MLOps/" class="pagination--pager" title="MLOps 정리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,711 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Union-Find - gooooooooooose</title>
+<meta name="description" content="Union-Find 이해   Union-Find(혹은 Disjoint Set)란,  여러개의 노드들을 집합으로 묶어주고 다시 노드들이 어떤 집합에 속하는지 확인할 수 있는 알고리즘이다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Union-Find">
+<meta property="og:url" content="http://localhost:4000/algorithm/union-find/">
+
+
+  <meta property="og:description" content="Union-Find 이해   Union-Find(혹은 Disjoint Set)란,  여러개의 노드들을 집합으로 묶어주고 다시 노드들이 어떤 집합에 속하는지 확인할 수 있는 알고리즘이다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-02-21T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/algorithm/union-find/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Union-Find">
+    <meta itemprop="description" content="Union-Find 이해Union-Find(혹은 Disjoint Set)란,  여러개의 노드들을 집합으로 묶어주고 다시 노드들이 어떤 집합에 속하는지 확인할 수 있는 알고리즘이다.">
+    <meta itemprop="datePublished" content="2021-02-21T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Union-Find
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-02-21T00:00:00+09:00">February 21, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#union-find-이해">Union-Find 이해</a></li><li><a href="#union-find-구현">Union-Find 구현</a></li><li><a href="#union-find-성능">Union-Find 성능</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="union-find-이해">Union-Find 이해</h2>
+<hr />
+<p>Union-Find(혹은 Disjoint Set)란,  여러개의 노드들을 집합으로 묶어주고 다시 노드들이 어떤 집합에 속하는지 확인할 수 있는 알고리즘이다.</p>
+
+<h2 id="union-find-구현">Union-Find 구현</h2>
+
+<hr />
+
+<p>이 알고리즘에서는 두 가지 연산이 필요한데, Find연산과 Union연산이다.</p>
+
+<p>먼저, Find 연산의 경우 노드 <code class="language-plaintext highlighter-rouge">x</code>가 어떤 집합에 속하는지 확인한다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">parent</span><span class="p">[</span><span class="n">MAX_SIZE</span><span class="p">];</span>
+
+<span class="kt">int</span> <span class="nf">Find</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">Find</span><span class="p">(</span><span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>위와 같이 코드를 작성할 경우 매 Find함수를 호출할 때마다 부모가 나올 때까지 반복하기 때문에 $O(N)$의 시간 복잡도를 가진다. 이 코드로는 트리로 구성하는 의미가 없어진다.</p>
+
+<p>그래서 “<strong>경로 압축</strong>”이라는 최적화 기법이 들어간다.</p>
+
+<p>경로 압축 기법의 중요한 점은 위의 코드에서 <code class="language-plaintext highlighter-rouge">x</code>가 <code class="language-plaintext highlighter-rouge">parent[x]</code>가 다른 경우 <code class="language-plaintext highlighter-rouge">parent[x]</code>를 인자로 Find함수를 다시 호출하는 것을 줄이는 것이다.</p>
+
+<p>그래서, <code class="language-plaintext highlighter-rouge">parent[x]</code>의 값을 <code class="language-plaintext highlighter-rouge">Find(parent[x])</code>의 반환값으로 저장하여 처음 쿼리에서 <code class="language-plaintext highlighter-rouge">x</code>의 부모노드를 바꿔줄 수 있다. 이후에 다시 호출할 때 바로 부모노드를 반환할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Find</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">=</span><span class="n">Find</span><span class="p">(</span><span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>다음, Union 연산은 두 인자 x, y가 같은 집합에 속할 수 있다면 두 집합을 합쳐주는 역할을 한다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">Union</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">Find</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="n">Find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">!=</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">parent</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>위의 코드는 <code class="language-plaintext highlighter-rouge">x</code>의 집합과 <code class="language-plaintext highlighter-rouge">y</code>의 집합을 합쳐야 하는 상황에서 <code class="language-plaintext highlighter-rouge">y</code>의 부모를 <code class="language-plaintext highlighter-rouge">x</code>로 바꿔주는 코드이다.</p>
+
+<p>그러나, 이 코드는 깊이가 깊은 정점이 깊이가 낮은 정점의 밑으로 들어가면 트리의 깊이가 깊어지는 문제가 생길 수 있다.</p>
+
+<p>그래서 깊이를 저장하는 배열을 하나 선언하여 이 문제를 해결하도록 한다.  이 배열을 rank라 한다.</p>
+
+<ul>
+  <li>이러한 최적화를 Union-by-rank라 한다.</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">Union</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">Find</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="n">Find</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+
+    <span class="c1">// 두 노드의 부모가 같다면 Union을 할 필요가 없다</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">y</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">&gt;</span><span class="n">rank</span><span class="p">[</span><span class="n">y</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// x가 y보다 더 깊은 노드라면</span>
+        <span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">=</span><span class="n">y</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span> <span class="c1">// x가 y보다 깊이가 낮거나 같다면</span>
+        <span class="n">parent</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">=</span><span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 두 노드가 깊이가 같다면, y의 부모가 x가 되므로 y의 깊이를 +1한다</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">rank</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">rank</span><span class="p">[</span><span class="n">y</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">level</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="union-find-성능">Union-Find 성능</h2>
+
+<hr />
+
+<p>Union 함수는 Find함수만 시간에 영향을 주므로 Find만 계산하면 된다.</p>
+
+<p>먼저, Find 함수에서 “경로 압축”을 사용하지 않으면 사향 트리(Skewed Tree)가 될 가능성이 있어서 이때의 시간 복잡도는 $O(N)$을 가진다.</p>
+
+<p>그러나, “경로 압축”을 사용할 경우 Find함수에 의해 호출할 때마다 수행 시간이 변하기 때문에 분석하기가 어렵다.</p>
+
+<p>그래서 경로 압축을 사용한 Find함수의 시간 복잡도는 $O(\alpha(N))$이라 한다.</p>
+
+<ul>
+  <li>$\alpha(N)$은 아커만 함수라 하며 거의 모든 $N$에 대해서 4이하의 시간을 가진다고 한다. (사실상 상수 시간이다)</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#tree" class="page__taxonomy-item p-category" rel="tag">tree</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#algorithm" class="page__taxonomy-item p-category" rel="tag">Algorithm</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-02-21T00:00:00+09:00">February 21, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="/algorithm/0-1-BFS/" class="pagination--pager" title="0-1 BFS
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

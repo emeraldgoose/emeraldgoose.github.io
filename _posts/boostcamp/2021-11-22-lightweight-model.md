@@ -1,0 +1,92 @@
+---
+title: "모델 경량화 소개"
+categories:
+  - BoostCamp
+tags: [lightweight]
+---
+## 경량화의 목적
+
+1. On device AI
+    1. Smart Phone, Watch, Other IoT devices
+    2. Limitation: Power Usage(Battery), Ram Memory Usage, Storage, Computing Power
+2. AI on cloud(or server)
+    1. 배터리, 저장 공간, 연산능력의 제약은 줄어드나, latency와 throughput의 제약이 존재
+        1. 한 요청의 소요시간, 단위 시간당 처리 가능한 요청 수
+    2. 같은 자원으로 더 적은 latency와 더 큰 throughput이 가능하다면? → 바로 사용
+3. Computation as a key compoenet of AI progress
+    1. 2012년 이후 큰 AI 모델 학습에 들어가는 연산은 3, 4개월마다 두배로 증가
+    2. 연산측정방법
+        1. Counting operations(FLOPs)
+        2. GPU times
+
+## 경량화는?
+
+- 모델의 연구와는 별개로, 산업에 적용되기 위해서 거쳐야하는 과정
+- 요구조건(하드웨어 종류, latency 제한, 요구 throughput, 성능)들 간의 trade-off를 고려하여 모델 경량화/최적화를 수행
+
+## 경량화, 최적화의 (대표적인) 종류
+
+- 네트워크 구조 관점
+    - Efficient Architecture Design(+AutoML; Neural Architecture Search(NAS))
+    - Network Pruning
+    - Knowledge Distrillation(Teacher-Student 구조)
+    - Matrix/Tensor Decompostion(작은 단위의 matrix, tensor의 곱 또는 합으로 구현 → 웨이트 사이즈 줄어드는 효과)
+- 하드웨어 관점
+    - Network Quantization
+    - Network Compling
+
+## 경량화 분야 소개
+
+1. Efficient architecture design; AutoML, Neural Architecture Search
+    - 모델을 찾는 네트워크(contorller) : 모델 제안
+    - 제안된 모델을 학습을 시킨 후 accuracy를 계산
+    - accuracy를 가지고 controller를 학습 → 다시 모델 제안
+    - 사람의 직관보다 상회하는 성능의 모듈들을 찾아낼 수 있음
+2. Network Pruning; 찾은 모델 줄이기
+    - 중요도가 낮은 파라미터를 제거하는 것
+    - 좋은 중요도를 정의, 찾는 것이 주요 연구 토픽 중 하나(L2 norm이 크면, loss gradient 크면 등)
+    - 크게 structured/unstructured pruning으로 나뉘어짐
+        - Structured pruning : 파라미터를 그룹 단위로 pruning하는 기법들을 총칭(channel, filter, layer 등)
+            - Dense computation에 최적화된 소프트웨어 또는 하드웨어에 적합한 기법
+        - Unstructured pruning : 파라미터 각각을 독립적으로 pruning하는 기법
+            - Pruning을 수행할 수록 네트워크 내부의 행렬이 점차 희소(sparse)해짐
+            - Structured pruning과 달리 sparse computation에 최적화된 소프트웨어 또는 하드웨어에 적합한 기법
+3. Knowledge distillation
+    - 학습된 큰 네트워크를 작은 네트워크의 학습 보조로 사용하는 방법
+    - Soft targets(soft outputs)에는 ground truth보다 더 많은 정보를 담고 있음(예를 들면, 특정 상황에서 레이블 간의 유사도 등)
+    - 구분
+        - Student network와 ground truth label의 cross-entropy
+        - teacher network와 student network의 inference 결과에 대한 KLD loss로 구성
+    - $L_{KD} = (1-\alpha)CE(\hat{y}^S, y) + \alpha T^2 KL(\sigma(\hat{y}^T/T),\lambda(\hat{y}^S/T))$
+        - $T$는 large teacher network의 출력을 smoothing(soften)하는 역할을 한다.
+        - $\alpha$는 두 loss의 균형을 조절하는 파라미터이다.
+4. Matrix/Tensor decomposition
+    - 하나의 Tensor를 작은 Tensor들의 operation들의 조합(합, 곱)으로 표현하는 것
+    - CP decomposition: rank 1 vector들의 outer product의 합으로 tensor를 approximation
+        - Full convolution을 CP-decompostion을 통해 웨이트와 연산량을 줄이는 것
+5. Network Quatization
+    - 일반적인 float32 데이터 타입의 Network의 연산과정을 그보다 작은 크기의 데이터타입(float16, int8, ...)으로 변환하여 연산을 수행
+    - 사이즈 감소, 성능은 일반적으로 약간 하락, 속도는 하드웨어 지원여부 및 라이브러리에 따라 다름
+6. Network Compiling
+    - 학습이 완료된 Network를 deploy하려는 target hardware에서 inference가 가능하도록 compile하는 것(최적화가 동반)
+    - 사실상 속도에 가장 큰 영향을 미치는 기법
+    - TensorRT(NVDIA), TFlite(Tensorflow), TVM(apache), ....
+    - 각 compile library마다 성능차이가 발생
+    - compile 과정에서, layer fusion(graph optimization) 등의 최적화가 수행됨
+    - 그러나 framework와 hardware backends 사이의 수많은 조합, hw마다 지원되는 core, unit수, instruction set, 가속 라이브러리 등이 다름
+    - Layer fusion의 조합에 따라 성능차이가 발생(동일 회사의 hw인 경우에도 발생함)
+    - 최근에는 AutoML로 graph의 좋은 fusion을 찾아보자는 시도가 있음
+
+## FLOPs
+
+- 연산속도를 가장 중요한 기준으로 볼 때, 연산횟수(FLOPs)는 속도 결정의 간접적인 factor 중 하나
+- Memory Access Cost와 같은 다른 중요한 요소들 또한 존재
+- 모델의 구조로 오는 병렬성 등은 고려하지 못함
+- HW platform마다 동일한 연산간의 속도 차이도 존재
+- 추천논문 : ShuffleNetv2, 속도에 영향을 주는 요소에 대한 insight
+    - FLOPs 이외에 Memory Access Cost 등의 관점에서 속도에 영향을 주는 요소를 추가로 고려
+    - 4가지의 가이드라인 제시
+        - 입출력의 채널 크기가 동일할 때 Memory Access Cost가 최소
+        - 큰 Group convolution은 Memory Access Cost를 증가
+        - 여러 분기 path가 나오는 구조는 병렬화에 악영향
+        - Element-wise operation은 무시하지 못할 비중을 가짐

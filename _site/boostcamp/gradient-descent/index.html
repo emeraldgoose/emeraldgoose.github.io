@@ -1,0 +1,832 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>경사하강법 정리 - gooooooooooose</title>
+<meta name="description" content="미분    함수 f의 주어진 점(x,f(x))에서의 미분을 통해 접선의 기울기를 구할 수 있다. 접선의 기울기는 어느 방향으로 점을 움직여야 함수값이 증가하는지/감소하는지 알 수 있습니다.   미분값을 더하면 경사상승법(gradient ascent)라 하며 극댓값의 위치를 구할 때 사용합니다.   미분값을 빼면 경사하강법(gradient descent)라 하며 극소값의 위치를 구할 때 사용합니다.   경사상승법과 경사하강법 모두 극값에 도착하면 움직임을 멈추게 됩니다. (미분값이 0이므로)">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="경사하강법 정리">
+<meta property="og:url" content="http://localhost:4000/boostcamp/gradient-descent/">
+
+
+  <meta property="og:description" content="미분    함수 f의 주어진 점(x,f(x))에서의 미분을 통해 접선의 기울기를 구할 수 있다. 접선의 기울기는 어느 방향으로 점을 움직여야 함수값이 증가하는지/감소하는지 알 수 있습니다.   미분값을 더하면 경사상승법(gradient ascent)라 하며 극댓값의 위치를 구할 때 사용합니다.   미분값을 빼면 경사하강법(gradient descent)라 하며 극소값의 위치를 구할 때 사용합니다.   경사상승법과 경사하강법 모두 극값에 도착하면 움직임을 멈추게 됩니다. (미분값이 0이므로)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-08-06T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/gradient-descent/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="경사하강법 정리">
+    <meta itemprop="description" content="미분  함수 f의 주어진 점(x,f(x))에서의 미분을 통해 접선의 기울기를 구할 수 있다. 접선의 기울기는 어느 방향으로 점을 움직여야 함수값이 증가하는지/감소하는지 알 수 있습니다.  미분값을 더하면 경사상승법(gradient ascent)라 하며 극댓값의 위치를 구할 때 사용합니다.  미분값을 빼면 경사하강법(gradient descent)라 하며 극소값의 위치를 구할 때 사용합니다.  경사상승법과 경사하강법 모두 극값에 도착하면 움직임을 멈추게 됩니다. (미분값이 0이므로)">
+    <meta itemprop="datePublished" content="2021-08-06T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">경사하강법 정리
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-08-06T00:00:00+09:00">August 06, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#미분">미분</a></li><li><a href="#경사하강법">경사하강법</a><ul><li><a href="#경사하강법-알고리즘">경사하강법: 알고리즘</a></li></ul></li><li><a href="#변수가-벡터인-경우">변수가 벡터인 경우</a><ul><li><a href="#경사하강법-알고리즘-1">경사하강법: 알고리즘</a></li></ul></li><li><a href="#경사하강법으로-선형회귀-계수-구하기">경사하강법으로 선형회귀 계수 구하기</a><ul><li><a href="#경사하강법-기반-선형회귀-알고리즘">경사하강법 기반 선형회귀 알고리즘</a></li><li><a href="#코드로-구현">코드로 구현</a></li></ul></li><li><a href="#경사하강법은-만능">경사하강법은 만능?</a></li><li><a href="#확률적-경사하강법">확률적 경사하강법</a><ul><li><a href="#확률적-경사하강법의-원리-미니배치-연산">확률적 경사하강법의 원리: 미니배치 연산</a></li><li><a href="#코드로-구현-1">코드로 구현</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="미분">미분</h2>
+<ul>
+  <li>함수 f의 주어진 점(x,f(x))에서의 미분을 통해 접선의 기울기를 구할 수 있다. 접선의 기울기는 어느 방향으로 점을 움직여야 함수값이 증가하는지/감소하는지 알 수 있습니다.</li>
+  <li>미분값을 더하면 경사상승법(gradient ascent)라 하며 극댓값의 위치를 구할 때 사용합니다.</li>
+  <li>미분값을 빼면 경사하강법(gradient descent)라 하며 극소값의 위치를 구할 때 사용합니다.</li>
+  <li>경사상승법과 경사하강법 모두 극값에 도착하면 움직임을 멈추게 됩니다. (미분값이 0이므로)</li>
+</ul>
+
+<h2 id="경사하강법">경사하강법</h2>
+<ul>
+  <li>경사하강법(Gradient Descent)는 함수값이 낮아지는 방향으로 독립변수 값을 변형시켜가며 최종적으로 극값에 이를때까지 반복하는 방법입니다.</li>
+  <li>최적화 할 함수 $f(x)$에 대하여 먼저 시작점 $x_0$를 정합니다. 현재 위치 $x_i$에서 다음 위치인 $x_{i+1}$은 다음과 같이 계산됩니다.
+    <ul>
+      <li>$x_{i+1} = x_i - \gamma_{i} \nabla f(x_i)$</li>
+      <li>$\gamma_i $는 이동할 거리를 조절하는 매개변수입니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="경사하강법-알고리즘">경사하강법: 알고리즘</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+input: gradient(미분을 계산하는 함수), init(시작점), lr(학습률), eps(종료조건 위한 상수) 
+output: var
+"""</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">init</span>
+<span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+<span class="k">while</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">eps</span><span class="p">):</span> <span class="c1"># 컴퓨터가 계산할 때 미분이 정확히 0이 되는 것은 불가능하므로 eps보다 작을 때 종료한다.
+</span>  <span class="n">var</span> <span class="o">=</span> <span class="n">var</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">grad</span> <span class="c1"># 다음 위치 = 현재 위치 - 이동거리 * 기울기
+</span>  <span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="c1"># 움직인 현재 위치에서 다시 미분값을 계산한다.
+</span></code></pre></div></div>
+
+<h2 id="변수가-벡터인-경우">변수가 벡터인 경우</h2>
+<ul>
+  <li>벡터가 입력인 경우 편미분(partial differentiataion)을 사용합니다.</li>
+  <li>각 변수별로 편미분을 계산한 그레디언트 벡터(gradient vector, $\nabla f$)를 이용하여 경사하강법/경사상승법에 사용할 수 있습니다.
+    <ul>
+      <li>$\nabla f = (\partial x_1f, \partial x_2f,…,\partial x_df)$</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="경사하강법-알고리즘-1">경사하강법: 알고리즘</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+input: gradient, init, lr, eps
+output: var
+"""</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">init</span>
+<span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+<span class="k">while</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">grad</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">eps</span><span class="p">):</span> <span class="c1"># 벡터는 절댓값 대신 노름을 계산해서 종료조건을 설정한다
+</span>  <span class="n">var</span> <span class="o">=</span> <span class="n">var</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">grad</span>
+  <span class="n">grad</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="경사하강법으로-선형회귀-계수-구하기">경사하강법으로 선형회귀 계수 구하기</h2>
+<ul>
+  <li>데이터를 선형모델(linear model)로 해석하면 $X\beta=\hat{y} \approx y$이므로 $\beta$에 대해서 다음과 같이 정리할 수 있습니다.
+    <ul>
+      <li>$\beta$를 최소화하는 $min||y-\hat{y}||_2$ 식을 얻을 수 있습니다.</li>
+    </ul>
+  </li>
+  <li>따라서 선형회귀의 목적식은 $min||y-\hat{y}||_2$이고 이를 최소화하는 $\beta$를 찾아야 하므로 다음과 같은 그레디언트 벡터를 구해야 합니다.
+    <ul>
+      <li>$\nabla_\beta ||y-X\beta|_2 = (\partial_{\beta_1}||y-X\beta||_2,…,\partial_{\beta_d}||y-X\beta||_2)$</li>
+      <li>$||y-X\beta||_2$말고 $||y-X\beta||_2^2$를 최적화 해도 좋습니다.</li>
+    </ul>
+  </li>
+  <li>$\beta$에 대해 미분하게 되면 $\partial_{\beta_k}||y-X\beta||_2 = -\frac{X^T(y-X\beta)}{n||y-X\beta||_2}$인 식을 얻을 수 있습니다.</li>
+  <li>목적식을 최소화하는 $\beta$를 구하는 경사하강법 식은 다음과 같습니다.
+    <ul>
+      <li>$\beta^{(t+1)} \leftarrow \beta^{(t)}-\lambda \nabla_\beta ||y-X\beta^{(t)}||_2$</li>
+      <li>위의 식을 정리하면 $\beta^{(t+1)} \leftarrow \beta^{(t)}+\frac{2\lambda}{n}X^T(y-X\beta^{(t)})$인 식을 얻을 수 있습니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="경사하강법-기반-선형회귀-알고리즘">경사하강법 기반 선형회귀 알고리즘</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"""
+input: X, y, lr, T(학습횟수)
+Output: beta
+"""</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+  <span class="n">error</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">X</span> <span class="o">@</span> <span class="n">beta</span> <span class="c1"># (y - Xb)
+</span>  <span class="n">grad</span> <span class="o">=</span> <span class="o">-</span> <span class="n">transpose</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">@</span> <span class="n">error</span> 
+  <span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">-</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">grad</span>
+</code></pre></div></div>
+
+<h3 id="코드로-구현">코드로 구현</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="c1"># print('numpy version : {\%\s}'%(np.__version__))
+</span>
+<span class="n">train_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="c1"># 1000개의 랜덤 x값
+</span><span class="n">train_y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span> <span class="c1"># y값의 초기화
+</span>
+<span class="c1"># f(x) = 5x+3으로 가정
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+  <span class="n">train_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">train_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span>
+
+<span class="c1"># parameter
+</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+
+<span class="n">lr_rate</span> <span class="o">=</span> <span class="mf">1e-2</span> <span class="c1"># learning rate
+</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+  <span class="n">pred_y</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">train_x</span> <span class="o">+</span> <span class="n">b</span> <span class="c1"># prediction
+</span>
+  <span class="c1"># gradient
+</span>  <span class="n">grad_w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">((</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">train_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">train_x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span> <span class="c1"># (1)
+</span>  <span class="n">grad_b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">train_y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span> <span class="c1"># (2)
+</span>
+  <span class="c1"># update
+</span>  <span class="n">w</span> <span class="o">-=</span> <span class="n">lr_rate</span> <span class="o">*</span> <span class="n">grad_w</span>
+  <span class="n">b</span> <span class="o">-=</span> <span class="n">lr_rate</span> <span class="o">*</span> <span class="n">grad_b</span>
+
+  <span class="c1"># error
+</span>  <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">((</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">train_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+  <span class="n">errors</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'w: {}, b: {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">b</span><span class="p">))</span> <span class="c1"># w: 5.008559005692836, b: 1.9170264334235934
+</span></code></pre></div></div>
+
+<ul>
+  <li>grad_w, grad_b를 구하는 방법
+    <ul>
+      <li>error = $\frac{1}{n}(\hat{y}-y)^2$인데 이것을 $w$,$b$에 대해 편미분하면 다음과 같다.</li>
+      <li>$\frac{\partial err}{\partial w}=\frac{2}{n}(\hat{y}-y)X$</li>
+      <li>$\frac{\partial err}{\partial w}=\frac{2}{n}(\hat{y}-y)$</li>
+      <li>따라서 $dw=((\hat{y}-y)X).mean$, $db=(\hat{y}-y).mean$이 된다.</li>
+    </ul>
+  </li>
+  <li>에러를 그래프로 출력하면 다음과 같습니다.
+<img src="https://drive.google.com/uc?export=view&amp;id=1WEEOKyJg8Tv43sd0ZoqQ9WRhjeCRNQoz" alt="" /></li>
+</ul>
+
+<h2 id="경사하강법은-만능">경사하강법은 만능?</h2>
+<ul>
+  <li>이론적으로 경사하강법은 미분가능하고 볼록(convex)한 함수에 대해선 적절한 학습률과 학습횟수를 선택했을 때 수렴이 보장됩니다.</li>
+  <li>그러나 비선형회귀 문제의 경우 목적식이 볼록하지 않기 때문에 수렴이 항상 보장되지 않습니다.
+    <ul>
+      <li>극소값의 위치를 찾았어도 최솟값의 위치가 아닐 수 있습니다.</li>
+    </ul>
+  </li>
+  <li>이를 위해 확률적 경사하강법(stochastic gradient descent)를 사용하게 됩니다.</li>
+</ul>
+
+<h2 id="확률적-경사하강법">확률적 경사하강법</h2>
+<ul>
+  <li>확률적 경사하강법은 데이터 한 개 또는 일부 활용하여 업데이트 합니다.</li>
+  <li>볼록이 아닌(non-convex) 목적식도 SGD를 통해 최적화할 수 있습니다.</li>
+  <li>$\theta^{(t+1)} \leftarrow \theta^{(t)}-\hat{\nabla_\theta L(\theta^{(t)})}, \space E[\hat{\nabla_\theta L}] \approx \nabla_\theta L$</li>
+  <li>데이터의 일부를 가지고 패러미터를 업데이트하기 때문에 연산자원을 좀 더 효율적으로 활용할 수 있습니다.</li>
+</ul>
+
+<h3 id="확률적-경사하강법의-원리-미니배치-연산">확률적 경사하강법의 원리: 미니배치 연산</h3>
+<ul>
+  <li>경사하강법은 전체데이터 $D = (X,y)$를 가지고 목적식의 그레디언트 벡터를 계산합니다.</li>
+  <li>SGD는 미니배치 $D_{(b)}=(X_{(b)},y_{(b)}) \subset D$를 가지고 그레디언트 벡터를 계산합니다.</li>
+  <li>매번 다른 미니배치를 사용하기 때문에 목적식 모양(곡선 모양)이 바뀌게 됩니다.
+    <ul>
+      <li>경사하강법의 경우 error가 줄어들 때 곡선형태로 줄어들지만, SGD는 요동치면서 줄어드는 것을 볼 수 있습니다.</li>
+    </ul>
+  </li>
+  <li>또한, SGD는 볼록이 아닌 목적식에서도 사용가능하므로 경사하강법보다 머신러닝 학습에 더 효율적입니다.</li>
+</ul>
+
+<h3 id="코드로-구현-1">코드로 구현</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="c1"># print('numpy version : {\%\s}'%(np.__version__))
+</span>
+<span class="n">train_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="n">train_y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+
+<span class="c1"># f(x) = 5x+3으로 가정
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+  <span class="n">train_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">train_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span>
+
+<span class="c1"># parameter
+</span><span class="n">w</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+
+<span class="n">lr_rate</span> <span class="o">=</span> <span class="mf">1e-2</span> <span class="c1"># learning rate
+</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+  <span class="c1"># mini batch
+</span>  <span class="c1"># 1000개 중 10개를 랜덤하게 뽑아 미니배치 생성
+</span>  <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+  <span class="n">mini_x</span> <span class="o">=</span> <span class="n">train_x</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+  <span class="n">mini_y</span> <span class="o">=</span> <span class="n">train_y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+  <span class="n">pred_y</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">mini_x</span> <span class="o">+</span> <span class="n">b</span> <span class="c1"># prediction
+</span>
+  <span class="c1"># gradient
+</span>  <span class="n">grad_w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">((</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">mini_y</span><span class="p">)</span> <span class="o">*</span> <span class="n">mini_x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mini_x</span><span class="p">)</span>
+  <span class="n">grad_b</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">mini_y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mini_x</span><span class="p">)</span>
+
+  <span class="c1"># update
+</span>  <span class="n">w</span> <span class="o">-=</span> <span class="n">lr_rate</span> <span class="o">*</span> <span class="n">grad_w</span>
+  <span class="n">b</span> <span class="o">-=</span> <span class="n">lr_rate</span> <span class="o">*</span> <span class="n">grad_b</span>
+
+  <span class="c1"># error
+</span>  <span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">((</span><span class="n">pred_y</span> <span class="o">-</span> <span class="n">mini_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">mini_x</span><span class="p">)</span>
+  <span class="n">errors</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'w: {}, b: {}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="n">b</span><span class="p">))</span> <span class="c1"># w: 5.008246440224214, b: 1.9408158614474957
+</span></code></pre></div></div>
+
+<ul>
+  <li>에러를 그래프로 출력하면 다음과 같다.
+<img src="https://drive.google.com/uc?export=view&amp;id=1oTfDOO8oFBbyWZim8zhkXazqs24DU70d" alt="" /></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#gradient-descent" class="page__taxonomy-item p-category" rel="tag">gradient_descent</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-08-06T00:00:00+09:00">August 6, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/convolution/" class="pagination--pager" title="Convolution 정리
+">Previous</a>
+    
+    
+      <a href="/boostcamp/probability/" class="pagination--pager" title="Probability 정리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

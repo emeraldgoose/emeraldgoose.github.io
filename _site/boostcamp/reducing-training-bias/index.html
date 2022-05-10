@@ -1,0 +1,710 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Reducing Training Bias - gooooooooooose</title>
+<meta name="description" content="Definition of Bias">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Reducing Training Bias">
+<meta property="og:url" content="http://localhost:4000/boostcamp/reducing-training-bias/">
+
+
+  <meta property="og:description" content="Definition of Bias">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-18T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/reducing-training-bias/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Reducing Training Bias">
+    <meta itemprop="description" content="Definition of Bias">
+    <meta itemprop="datePublished" content="2021-10-18T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Reducing Training Bias
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-10-18T00:00:00+09:00">October 18, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#definition-of-bias">Definition of Bias</a><ul><li><a href="#bias의-종류">Bias의 종류</a></li><li><a href="#gender-bias">Gender Bias</a></li><li><a href="#sampling-bias">Sampling Bias</a></li></ul></li><li><a href="#bias-in-open-domain-question-answering">Bias in Open-domain Question Answering</a><ul><li><a href="#training-bias-in-reader-model">Training bias in reader model</a></li><li><a href="#how-to-mitigate-training-bias">How to mitigate training bias?</a></li></ul></li><li><a href="#annotation-bias-from-datasets">Annotation Bias from Datasets</a><ul><li><a href="#what-is-annotation-bias">What is annotation bias?</a></li><li><a href="#dealing-with-annotation-bias">Dealing with annotation bias</a></li><li><a href="#another-bias-in-mrc-dataset">Another bias in MRC dataset</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="definition-of-bias">Definition of Bias</h2>
+
+<h3 id="bias의-종류">Bias의 종류</h3>
+
+<p>Bias in learning</p>
+
+<ul>
+  <li>학습할 때 과적합을 막거나 사전 지식을 주입하기 위해 특정 형태의 함수를 선호하는 것 (inductive bias)</li>
+</ul>
+
+<p>A Biased World</p>
+
+<ul>
+  <li>현실 세계가 편향되어 있기 때문에 모델에 원치 않는 속성이 학습되는 것 (historical bias)</li>
+  <li>성별과 직업 간 관계 등 표면적인 상관관계 때문에 원치 않는 속성이 학습되는 것 (co-occurrence bias)</li>
+</ul>
+
+<p>Bias in Data Generator</p>
+
+<ul>
+  <li>입력과 출력을 정의한 방식 때문에 생기는 편향 (specification bias)</li>
+  <li>데이터를 샘플링한 방식 때문에 생기는 편향 (sampling bias)</li>
+  <li>어노테이터의 특성 때문에 생기는 편향 (annotator bias)</li>
+</ul>
+
+<h3 id="gender-bias">Gender Bias</h3>
+
+<ul>
+  <li>대표적인 bias 예시</li>
+  <li>특정 성별과 행동을 연관시켜서 예측 오류가 발생</li>
+</ul>
+
+<h3 id="sampling-bias">Sampling Bias</h3>
+
+<p>[리터러시 다이제스트] 여론조사</p>
+
+<ul>
+  <li>포본크기 : 240만명</li>
+  <li>예측 : 루즈벨트 43%, 알프레드 랜던 57% → 실제 : 루즈벨트 62%, 알프레드 랜던 38%</li>
+  <li>설문대상 : 잡지 정기구독자, 자동차 등록명부, 사교클럽 명부 등 → 중산층 이상으로 표본 왜곡</li>
+</ul>
+
+<h2 id="bias-in-open-domain-question-answering">Bias in Open-domain Question Answering</h2>
+<h3 id="training-bias-in-reader-model">Training bias in reader model</h3>
+<p>만약 reader 모델이 한정된 데이터셋에만 학습이 된다면 reader는 항상 정답이 문서 내에 포함된 데이터쌍만(Positive)을 보게됨<br />
+특히 SQuAD와 같은 (Context, Query, Answer)가 모두 포함된 데이터는 positive가 완전히 고정됨</p>
+
+<ul>
+  <li>Inference 시 만약 데이터 내에서 찾아볼 수 없었던 새로운 문서를 준다면?</li>
+  <li>Reader 모델은 문서에 대한 독해 능력이 매우 떨어질 것이고, 결과적으로 정답을 내지 못할 것임</li>
+</ul>
+
+<h3 id="how-to-mitigate-training-bias">How to mitigate training bias?</h3>
+
+<ol>
+  <li>Train negative examples
+    <ol>
+      <li>훈련할 때 잘못된 예시를 보여줘야 retriever이 negative한 내용들을 먼 곳에 배치할 수 있음 → Negative sample도 완전히 다른 negative와 비슷한 negative에 대한 차이 고려가 필요함</li>
+    </ol>
+  </li>
+  <li>Add no answer bias
+    <ol>
+      <li>입력 시퀸스의 길이가 N일시, 시퀸스의 길이 외 1개의 토큰이 더 있다고 생각하기 → 훈련 모델의 마지막 레이어 wight에 훈련 가능한 bias를 하나 더 추가</li>
+      <li>softmax로 answer prediction을 최종적으로 수행할 때, start end 확률이 해당 bias 위치에 있는 경우가 가장 확률이 높으면 이는 “대답할 수 없다”라고 취급</li>
+    </ol>
+  </li>
+</ol>
+
+<p>어떻게 좋은 Negative sample을 만들 수 있을까?</p>
+
+<ol>
+  <li>Corpus내에서 랜덤하게 뽑기</li>
+  <li>좀 더 헷갈리는 negative 샘플들 뽑기
+    <ol>
+      <li>높은 BM25 / TF-IDF 매칭 스코어를 가지지만, 답을 포함하지 않는 샘플</li>
+      <li>같은 문서에서 나온 다른 Passage/Question 선택하기</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="annotation-bias-from-datasets">Annotation Bias from Datasets</h2>
+
+<h3 id="what-is-annotation-bias">What is annotation bias?</h3>
+<p>ODQA 학습 시 기존의 MRC 데이터셋 활용 → ODQA 세팅에는 적합하지 않은 bias가 데이터 제작(annotation) 단계에서 발생할 수 있음<br />
+SQuAD 같은 경우, 질문의 답을 아는 사람이 질문과 답을 작성해서 질문의 단어들이 context와 어느정도 겹치고 context에 의존적이다. 그리고 사용하는 문단이 사람들이 자주 보는 문단 500개 정도이기 때문에 어느정도 bias가 존재한다. 그래서 다른 데이터셋과 달리 SQuAD는 BM25의 점수가 DPR보다 점수가 높게 나온다. DPR에 BM25를 추가해서 사용하면</p>
+
+<h3 id="dealing-with-annotation-bias">Dealing with annotation bias</h3>
+<p>Annotation 단계에서 발생할 수 있는 bias를 인지하고, 이를 고려하여 데이터를 모아야 함<br />
+ex) ODQA 세팅과 유사한 데이터 수집 방법<br />
+→ Natural Questions: Supporting  evidence가 주어지지 않은, 실제 유저의 question들을 모아서 dataset을 구성</p>
+
+<h3 id="another-bias-in-mrc-dataset">Another bias in MRC dataset</h3>
+<p>SQuAD: Passage가 주어지고, 주어진 passage 내에서 질문과 답을 생성 → ODQA에 applicable하지 않는 질문들이 존재</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#mrc" class="page__taxonomy-item p-category" rel="tag">MRC</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-10-18T00:00:00+09:00">October 18, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/linking-mrc-and-retrieval/" class="pagination--pager" title="Linking MRC and Retrieval
+">Previous</a>
+    
+    
+      <a href="/boostcamp/closed-book-qa-t5/" class="pagination--pager" title="Closed-book QA with T5
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

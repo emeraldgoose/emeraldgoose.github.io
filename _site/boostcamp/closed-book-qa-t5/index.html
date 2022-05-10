@@ -1,0 +1,724 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Closed-book QA with T5 - gooooooooooose</title>
+<meta name="description" content="Closed-book Question Answering">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Closed-book QA with T5">
+<meta property="og:url" content="http://localhost:4000/boostcamp/closed-book-qa-t5/">
+
+
+  <meta property="og:description" content="Closed-book Question Answering">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-19T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/closed-book-qa-t5/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Closed-book QA with T5">
+    <meta itemprop="description" content="Closed-book Question Answering">
+    <meta itemprop="datePublished" content="2021-10-19T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Closed-book QA with T5
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-10-19T00:00:00+09:00">October 19, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#closed-book-question-answering">Closed-book Question Answering</a><ul><li><a href="#zero-shot-qa-performance-of-gpt-2">Zero-shot QA performance of GPT-2</a></li><li><a href="#open-book-qa-vs-closed-book-qa">Open-book QA vs. Closed-book QA</a></li></ul></li><li><a href="#text-to-text-format">Text-to Text Format</a><ul><li><a href="#closed-book-qa-as-text-to-text-format">Closed-book QA as Text-to-Text Format</a></li><li><a href="#text-to-text-format-1">Text-to-Text Format</a></li><li><a href="#t5">T5</a></li><li><a href="#pre-training-t5">Pre-training T5</a></li><li><a href="#using-t5-for-closed-book-qa">Using T5 for Closed-book QA</a></li><li><a href="#experiment-results--analysis">Experiment Results &amp; Analysis</a></li><li><a href="#experiment-setting">Experiment Setting</a></li><li><a href="#quanitative-examples">Quanitative Examples</a></li><li><a href="#false-negatives">False negatives</a></li><li><a href="#limitations">Limitations</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="closed-book-question-answering">Closed-book Question Answering</h2>
+
+<blockquote>
+  <p>모델이 이미 사전학습으로 대량의 지식을 학습했다면, 사전학습 언어모델 자체가 이미 하나의 knowledge storage라고 볼 수 있지 않을까? → 굳이 다른 곳에서 지식을 가져와야할 필요가 있을까?</p>
+</blockquote>
+
+<h3 id="zero-shot-qa-performance-of-gpt-2">Zero-shot QA performance of GPT-2</h3>
+
+<p>사전학습 시 전혀 본적없는 Natural Question 데이터셋에도 어느정도 대답이 가능함</p>
+
+<h3 id="open-book-qa-vs-closed-book-qa">Open-book QA vs. Closed-book QA</h3>
+
+<ul>
+  <li>지식을 찾는 방법
+    <ul>
+      <li>Open-book QA : 대량의 지식소스를 특정 문서 단위로 나누어 Dense/Sparse 형태로 표현한 후, qeury가 들어오면 가장 그와 관련된 문서를 search</li>
+      <li>Closed-book QA : 대량의 지식소스를 기반으로 사전학습된 언어모델이 그 지식을 기억하고 있을 것이라 가정하여 Search 과정없이 바로 정답을 생성함</li>
+    </ul>
+  </li>
+  <li>문제점
+    <ul>
+      <li>Open-book QA : 지식 소스를 저장하기 어려움, 검색하는 시간 소요</li>
+      <li>Closed-book QA : 사전학습된 언어 모델이 얼마나 지식을 잘 기억하고 있는지가 매우 중요함</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="text-to-text-format">Text-to Text Format</h2>
+
+<h3 id="closed-book-qa-as-text-to-text-format">Closed-book QA as Text-to-Text Format</h3>
+
+<p>Closed-book QA에 사용되는 방법은 Generation-based MRC와 유사함</p>
+
+<ul>
+  <li>단, 입력에 지문(Context)가 없이 질문만 들어간다는 것이 차이점</li>
+  <li>사전학습된 언어 모델은 BART와 같은 seq-to-seq 형태의 Transformer 모델을 사용함</li>
+  <li>Text-to-Text format에서는 각 입력값(질문)과 출력값(답변)에 대한 설명을 맨 앞에 추가함</li>
+</ul>
+
+<h3 id="text-to-text-format-1">Text-to-Text Format</h3>
+
+<ol>
+  <li>
+    <p>Text-to-text problem : input으로 text를 받아서, output으로 새로운 text를 생성하는 문제</p>
+
+    <p>다양한 text processing problem을 Text-to-text 문제로 변형</p>
+  </li>
+  <li>
+    <p>Text classification (MNLI)</p>
+
+    <p>MNLI: 두 개의 sentence (premise, hypothesis)가 주어지고, 이 둘의 관계를 예측하는 task (neutral, contradiction, entailment)</p>
+  </li>
+</ol>
+
+<h3 id="t5">T5</h3>
+
+<p>Text-to-Text format 이라는 형태로 데이터의 입출력을 만들어 거의 모든 자연어 처리 문제를 해결하도록 학습된 seq-to-seq 형태의 Transformer 모델</p>
+
+<h3 id="pre-training-t5">Pre-training T5</h3>
+
+<p>다양한 모델 구조, 사전학습 목표, 사전학습용 데이터, Fine-tuning 방법 등을 체계적으로 실험할 가장 성능이 좋은 방식을 선택하여 방대한 규모의 모델을 학습시킴</p>
+
+<h3 id="using-t5-for-closed-book-qa">Using T5 for Closed-book QA</h3>
+
+<p>Fine-tuning T5:</p>
+
+<ul>
+  <li>Fine-tuning: MRC 데이터셋 (TriviaQA, WebQuestions, Natural Question)의 QA pair를 활용</li>
+  <li>MRC 데이터셋에 제공되는 supporting document는 무시</li>
+  <li>input: Task-specific prefix cnrk → “trivia question: [question]”</li>
+  <li>Natural Question와 같이 답이 여러개인 경우 target → “answer: [answer1] answer: [answer2]”</li>
+</ul>
+
+<h3 id="experiment-results--analysis">Experiment Results &amp; Analysis</h3>
+
+<h3 id="experiment-setting">Experiment Setting</h3>
+
+<ul>
+  <li>Dataset : Open-domain QA 데이터셋 또는 MRC 데이터셋에서 지문을 제거하고 질문과 답변만 남긴 데이터셋을 활용</li>
+  <li>Salient Span Masking : 고유명사, 날짜 등 의미를 갖는 단위에 속하는 토큰 범위를 마스킹한 뒤 학습, Pre-trained 체크포인트에서 추가로 pre-training 함</li>
+  <li>Fine-tuning : Pre-trained T5 체크포인트를 Open-domain QA 학습 데이터셋으로 추가 학습</li>
+</ul>
+
+<h3 id="quanitative-examples">Quanitative Examples</h3>
+<p>대부분의 Open-book 스타일 모델 (문서 검색 후 기계 독해) 보다 뛰어난 성능을 보여줌<br />
+모델의 크기가 커질수록 성능이 증가함<br />
+Salient Span Masking이 성능을 크게 끌어올림</p>
+
+<h3 id="false-negatives">False negatives</h3>
+
+<p>Exact match 기준으로 오답으로 채점된 결과를 사람이 평가한 결과 오답이 아닌 경우</p>
+
+<ol>
+  <li>Phrasing Mismatch : 정답에 대한 표현이 다른 경우</li>
+  <li>Incomplete Annotation : 정답이 여러 개일 수 있으나 하나만 정답으로 처리되는 경우</li>
+  <li>Unanswerable : 질문을 한 시간이나 문맥에 따라서 정답이 달라지는 경우</li>
+</ol>
+
+<h3 id="limitations">Limitations</h3>
+
+<p>Closed-book QA의 한계점 및 앞으로의 개선 방향</p>
+
+<ol>
+  <li>모델의 크기가 커서 계산량이 많고 속도가 느림 → 더 효율적인 모델 필요</li>
+  <li>모델이 어떤 데이터로 답을 내는지 알 수 없음 → 결과의 해석 가능성(interpretability)을 높이는 연구 필요</li>
+  <li>모델이 참조하는 지식을 추가하거나 제거하기 어려움</li>
+</ol>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#mrc" class="page__taxonomy-item p-category" rel="tag">MRC</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-10-19T00:00:00+09:00">October 19, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/reducing-training-bias/" class="pagination--pager" title="Reducing Training Bias
+">Previous</a>
+    
+    
+      <a href="/boostcamp/OA-phrase-retrieval/" class="pagination--pager" title="QA with Phrase Retrieval
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

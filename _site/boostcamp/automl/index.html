@@ -1,0 +1,759 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>AutoML 이론 - gooooooooooose</title>
+<meta name="description" content="Overview">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="AutoML 이론">
+<meta property="og:url" content="http://localhost:4000/boostcamp/automl/">
+
+
+  <meta property="og:description" content="Overview">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-11-23T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/automl/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AutoML 이론">
+    <meta itemprop="description" content="Overview">
+    <meta itemprop="datePublished" content="2021-11-23T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">AutoML 이론
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-11-23T00:00:00+09:00">November 23, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#overview">Overview</a><ul><li><a href="#conventional-dl-training-pipeline">Conventional DL Training Pipeline</a></li><li><a href="#automlhpo-hyperparameter-optimization의-문제-정의">AutoML(HPO: Hyperparameter Optimization)의 문제 정의</a></li><li><a href="#dl-model-configurationarchitecture-hyperparameter의-특징">DL model Configuration(Architecture, Hyperparameter)의 특징</a></li><li><a href="#주어진-모델을-경량화하자-vs-새로운-경량-모델을-찾자">주어진 모델을 경량화하자 vs. 새로운 경량 모델을 찾자</a></li></ul></li><li><a href="#basic-concept">Basic concept</a><ul><li><a href="#일반적인-automl-pipeline">일반적인 AutoML Pipeline</a></li><li><a href="#bayesian-optimizationwith-gaussian-process-regression">Bayesian Optimization(with Gaussian Process Regression)</a></li><li><a href="#tree-structed-parzen-estimatortpe">Tree-structed Parzen Estimator(TPE)</a></li></ul></li><li><a href="#further-studies">Further Studies</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="overview">Overview</h2>
+
+<h3 id="conventional-dl-training-pipeline">Conventional DL Training Pipeline</h3>
+
+<ul>
+  <li>Data Engineering
+    <ul>
+      <li>일반적으로 Data Engineering은 Data Cleansing, Preprocessing, Feature Engineering, Select ML Algorihm, Set Hyperparameters 등의 일련을 거친다.</li>
+      <li>Model Architecture와 Hyperparamter를 선택한 후 Train &amp; Evaluate를 진행하는데 성능이 잘 나오면 Hyperparameter tuning을 진행하고 성능이 나오지 않으면 다른 모델을 선택해서 반복한다.</li>
+      <li>가장 큰 문제는 위의 과정을 사람이 한다.</li>
+      <li>AutoML은 이 반복적인 과정에서 사람을 빼내는 것이 목표이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="automlhpo-hyperparameter-optimization의-문제-정의">AutoML(HPO: Hyperparameter Optimization)의 문제 정의</h3>
+
+<ul>
+  <li>$\lambda^{*} \in \text{arg}_{\lambda \in \Lambda}\min{L(A_{\lambda}, D_{train}, D_{valid})}$</li>
+  <li>$\lambda$는 도메인 $\Lambda$에서의 ML 알고리즘 $A$이다.</li>
+  <li>$L()$는 하이퍼파라미터 $\lambda$를 사용한 $A$의 로스를 정의한 것이다.</li>
+  <li>HPO는 이 로스를 줄이는 하이퍼파라미터 $\lambda^{*}$를 찾는 문제를 말한다.</li>
+</ul>
+
+<h3 id="dl-model-configurationarchitecture-hyperparameter의-특징">DL model Configuration(Architecture, Hyperparameter)의 특징</h3>
+
+<ul>
+  <li>주요 타입 구분
+    <ul>
+      <li>Categorical : optimizer(Adam, SGD, …), module(Conv, Bottleneck, …)</li>
+      <li>Continuous : learning rate, regularizer param</li>
+      <li>Integer : batch_size, epochs</li>
+    </ul>
+  </li>
+  <li>Conditional : configuration에 따라 search space가 달라질 수 있음
+    <ul>
+      <li>Optimizer의 sampling에 따라서 optimizer parameter의 종류, search space도 달라짐</li>
+      <li>Module의 sample에 따라서 해당 module의 parameter의 종류, search space도 달라짐</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="주어진-모델을-경량화하자-vs-새로운-경량-모델을-찾자">주어진 모델을 경량화하자 vs. 새로운 경량 모델을 찾자</h3>
+
+<ul>
+  <li>기존 가지고 있는 모델을 경량화 하는 기법 : Pruning, Tensor decomposition</li>
+  <li>search를 통해서 경량 모델을 찾는 기법 : NAS(Neural Architecture Search), AutoML(Automated Machine Learning)</li>
+</ul>
+
+<h2 id="basic-concept">Basic concept</h2>
+
+<h3 id="일반적인-automl-pipeline">일반적인 AutoML Pipeline</h3>
+
+<ul>
+  <li>Configuration $\lambda$(Backbone, Hyperparameters)</li>
+  <li>Train with $\lambda$(Black box)</li>
+  <li>Evaluate Objective $f(\lambda)$(Accuracy, Speed, Size, …)</li>
+  <li>Blackbox Optimization $arg_\lambda \max{f(\lambda)}$</li>
+</ul>
+
+<h3 id="bayesian-optimizationwith-gaussian-process-regression">Bayesian Optimization(with Gaussian Process Regression)</h3>
+
+<ul>
+  <li>Evaluate까지는 일반적인 AutoML pipeline과 같다.</li>
+  <li>Update Surrogate Function($f(\lambda)$의 regression model)</li>
+  <li>Update Accquisition Function → 다음 configuration을 찾는다.</li>
+  <li>Gaussian Process Regression 간단 설명
+    <ul>
+      <li>train data $(X, Y)$가 있고 우리는 $Y \approx f(X) + e$ 처럼 $Y$를 잘 설명할 수 있는 함수 $f$를 찾는 것이 목적이다.</li>
+      <li>test data $(X_*, Y_*)$ 가 있을 때 우리는 $Y_* $ 를 제외한 나머지를 알고 있다. 우리는 $Y_*$ 는 $X, Y, X_*$ 와 연관이 있을 것이라는 가정을 통해  $X, Y, X_*$ 로 $Y_*$ 를 추정해야 한다. 연관에 대한 표현은 Kernel 함수 $K$ 로 한다.</li>
+      <li>$f(x)$를 입력 $x$에서의 가능한 함수의 분포(Random variable)로 생각한다. 그리고 각 Random variable들이 Multivariate Gaussian distribution 관계에 있다고 가정한다.
+        <ul>
+          <li>함수들의 분포가 Multivariate Gaussian distribution을 따른다고 가정</li>
+        </ul>
+      </li>
+      <li>
+        <p>함수 f가 Gaussian process를 따른다.</p>
+
+        <p><img src="https://drive.google.com/uc?export=view&amp;id=1q_m0cq4i2DWgudWytKe-SCxcabLP9Bmf" alt="" /></p>
+      </li>
+      <li>
+        <p>Gaussian Identities(Gaussian의 marginal, conditional도 Gaussian)</p>
+
+        <p><img src="https://drive.google.com/uc?export=view&amp;id=1Fk6MHQKINe0fMxa8-eMrBPk4ZRcxe5YG" alt="" /></p>
+      </li>
+    </ul>
+  </li>
+  <li>Surrogate Model(Function): f($\lambda$)의 Regression model
+    <ul>
+      <li>Objective $f(\lambda)$ 값을 예측하는 모델(지금까지 관측된 $f(\lambda)$들이 있을 때, 새로운 $\lambda^*$에 대한 objective $f(\lambda^*)$는 얼마일까?)</li>
+      <li>Objective를 estimate하는 surrogate model을 학습, 다음 좋은 $\lambda$를 선택하는 기준으로 사용</li>
+      <li>대표적인 Surrogate model로는 Gaussian Processing Regression(GPR) Model(Mean: 예측 f값, Var: uncertainty)</li>
+    </ul>
+  </li>
+  <li>Acquisition Function: 다음은 어디를 trial하면 좋을까?
+    <ul>
+      <li>Surrogate model의 output으로부터, 다음 시도해보면 좋을 $\lambda$를 계산하는 함수</li>
+      <li>Exploration vs. Exploitation(“불확실한 지점 vs. 알고있는 가장 좋은 곳”의 trade off)</li>
+      <li>Acquisition function의 max지점을 다음 iteration에서 trial
+        <ul>
+          <li>가장 좋은 위치에서 가장 큰 불확실성을 가진 곳을 탐색</li>
+          <li>Upper Confidence Bound(UCB) Aquisition function</li>
+          <li>$\alpha_t = \mu_{t-1} + \kappa\sigma_{t-1}$</li>
+          <li>$\mu$ : posterior mean(Exploitation), $\sigma$ : posterior variance(Exploration), $\kappa$ : hyperparameter(balance)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="tree-structed-parzen-estimatortpe">Tree-structed Parzen Estimator(TPE)</h3>
+
+<ul>
+  <li>GP의 약점 :
+    <ul>
+      <li>High-dim($O(N^3)$)</li>
+      <li>Conditional, continuous/discrete한 파라미터들의 혼재시 적용이 어려움 → 다른 테크닉이 필요</li>
+    </ul>
+  </li>
+  <li>TPE : GPR($p(f|\lambda)$)과 다르게 $p(\lambda|f)$와 $p(\lambda)$를 계산</li>
+  <li>TPE를 통한 다음 step의 $\lambda$ 계산 방법
+    <ul>
+      <li>현재까지 observation들을 특정 quantile(inverse CDF)로 구분 (예를들면 전체 중 75% bad, 25% good)</li>
+      <li>KDE(Kernel density estimation)으로 good observations 분포(p(g)), bad observations의 분포(p(b))를 각각 추정</li>
+      <li>p(g)/p(b)은 EI(Expected Improvement, aquisition function 중 하나)에 비례하므로 높은 값을 가지는 $\lambda$를 다음 step으로 설정</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="further-studies">Further Studies</h2>
+
+<ul>
+  <li>가장 큰 문제는 대부분의 task에 대해서, 한 iteration에도 많은 시간이 걸림</li>
+  <li>DL에서의 AutoML은 scalability 이슈가 더욱 대두됨</li>
+  <li>주요 키워드
+    <ul>
+      <li>Hyperparameter Gradient Descent</li>
+      <li>Meta-learning(Auto ‘AutoML’)</li>
+      <li>Multi-fidelity optimization : Data의 subset만을 활용, 작은 epoch, RL을 활용한 적은 trial, Image Downsampling 등등</li>
+    </ul>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#automl" class="page__taxonomy-item p-category" rel="tag">AutoML</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-11-23T00:00:00+09:00">November 23, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/lightweight-model/" class="pagination--pager" title="모델 경량화 소개
+">Previous</a>
+    
+    
+      <a href="/boostcamp/automl-augmentation/" class="pagination--pager" title="좋은 모델 찾기
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

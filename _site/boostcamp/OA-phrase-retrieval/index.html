@@ -1,0 +1,745 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>QA with Phrase Retrieval - gooooooooooose</title>
+<meta name="description" content="Phrase Retrieval in Open-Domain Qeustion Answering">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="QA with Phrase Retrieval">
+<meta property="og:url" content="http://localhost:4000/boostcamp/OA-phrase-retrieval/">
+
+
+  <meta property="og:description" content="Phrase Retrieval in Open-Domain Qeustion Answering">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-22T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/OA-phrase-retrieval/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="QA with Phrase Retrieval">
+    <meta itemprop="description" content="Phrase Retrieval in Open-Domain Qeustion Answering">
+    <meta itemprop="datePublished" content="2021-10-22T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">QA with Phrase Retrieval
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-10-22T00:00:00+09:00">October 22, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#phrase-retrieval-in-open-domain-qeustion-answering">Phrase Retrieval in Open-Domain Qeustion Answering</a><ul><li><a href="#current-limitation-of-retriever-reader-approach">Current limitation of Retriever-Reader approach</a></li><li><a href="#how-does-document-search-work">How does Document Search work?</a></li><li><a href="#one-solution-phrase-indexing">One solution: Phrase Indexing</a></li><li><a href="#query-agnostic-decomposition">Query-Agnostic Decomposition</a></li></ul></li><li><a href="#dense-sparse-representation-for-phrase">Dense-sparse Representation for Phrase</a><ul><li><a href="#dense-vectors-vs-sparse-vectors">Dense vectors vs. Sparse vectors</a></li><li><a href="#phrase-and-question-embedding">Phrase and Question Embedding</a></li><li><a href="#dense-representation">Dense representation</a></li><li><a href="#sparse-representation">Sparse representation</a></li><li><a href="#scalability-challenge">Scalability Challenge</a></li></ul></li><li><a href="#experiment-results--analysis">Experiment Results &amp; Analysis</a><ul><li><a href="#experiment-results---squad-open">Experiment Results - SQuAD-open</a></li><li><a href="#limitataion-in-phrase-retrieval-approach">Limitataion in Phrase Retrieval Approach</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="phrase-retrieval-in-open-domain-qeustion-answering">Phrase Retrieval in Open-Domain Qeustion Answering</h2>
+
+<h3 id="current-limitation-of-retriever-reader-approach">Current limitation of Retriever-Reader approach</h3>
+
+<ol>
+  <li>Error Propagation: 5-10개의 문서만 reader에게 전달</li>
+  <li>Query-dependent encoding: query에 따라 정답이 되는 answer span에 대한 encoding이 달라짐</li>
+</ol>
+
+<h3 id="how-does-document-search-work">How does Document Search work?</h3>
+
+<p>사전에 Dense 또는 Sparse vector를 만들고 indexing. MIPS와 같은 방법으로 검색</p>
+
+<p>Retrieve-Read 두 단계 말고 정답을 바로 search 할 수는 없을까?</p>
+
+<h3 id="one-solution-phrase-indexing">One solution: Phrase Indexing</h3>
+
+<p>“Barack Obama (1961-present) was the 44th President of the United States.”</p>
+
+<p>“<strong>Barack Obama …</strong>”, “… (<strong>1961</strong>-presnet) …”, 등의 모든 phrase들을 enumeration하고 phrase에 대한 임베딩을 맵핑해준다. 이때, 임베딩은 key vector가 되며 query가 들어왔을 때  query vector와 key vector에 대해 Nearest Neighbor Search를 통해 가장 가까운 phrase를 찾게 된다.</p>
+
+<p>또한, 새로운 질문이 들어오더라도 key vector의 업데이트 없이 가장 가까운 벡터로 연결시킬 수 있다.</p>
+
+<h3 id="query-agnostic-decomposition">Query-Agnostic Decomposition</h3>
+
+<p>기존 MRC 방법 : $\hat{a} = \text{argmax}<em>a F</em>{\theta}(a,q,d)$</p>
+
+<ul>
+  <li>$F_{\theta}$ : Model</li>
+  <li>$a$ : phrase, $q$ : question, $d$ : document</li>
+</ul>
+
+<p>Query-Agnostic Decomposition : $\hat{a} = \text{argmax}<em>a G</em>{\theta}(q) \cdot H_{\theta}(a,d)$</p>
+
+<ul>
+  <li>$G_{\theta}$ : Question encoder</li>
+  <li>$H_{\theta}$ : Phrase encoder</li>
+</ul>
+
+<p>기존 방식에서 $F$는 $G$와 $H$의 곱으로 나타내어 질 수 있는데 이 가정이 애초에 틀린 것 일수도 있다. $F$는 복잡한 함수이고 이 함수가 $G$와 $H$로 decomposed된다고 보장할 수 없다.</p>
+
+<p>따라서 Key Challenge는 다음과 같다.</p>
+
+<ul>
+  <li>Key Challenge : 어떻게 각 phrase를 vector space 상에 잘 mapping 할 수 있을까?</li>
+  <li>solution: Dense와 Sparse 임베딩을 둘 다 사용해보자</li>
+</ul>
+
+<h2 id="dense-sparse-representation-for-phrase">Dense-sparse Representation for Phrase</h2>
+
+<h3 id="dense-vectors-vs-sparse-vectors">Dense vectors vs. Sparse vectors</h3>
+
+<ul>
+  <li>Dense vectors : 통사적, 의미적 정보를 담는 데 효과적</li>
+  <li>Sparse vectors : 어휘적 정보를 담는 데 효과적</li>
+</ul>
+
+<h3 id="phrase-and-question-embedding">Phrase and Question Embedding</h3>
+
+<p>Dense vector와 sparse vector를 모두 사용하여 phrase (and question) embedding</p>
+
+<p>각각의 phrase embedding을 구할 때 Dense와 Sparse vector를 구하여 하나로 합쳐 inner product나 nearest search를 진행한다.</p>
+
+<h3 id="dense-representation">Dense representation</h3>
+
+<p>Dense vector를 만드는 방법</p>
+
+<ul>
+  <li>Pre-trained LM (e.g. BERT)를 이용</li>
+  <li>
+    <p>Start vector와 end vector를 재사용해서 메모리 사용량을 줄임</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1TpNKovvDBZbRFCPR6xzFOVumnBGGkRf6" alt="" /></p>
+  </li>
+</ul>
+
+<p>Question embedding</p>
+
+<ul>
+  <li>
+    <p>Question을 임베딩할 때는 [CLS] 토큰 (BERT)을 활용</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1SRmmNEyT39a58yVQKZAavbWGmb42lUB3" alt="" /></p>
+  </li>
+</ul>
+
+<h3 id="sparse-representation">Sparse representation</h3>
+
+<p>Sparse vector를 만드는 방법</p>
+
+<ul>
+  <li>
+    <p>문맥화된 임베딩(contextualized embedding)을 활용하여 가장 관련성이 높은 n-gram으로 sparse vector를 구성한다-</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1DXYxlr792-eAZxyAbPVnDLXEhMfYeAlf" alt="" /></p>
+  </li>
+  <li>각 Phrase에 주변에 있는 단어들과 유사성을 측정해 유사성을 각 단어에 해당하는 sparse vector상의 dimension에 넣어준다</li>
+  <li>TF-IDF와 비슷하지만 phrase마다 weight가 다르게 다이나믹하게 변하는 형태의 벡터로 만들어진다</li>
+</ul>
+
+<h3 id="scalability-challenge">Scalability Challenge</h3>
+
+<p>Wikipedia는 60 billion개의 phrase가 존재한다. 따라서 Storage, indexing, search의 scalability가 고려되어야 한다.</p>
+
+<ul>
+  <li>Storage : Pointer, filter, scalar quantization 활용</li>
+  <li>Search : FAISS를 활용해 dense vector에 대한 search를 먼저 수행 후 sparse vector로 ranking</li>
+</ul>
+
+<h2 id="experiment-results--analysis">Experiment Results &amp; Analysis</h2>
+
+<h3 id="experiment-results---squad-open">Experiment Results - SQuAD-open</h3>
+
+<p>DrQA(Retriever-reader)보다 +3.6% 성능, 68배 빠른 inference speeds</p>
+
+<h3 id="limitataion-in-phrase-retrieval-approach">Limitataion in Phrase Retrieval Approach</h3>
+
+<ol>
+  <li>Large storage required</li>
+  <li>최신 Retriever-reader 모델 대비 낮은 성능 → Decomposability gap이 하나의 원인</li>
+</ol>
+
+<p>Decomposability gap :</p>
+
+<ul>
+  <li>(기존) Question, passage, answer가 모두 함께 encoding</li>
+  <li>(Phrase retrieval) Question과 passage/answer가 각각 encoding → Question과 passage사이 attention 정보 X</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#mrc" class="page__taxonomy-item p-category" rel="tag">MRC</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-10-22T00:00:00+09:00">October 22, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/closed-book-qa-t5/" class="pagination--pager" title="Closed-book QA with T5
+">Previous</a>
+    
+    
+      <a href="/boostcamp/creating-data/" class="pagination--pager" title="데이터 제작
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

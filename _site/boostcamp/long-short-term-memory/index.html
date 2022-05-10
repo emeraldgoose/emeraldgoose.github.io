@@ -1,0 +1,727 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>LSTM &amp; GRU 정리 - gooooooooooose</title>
+<meta name="description" content="Long Short-Term Memory (LSTM)">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="LSTM &amp; GRU 정리">
+<meta property="og:url" content="http://localhost:4000/boostcamp/long-short-term-memory/">
+
+
+  <meta property="og:description" content="Long Short-Term Memory (LSTM)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-09-09T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/long-short-term-memory/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="LSTM &amp; GRU 정리">
+    <meta itemprop="description" content="Long Short-Term Memory (LSTM)">
+    <meta itemprop="datePublished" content="2021-09-09T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">LSTM &amp; GRU 정리
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-09-09T00:00:00+09:00">September 09, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</a></li><li><a href="#gated-recurrent-unitgru">Gated Recurrent Unit(GRU)</a></li><li><a href="#summary-on-rnnlstmgru">Summary on RNN/LSTM/GRU</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</h2>
+
+<ul>
+  <li>Original RNN에서의 Long term dependency를 개선한 모델이다.</li>
+  <li>매 타임스텝마다 변화하는 hidden state vector를 단기기억을 담당하는 기억소자로 볼 수 있다.</li>
+  <li>단기기억을 이 시퀀스가 타임스텝별로 진행됨에 따라서 단기기억을 보다 길게 기억할 수 있도록 개선한 모델이다.</li>
+  <li>LSTM은 RNN과 달리 이전 state에서 두 가지의 정보가 들어오는데 $C_{t-1}$와 $h_{t-1}$이다.
+    <ul>
+      <li>$C_{t-1}$을 Cell state라 부르고 $h_{t-1}$을 hidden state vector라 한다.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Long short-term memory</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1CohnbjI4kQSr2SldfOX3eEJmyz98ZKim" alt="" /></p>
+
+    <ul>
+      <li>i : Input gate</li>
+      <li>f : Forget gate</li>
+      <li>o : Output gate</li>
+      <li>g : Gate gate</li>
+      <li>W는 $x$와 $h$를 concat한 크기와 4개의 output의 크기만큼의 사이즈를 갖게된다.</li>
+      <li>이후에 sigmoid 값을 곱해 일정 비율의 정보만 갖도록 계산해주고 tanh를 통해 현재 타임스텝에서 유의미한 정보로 변환하게 된다.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Forget gate</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1AtU18zyX_52jI27o5tklVFQQZ-sEg7ed" alt="" width="400" /></p>
+
+    <ul>
+      <li>$f_t=\sigma(W_f\cdot [h_{t-1},x_t] + b_f)$</li>
+      <li>이전 cell state vector의 값 $C_{t-1}$과 $f_t$를 곱해 일부 정보를 잊게 한다.</li>
+    </ul>
+  </li>
+  <li>Generate information to be added and cut it by input gate
+    <ul>
+      <li>$i_t = \sigma(W_i\cdot [h_{t-1},x_t] + b_i)$</li>
+      <li>$\tilde{C_t}=tanh(W_C \cdot [h_{t-1},x_t] + b_C)$ → -1과 1사이의 값</li>
+    </ul>
+  </li>
+  <li>
+    <p>Generate new cell state by adding current information to previous cell state</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1kn9T6ESwAWZBlsP6VNelcHPegWr1nK1Q" alt="" width="400" /></p>
+
+    <ul>
+      <li>$C_t = f_t \cdot C_{t-1} + i_t \cdot \tilde{C_t}$</li>
+      <li>$\tilde{C}$와 input gate를 곱하는 것은 한번의 선형변환만으로 $C_{t-1}$의 더해줄 정보를 만들기가 어려운 경우 더해주고자 하는 값보다 좀 더 큰 값들로 구성된 $\tilde{C}$ 혹은 Gate gate로 만들어 준 후 그 값에서 dimension별로 특정 비율만큼의 정보를 덜어내서  $C_t$를 만들기 위함이다.</li>
+    </ul>
+  </li>
+  <li>Generate hidden state by passing cell state to tanh and output gate</li>
+  <li>
+    <p>Pass this hidden state to next time step, and output or next layer if needed</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1LvQH_SdxIDYbw7MYA9tOr7qMRP3XOEnU" alt="" width="400" /></p>
+
+    <ul>
+      <li>$o_t = \sigma(W_o[h_{t-1},x_t] + b_o)$</li>
+      <li>$h_t = o_t \cdot tanh(C_t)$
+        <ul>
+          <li>$0 ≤ o_t ≤ 1, -1 ≤ tanh(C_t) ≤ 1$</li>
+          <li>hidden state를 만들 때에도 dimension 별로 특정 비율로 작게 만들어서 구성된다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="gated-recurrent-unitgru">Gated Recurrent Unit(GRU)</h2>
+
+<ul>
+  <li>GRU는 적은 메모리와 빠른 계산시간이 가능하도록 만든 모델이다.</li>
+  <li>
+    <p>LSTM의 cell state vector와 hidden state vector를 일원화해서 hidden state 하나만 사용하는 것이 GRU의 특징</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=1fefitTJsa8D8tcGx3uKIrXL31MxH6_G9" alt="" width="400" /></p>
+
+    <ul>
+      <li>$z_t = \sigma(W_z \cdot [h_{t-1},x_t])$</li>
+      <li>$r_t = \sigma(W_r \cdot [h_{t-1},x_t])$</li>
+      <li>$\tilde{h_t} = tanh(W \cdot [r_t \cdot h_{t-1},x_t])$</li>
+      <li>$h_t = (1 - z_t)\cdot h_{t-1} + z_t\cdot \tilde{h_t}$
+        <ul>
+          <li>$h_{t-1}$와 $\tilde{h_t}$ 두 정보를 더하는 것이 아닌 두 정보간의 가중평균을 내는 형태로 계산된다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Backpropagation in LSTM? GRU
+    <ul>
+      <li>
+        <p>Uninterrupted gradient flow!</p>
+
+        <p><img src="https://drive.google.com/uc?export=view&amp;id=1LVrUy6fcQeE1o8WP1Vh3_Y6a5gcn8GAb" alt="" width="1000" /></p>
+      </li>
+      <li>forget gate를 곱하는 것이 아닌 덧셈으로 계산하기 때문에 gradient vanish / explosion problem이 없어진다.</li>
+      <li>덧셈연산은 backprop을 수행할 때 gradient를 복사해주는 연산이 되고 따라서 항상 동일한 $W_{hh}$가 곱해지는 Original RNN에 비해 멀리있는 타임스텝까지 Gradient를 큰 변형없이 전달할 수 있다.</li>
+      <li>이를 통해 긴 타임스텝간에 존재하는 Long term dependency문제를 해결할 수 있게 된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="summary-on-rnnlstmgru">Summary on RNN/LSTM/GRU</h2>
+
+<ul>
+  <li>RNN은 다양한 길이를 가질 수 있는 시퀀스 데이터에 특화된 유연한 형태의 딥러닝 모델 구조이다.</li>
+  <li>Vanila RNN(Original RNN)은 구조가 간단하지만 학습 시에 Gradient Vanishing/Explosion 문제가 있어서 실제로 많이 사용하지 않는다.</li>
+  <li>LSTM이나 GRU를 실제로 많이 사용하고 Cell state vector 혹은 hidden state vector에서 업데이트하는 과정이 덧셈이기 때문에 Long term dependency문제를 해결할 수 있다.</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#nlp" class="page__taxonomy-item p-category" rel="tag">nlp</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-09-09T00:00:00+09:00">September 9, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/atcoder/abc214/" class="pagination--pager" title="AtCoder Beginner Contest 214
+">Previous</a>
+    
+    
+      <a href="/boostcamp/recurrent-neural-network/" class="pagination--pager" title="Basics of Recurrent Nerual Networks (RNN)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

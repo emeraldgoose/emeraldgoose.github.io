@@ -1,0 +1,995 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>CNN 정리 - gooooooooooose</title>
+<meta name="description" content="Convolution    Continuous convolution            $(f * g)(t) = \int f(\tau)g(t-\tau)d\tau = \int f(t-\tau)g(t)d\tau$           Discrete convolution            $(f * g)(t) = \sum_{i=-\infty}^{\infty} f(\tau)g(t-\tau)d\tau = \sum_{i=-\infty}^{\infty} f(t-\tau)g(t)d\tau$           2D image convolution            $(I * K)(i,j) = \sum_m \sum_n I(m,n)K(i-m,j-n) = \sum_m \sum_n I(i-m,i-n)K(m,n)$           filter 값과 이미지의 값을 컨볼루션 연산한 값을 출력한다.   2D 컨볼루션 연산으로 Blur, Emboss, Outline 등의 결과를 얻을 수 있다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="CNN 정리">
+<meta property="og:url" content="http://localhost:4000/boostcamp/cnn/">
+
+
+  <meta property="og:description" content="Convolution    Continuous convolution            $(f * g)(t) = \int f(\tau)g(t-\tau)d\tau = \int f(t-\tau)g(t)d\tau$           Discrete convolution            $(f * g)(t) = \sum_{i=-\infty}^{\infty} f(\tau)g(t-\tau)d\tau = \sum_{i=-\infty}^{\infty} f(t-\tau)g(t)d\tau$           2D image convolution            $(I * K)(i,j) = \sum_m \sum_n I(m,n)K(i-m,j-n) = \sum_m \sum_n I(i-m,i-n)K(m,n)$           filter 값과 이미지의 값을 컨볼루션 연산한 값을 출력한다.   2D 컨볼루션 연산으로 Blur, Emboss, Outline 등의 결과를 얻을 수 있다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-08-13T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/cnn/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="CNN 정리">
+    <meta itemprop="description" content="Convolution  Continuous convolution          $(f * g)(t) = \int f(\tau)g(t-\tau)d\tau = \int f(t-\tau)g(t)d\tau$        Discrete convolution          $(f * g)(t) = \sum_{i=-\infty}^{\infty} f(\tau)g(t-\tau)d\tau = \sum_{i=-\infty}^{\infty} f(t-\tau)g(t)d\tau$        2D image convolution          $(I * K)(i,j) = \sum_m \sum_n I(m,n)K(i-m,j-n) = \sum_m \sum_n I(i-m,i-n)K(m,n)$        filter 값과 이미지의 값을 컨볼루션 연산한 값을 출력한다.  2D 컨볼루션 연산으로 Blur, Emboss, Outline 등의 결과를 얻을 수 있다.">
+    <meta itemprop="datePublished" content="2021-08-13T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">CNN 정리
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-08-13T00:00:00+09:00">August 13, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#convolution">Convolution</a></li><li><a href="#rgb-image-convolution">RGB Image Convolution</a></li><li><a href="#stack-of-convolultion">Stack of Convolultion</a></li><li><a href="#convolutional-neural-networks">Convolutional Neural Networks</a></li><li><a href="#stride">Stride</a></li><li><a href="#padding">Padding</a></li><li><a href="#convolution-arithmetic">Convolution Arithmetic</a><ul><li><a href="#exercise">Exercise</a></li></ul></li><li><a href="#modern-convolutional-neural-networks">Modern Convolutional Neural Networks</a><ul><li><a href="#1x1-convolution">1x1 Convolution</a></li><li><a href="#ilsvrc">ILSVRC</a></li><li><a href="#alexnet">AlexNet</a></li><li><a href="#vanishing-gradient-problem">Vanishing gradient problem</a></li><li><a href="#vggnet">VGGNet</a></li><li><a href="#googlenet">GoogLeNet</a><ul><li><a href="#inception-block">Inception Block</a></li></ul></li><li><a href="#quiz">Quiz</a></li><li><a href="#resnet">ResNet</a></li><li><a href="#densenet">DenseNet</a></li><li><a href="#summary">Summary</a></li></ul></li><li><a href="#computer-vision-applications">Computer Vision Applications</a><ul><li><a href="#semantic-segmentation">Semantic Segmentation</a></li><li><a href="#fully-convolutional-networkfcn">Fully Convolutional Network(FCN)</a></li><li><a href="#deconvolutionconv-transpose">Deconvolution(conv transpose)</a></li><li><a href="#detection">Detection</a><ul><li><a href="#r-cnn">R-CNN</a></li><li><a href="#sppnet">SPPNet</a></li></ul></li><li><a href="#fast-r-cnn">Fast R-CNN</a></li><li><a href="#faster-r-cnn">Faster R-CNN</a><ul><li><a href="#region-proposal-network">Region Proposal Network</a></li></ul></li><li><a href="#yolo">YOLO</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="convolution">Convolution</h2>
+<ul>
+  <li>Continuous convolution
+    <ul>
+      <li>$(f * g)(t) = \int f(\tau)g(t-\tau)d\tau = \int f(t-\tau)g(t)d\tau$</li>
+    </ul>
+  </li>
+  <li>Discrete convolution
+    <ul>
+      <li>$(f * g)(t) = \sum_{i=-\infty}^{\infty} f(\tau)g(t-\tau)d\tau = \sum_{i=-\infty}^{\infty} f(t-\tau)g(t)d\tau$</li>
+    </ul>
+  </li>
+  <li>2D image convolution
+    <ul>
+      <li>$(I * K)(i,j) = \sum_m \sum_n I(m,n)K(i-m,j-n) = \sum_m \sum_n I(i-m,i-n)K(m,n)$</li>
+    </ul>
+  </li>
+  <li>filter 값과 이미지의 값을 컨볼루션 연산한 값을 출력한다.</li>
+  <li>2D 컨볼루션 연산으로 Blur, Emboss, Outline 등의 결과를 얻을 수 있다.</li>
+</ul>
+
+<h2 id="rgb-image-convolution">RGB Image Convolution</h2>
+<ul>
+  <li>이미지에 여러가지의 필터를 적용하게 되면 feature의 개수는 필터의 개수가 된다.</li>
+</ul>
+
+<h2 id="stack-of-convolultion">Stack of Convolultion</h2>
+<ul>
+  <li>(32,32,3) 이미지에 4개의 (5,5,3) 필터를 적용하여 (28,28,4)의 결과를 얻을 수 있다.</li>
+  <li>다시 10개의 (5,5,4) 필터를 적용하여 (24,24,10)의 결과를 얻을 수 있다.</li>
+</ul>
+
+<h2 id="convolutional-neural-networks">Convolutional Neural Networks</h2>
+<ul>
+  <li>일반적인 CNN은 Convolution layer, pooling layer, fully connected layer로 구성된다.
+    <ul>
+      <li>convolution layer는 컨볼루션 연산을 계산하는 레이어이다.</li>
+      <li>convolution layer와 pooling layer는 feature의 정보를 추출하는 역할을 한다.</li>
+      <li>fully connected layer는 마지막에 회귀를 하거나 분류를 하여 결과를 만드는 역할을 한다.</li>
+    </ul>
+  </li>
+  <li>fully connected layer가 최근은 사라지는 추세이다. 모델을 딥하게 가져가면서 파라미터 숫자를 줄이는 방법으로 연구되고 있다.</li>
+  <li>Convolution layer는 각 필터당 하나의 feature map이 형성되고, 그 feature map을 스택처럼 쌓아둔 것이다</li>
+  <li>많은 수의 필터를 사용하게 되면 그 만큼 많은 양의 feature map을 사용하게 되고 더 많은 수의 파라미터들을 필요로하게 된다. -&gt; 오버피팅 가능성 증가</li>
+  <li>차원을 줄일 필요가 있고 그 역할을 하는 것이 Pooling layer이다.</li>
+  <li>Pooling layer에는 두 가지 타입이 있는데
+    <ul>
+      <li>Max pooling layer : 각 feature map을 입력으로 받고 window 안에 포함된 픽셀들 중 최댓값을 뽑는 레이어이다.</li>
+      <li>Global average pooling layer : 각 feature map 상의 노드값들의 평균을 뽑아주는 레이어이다. 이때 global average pooling layer의 최종 output은 single value로 크기가 감소된 feature map이 된다. 이런 방식으로 이 레이어는 3D array를 input으로 하여 벡터를 리턴한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="stride">Stride</h2>
+<ul>
+  <li>stride = 1 : 한 픽셀 옮겨서 계산하는 방법 (인풋 7, 필터 3이라면 아웃풋이 5가 나온다)</li>
+  <li>stirde = 2 : 두 픽셀 옮겨서 계산하는 방법(인풋 7, 필터 3이라면 아웃풋이 3이 나온다)</li>
+</ul>
+
+<h2 id="padding">Padding</h2>
+<ul>
+  <li>패딩을 넣어 가장자리도 conv연산을 할 수 있게 한다.</li>
+</ul>
+
+<h2 id="convolution-arithmetic">Convolution Arithmetic</h2>
+<ul>
+  <li>모델의 파라미터 수 계산을 할 줄 알아야 한다.</li>
+  <li>(W 40,H 50,C 128)에 (3,3)커널을 적용하고 패딩 1, 스트라이드 1을 주었을 때 아웃풋이 (40,50,64)일 때 파라미터 수?
+    <ul>
+      <li>3 x 3 x 128 x 64 = 73728</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="exercise">Exercise</h3>
+<ul>
+  <li>AlexNet의 파라미터 수?</li>
+  <li>첫 번째
+    <ul>
+      <li>정보
+        <ul>
+          <li>인풋 (224,224,3)</li>
+          <li>필터 크기 (11,11) -&gt; 커널의 채널은 3</li>
+          <li>stride 4</li>
+          <li>아웃풋 (55,55,28)이 2개가 있다.</li>
+        </ul>
+      </li>
+      <li>따라서 파라미터 수는 11 x 11 x 3 x 48 x 2 = 35K</li>
+    </ul>
+  </li>
+  <li>두 번째
+    <ul>
+      <li>정보
+        <ul>
+          <li>필터 크기 (5,5)</li>
+          <li>아웃풋 (27,27,128)이 2개가 있다.</li>
+        </ul>
+      </li>
+      <li>따라서 파라미터 수는 5 x 5 x 48 x 128 x 2 = 307K</li>
+    </ul>
+  </li>
+  <li>세 번재
+    <ul>
+      <li>정보
+        <ul>
+          <li>필터 크기 (3,3)</li>
+          <li>아웃풋 (13,13,192)이 2개가 있다.</li>
+          <li>인풋에 필터를 통과한 결과가 현재 아웃풋 2개에 모두 계산된다.</li>
+        </ul>
+      </li>
+      <li>따라서 파라미터 수는 3 x 3 x 128 x 2 x 192 x 2 = 884K</li>
+    </ul>
+  </li>
+  <li>네 번째
+    <ul>
+      <li>정보
+        <ul>
+          <li>필터 크기 (3,3)</li>
+          <li>아웃풋 (13,13,192)</li>
+          <li>인풋에 필터를 통과한 결과가 하나의 아웃풋에 계산된다.</li>
+        </ul>
+      </li>
+      <li>따라서 파라미터 수는 3 x 3 x 192 x 192 x 2 = 663K</li>
+    </ul>
+  </li>
+  <li>다섯 번째
+    <ul>
+      <li>정보
+        <ul>
+          <li>필터 크기 (3,3)</li>
+          <li>아웃풋 (13,13,128)</li>
+          <li>인풋 결과가 하나의 아웃풋에 계산</li>
+        </ul>
+      </li>
+      <li>따라서 파라미터 수는 3 x 3 x 192 x 128 x 2 = 442K</li>
+    </ul>
+  </li>
+  <li>Dense layer
+    <ul>
+      <li>이 레이어에서의 파라미터 수는 인풋의 개수와 아웃풋의 개수의 곱이다.</li>
+      <li>13 x 13 x 128 x 2 x 2048 x 2 = 177M</li>
+      <li>2048 x 2 x 2048 x 2 = 16M</li>
+      <li>2048 x 2 x 1000 = 4M</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="modern-convolutional-neural-networks">Modern Convolutional Neural Networks</h2>
+
+<h3 id="1x1-convolution">1x1 Convolution</h3>
+<ul>
+  <li>Dimension reduction이 목표이다.</li>
+  <li>채널를 줄임으로써 파라미터의 수를 줄이는 방법
+    <ul>
+      <li>인풋의 크기가 256x256x128일때 커널의 크기가 1x1x32로 가져가면서 아웃풋의 크기가 256x256x32가 되도록 한다.</li>
+      <li>이때 파라미터 수는 1x1x128x32가 되면서 파라미터 수가 줄어든다.</li>
+    </ul>
+  </li>
+  <li>bottleneck architecture</li>
+</ul>
+
+<h3 id="ilsvrc">ILSVRC</h3>
+<ul>
+  <li>ImageNet Large-Scale Visual Recognition Challenge</li>
+  <li>1000개의 다른 카테고리</li>
+  <li>classsfification, Dection, Localization, Segmentation</li>
+  <li>2015년 이후 사람보다 에러가 좋아졌다</li>
+</ul>
+
+<h3 id="alexnet">AlexNet</h3>
+<ul>
+  <li>두 개로 나눠진 이유는 GPU의 메모리가 모자라기 때문</li>
+  <li>ReLU activation 사용</li>
+  <li>Local response normalizatoin, Overlapping pooling</li>
+  <li>data augmentation</li>
+  <li>dropout</li>
+  <li>ReLU Activation
+    <ul>
+      <li>선형모델의 좋은 성질들을 가지고 있다.</li>
+      <li>gradient descent로 학습하기 쉽다</li>
+      <li>좋은 generalization</li>
+      <li>vanishing gradient problem을 해결해준다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vanishing-gradient-problem">Vanishing gradient problem</h3>
+<ul>
+  <li>학습을 진행할 수록 기울기가 소실되는 문제</li>
+  <li>히든 레이어가 많은 MLP에서 레이어를 거쳐가면서 갈수록 전달되는 오차가 크게 줄어들어 더 이상 학습되지 않는 현상이 일어나는데 이를 기울기 소실 문제라 한다.</li>
+  <li>기울기가 0으로 소실되어 버리면 네트워크의 학습은 매우 느려지고 학습이 다 이루어지지 않은 상태에서 학습이 멈춰버린다. 이를 지역 최솟값에 도달한다고 표현한다.
+    <ul>
+      <li>sigmoid 함수의 경우 출력값이 1아래여서 기울기 소멸 문제가 빠르게 일어난다. 매우 작은 수 끼리 계속 곱하면서 연산하게 되면 0에 가까워지는 것을 생각하면 된다.</li>
+    </ul>
+  </li>
+  <li>이를 해결하기 위해 사라져가는 성질을 갖지 않은 비선형 함수를 활성화함수로 선택하면 해결할 수 있다.
+    <ul>
+      <li>ReLU</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vggnet">VGGNet</h3>
+<ul>
+  <li>3x3 컨볼루션 필터만 사용 &lt;- 중요
+    <ul>
+      <li>3x3 필터 두번이면 5x5하나 사용하는 것과 같아진다. 그러나 파라미터의 수는 3x3이 적다</li>
+    </ul>
+  </li>
+  <li>fully connected layers에 1x1 컨볼루션을 사용</li>
+</ul>
+
+<h3 id="googlenet">GoogLeNet</h3>
+<ul>
+  <li>비슷하게 보이는 레이어가 반복 (network-in-network, NiN 구조)</li>
+  <li>3x3, 5x5 conv 연산하기 전에 1x1 conv을 추가해서 파라미터 수를 줄인다</li>
+  <li>1x1 convoultion은 채널 방향으로 dimension을 줄이는 효과가 있다.
+    <ul>
+      <li>하지만 1x1 conv는 필터의 효과가 없지만 파라미터 수를 줄이는 데 효과가 크다</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="inception-block">Inception Block</h4>
+<ul>
+  <li>1x1 컨볼루션을 사용하여 약 30%의 파라미터 수를 줄일 수 있다.
+    <ul>
+      <li>input_C=128, 3x3 filter -&gt; output_C=128 =&gt; 3x3x128x128 = 147456</li>
+      <li>input_C=128, 1x1 filter -&gt; output_C=32, 3x3 filter -&gt; output_C=128
+  =&gt; 1x1x128x32 + 3x3x32x128 = 40960</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="quiz">Quiz</h3>
+<ul>
+  <li>AlexNet(8-layer) : 60M</li>
+  <li>VGGNet(19-layer) : 110M</li>
+  <li>GoogLeNet(22-layer) : 4M</li>
+  <li>-&gt; GoogLeNet이 AlexNet보다 3배는 깊어졌지만 파라미터 수가 많이 줄었다.</li>
+</ul>
+
+<h3 id="resnet">ResNet</h3>
+<ul>
+  <li>뉴럴 네트워크를 깊게 내려갈 수록 학습하기 어려워진다.
+    <ul>
+      <li>파라미터 수가 많아질 수록 오버피팅의 가능성이 커진다.</li>
+      <li>오버피팅이 아니어도 train 에러가 더 작은데도 불구하고 saturated 된 test 에러가 더 커진다.</li>
+    </ul>
+  </li>
+  <li>그래서 ResNet은 identity map을 추가한다.
+    <ul>
+      <li>입력을 layer의 출력에 바로 연결시키는 skip connection을 사용한다</li>
+      <li>입력을 x라 하고 중간 레이어 출력을 F(x), 마지막 출력을 H(x)라 할 때 skip connection을 통해 H(x)=F(x)+x로 변경된다
+        <ul>
+          <li>F(x) = H(x) - x, F(x)를 학습한다는 것은 H(x)와 x의 차이을 학습한다는 것이다</li>
+          <li>H(x) - x인 잔차(residual)(=차이,나머지)를 학습하는 레이어이다. 그래서 이름이 ResNet이 되었다</li>
+        </ul>
+      </li>
+      <li>이런 방식을 통해 기존 모델들은 H(x)를 얻기 위한 학습을 한 반면에 ResNet은 F(x)가 0이 되는 방향으로 학습한다</li>
+      <li>또한, x와 F(x)의 dimension의 차이가 있다면 dimension을 맞추기 위한 파라미터 w를 추가해서 학습한다</li>
+    </ul>
+  </li>
+  <li>특이한 점은 batch norm이 컨볼루션 이후에 이루어진다.</li>
+  <li>bottleneck 아키텍쳐</li>
+</ul>
+
+<h3 id="densenet">DenseNet</h3>
+<ul>
+  <li>채널의 concatenation을 진행</li>
+  <li>채널이 많아지면서 커널의 채널도 같이 증가하면서 파라미터 수가 증가한다.</li>
+  <li>채널이 많아지는 것을 막기 위해 중간에 채널을 중간에 줄여준다.
+    <ul>
+      <li>채널을 줄이기 위해 1x1 conv를 추가</li>
+    </ul>
+  </li>
+  <li>두 가지 block을 통해 연산
+    <ul>
+      <li>Dense block : 채널의 concatenate</li>
+      <li>Transitoin block : 채널의 수를 줄이는 block</li>
+      <li>Dense block으로 채널을 늘리고 Transition block으로 채널을 줄인다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="summary">Summary</h3>
+<ul>
+  <li>key takeways
+    <ul>
+      <li>VGG : repeated 3x3 blocks</li>
+      <li>GoogLeNet : 1x1 convolution</li>
+      <li>ResNet : skip-connection</li>
+      <li>DenseNet : concatenation</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="computer-vision-applications">Computer Vision Applications</h2>
+
+<h3 id="semantic-segmentation">Semantic Segmentation</h3>
+<ul>
+  <li>어떤 이미지가 있을 때 픽셀 하나하나 분리하는 것</li>
+  <li>모든 픽셀단위로 어떤 분류에 속하는지 찾고 싶은 것</li>
+  <li>자율주행에 사용</li>
+</ul>
+
+<h3 id="fully-convolutional-networkfcn">Fully Convolutional Network(FCN)</h3>
+<ul>
+  <li>dense layer의 경우 conv 연산 후에 flat을 하고 dense과정을 거친다</li>
+  <li>FCN는 conv 연산 후에 다시 conv 연산을 거친다.</li>
+  <li>둘의 방식 모두 파라미터 수의 변화는 없다.</li>
+  <li>dense layer를 FCN로 바꾸는 것을 Convolutionalization이라 한다.</li>
+  <li>FCN의 가장 큰 특징은 input dimension에 독립적인 것이다.
+    <ul>
+      <li>FCN는 이미지가 커지던 작아지던 상관없이 network가 돌아간다.</li>
+      <li>동작의 결과는 heatmap과 같다. 찾고자 하는 object의 위치가 heatmap으로 출력된다.</li>
+      <li>FCN은 인풋의 어떤 사이즈에도 돌아가지만 아웃풋 dimension도 줄어들게 된다. 그래서 coarse output(spatial resolution이 떨어져있는)을 원래의 dense pixels로 바꾸는 과정이 필요하다</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="deconvolutionconv-transpose">Deconvolution(conv transpose)</h3>
+<ul>
+  <li>컨볼루션의 역연산이라고 하지만 컨볼루션을 역연산할 수는 없다.</li>
+  <li>패딩을 많이 줘서 계산</li>
+  <li>?</li>
+</ul>
+
+<h3 id="detection">Detection</h3>
+<h4 id="r-cnn">R-CNN</h4>
+<ul>
+  <li>이미지 안에서 2000개의 region을 뽑고 CNN을 통해 계산</li>
+  <li>정확하지는 않음</li>
+  <li>이미지 안에서 2000개의 이미지(patch)를 모두 CNN에 넣는다 -&gt; 오래걸림</li>
+</ul>
+
+<h4 id="sppnet">SPPNet</h4>
+<ul>
+  <li>CNN을 한 번만 돌리는 방법</li>
+  <li>이미지 전체에서 Convolutional feature map을 만든 후에 뽑힌 bounding box에 해당하는 convolutional feature map의 tensor만 가져오는 방법</li>
+  <li>컨볼루션 내용은 한 번 돌지만 feature map의 subtensor만 뜯어오는 것을 region별로 하기 때문에 R-CNN보다 빠르다</li>
+  <li>그러나 feature map을 만들기 위해 여러개의 subtensor의 벡터를 만들어야 하므로 느리다</li>
+</ul>
+
+<h3 id="fast-r-cnn">Fast R-CNN</h3>
+<ul>
+  <li>SPPNet의 컨셉과 비슷하다</li>
+  <li>RoI feature map이라는 것을 통해 bounding box regression과 classification을 한다</li>
+</ul>
+
+<h3 id="faster-r-cnn">Faster R-CNN</h3>
+<ul>
+  <li>Faster R-CNN = Region Proposal Network + Fast R-CNN</li>
+  <li>바운딩 박스를 뽑는 것도 네트워크로 학습하자라는 아이디어</li>
+</ul>
+
+<h4 id="region-proposal-network">Region Proposal Network</h4>
+<ul>
+  <li>바운딩 박스 안에 물체가 있는지 없는지 판단하는 것. 물체의 종류는 뒷단의 네트워크가 처리</li>
+  <li>anchor box는 미리 정해놓은 박스의 크기</li>
+  <li>region sizes (128,256,512)와 비율(1:1,1:2,2:1)을 정해서 총 9개의 박스 중 하나를 선택</li>
+  <li>4개의 바운딩 박스 파라미터를 통해 바운딩 박스를 얼마나 키우고 줄일지 결정</li>
+  <li>해당 바운딩 박스가 쓸모있는지 분류한다</li>
+</ul>
+
+<h3 id="yolo">YOLO</h3>
+<ul>
+  <li>Faster R-CNN보다 매우 빠르게 동작한다.</li>
+  <li>이미지 한장에서 아웃풋이 바로 나온다. 바운딩 박스를 뽑는 작업이 없다.</li>
+  <li>이미지가 들어오면 S x S 그리드로 나눈다. 각각의 그리드 셀은 B개의 바운딩 박스를 예측하게 된다.
+    <ul>
+      <li>각각의 바운딩 박스는 x,y,w,h와 confidence score값을 예측하게된다.</li>
+      <li>confidence score는 물체가 있을 확률과 물체와 실제 물체의 바운딩 박스와 예측된 바운딩 박스가 얼마나 겹치는지에 대한 점수)</li>
+    </ul>
+  </li>
+  <li></li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#cnn" class="page__taxonomy-item p-category" rel="tag">cnn</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-08-13T00:00:00+09:00">August 13, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/statistics/" class="pagination--pager" title="Statistics 정리
+">Previous</a>
+    
+    
+      <a href="/boostcamp/generative-model/" class="pagination--pager" title="Generative models 정리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

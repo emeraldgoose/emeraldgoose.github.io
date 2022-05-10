@@ -1,0 +1,1750 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-05-10T17:27:24+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">AtCoder Beginner Contest 250</title><link href="http://localhost:4000/atcoder/abc250/" rel="alternate" type="text/html" title="AtCoder Beginner Contest 250" /><published>2022-05-10T00:00:00+09:00</published><updated>2022-05-10T00:00:00+09:00</updated><id>http://localhost:4000/atcoder/abc250</id><content type="html" xml:base="http://localhost:4000/atcoder/abc250/"><![CDATA[<h2 id="a-adjacent-squares">A. Adjacent Squares</h2>
+<p>(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.<br />
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">h</span><span class="o">&gt;&gt;</span><span class="n">w</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">r</span><span class="o">&gt;&gt;</span><span class="n">c</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">h</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="n">ans</span><span class="o">-=</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">w</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="n">ans</span><span class="o">-=</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">h</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">r</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">r</span><span class="o">==</span><span class="n">h</span><span class="p">))</span> <span class="n">ans</span><span class="o">--</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">w</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">c</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">c</span><span class="o">==</span><span class="n">w</span><span class="p">))</span> <span class="n">ans</span><span class="o">--</span><span class="p">;</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="b-enlarged-checker-board">B. Enlarged Checker Board</h2>
+<p>B번 ‘.’출력하고 B번 ‘#’출력하면서 전체 길이 $N \times B$를 $N \times A$번 출력하면 된다.<br />
+단, A번 마다 먼저 출력하는 ‘.’와 ‘#’의 순서가 바뀐다.<br />
+테스트케이스를 보면 쉽게 이해할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">b</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"."</span><span class="p">;</span>
+      <span class="k">else</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"#"</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">b</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"#"</span><span class="p">;</span>
+      <span class="k">else</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"."</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">a</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">a</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">)</span> <span class="n">foo</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">else</span> <span class="n">foo</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="c-adjacent-swaps">C. Adjacent Swaps</h2>
+<p>$2 ≤ N ≤ 2 \times 10^5$ 범위를 가진 N이 주어졌을 때, 1부터 N까지 적혀있는 공이    일렬로 정렬되어 있다.<br />
+$x_i$인 쿼리가 입력될 때 해당 숫자가 적혀있는 공의 위치와 오른쪽에 있는 공의 위치를 교환한다. 가장 오른쪽에 있는 공의 경우 왼쪽 공과 바꿔준다.<br />
+$1 ≤ Q ≤ 2 \times 10^5$ 인 쿼리가 들어오면서 시간 복잡도 $O(Q)$에 문제를 해결해야 한다.<br />
+숫자가 적혀있는 공의 위치를 저장하는 배열(v2p)과 어떤 위치에 있는 공의 번호를 저장하는 배열(p2v)을 두어 $O(1)$의 시간복잡도로 두 공의 위치를 찾을 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">q</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">q</span><span class="p">;</span>
+  <span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v2p</span><span class="p">,</span><span class="n">p2v</span><span class="p">;</span> <span class="c1">// idx-&gt;lo, lo-&gt;idx</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">v2p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">p2v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">q</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">n</span><span class="p">)</span> <span class="n">y</span><span class="o">=</span><span class="n">p2v</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">else</span> <span class="n">y</span><span class="o">=</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]],</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">y</span><span class="p">]]);</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">v2p</span><span class="p">[</span><span class="n">y</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">:</span> <span class="n">p2v</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">it</span><span class="p">.</span><span class="n">second</span><span class="o">&lt;&lt;</span><span class="sc">' '</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="d-250-like-number">D. 250-like Number</h2>
+<p>$1 ≤ N ≤ 10^{18}$인 $N$이 주어졌을 때 아래 조건을 만족하는 $k$의 개수를 출력하는 문제이다.</p>
+<ul>
+  <li>$k = p \times q^3$, ($p &lt; q$ 를 만족하는 소수 $p$, $q$)</li>
+  <li>$k ≤ N$ 조건에서 $p \times q^3 ≤ N \rightarrow q^3 ≤ N/p$을 알 수 있다.</li>
+</ul>
+
+<p>$p^3 &lt; X ≤ N/p$인 $X$의 개수를 upperbound로 세어주면 된다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="n">ll</span> <span class="n">n</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="c1">// k&lt;=n -&gt; p * q^3 &lt;= n -&gt; q^3 &lt;= (n/p) -&gt; upperbound?</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temp</span><span class="p">(</span><span class="mf">1e6</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">mul</span><span class="p">;</span>
+  <span class="n">set</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">prime</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mf">1e6</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">prime</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">)</span> <span class="n">mul</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="mf">1e6</span><span class="p">;</span><span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span> <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">sort</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="n">ll</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">prime</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">n</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+      <span class="n">ll</span> <span class="n">lim</span><span class="o">=</span><span class="n">n</span><span class="o">/</span><span class="n">i</span><span class="p">;</span>
+      <span class="n">ll</span> <span class="n">uidx</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">lim</span><span class="p">)</span><span class="o">-</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+      <span class="n">ll</span> <span class="n">lidx</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">uidx</span><span class="o">&gt;</span><span class="n">lidx</span><span class="p">)</span> <span class="n">ans</span><span class="o">+=</span><span class="n">uidx</span><span class="o">-</span><span class="n">lidx</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>goooose</name></author><category term="AtCoder" /><category term="ABC" /><summary type="html"><![CDATA[A. Adjacent Squares (H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다. H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.]]></summary></entry><entry><title type="html">airflow 체험기_최종</title><link href="http://localhost:4000/airflow/airflow-final/" rel="alternate" type="text/html" title="airflow 체험기_최종" /><published>2022-01-11T00:00:00+09:00</published><updated>2022-01-11T00:00:00+09:00</updated><id>http://localhost:4000/airflow/airflow-final</id><content type="html" xml:base="http://localhost:4000/airflow/airflow-final/"><![CDATA[<blockquote>
+  <p>이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.</p>
+</blockquote>
+
+<h2 id="celeryexecutor">CeleryExecutor</h2>
+<p>Celery는 Postgresql과 Mysql만 db로 사용하고 있어서 기존 sqlite를 postgresql로 바꾸는 작업을 진행했습니다. Mysql은 에러가 자주나서 Postgresql을 선택했습니다.<br />
+먼저, <code class="language-plaintext highlighter-rouge">airflow db init</code>을 하게 되면 <code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code>에 <code class="language-plaintext highlighter-rouge">airflow.cfg</code>라는 설정 파일이 생성됩니다. 바꿔야 하는 설정은 다음과 같습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># port는 모두 기본포트를 사용하고 있어서 명시해줄 필요가 없었습니다.
+</span><span class="n">executor</span> <span class="o">=</span> <span class="n">CeleryExecutor</span>
+<span class="n">sql_alchemy_conn</span> <span class="o">=</span> <span class="n">postgresql</span><span class="o">+</span><span class="n">psycopg2</span><span class="p">:</span><span class="o">//</span><span class="nb">id</span><span class="p">:</span><span class="n">password</span><span class="o">@</span><span class="n">addr</span><span class="o">/</span><span class="n">dbname</span>
+<span class="n">broker_url</span> <span class="o">=</span> <span class="n">amqp</span><span class="p">:</span><span class="o">//</span><span class="nb">id</span><span class="p">:</span><span class="n">password</span><span class="o">@</span><span class="n">addr</span><span class="o">/</span><span class="n">mqname</span>
+<span class="n">result_backend</span> <span class="o">=</span> <span class="n">db</span><span class="o">+</span><span class="n">postgresql</span><span class="p">:</span><span class="o">//</span><span class="nb">id</span><span class="p">:</span><span class="n">password</span><span class="o">@</span><span class="n">addr</span><span class="o">/</span><span class="n">dbname</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">broker_url</code>에는 보통 메시지 큐를 삽입하는데 RabbitMQ를 사용하기로 했습니다. 보통 Redis는 캐시, RabbitMQ는 메시지 큐로 사용한다고 합니다.</p>
+
+<p>그렇다면, 도커를 추가로 올려야 할 것은 RabbitMQ, Postgresql입니다.</p>
+
+<h2 id="rabbitmq-postgresql">RabbitMQ, Postgresql</h2>
+<p>RabbitMQ와 Postgresql은 Docker Hub에 이미지파일이 있어서 latest버전으로 pull했습니다.</p>
+
+<h3 id="rabbitmq-설정">RabbitMQ 설정</h3>
+<p>RabbitMQ는 도커로 실행하면 자동으로 서버가 실행되도록 작성되어 있습니다. (CMD [“rabbitmq-server”])<br />
+그러나, 여기서 airflow라는 유저와 airflow라는 가상호스트를 추가해야 합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># entrypoint.sh
+</span><span class="n">rabbitmqctl</span> <span class="n">add_user</span> <span class="n">airflow</span> <span class="n">airflow</span>
+<span class="n">rabbitmqctl</span> <span class="n">add_vhost</span> <span class="n">airflow</span>
+<span class="n">rabbitmqctl</span> <span class="n">set_user_tags</span> <span class="n">airflow</span> <span class="n">airflow</span>
+<span class="n">rabbitmqctl</span> <span class="n">set_permissions</span> <span class="o">-</span><span class="n">p</span> <span class="n">airflow</span> <span class="n">airflow</span> <span class="s">".*"</span> <span class="s">".*"</span> <span class="s">".*"</span>
+</code></pre></div></div>
+<p>dockerfile에서 CMD로 실행시켜버리면 rabbitmq 이미지의 CMD 명령어가 실행되지 않고 위의 명령어들이 실행되면서 <strong>rabbitmq 서버를 찾을 수 없다</strong>는 에러를 볼 수 있습니다.<br />
+어쩔 수 없이 쉘 스크립트로 만들어서 컨테이너에서 쉘을 실행시키는 방법으로 해결했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># dockerfile
+</span><span class="n">FROM</span> <span class="n">rabbitmq</span><span class="p">:</span><span class="n">latest</span>
+
+<span class="n">ADD</span> <span class="p">.</span><span class="o">/</span><span class="n">entrypoint</span><span class="p">.</span><span class="n">sh</span>
+<span class="n">RUN</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">entrypoint</span><span class="p">.</span><span class="n">sh</span>
+</code></pre></div></div>
+
+<h3 id="postgresql">Postgresql</h3>
+<p>Postgresql은 미리 데이터베이스를 만들어둬야 합니다. 그래서 다음과 같은 sql 쿼리를 작성해서 컨테이너에서 실행할 수 있도록 작성했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># entrypoint.sql
+</span><span class="n">CREATE</span> <span class="n">DATABASE</span> <span class="n">airflow</span><span class="p">;</span>
+<span class="n">CREATE</span> <span class="n">USER</span> <span class="n">airflow</span> <span class="n">WITH</span> <span class="n">PASSWORD</span> <span class="s">'1234'</span> <span class="n">SUPERUSER</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>dockerfile 또한 entrypoint.sql을 실행할 수 있도록 권한을 변경해주고 postgres를 실행할 수 있게 했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># dockerfile
+</span><span class="n">FROM</span> <span class="n">postgres</span><span class="p">:</span><span class="n">latest</span>
+
+<span class="n">ADD</span> <span class="p">.</span><span class="o">/</span><span class="n">entrypoint</span><span class="p">.</span><span class="n">sql</span> <span class="p">.</span>
+<span class="n">CMD</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">entrypoint</span><span class="p">.</span><span class="n">sql</span> <span class="o">&amp;&amp;</span> \
+    <span class="n">su</span> <span class="n">postgres</span>
+</code></pre></div></div>
+<p>이후에 컨테이너에서 <code class="language-plaintext highlighter-rouge">psql -U postgres -f entrypoint.sql</code>로 작성한 sql 쿼리를 실행할 수 있습니다.
+쉘 스크립트 내에서 sql을 실행시킬 수 있는 방법이 있지만 아직 어려워서 사용하지 못했습니다.</p>
+
+<h2 id="airflow">airflow</h2>
+<p>위의 CeleryExecutor에서 바꿔야 할 설정파일들을 자동으로 적용되게 하고 싶었습니다. 스크립트에서 설정파일을 바꿀 수 있는 명렁어가 있는지 찾아보다가 <code class="language-plaintext highlighter-rouge">sed</code>를 찾게 되어 바로 적용했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/bin/bash
+</span><span class="n">cp</span> <span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">mydags</span><span class="p">.</span><span class="n">py</span> <span class="o">/</span><span class="n">dags</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">func</span><span class="p">.</span><span class="n">py</span> <span class="o">/</span><span class="n">dags</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">redisqueue</span><span class="p">.</span><span class="n">py</span> <span class="o">/</span><span class="n">dags</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">redis</span><span class="o">/</span><span class="n">constant</span><span class="p">.</span><span class="n">py</span> <span class="o">/</span><span class="n">dags</span>
+
+<span class="c1"># create airflow.cfg
+</span><span class="n">airflow</span> <span class="n">db</span> <span class="n">init</span>
+
+<span class="c1"># exampel=False, set celery worker
+</span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s">"s/load_examples = True/load_examples = False/g"</span> <span class="n">airflow</span><span class="p">.</span><span class="n">cfg</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s">"s/executor = SequentialExecutor/executor = CeleryExecutor/g"</span> <span class="n">airflow</span><span class="p">.</span><span class="n">cfg</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s">"s^sql_alchemy_conn = sqlite:///./airflow.db^sql_alchemy_conn = postgresql+psycopg2://postgres:1234@172.17.0.2/airflow^g"</span> <span class="n">airflow</span><span class="p">.</span><span class="n">cfg</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s">"s^broker_url = redis://redis:6379/0^broker_url = amqp://airflow:airflow@172.17.0.5/airflow^g"</span> <span class="n">airflow</span><span class="p">.</span><span class="n">cfg</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s">"s^result_backend = db+postgresql://postgres:airflow@postgres/airflow^result_backend = db+postgresql://postgres:1234@172.17.0.2:5432/airflow^g"</span> <span class="n">airflow</span><span class="p">.</span><span class="n">cfg</span>
+
+<span class="c1"># create account
+</span><span class="n">airflow</span> <span class="n">users</span> <span class="n">create</span> <span class="o">--</span><span class="n">username</span> <span class="n">admin</span> <span class="o">--</span><span class="n">password</span> <span class="mi">1234</span> <span class="o">--</span><span class="n">firstname</span> <span class="n">a</span> <span class="o">--</span><span class="n">lastname</span> <span class="n">b</span> <span class="o">--</span><span class="n">role</span> <span class="n">Admin</span> <span class="o">--</span><span class="n">email</span> <span class="n">smk6221</span><span class="o">@</span><span class="n">naver</span><span class="p">.</span><span class="n">com</span>
+
+<span class="c1"># run airflow
+</span><span class="n">airflow</span> <span class="n">celery</span> <span class="n">worker</span> <span class="o">-</span><span class="n">D</span>
+<span class="n">airflow</span> <span class="n">celery</span> <span class="n">flower</span> <span class="o">-</span><span class="n">D</span>
+<span class="n">airflow</span> <span class="n">scheduler</span> <span class="o">-</span><span class="n">D</span>
+<span class="n">airflow</span> <span class="n">webserver</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">cp</code>명령어로 file sharing으로 로컬에서 작성한 파일들을 컨테이너로 옮기는 과정입니다.<br />
+이후에 db 초기화를 진행하고 설정파일을 <code class="language-plaintext highlighter-rouge">sed</code>명렁어로 바꿔줍니다. 이때 주소는 바뀔 수 있어서 airflow 컨테이너를 가장 마지막에 올렸습니다.<br />
+로그인할 계정을 만들어주고 celery, scheduler, server를 차례대로 실행시켜 줍니다. 웹서버를 제외한 나머지를 background로 돌리고 웹서버만 foreground로 돌리게했습니다.</p>
+
+<h3 id="dag">DAG</h3>
+<p>다음, mydags.py 내용을 수정했습니다. sqlite의 테이블이 있는지 확인하고 없으면 생성하는 태스크를 할 수 있도록 함수 추가와 오퍼레이터를 추가했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># func.py
+</span><span class="k">def</span> <span class="nf">create_table</span><span class="p">():</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'./dags/sqlite.db'</span><span class="p">)</span>
+    <span class="n">con</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">'create table if not exists logging (time, level, id)'</span><span class="p">)</span>
+    <span class="n">con</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mydags.py
+</span><span class="n">t2</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'if_exists_table'</span><span class="p">,</span>
+    <span class="n">python_callable</span><span class="o">=</span><span class="n">create_table</span><span class="p">,</span>
+    <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">owner</span><span class="o">=</span><span class="s">'gooose'</span><span class="p">,</span>
+    <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="결과">결과</h2>
+<p>최종 그래프는 다음과 같습니다. 
+<img src="https://drive.google.com/uc?export=view&amp;id=1Qtqbduiw72XpNNSeQeH7pGWufVc-VT1-" alt="" /><br />
+collector들이 연두색 테두리를 가지고 있는데 RUNNING되고 있는 것을 나타내고 있으며 병렬처리되고 있음을 알 수 있습니다.<br />
+추가적으로 collector들이 db에 접근하기 때문에 table lock이 필요한가?에 대해서 찾아봤는데 sqlite는 트랜잭션을 실행할 때 테이블을 잠가버리기 때문에 따로 구현할 필요는 없다고 합니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1dtOKXsliL3tkOZaqZ9WOmgbz05_8hXIP" alt="" /><br />
+collector 하나의 log를 살펴본 이미지인데 에러가 아닌(check=0) 로그들이 문제없이 db로 들어가고 있습니다. 지금 출력이 2개씩 되고 있는것은 코드 작성에서 print가 두 번 실행되고 있기 때문입니다.</p>
+
+<h2 id="회고">회고</h2>
+<h3 id="도커">도커</h3>
+<p>5개의 컨테이너를 하나씩 돌려보면서 docker-compose를 사용하는 이유를 알 수 있었습니다. 나중에 한 번 연습해보려고 합니다.<br />
+그리고, 도커를 실행하면 바로 exit(0)되는 경우가 자주 있었는데 이건 도커에 대한 이해를 제대로 하지 못해서였습니다. 도커는 vmware나 virtual box가 아닌 가상 컨테이너에서 명령을 실행하는 도구로 인식해야 함을 알게 되었습니다.
+그래서 명령을 다 실행하게되면 자동으로 도커가 stop되는 것이고 서버처럼 계속 돌아가고 있게 하려면 서버를 foreground로 구동해야 합니다. 컨테이너를 돌릴 때 while문으로 메시지(예를들면, “still alive…“)를 계속 출력하게 하는 방법도 있다고 합니다.<br />
+마지막으로 RabbitMQ나 Postgres를 사용해보면서 dockerfile 마지막에 CMD로 쉘 스크립트를 실행시키려고 했지만 서버가 실행되지 않으면서 스크립트 명령어가 제대로 작동하지 않았습니다. 이유는 from으로 들어오는 이미지의 도커파일 마지막에 CMD로 서버를 실행시키는 명령이 있고 저의 dockerfile에서 CMD를 사용해버리면서 대체되어 버리기 때문입니다. 이것을 해결하는 방법은 아직 찾지 못했습니다.</p>
+
+<h3 id="쉘-스크립트">쉘 스크립트</h3>
+<p>부캠때도 많이 사용하지 않은 쉘 스크립트를 이번에 많이 사용하게 되었습니다. 아직 초보 수준이고 if문이나 다른 문법들을 공부할 필요를 느낄 수 있었습니다.<br />
+특히 <code class="language-plaintext highlighter-rouge">sed</code>의 경우 모두 블로그에서 치환자(?)를 <code class="language-plaintext highlighter-rouge">/</code>로 많이 사용해서 치환할 문자열이 주소인 경우 너무 난감했습니다. 하나의 블로그에서 다른 치환자가 가능하다는 것을 알려줘서 주소가 들어간 경우 <code class="language-plaintext highlighter-rouge">^</code>로 사용할 수 있었습니다.</p>
+
+<h3 id="에어플로우">에어플로우</h3>
+<p>먼저, <code class="language-plaintext highlighter-rouge">bashOperator</code>의 경우 임시 폴더에서 실행되는 것을 알 수 있었습니다. 맥 기준 /var/private/…/…(확실하진 않지만 비슷한 경로입니다)와 같은 폴더에서 실행되어 환경변수 <code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code> 설정이 정말 중요하다는 것을 알 수 있었습니다. 도커파일에는 다른 것들이 들어가지 않아서 <code class="language-plaintext highlighter-rouge">.</code>으로 설정했지만 디렉토리 구분이 필요한 경우 환경변수 세팅이 중요해보입니다.<br />
+다음, cron 표기인데 (초, 분, 시간, 일, 월, 년) 순으로 되어 있는 것을 몰라서 0/1 * * * *로 했다가 1초마다 갱신되는 지옥을 보았습니다. 나중에 수정해서 5분마다 갱신되도록 했습니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://www.slideshare.net/YoungHeonKim1/airflow-workflow">https://www.slideshare.net/YoungHeonKim1/airflow-workflow</a></li>
+  <li><a href="http://sanghun.xyz/2017/12/airflow-4.-celeryexecutor-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/">http://sanghun.xyz/2017/12/airflow-4.-celeryexecutor-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/</a></li>
+  <li><a href="https://stackoverflow.com/questions/36822515/configuring-airflow-to-work-with-celeryexecutor">https://stackoverflow.com/questions/36822515/configuring-airflow-to-work-with-celeryexecutor</a></li>
+  <li><a href="http://daplus.net/postgresql-%EC%99%B8%EB%B6%80%EC%97%90%EC%84%9C-%EB%8F%84%EC%BB%A4-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%EC%9D%98-postgresql%EC%97%90-%EC%97%B0%EA%B2%B0/">http://daplus.net/postgresql-%EC%99%B8%EB%B6%80%EC%97%90%EC%84%9C-%EB%8F%84%EC%BB%A4-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88%EC%9D%98-postgresql%EC%97%90-%EC%97%B0%EA%B2%B0/</a></li>
+  <li><a href="https://forums.docker.com/t/unable-to-run-psql-inside-a-postgres-container/90623/7">https://forums.docker.com/t/unable-to-run-psql-inside-a-postgres-container/90623/7</a></li>
+</ul>]]></content><author><name>goooose</name></author><category term="airflow" /><category term="docker" /><category term="Ops" /><summary type="html"><![CDATA[이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.]]></summary></entry><entry><title type="html">airflow 체험기</title><link href="http://localhost:4000/airflow/airflow/" rel="alternate" type="text/html" title="airflow 체험기" /><published>2022-01-09T00:00:00+09:00</published><updated>2022-01-09T00:00:00+09:00</updated><id>http://localhost:4000/airflow/airflow</id><content type="html" xml:base="http://localhost:4000/airflow/airflow/"><![CDATA[<blockquote>
+  <p>부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)</p>
+</blockquote>
+
+<h2 id="airflow-시작">airflow 시작</h2>
+<p>데이터 엔지니어링 도구인 airflow를 로컬에 설치한 후 몇가지를 살펴보았는데 airflow는 데이터를 관리하는 것이 아닌 함수 단위나 스크립트 단위로 실행시켜주는 도구라는 것을 깨닫게 되었습니다.<br />
+그렇다면 데이터를 생성해서 스케줄링을 돌리자!라는 생각이 들어 재밌어보여서 바로 실행에 옮겼습니다. 다시 어떤 데이터를 생성해야 하나?라는 생각에 기업이라면 로그들을 사용하므로 저도 간단한 로그를 생성해서 db에 넣는 것 까지 해볼 생각이었습니다.</p>
+
+<h3 id="데이터-형태">데이터 형태</h3>
+<p>실제 로그들을 보면 많은 양의 정보가 들어있지만 간단하게 생성할 생각이므로 (타임스탬프, level, 메시지, id, 오류 check)로 구성했습니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">{"timestamp": 1641699997.0480268, "level": "ERROR", "id": 23, "message": "An unexpected error occurred.", "check": 0}</code></p>
+
+<p>check항목은 10%의 확률로 오류인경우 check에 1이 들어가도록 설정했습니다. 실제로는 좀 더 복잡한 데이터 검증을 하겠지만 여기서는 간단하게 에러인지 아닌지 확인하는 정도만 확인하도록 구성했습니다.</p>
+
+<h2 id="데이터-생성">데이터 생성</h2>
+<p>각종 서버에서 생성된 로그들은 한 곳에 모아지거나 어느정도 분산된 데이터베이스로 전달되는데 여기는 메시지 큐(Message Queue, MQ)를 사용하고 싶었습니다. 로그들이 메시지 큐로 들어가 에어플로우 worker들이 큐에서 하나씩 빼와서 에러 체크한 후 db에 넣어주는 것을 생각했습니다.<br />
+메시지 큐는 RabbitMQ, Redis 등이 있는데 어디서 들어본 Redis를 사용해서 큐를 구축했습니다. <a href="https://blog.naver.com/wideeyed/221370229153">링크</a>에서 코드들을 가져와 코드들을 다시 재구성했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># producer.py
+</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">redisqueue</span> <span class="kn">import</span> <span class="n">RedisQueue</span>
+<span class="kn">from</span> <span class="nn">constant</span> <span class="kn">import</span> <span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">REDIS_PORT</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">RedisQueue</span><span class="p">(</span><span class="s">'my-queue'</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">REDIS_PORT</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">level</span> <span class="o">=</span> <span class="p">[</span><span class="s">'INFO'</span><span class="p">,</span> <span class="s">'WARNING'</span><span class="p">,</span> <span class="s">'ERROR'</span><span class="p">]</span>
+<span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="s">'All passed.'</span><span class="p">,</span> <span class="s">'Incorrect access'</span><span class="p">,</span> <span class="s">'An unexpected error occurred.'</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="c1"># message put
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+        <span class="n">cur_time</span> <span class="o">=</span> <span class="s">'{"timestamp":'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="s">'}'</span>
+        <span class="n">element</span>  <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cur_time</span><span class="p">)</span>
+
+        <span class="c1"># Add Your Own Data
+</span>        <span class="n">ridx</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">rndn</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'level'</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="n">ridx</span><span class="p">]</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="n">ridx</span><span class="p">]</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'check'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">rndn</span> <span class="o">&gt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="mi">1</span>
+
+        <span class="n">element_str</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">element_str</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">element_str</span><span class="p">)</span>
+        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+</code></pre></div></div>
+<p>먼저, <code class="language-plaintext highlighter-rouge">producer.py</code>는 로그를 생성하는 파일입니다. 랜덤으로 [‘INFO’, ‘WARNING’, ‘ERROR’]를 선택하게 하고 그에 맞는 메시지도 포함시키도록 했습니다. 에러는 위에서 말한대로 10%의 확률로 일어나고 json 포맷 형태로 큐에 들어가고 1초마다 생성하도록 구성했습니다.</p>
+
+<h2 id="redis-세팅">Redis 세팅</h2>
+<p>Redis를 사용하려면 Redis가 돌아가는 서버를 돌려야 하는데 참고한 블로그와 마찬가지로 도커를 이용하기로 했습니다. 이후에 airflow까지 도커로 돌릴 생각이었기 때문입니다. (사실 맥북 용량이 얼마 안남았습니다. 조만간 포맷해야…)
+도커에서 이미지를 가져와야 하는데 저는 블로그와 똑같이 redis:latest 위에서 작업했습니다. dockerfile을 만들지는 않고 컨테이너 위에서 설치했습니다.</p>
+
+<p>먼저, redis-server라는 이름의 컨테이너에서 6379번 포트를 열어서 redis 이미지를 실행시킵니다.
+<code class="language-plaintext highlighter-rouge">docker run --name redis-server -p 6379:6379 -it redis:latest /bin/bash</code></p>
+
+<p>redis 서버를 사용하려면 host 주소와 포트번호를 알아야 하는데 이를 위해 ifconfig를 설치할 것입니다.<br />
+<code class="language-plaintext highlighter-rouge">apt-get update &amp;&amp; apt-get install net-tools &amp;&amp; ifconfig</code>
+그러면 eth0에 172.17.0.x의 주소가 보이는데 이것을 기록해놓으면 됩니다.</p>
+
+<ul>
+  <li>나중에 알았는데 vsc에서 도커 익스텐션을 설치한 후 bridge에서 검사를 누르면 열러있는 도커들의 주소들을 알 수 있습니다.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">redis-server</code>실행하게 되면 redis 서버가 실행되면서 세팅은 끝나게 됩니다.</p>
+
+<h3 id="redis-client-세팅">Redis-client 세팅</h3>
+<p>이 컨테이너는 <code class="language-plaintext highlighter-rouge">producer.py</code>를 실행시켜 로그를 생성해 큐에 메시지를 넣는 컨테이너입니다. python 이미지 위에서 redis를 설치하면 끝납니다. 직접 실행시켜도 되고 watch 명령어로 주기적으로 실행시켜도 됩니다.</p>
+
+<h2 id="airflow-세팅">Airflow 세팅</h2>
+<p>airflow는 이전에 세팅한 경험이 있어서 비교적 쉽게 할 수 있었습니다. 이번에는 python 이미지 위에서 작업했습니다.<br />
+<code class="language-plaintext highlighter-rouge">docker run --name airflow-server -p 8080:8080 -it python:3.7.0 /bin/bash</code><br />
+저는 <code class="language-plaintext highlighter-rouge">-v</code>옵션을 통해서 file sharing을 활성화했습니다. 이 옵션을 선택하면 로컬에 있는 폴더에서 컨테이너 내부로 파일을 쉽게 옮길 수 있습니다. vsc로 코드를 작성하면 <code class="language-plaintext highlighter-rouge">cp</code>명령어로 업데이트까지 편하게 할 수 있습니다.</p>
+
+<p>먼저, airflow는 airflow webserver와 airflow scheduler를 동시에 실행시켜야 합니다. 그래서 screen을 이용하기로 했습니다.
+<code class="language-plaintext highlighter-rouge">apt-get update &amp;&amp; apt-get install screen</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code>을 비롯해 DB 초기화, Admin 계정을 만들어 줍니다. 이제 screen으로 서버와 스케줄러를 돌려줍니다. 스크린에서 빠져나오는 키는 <code class="language-plaintext highlighter-rouge">ctrl+a+d</code>입니다.<br />
+<code class="language-plaintext highlighter-rouge">screen -S airflow-scheduler</code><br />
+<code class="language-plaintext highlighter-rouge">airflow scheduler</code><br />
+<code class="language-plaintext highlighter-rouge">screen -S airflow-server</code><br />
+<code class="language-plaintext highlighter-rouge">airflow webserver -p 8080</code></p>
+
+<h2 id="dag작성">Dag작성</h2>
+<p>airflow가 돌아가는 컨테이너에서 <code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code> 위치에서 <code class="language-plaintext highlighter-rouge">mkdir dags</code>로 dag를 넣어줄 디렉토리를 생성합니다.<br />
+dag는 다음과 같이 작성합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># func.py
+</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">sqlite3.dbapi2</span> <span class="kn">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">redisqueue</span> <span class="kn">import</span> <span class="n">RedisQueue</span>
+<span class="kn">from</span> <span class="nn">constant</span> <span class="kn">import</span> <span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">REDIS_PORT</span>
+
+<span class="k">def</span> <span class="nf">consumer</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">RedisQueue</span><span class="p">(</span><span class="s">'my-queue'</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">REDIS_PORT</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">isBlocking</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">msg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">msg_json</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">msg_json</span><span class="p">[</span><span class="s">'check'</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'sqltie.db'</span><span class="p">)</span> <span class="k">as</span> <span class="n">con</span><span class="p">:</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+                    <span class="n">_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]))</span> \
+                        <span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d %H:%M:%S'</span><span class="p">)</span>
+                    <span class="n">cur</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+                        <span class="s">"INSERT INTO table </span><span class="se">\
+</span><span class="s">                        (time, level, id) VALUES (?,?,?)"</span><span class="p">,</span>
+                        <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">_date</span><span class="p">),</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'level'</span><span class="p">],</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'id'</span><span class="p">]))</span>
+            <span class="k">except</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">con</span><span class="p">.</span><span class="n">rollback</span><span class="p">()</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>          
+        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+<p>위의 코드에서 <code class="language-plaintext highlighter-rouge">isBlocking=True</code>로 두면 큐가 비어있을 때 무한정 대기한다는 뜻입니다. False로 두어서 큐가 비어있으면 태스크를 끝내도록 작성했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mydags.py
+</span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+
+<span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">airflow.utils.dates</span> <span class="kn">import</span> <span class="n">days_ago</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.bash</span> <span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.python</span> <span class="kn">import</span> <span class="n">PythonOperator</span>
+
+<span class="kn">from</span> <span class="nn">func</span> <span class="kn">import</span> <span class="n">consumer</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s">'data_collector'</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s">'My dag'</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">days_ago</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">,</span>
+    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">"0 0/5 * * *"</span><span class="p">,</span> <span class="c1"># 5분간격
+</span>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'my_dags'</span><span class="p">],</span>
+    <span class="n">concurrency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'start_schedule'</span><span class="p">,</span>
+        <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo START DATA COLLECTOR'</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'gooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_0'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_1'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_2'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t5</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'end_schedule'</span><span class="p">,</span>
+        <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo END DATA COLLECTOR'</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'gooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 태스크 순서 정의
+</span>    <span class="n">t1</span><span class="o">&gt;&gt;</span><span class="p">[</span><span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="n">t5</span>
+</code></pre></div></div>
+
+<h2 id="몰랐던-airflowcfg">몰랐던 airflow.cfg</h2>
+<p>처음 생각은 consumer역할을 맡은 t2, t3, t4에서 큐에서 하나씩 로그를 빼낸 후 에러 검증 후 db에 넣는 것을 생각했습니다.</p>
+
+<p>그러나, collector_0만 실행되고 나머지 collector는 큐에 대기하다가 실행이 끝났습니다.<br />
+airflow의 병렬처리를 할 수 있는 방법에 대해 찾아보니 celery를 사용하는 것을 볼 수 있었습니다.</p>
+
+<p>airflow 설정파일인 <code class="language-plaintext highlighter-rouge">airflow.cfg</code>를 보면 다음과 같은 항목이 보입니다.<br />
+<code class="language-plaintext highlighter-rouge">executor = SequentialExecutor</code><br />
+airflow의 초기 세팅은 SequentialExecutor이었고 collector_0만 실행되는 이유도 같은 것이었습니다.</p>
+
+<p>그렇다면 celery만 사용하면 되는것이 아닌가?하는 의문이 생길 수 있는데 여기부터 좀 어려웠습니다.<br />
+celery가 지원하는 db는 postgresql, mysql 정도이고 세팅하려면 새로 컨테이너를 올려야 한다는 판단을 했습니다.</p>
+
+<h2 id="현재-위치">현재 위치</h2>
+<p>mysql을 선택하고 컨테이너에 올렸는데 <code class="language-plaintext highlighter-rouge">Authentication plugin 'caching_sha2_password' cannot be loaded: dlopen(/usr/local/mysql/lib/plugin/caching_sha2_password.so, 2): image not found</code>이런 에러로 더이상 진행되지 못하고 있습니다.</p>
+
+<p>해결방법인 <code class="language-plaintext highlighter-rouge">ALTER USER root@localhost IDENTIFIED WITH mysql_natvie_password by 'password'</code>까지 시도했지만 해결되지 않았습니다.</p>
+
+<p>다른 DB인 postgresql로 바꾼 뒤에 다시 시도해보고 성공하면 다음 포스트에 후기를 남길 수 있을 것 같습니다.</p>]]></content><author><name>goooose</name></author><category term="airflow" /><category term="Ops" /><summary type="html"><![CDATA[부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)]]></summary></entry><entry><title type="html">AtCoder Beginner Contest 233</title><link href="http://localhost:4000/atcoder/abc233/" rel="alternate" type="text/html" title="AtCoder Beginner Contest 233" /><published>2022-01-05T00:00:00+09:00</published><updated>2022-01-05T00:00:00+09:00</updated><id>http://localhost:4000/atcoder/abc233</id><content type="html" xml:base="http://localhost:4000/atcoder/abc233/"><![CDATA[<h2 id="a-10yen-stamp">A. 10yen Stamp</h2>
+<p>10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.<br />
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span> <span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt", "r", stdin);</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">&gt;=</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ceil</span><span class="p">(</span><span class="kt">double</span><span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="b-a-reverse">B. A Reverse</h2>
+<p>문자열 $S$에서 $L$번째부터 $R$번째까지 부분문자열을 뒤집어 출력하는 구현 문제이다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span> <span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt", "r", stdin);</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">;</span>
+  <span class="n">string</span> <span class="n">s</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">s</span><span class="p">;</span>
+  <span class="n">string</span> <span class="n">t</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">reverse</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">t</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">a</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">t</span><span class="o">&lt;&lt;</span><span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="c-product">C. Product</h2>
+<p>$i$번째 가방에 $L_i$개의 공이 있고 각 공은 $a_{ij}$의 숫자가 적혀있다.<br />
+모든 가방에서 공을 하나씩 선택하고 각 공에 적힌 수의 곱이 $X$인 경우의 수를 계산하는 문제이다.<br />
+중요한 정보로 $\sum_{i}^N L_i = 10^5$ 이라는 조건이 문제에 있다. 그래서 dp처럼 접근하는 것도 가능할 것 같아서 다음과 같이 접근했다. 사실 통과할 줄 몰랐다.<br />
+map을 사용해서 위에서부터 어떤 공을 선택했을 때 이전 값에 나눈 몫을 다음 값으로 저장하는 방법을 사용했다.<br />
+<code class="language-plaintext highlighter-rouge">current</code>는 위에서 선택한 수를 나누어 현재 필요한 수를 의미하고 <code class="language-plaintext highlighter-rouge">ball</code>은 $i$번째 가방에서 꺼낸 어떤 공에 적힌 수를 의미한다.<br />
+그렇다면 <code class="language-plaintext highlighter-rouge">current</code>를 <code class="language-plaintext highlighter-rouge">ball</code>로 나누어 떨어질 때 <code class="language-plaintext highlighter-rouge">m[i][current/ball] += m[i-1][current]</code>와 같은 식을 사용할 수 있게된다.<br />
+나중에 editorial을 보니까 dfs로 접근하여 문제를 해결하고 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span> <span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt", "r", stdin);</span>
+  <span class="n">ll</span> <span class="n">n</span><span class="p">,</span><span class="n">x</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">bag</span><span class="p">[</span><span class="mi">100001</span><span class="p">];</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ll</span> <span class="n">l</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">l</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">l</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ll</span> <span class="n">a</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="p">;</span>
+      <span class="n">bag</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">map</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">m</span><span class="p">[</span><span class="mi">100001</span><span class="p">];</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">bag</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="n">bag</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">x</span><span class="o">/</span><span class="n">bag</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]]</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">:</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">bag</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">first</span><span class="o">&gt;=</span><span class="n">bag</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">it</span><span class="p">.</span><span class="n">first</span><span class="o">%</span><span class="n">bag</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">it</span><span class="p">.</span><span class="n">first</span><span class="o">/</span><span class="n">bag</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]]</span><span class="o">+=</span><span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">it</span><span class="p">.</span><span class="n">first</span><span class="p">];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">m</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="d-count-interval">D. Count Interval</h2>
+<p>어떤 수열 $A$가 주어졌을 때, 연속된 구간의 부분합이 $K$가 되는 경우를 모두 계산하는 문제이다.<br />
+수열의 길이가 $2 \times 10^5$이므로 $O(N)$에 문제를 해결해야 한다.<br />
+어떤 구간합을 구하기 위해서는 $K = prefix[i] - prefix[j]$ 를 찾아야 한다. 이걸 다시 바꾸면 $prefix[i]$와 $prefix[i] - K$가 있는지 확인하면 된다.<br />
+보통 누적합을 사용해서 문제를 풀 수 있는데 $O(1)$의 접근을 위해 <code class="language-plaintext highlighter-rouge">map</code>을 사용하려고 한다.<br />
+2중 for문으로 $1≤i≤N, 1≤j≤i$를 찾으려고 하면 <code class="language-plaintext highlighter-rouge">TLE</code>이므로 <code class="language-plaintext highlighter-rouge">map</code>을 사용하여 2중 for문 결과와 같게 할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;queue&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ull</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span> <span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span> <span class="o">=</span> <span class="mf">1e9</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt", "r", stdin);</span>
+  <span class="n">ll</span> <span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">k</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">prefix</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="n">it</span> <span class="o">:</span> <span class="n">a</span><span class="p">)</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">it</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">map</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">m</span><span class="p">;</span>
+  <span class="n">ll</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m</span><span class="p">[</span><span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">ans</span><span class="o">+=</span><span class="n">m</span><span class="p">[</span><span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">k</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>]]></content><author><name>goooose</name></author><category term="AtCoder" /><category term="ABC" /><summary type="html"><![CDATA[A. 10yen Stamp 10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다. $X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다. ```cpp #include #include #include #include #include #include #define endl '\n' #define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0); using namespace std;]]></summary></entry><entry><title type="html">Github Action 정리</title><link href="http://localhost:4000/github/github-action/" rel="alternate" type="text/html" title="Github Action 정리" /><published>2022-01-04T00:00:00+09:00</published><updated>2022-01-04T00:00:00+09:00</updated><id>http://localhost:4000/github/github-action</id><content type="html" xml:base="http://localhost:4000/github/github-action/"><![CDATA[<blockquote>
+  <p>CI/CD를 위한 도구로 jenkins, github action 등이 있는데 이 중 github action을 설정하고 pytest와 슬랙 메시지까지 전송해보는 것을 정리했습니다.</p>
+</blockquote>
+
+<h2 id="github-action-설정">Github Action 설정</h2>
+<p>먼저, public으로 Github action을 활성화할 repo를 생성합니다. (private은 사용 요금이 청구되는 것으로 알고 있습니다.)<br />
+다음, Actions 탭에서 New workflow로 새로운 워크플로우를 생성합니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1B0qZbAkEBeZOTmEj67Cg7LvTAzqzFkTC" alt="" /></p>
+
+<p>워크플로우를 선택하는 페이지에서 <code class="language-plaintext highlighter-rouge">Python application</code>으로 생성합니다.</p>
+
+<p>이제 자동으로 <code class="language-plaintext highlighter-rouge">.github/workflows</code>에 <code class="language-plaintext highlighter-rouge">python-app.yml</code>이라는 파일이 생성이 되고 기본 코드는 다음과 같습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+</span>
+<span class="n">name</span><span class="p">:</span> <span class="n">Python</span> <span class="n">application</span>
+
+<span class="n">on</span><span class="p">:</span>
+  <span class="n">push</span><span class="p">:</span>
+    <span class="n">branches</span><span class="p">:</span> <span class="p">[</span> <span class="n">main</span> <span class="p">]</span>
+  <span class="n">pull_request</span><span class="p">:</span>
+    <span class="n">branches</span><span class="p">:</span> <span class="p">[</span> <span class="n">main</span> <span class="p">]</span>
+
+<span class="n">jobs</span><span class="p">:</span>
+  <span class="n">build</span><span class="p">:</span>
+
+    <span class="n">runs</span><span class="o">-</span><span class="n">on</span><span class="p">:</span> <span class="n">ubuntu</span><span class="o">-</span><span class="n">latest</span>
+
+    <span class="n">steps</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">checkout</span><span class="o">@</span><span class="n">v2</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Set</span> <span class="n">up</span> <span class="n">Python</span> <span class="mf">3.10</span>
+      <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">setup</span><span class="o">-</span><span class="n">python</span><span class="o">@</span><span class="n">v2</span>
+      <span class="k">with</span><span class="p">:</span>
+        <span class="n">python</span><span class="o">-</span><span class="n">version</span><span class="p">:</span> <span class="s">"3.10"</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Install</span> <span class="n">dependencies</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+        <span class="n">pip</span> <span class="n">install</span> <span class="n">flake8</span> <span class="n">pytest</span>
+        <span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">f</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span> <span class="p">];</span> <span class="n">then</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span><span class="p">;</span> <span class="n">fi</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Lint</span> <span class="k">with</span> <span class="n">flake8</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="c1"># stop the build if there are Python syntax errors or undefined names
+</span>        <span class="n">flake8</span> <span class="p">.</span> <span class="o">--</span><span class="n">count</span> <span class="o">--</span><span class="n">select</span><span class="o">=</span><span class="n">E9</span><span class="p">,</span><span class="n">F63</span><span class="p">,</span><span class="n">F7</span><span class="p">,</span><span class="n">F82</span> <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="n">source</span> <span class="o">--</span><span class="n">statistics</span>
+        <span class="c1"># exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+</span>        <span class="n">flake8</span> <span class="p">.</span> <span class="o">--</span><span class="n">count</span> <span class="o">--</span><span class="nb">exit</span><span class="o">-</span><span class="n">zero</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">complexity</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">line</span><span class="o">-</span><span class="n">length</span><span class="o">=</span><span class="mi">127</span> <span class="o">--</span><span class="n">statistics</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Test</span> <span class="k">with</span> <span class="n">pytest</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="n">pytest</span>
+</code></pre></div></div>
+
+<p>이 코드에서 크게 on은 Event, jobs는 Stpes의 조합으로 이루어져 있습니다.</p>
+<ul>
+  <li>on은 특정 branch로 push, PR할 때 실행하는 것을 의미하며 특정 시간대(cron)에 실행할 수도 있습니다.</li>
+  <li>하나의 jobs는 여러개의 steps를 가질 수 있고 여러개의 jobs이 있는 경우 병렬로 실행됩니다.
+    <ul>
+      <li>다른 jobs에 의존 관계를 가질 수도 있습니다. (job A가 success -&gt; run job B)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="jobs">jobs</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">build</span><span class="p">:</span>
+
+    <span class="n">runs</span><span class="o">-</span><span class="n">on</span><span class="p">:</span> <span class="n">ubuntu</span><span class="o">-</span><span class="n">latest</span>
+
+    <span class="n">steps</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">checkout</span><span class="o">@</span><span class="n">v2</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Set</span> <span class="n">up</span> <span class="n">Python</span> <span class="mf">3.10</span>
+      <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">setup</span><span class="o">-</span><span class="n">python</span><span class="o">@</span><span class="n">v2</span>
+      <span class="k">with</span><span class="p">:</span>
+        <span class="n">python</span><span class="o">-</span><span class="n">version</span><span class="p">:</span> <span class="s">"3.10"</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Install</span> <span class="n">dependencies</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span>
+        <span class="n">pip</span> <span class="n">install</span> <span class="n">flake8</span> <span class="n">pytest</span>
+        <span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">f</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span> <span class="p">];</span> <span class="n">then</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span><span class="p">;</span> <span class="n">fi</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Lint</span> <span class="k">with</span> <span class="n">flake8</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="c1"># stop the build if there are Python syntax errors or undefined names
+</span>        <span class="n">flake8</span> <span class="p">.</span> <span class="o">--</span><span class="n">count</span> <span class="o">--</span><span class="n">select</span><span class="o">=</span><span class="n">E9</span><span class="p">,</span><span class="n">F63</span><span class="p">,</span><span class="n">F7</span><span class="p">,</span><span class="n">F82</span> <span class="o">--</span><span class="n">show</span><span class="o">-</span><span class="n">source</span> <span class="o">--</span><span class="n">statistics</span>
+        <span class="c1"># exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+</span>        <span class="n">flake8</span> <span class="p">.</span> <span class="o">--</span><span class="n">count</span> <span class="o">--</span><span class="nb">exit</span><span class="o">-</span><span class="n">zero</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">complexity</span><span class="o">=</span><span class="mi">10</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">line</span><span class="o">-</span><span class="n">length</span><span class="o">=</span><span class="mi">127</span> <span class="o">--</span><span class="n">statistics</span>
+    <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Test</span> <span class="k">with</span> <span class="n">pytest</span>
+      <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+        <span class="n">pytest</span>
+</code></pre></div></div>
+
+<p>runs-on은 action을 실행할 os를 말합니다. 보통 ubuntu에서 돌립니다.<br />
+steps에 <code class="language-plaintext highlighter-rouge">-</code>단위로 순차적으로 실행됩니다. 
+<img src="https://drive.google.com/uc?export=view&amp;id=119I6XBZ0AodU-BtzYJS3iM7gj3amr6Td" alt="" /></p>
+
+<h2 id="pytest">Pytest</h2>
+<p>Github Action을 사용하는 이유는 테스트, 빌드, 배포를 자동화하는 도구이므로 pytest를 사용하여 원하는 코드를 테스트할 수 있습니다.<br />
+저는 간단하게 <code class="language-plaintext highlighter-rouge">math_.py</code>와 <code class="language-plaintext highlighter-rouge">test_math_.py</code>를 만들어 함수들을 테스트했습니다.
+테스트코드를 작성하면서 따로 설정할 것은 없었습니다. 테스트코드를 만들어 두면 <code class="language-plaintext highlighter-rouge">Test with pytest</code> 단계에서 테스트한 결과를 볼 수 있습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1JVmteiLG7BU_MCzbjyV-QpSDtdArDJ2V" alt="" /></p>
+
+<p>단, pytest를 사용할 때 테스트 파일의 전치사가 <code class="language-plaintext highlighter-rouge">test_</code>로 시작해야 합니다. 그렇지 못하면 <code class="language-plaintext highlighter-rouge">Test with pytest</code>의 run에서 <code class="language-plaintext highlighter-rouge">pytest filename.py</code>로 바꿔줘야 합니다.</p>
+
+<h2 id="slack-message">Slack message</h2>
+<p>이제 테스트가 성공인지 실패인지 알림이 왔으면 좋겠습니다. 개발자들이 많이 사용하는 슬랙으로 알림을 보내려고 합니다.<br />
+슬랙을 사용하기 전에 알림을 받고 싶은 스페이스에서 webhook을 설정해야 합니다. 이건 다른 블로그에서 많이 소개하고 있어서 참고하시면 되겠습니다.<br />
+하지만 공개된 repo에 webhook url을 설정할 수는 없으므로 깃허브에 환경변수로 등록하려고 합니다.
+깃허브 repo의 Settings 탭에서 Secretes로 가면 환경변수를 등록할 수 있습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1cErmGBRZUoAydx2ZEaW_o_5ikR_z3KwQ" alt="" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">YOUR_SECRET_NAME</code>에 <code class="language-plaintext highlighter-rouge">SLACK_WEBHOOK_URL</code>이라 입력하고 <code class="language-plaintext highlighter-rouge">Value</code>에 url을 입력하시고 등록하면 <code class="language-plaintext highlighter-rouge">python-app.yml</code>에서 해당 환경변수를 사용할 수 있습니다.<br />
+이름은 원하는데로 설정할 수 있습니다.</p>
+
+<p>이제 <code class="language-plaintext highlighter-rouge">python-app.yml</code>에 하나를 추가해야 합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">action</span><span class="o">-</span><span class="n">slack</span>
+      <span class="n">uses</span><span class="p">:</span> <span class="mi">8398</span><span class="n">a7</span><span class="o">/</span><span class="n">action</span><span class="o">-</span><span class="n">slack</span><span class="o">@</span><span class="n">v3</span>
+      <span class="k">with</span><span class="p">:</span>
+        <span class="n">status</span><span class="p">:</span> <span class="err">$</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">workflow</span><span class="p">,</span><span class="n">job</span><span class="p">,</span><span class="n">commit</span><span class="p">,</span><span class="n">repo</span><span class="p">,</span><span class="n">ref</span><span class="p">,</span><span class="n">author</span><span class="p">,</span><span class="n">took</span>
+      <span class="n">env</span><span class="p">:</span>
+        <span class="n">SLACK_WEBHOOK_URL</span><span class="p">:</span> <span class="err">$</span>
+      <span class="k">if</span><span class="p">:</span> <span class="n">always</span><span class="p">()</span> <span class="c1"># Pick up events even if the job fails or is canceled.
+</span></code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">steps</code>에 <code class="language-plaintext highlighter-rouge">Test with pytest</code>밑에 위 코드를 추가하면 테스트가 통과했을 때 아래 사진과 같이 슬랙으로 알림이 날라오게 됩니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1d3KLHipOBFTukVpKjUavbw6A--rgwTPz" alt="" /></p>
+
+<p>다음 코드처럼 다른 방식도 존재합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">action</span><span class="o">-</span><span class="n">slack</span>
+      <span class="n">uses</span><span class="p">:</span> <span class="mi">8398</span><span class="n">a7</span><span class="o">/</span><span class="n">action</span><span class="o">-</span><span class="n">slack</span><span class="o">@</span><span class="n">v3</span>
+      <span class="k">with</span><span class="p">:</span>
+        <span class="n">status</span><span class="p">:</span> <span class="n">custom</span>
+        <span class="n">fields</span><span class="p">:</span> <span class="n">workflow</span><span class="p">,</span><span class="n">job</span><span class="p">,</span><span class="n">commit</span><span class="p">,</span><span class="n">repo</span><span class="p">,</span><span class="n">ref</span><span class="p">,</span><span class="n">author</span><span class="p">,</span><span class="n">took</span>
+        <span class="n">custom_payload</span><span class="p">:</span> <span class="o">|</span>
+          <span class="p">{</span>
+            <span class="n">attachments</span><span class="p">:</span> <span class="p">[{</span>
+              <span class="n">color</span><span class="p">:</span> <span class="s">'$'</span> <span class="o">===</span> <span class="s">'success'</span> <span class="err">?</span> <span class="s">'good'</span> <span class="p">:</span> <span class="s">'$'</span> <span class="o">===</span> <span class="s">'failure'</span> <span class="err">?</span> <span class="s">'danger'</span> <span class="p">:</span> <span class="s">'warning'</span><span class="p">,</span>
+              <span class="n">text</span><span class="p">:</span> <span class="sb">`${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} $ in ${process.env.AS_TOOK}`</span><span class="p">,</span>
+            <span class="p">}]</span>
+          <span class="p">}</span>
+      <span class="n">env</span><span class="p">:</span>
+        <span class="n">SLACK_WEBHOOK_URL</span><span class="p">:</span> <span class="err">$</span>
+      <span class="k">if</span><span class="p">:</span> <span class="n">always</span><span class="p">()</span> <span class="c1"># Pick up events even if the job fails or is canceled.
+</span></code></pre></div></div>
+<p>위 코드에 대한 슬랙 알림은 다음과 같습니다.
+<img src="https://drive.google.com/uc?export=view&amp;id=1ulXEhcH-9wXD54aOH9J_DmUaPv5CBY6E" alt="" /></p>
+
+<h2 id="다른-apps">다른 Apps</h2>
+<p>위에서 Github Action에서 원하는 애플리케이션을 추가하는 방법을 정리했습니다.<br />
+다른 애플리케이션을 추가하고 싶다면 <a href="https://github.com/marketplace?category=&amp;query=&amp;type=actions">https://github.com/marketplace?category=&amp;query=&amp;type=actions</a>로 들어가서 똑같은 방식으로 추가하면 됩니다.</p>]]></content><author><name>goooose</name></author><category term="github" /><category term="Ops" /><summary type="html"><![CDATA[CI/CD를 위한 도구로 jenkins, github action 등이 있는데 이 중 github action을 설정하고 pytest와 슬랙 메시지까지 전송해보는 것을 정리했습니다.]]></summary></entry><entry><title type="html">Pytorch layer 초기화 함수</title><link href="http://localhost:4000/pytorch/reset-parameters/" rel="alternate" type="text/html" title="Pytorch layer 초기화 함수" /><published>2021-12-31T00:00:00+09:00</published><updated>2021-12-31T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/reset-parameters</id><content type="html" xml:base="http://localhost:4000/pytorch/reset-parameters/"><![CDATA[<blockquote>
+  <p>모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다.
+그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.</p>
+</blockquote>
+
+<h2 id="class-linear">Class Linear</h2>
+
+<p><code class="language-plaintext highlighter-rouge">Linear</code> 레이어 모듈을 살펴보기 위해 pytorch 코드를 가져왔습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Linear</span><span class="p">(</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">__constants__</span> <span class="o">=</span> <span class="p">[</span><span class="s">'in_features'</span><span class="p">,</span> <span class="s">'out_features'</span><span class="p">]</span>
+    <span class="n">in_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">out_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">weight</span><span class="p">:</span> <span class="n">Tensor</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">factory_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s">'device'</span><span class="p">:</span> <span class="n">device</span><span class="p">,</span> <span class="s">'dtype'</span><span class="p">:</span> <span class="n">dtype</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Linear</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">in_features</span> <span class="o">=</span> <span class="n">in_features</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">out_features</span> <span class="o">=</span> <span class="n">out_features</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
+            <span class="n">torch</span><span class="p">.</span><span class="n">empty</span><span class="p">((</span><span class="n">out_features</span><span class="p">,</span> <span class="n">in_features</span><span class="p">),</span> <span class="o">**</span><span class="n">factory_kwargs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
+                <span class="n">torch</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="n">out_features</span><span class="p">,</span> <span class="o">**</span><span class="n">factory_kwargs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="s">'bias'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">kaiming_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">fan_in</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">init</span><span class="p">.</span><span class="n">_calculate_fan_in_and_fan_out</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="n">bound</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fan_in</span><span class="p">)</span> <span class="k">if</span> <span class="n">fan_in</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">init</span><span class="p">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">bias</span><span class="p">,</span> <span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">F</span><span class="p">.</span><span class="n">linear</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">bias</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'in_features={}, out_features={}, bias={}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">in_features</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">out_features</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+        <span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Linear layer</code>를 선언하게 되면 <code class="language-plaintext highlighter-rouge">__init__()</code>함수에 의해 <code class="language-plaintext highlighter-rouge">self.weight</code>와 <code class="language-plaintext highlighter-rouge">self.bias</code>를 생성합니다.</p>
+
+<p>이후 이 파라미터들은 <code class="language-plaintext highlighter-rouge">self.reset_parameters()</code>에 의해 초기화가 진행됩니다.</p>
+
+<h2 id="reset_parameters">reset_parameters()</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">init</span><span class="p">.</span><span class="n">kaiming_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">fan_in</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">init</span><span class="p">.</span><span class="n">_calculate_fan_in_and_fan_out</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fan_in</span><span class="p">)</span> <span class="k">if</span> <span class="n">fan_in</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">init</span><span class="p">.</span><span class="n">uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">bias</span><span class="p">,</span> <span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>먼저, <code class="language-plaintext highlighter-rouge">self.weight</code>는 <code class="language-plaintext highlighter-rouge">kaiming_unifrom</code>에 의해 초기화가 진행됩니다. kaiming initialize는 검색하시면 자세한 내용이 있기 때문에 넘어가겠습니다.</p>
+
+<p>그냥 kaiming 초기화 방법을 사용하는구나 정도로 봐주세요.</p>
+
+<p>다음, <code class="language-plaintext highlighter-rouge">self.bias는</code> weight의 <code class="language-plaintext highlighter-rouge">bound</code>를 계산한 후 <code class="language-plaintext highlighter-rouge">unform(-bound, bound)</code>에 의해 초기화가 진행됩니다.</p>
+
+<h3 id="initialize-bias">initialize Bias</h3>
+<p>논문을 잠깐 읽어봤는데 kaiming 방법은 <code class="language-plaintext highlighter-rouge">bias</code>를 0으로 초기화하고 진행했습니다.</p>
+
+<p>그러나 torch 코드에서는 <code class="language-plaintext highlighter-rouge">bias</code>를 <code class="language-plaintext highlighter-rouge">uniform(-bound, bound)</code>로 초기화하고 있기 때문에 다시 찾아봤는데 <a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">링크</a>에서 bias는 <strong>LeCunn 초기화 방법</strong>을 사용한다고 합니다.</p>
+
+<p><a href="https://yeomko.tistory.com/40">링크</a>에 따르면 Lecunn 초기화 방법의 아이디어는 확률분포를 <code class="language-plaintext highlighter-rouge">fan_in</code>으로 조절하고자 하는 것이라고 합니다.</p>
+
+<ul>
+  <li>bound를 계산하기 전에 <code class="language-plaintext highlighter-rouge">_calculate_fan_in_and_fan_out()</code>이라는 함수를 통해 <code class="language-plaintext highlighter-rouge">fan_in</code>이라는 값을 계산하는데 input layer의 뉴런 수를 <code class="language-plaintext highlighter-rouge">fan_in</code>, output layer의 뉴런 수를 <code class="language-plaintext highlighter-rouge">fan_out</code>이라고 합니다.</li>
+</ul>
+
+<p>lecunn init 논문인 <strong>Efficient BackProp</strong>의 섹션 4.6을 보면 sqrt(1/fan_in)으로 표준편자를 정하고 평균은 0인 uniform하게 초기화합니다.</p>
+
+<p>이렇게 <code class="language-plaintext highlighter-rouge">nn.Linear</code> 레이어의 weight는 kaiming, bias는 lecunn 초기화가 진행되어 <code class="language-plaintext highlighter-rouge">reset_parameters()</code>가 끝나게 됩니다.</p>
+
+<h2 id="다른-초기화-방법들">다른 초기화 방법들</h2>
+
+<p>초기화 방법들은 여러가지가 있고 torch의 모듈마다 초기화 방법이 달라집니다.</p>
+
+<p>예를들면 embedding 레이어는 normal을 사용합니다.</p>
+
+<p>다른 Xaiver, He 등의 여러가지 초기화 방법들 또한 사용가능합니다.</p>
+
+<p>사용할때는 초기화를 신경쓰면서 사용하는 편은 아니지만 한번 코드 내부를 돌면서 이런식으로 진행하는구나 정도로 봐주시면 될 것 같습니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://arxiv.org/abs/1502.01852v1">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a></li>
+  <li><a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">Efficient BackProp</a></li>
+  <li><a href="https://yeomko.tistory.com/40">갈아먹는 딥러닝 기초 [2] weight initialization</a></li>
+  <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">Pytorch</a></li>
+  <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">StackOverflow</a></li>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><category term="initialize" /><summary type="html"><![CDATA[모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다. 그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.]]></summary></entry><entry><title type="html">악성채팅 탐지 시스템 구현</title><link href="http://localhost:4000/boostcamp/final-project/" rel="alternate" type="text/html" title="악성채팅 탐지 시스템 구현" /><published>2021-12-26T00:00:00+09:00</published><updated>2021-12-26T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/final-project</id><content type="html" xml:base="http://localhost:4000/boostcamp/final-project/"><![CDATA[<h2 id="목적">목적</h2>
+
+<blockquote>
+  <p>유저가 많은 방의 채팅 속도가 빨라 모든 악성채팅을 거르지 못하기 때문에 실시간으로 탐지하여 관리자에게 악성유저들을 리포트할 수 있는 애플리케이션을 개발하고자 했습니다.</p>
+
+</blockquote>
+
+<h2 id="계획">계획</h2>
+
+<hr />
+
+<h3 id="모델">모델</h3>
+
+<p>실시간으로 문장의 성향을 파악하기 위해서는 매우 무겁고 느리기 때문에 기존 언어모델을 사용할 수 없었습니다.</p>
+
+<p>그리고 Toxicity text detection은 비교적 쉬운 task에 속합니다.</p>
+
+<p>또한, 서버의 환경을 생각해보면 보통 GPU가 있기보단 좋은 CPU와 많은 메모리를 사용하여 서버를 구동하고 있습니다.</p>
+
+<p>따라서 빠른 속도를 가진 CNN 기반의 모델을 구현하여 성능을 어느정도 손해보더라도 속도를 가져가려고 했습니다.</p>
+
+<h3 id="데이터">데이터</h3>
+
+<p>악성채팅은 보통 욕설, 혐오표현, 공격적인 표현 등으로 구성되어 있습니다.</p>
+
+<p>하지만 이런 분류 모두 사람의 주관적 시선으로 만들어져 기준이 모두 다를 수 있습니다. 따라서 저희는 욕설과 혐오표현을 위주로 학습을 진행했고 해당 채팅을 친 유저의 판단은 관리자에게 맡기는 방향으로 계획했습니다.</p>
+
+<h2 id="악성채팅의-유형">악성채팅의 유형</h2>
+
+<hr />
+
+<h3 id="욕설-혐오표현의-유형">욕설, 혐오표현의 유형</h3>
+
+<p>욕설의 경우, 한 단어로 이루어진 경우가 많습니다.  하지만 필터링 기술이 발전함에 따라 필터링을 피하기 위해 욕설 사이에 의미없는 문자를 넣는 방식을 많이 사용합니다.</p>
+
+<p>혐오표현의 경우 혐오적인 단어를 보통 포함합니다. 특히 특정 집단을 일컫는 단어를 사용합니다.</p>
+
+<h3 id="트위치-채팅의-유형">트위치 채팅의 유형</h3>
+
+<p>트위치는 스트리머마다 특정 밈(Meme)을 사용하는 경우가 많습니다. 젊은 사람들이 많이 보기 때문에 인터넷 커뮤니티 단어들이 사용되고 짧은 문장의 채팅이 자주 올라옵니다.</p>
+
+<p>그러나, 트위치는 구독을 했을 시 스트리머마다 다른 이모지를 제공하며 그 이름도 다릅니다. 그리고 그림을 그리는 경우(예를들면, 빅딕맨)도 존재합니다.</p>
+
+<h2 id="challenge">Challenge</h2>
+
+<hr />
+
+<h3 id="word-embedding">Word embedding</h3>
+
+<p>문장을 그대로 사용할 수는 없으므로 Huggingface의 Tokenizer를 사용하여 Word embedding을 진행했습니다.</p>
+
+<p>corpus만 확보하면 BertWordPieceTokenizer로 빠르게 학습할 수 있고 다루기 쉬운 장점이 있습니다.</p>
+
+<p>그리고 Rust로 구현되어있기 때문에 굉장히 빠릅니다.</p>
+
+<h3 id="punctuation">Punctuation</h3>
+
+<p>인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다. 오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해야 하므로 문장의 단어 중간에 Punctuation을 삽입하여 모델이 Robust하도록 유도했습니다.</p>
+
+<p>단어 사이에 Punctuation을 넣는 것도 생각해보았지만 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하면서 성능이 떨어졌습니다.</p>
+
+<p>이후, Meta Pseudo labeling을 구현하면서 위의 전처리 방법을 augmentation하는데 사용했습니다.</p>
+
+<h3 id="cnn">CNN</h3>
+
+<p>NLP task를 위한 CNN 모델을 구현하는 것이 처음이라서 여러가지 블로그들을 찾아봤는데 공통적인 구조는 Embedding layer에서 Conv layer로 쓸고 pooling을 하는식으로 설계되어 있습니다. 저 또한 이러한 구조를 크게 벗어나지 않게 설계했습니다.</p>
+
+<h3 id="bilstm">BiLSTM</h3>
+
+<p>CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내주지만 성능에 대한 욕심이 조금 더 있었고 NLP에 적합한 BiLSTM을 사용하여 성능을 더 올릴 수 있었습니다.</p>
+
+<h3 id="benchmark">Benchmark</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Best Acc</th>
+      <th>Best F1</th>
+      <th>Inference time(128 batch, CPU)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Rule based</td>
+      <td>0.81</td>
+      <td>0.690</td>
+      <td><strong>0.01s</strong>(1300 words)</td>
+    </tr>
+    <tr>
+      <td>CNN</td>
+      <td>0.90</td>
+      <td>0.878</td>
+      <td>0.03s</td>
+    </tr>
+    <tr>
+      <td>BiLSTM</td>
+      <td><strong>0.93</strong></td>
+      <td>0.90</td>
+      <td>0.28s</td>
+    </tr>
+    <tr>
+      <td>CNN + BiLSTM</td>
+      <td>0.92</td>
+      <td><strong>0.911</strong></td>
+      <td>0.3s</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>CNN과 BiLSTM을 같이 사용할 때 CNN 대비 10배 느려지지만 좀 더 다양한 표현을 잡으려면 꼭 사용해야 한다고 판단했습니다.<br />
+병렬처리를 사용한다면 시간이 빨라지긴 하겠지만 아직 공부하지 않았으므로 패스합니다.</p>
+
+<h3 id="semi-supervised-learning">Semi-Supervised Learning</h3>
+
+<p>저희의 목적은 트위치 채팅 데이터의 성향을 판단하는 것이므로 트위치 문장들을 데이터로 모델에 먹일 필요가 있습니다. 그러나 레이블링되지 않은 데이터를 사람 손으로 레이블링하기에는 데이터의 양이 너무 많습니다.</p>
+
+<p>Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에 의존해야 하며 사용하려는 모델이 Pseudo label을 생성하고 다시 학습하게되면 Bias가 증폭되는 단점을 갖고 있습니다.</p>
+
+<p>이를 해결하기 위해 Meta Pseudo Labels라는 방법을 사용하여 좀 더 정확한 레이블링을 할 수 있도록 구현하고자 했습니다.</p>
+
+<h3 id="meta-pseudo-labels">Meta Pseudo Labels</h3>
+
+<ul>
+  <li>Reference : <a href="https://arxiv.org/abs/2003.10580">https://arxiv.org/abs/2003.10580</a></li>
+</ul>
+
+<p>겉핥기로 공부해서 논문 내용을 정확하게 보지는 않았지만 대략적인 설명은 다음 그림과 같습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=14HfiaSGFEWCmyNdNaD-_aTCrXWZg0o3B" alt="" /></p>
+
+<p>기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정이지만 MPL 방법은 Student가 Pseudo label을 학습하지만 Student의 loss를 Teacher가 학습합니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1VB9geH6mpHxgfR827u8iUHsPiFs2uG3m" alt="" /></p>
+
+<p>Supervised learning보다 MPL이 더 좋은 퍼포먼스를 보여준다는 일러스트입니다.</p>
+
+<p>그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 현재 SOTA급의 성능을 내고 있는 중입니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1vFXRUOcIu5g-eKLLqo2TvPz2Gc4WPg-0" alt="" /></p>
+
+<p>가장 중요한 점은 Teacher-Student 형태를 가지고 있지만 Teacher의 좀 더 정확한 Pseudo Labels를 생성하기 위해 최적화하는 과정입니다.</p>
+
+<h3 id="mlflow">MLflow</h3>
+
+<p>모델 버전관리와 배포가 쉬운 도구인 MLflow를 사용했습니다.</p>
+
+<p>MLflow의 tracking server를 GCP(Google Cloud Platform)으로 지정했는데 이때 Docker를 사용하면 굉장히 쉽게 배포가 가능합니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM python:3.10.1-slim-buster
+
+COPY . /mlflow
+WORKDIR /mlflow
+
+RUN apt-get update &amp;&amp; \
+    pip install pip --upgrade &amp;&amp; \
+    pip install -r requirements.txt
+
+ENV BACKEND_STORE_URI=mysql+pymysql://{Google-cloud-storage}
+ENV DEFAULT_ARTIFACT_ROOT=gs://{tracking-server}
+ENV MLFLOW_TRACKING_URI=http://localhost:5000
+EXPOSE 80
+</code></pre></div></div>
+<p>python 이미지 위에 mlflow를 설치하고 환경변수를 넣어주는 방법을 사용했습니다. 원래는 환경변수를 넣어주는 것이 좋지는 않지만 CLI에서 넣을때 에러가 발생하는 경우가 있어서 dockerfile에 넣어주는 걸로 결정했습니다.</p>
+
+<p>또한, 새로운 기능을 넣거나 버전을 다운그레이드 시킬때도 아티팩트들이 그대로 google-cloud-storage에 저장되어 있기 때문에 새롭게 학습시킬 필요가 없습니다.</p>
+
+<p>그러나 <a href="https://github.com/mlflow/mlflow/issues/4749">[BUG] ‘mlflow.pyfunc.load_model()’ need to be added keyword argument #4749</a>와 같이 gpu상에서 학습시킨 모델을 cpu상의 시스템에서 사용할 수 없습니다.</p>
+
+<p>torch에서는 gpu에서 학습한 모델을 cpu만 사용하는 시스템에서 불러올 수 있게 <code class="language-plaintext highlighter-rouge">torch.load()</code>시 <code class="language-plaintext highlighter-rouge">map_location</code>의 인자를 ‘cpu’로 주어 cpu상의 시스템으로 옮길 수 있도록 하지만 mlflow는 이런것을 지원하지 않았습니다.</p>
+
+<p>그래서 gpu가 없는 서버에 모델을 배포하려면 cpu로 학습시켜야 한다는 단점이 있었습니다. 다행히 애플리케이션을 제공받은 gpu가 있는 서버에서 시연하기로 해서 cuda로 학습할 수 있었습니다.</p>
+
+<h2 id="회고">회고</h2>
+
+<hr />
+
+<p>airflow까지 해보고 싶었는데 SQLAlchemy하고 충돌때문인지 <code class="language-plaintext highlighter-rouge">airflow db init</code> 를 실행하면 자꾸 에러나서 다운그레이드도 해봤는데 결국 해결하지 못했습니다.</p>
+
+<p>그리고 MLflow의 파이프라인 작성을 해보지 못해서 이와 관련된 airflow와 mlflow의 파이프라인 작성을 연습해보려고 합니다.</p>
+
+<p>마지막으로 Docker를 제대로 써본건 이번이 처음인데 정말 편한 도구였습니다. k8s도 해보고 싶네요.</p>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="cnn" /><category term="nlp" /><summary type="html"><![CDATA[목적]]></summary></entry><entry><title type="html">머신러닝 라이프 사이클</title><link href="http://localhost:4000/boostcamp/ml-life-cycle/" rel="alternate" type="text/html" title="머신러닝 라이프 사이클" /><published>2021-12-21T00:00:00+09:00</published><updated>2021-12-21T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/ml-life-cycle</id><content type="html" xml:base="http://localhost:4000/boostcamp/ml-life-cycle/"><![CDATA[<h2 id="문제-정의의-중요성">문제 정의의 중요성</h2>
+
+<blockquote>
+  <p>문제 정의란, 특정 현상을 파악하고 그 현상에 있는 문제(<strong>Problem</strong>)을 정의하는 과정을 말한다.
+<strong>문제를 잘 풀기(Solve) 위해선 문제 정의(Problem Definition)이 매우 중요함</strong></p>
+
+</blockquote>
+
+<p>풀려고 하는 문제가 명확하지 않으면 그 이후 무엇을 해야할지 결정하기 어려워짐</p>
+
+<h2 id="프로젝트-flow">프로젝트 Flow</h2>
+
+<ul>
+  <li>문제를 해결하기 위한 flow는 다음과 같다.
+    <ul>
+      <li>현상파악</li>
+      <li>목적, 문제 정의 → 계속 생각하기, 쪼개서 생각하기</li>
+      <li>프로젝트 설계</li>
+      <li>Action</li>
+      <li>추가 원인 분석</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="현상-파악">현상 파악</h3>
+
+<p>어떤 현상이 발견되었는가?</p>
+
+<ul>
+  <li>어떤 일이 발생하고 있는가?</li>
+  <li>해당 일에서 어려움은 무엇인가?</li>
+  <li>해당 일에서 해결하면 좋은 것은 무엇인가?</li>
+  <li>추가적으로 무엇을 해볼 수 있을까?</li>
+  <li>어떤 가설을 만들어 볼 수 있을까?</li>
+  <li>어떤 데이터가 있을까?</li>
+</ul>
+
+<h3 id="구체적인-문제-정의">구체적인 문제 정의</h3>
+
+<p>다음의 예시를 보자.</p>
+
+<blockquote>
+  <p>레스토랑의 매출이 3달 연속으로 감소되고 있으며, 전체적인 손님 수가 줄어들고 있다.</p>
+
+</blockquote>
+
+<p>전체적인 손님의 수가 줄어든다는 것은 방문하는 손님도 줄어들 뿐만 아니라 기존 손님도 줄어든다는 것을 의미한다.</p>
+
+<p>기존 손님에게 피드백을 받을 필요가 있고 처음 방문하는 손님의 경우 어떤 어려움이 있는지 조사해볼 필요가 있다.</p>
+
+<p>손님의 피드백에 <strong>“메뉴가 너무 다양하고 설명이 부족해서 메뉴를 선정하기 어렵다.”</strong>라는 문제가 있다고 가정하자.</p>
+
+<ul>
+  <li><strong>문제상황 : “메뉴가 너무 다양하고 설명이 부족해 선정하기 어렵다”</strong></li>
+</ul>
+
+<p>이를 해결하기 위해 <strong>메뉴를 줄이거나</strong> <strong>설명을 늘리는 방법</strong>을 제시할 수 있다.</p>
+
+<ul>
+  <li>이때, 메뉴를 줄인다는 방법은 해당 메뉴를 즐기던 손님을 잃어버릴 수 있는 방법이므로 고민해본다.</li>
+  <li>설명을 늘리는 방법은 지금 당장 사용할 수 있는 방법이고 어떤 상황에 이 음식을 먹으면 좋은지 가이드를 줄 수 있다.</li>
+</ul>
+
+<p><strong>당장 진행할 수 있는 설명을 늘리는 방식을 사용하고, 병렬로 손님의 취향에 기반한 음식을 추천할 수 있지 않을까?</strong></p>
+
+<ul>
+  <li>설명을 늘리는 방식(룰 베이스) → 당장의 문제 해결</li>
+  <li>추천(알고리즘 개발) → 문제 해결의 또 다른 방법</li>
+</ul>
+
+<p>즉, <strong>문제 정의는 결국 현상을 계속 쪼개고, 그 문제를 기반으로 어떤 어려움을 겪고 있는지 파악하는 것을 말한다.</strong></p>
+
+<p>데이터로 할 수 있는 일을 만들어서 진행하되, <strong>무조건 알고리즘적 접근이 최상은 아니라는 방법을 제시할 수도 있어야 함</strong> (간단한 방법부터 점진적 접근!)</p>
+
+<p>왜냐하면, 우리는 시간적 제약을 받기 때문이다.</p>
+
+<p><strong>여기서 인지하면 좋은 내용</strong></p>
+
+<ul>
+  <li>문제를 쪼개서 파악해보자</li>
+  <li>문제의 해결 방식은 다양하다</li>
+  <li>해결 방식 중에서 데이터로 해결할 수 있는 방법을 고민해보기</li>
+  <li>점진적으로 실행하기(룰베이스로 시작해서 병렬로 모델링 + 룰베이스가 기준점이 될 수 있음)</li>
+</ul>
+
+<h3 id="프로젝트-설계">프로젝트 설계</h3>
+
+<blockquote>
+  <p>“<strong>문제 정의 후, 프로젝트의 설계를 최대한 구체적으로 하는 것이 좋다!!”</strong></p>
+
+</blockquote>
+
+<p>문제 정의에 기반해서 프로젝트 설계</p>
+
+<ul>
+  <li>해결하려는 문제 구체화</li>
+  <li>머신러닝 문제 타당성 확인</li>
+  <li>목표 설정, 지표 결정</li>
+  <li>제약조건(Constraint &amp; Risk)</li>
+  <li>베이스라인, 프로토타입</li>
+  <li>평가(Evaluation) 방법 설계</li>
+</ul>
+
+<h3 id="프로젝트-설계---머신러닝-문제-타당성-평가">프로젝트 설계 - 머신러닝 문제 타당성 평가</h3>
+
+<p>머신러닝 문제를 고려할 때는 <strong>얼마나 흥미로운지가 아니라 제품, 회사의 비즈니스에서 어떤 가치를 줄 수 있는지 고려</strong>해야 함</p>
+
+<p>머신러닝 문제는 결국 데이터로부터 어떤 함수를 학습하는 것이다.</p>
+
+<p>복잡도를 평가하는 방법은 필요한 데이터의 종류와 기존 모델이 있는지 확인한다.</p>
+
+<p>머신러닝이 모든 문제를 해결할 수 있는 도구가 아니고 머신러닝 솔루션이 최적이 아닐 수 있다.</p>
+
+<p>머신러닝이 사용되면 좋은 경우:</p>
+
+<ul>
+  <li>학습할 수 있는 <strong>패턴</strong>이 있는가?
+    <ul>
+      <li>생성되는 방식에 패턴이 없다면 학습할 수가 없음</li>
+    </ul>
+  </li>
+  <li>학습을 위한 <strong>목적함수(loss)</strong>를 만들 수 있어야 함
+    <ul>
+      <li>머신러닝 알고리즘은 유용한 패턴을 학습하거나 노이즈를 패턴으로 학습하는 경우도 존재</li>
+      <li>지도학습은 정답 레이블과 예측 결과의 차이로 정의할 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>패턴</strong>이 복잡해야 함
+    <ul>
+      <li>주소 검색 문제 → 우편번호에 기반하여 정렬되어 있으므로 필요하지 않음</li>
+      <li>집 가격 예측 → 동네의 평균 가격, 공원 유무 등 복잡한 패턴이 필요할 수 있다.</li>
+    </ul>
+  </li>
+  <li><strong>데이터가 존재하거나 수집할 수 있어야 함</strong>
+    <ul>
+      <li>데이터가 없다면 룰베이스 알고리즘을 만든 후, 데이터 수집 계획부터 수립</li>
+    </ul>
+  </li>
+  <li>사람이 <strong>반복적</strong>으로 실행하는 경우
+    <ul>
+      <li>작업이 반복된다 = 패턴</li>
+      <li>사람의 노동력을 줄일 수 있는 관점</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>머신러닝이 사용되면 좋지 않은 경우</strong></p>
+
+<ul>
+  <li>한번의 예측 오류가 치명적인 결과를 발생할 경우</li>
+  <li>비윤리적 문제</li>
+  <li>간단히 해결할 수 있는 경우</li>
+  <li>좋은 데이터를 얻기 어려울 경우</li>
+  <li>시스템이 내리는 모든 결정이 설명 가능해야 할 경우</li>
+  <li>비용 효율적이지 않은 경우</li>
+</ul>
+
+<h3 id="프로젝트-설계---목표-설정-지표-설정">프로젝트 설계 - 목표 설정, 지표 설정</h3>
+
+<p>프로젝트 목표</p>
+
+<ul>
+  <li>Goal : 프로젝트의 일반적인 목적, 큰 목적</li>
+  <li>Objectives : 목적을 달성하기 위한 세부 단계의 목표(구체적인 목적)</li>
+</ul>
+
+<p>예를들면, 랭킹 시스템에서 고객의 참여(Engage)를 최대화하고 싶은 Goal이 있는 경우</p>
+
+<ul>
+  <li>Objectives
+    <ul>
+      <li>NSFW(Not Safe For Work) 컨텐츠 필터링을 통해 사용자에게 불쾌감을 줄임</li>
+      <li>참여에 따른 게실물 랭킹 선정 : 사용자가 클릭할 가능성이 있는 게시물 추천</li>
+    </ul>
+  </li>
+  <li>그러나 참여를 위해 최적화를 하면 윤리적인 의문이 존재할 수 있음
+    <ul>
+      <li>극단적으로 클릭을 유도할 자극적인 컨텐츠를 노출할 수 있음(Netflix 소셜 딜레마)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>새로운 Goal : 극단적인 견해와 잘못된 정보의 확산을 최소화하며 사용자의 참여를 극대화하는 목표</p>
+
+<ul>
+  <li>새로운 Objectives
+    <ul>
+      <li>NSFW 컨텐츠 필터링</li>
+      <li>잘못된 정보 필터링</li>
+      <li>품질에 따른 게시물 랭킹 선정 : 좋은 품질의 게시물</li>
+      <li>참여에 따른 게시물 랭킹 선정 : 사용자가 클릭할 가능성이 있는 게시물</li>
+    </ul>
+  </li>
+</ul>
+
+<p>목표를 설정하며 데이터를 확인해야 함(지표와 연결되는 내용이기 때문)</p>
+
+<ul>
+  <li>데이터셋이 레이블링 되지 않은 경우도 존재</li>
+  <li>데이터 소스 찾아보기</li>
+</ul>
+
+<p>정확히 찾으려는 데이터가 없는 경우가 있어서 <strong>여러가지 시나리오</strong>를 고려하는 것이 좋음</p>
+
+<ul>
+  <li><strong>Label을 가진 데이터</strong> : 바로 사용</li>
+  <li><strong>유사 Label</strong>을 가진 데이터 : 음악 스트리밍 서비스에서 노래 재생, 건너뛰기 기록은 선호도를 예측하기 위한 유사 레이블</li>
+  <li><strong>Label이 없는 데이터</strong> : 직접 레이블링 or 레이블링이 없는 상태에서 학습하는 방법 찾기</li>
+  <li><strong>데이터가 없는 경우</strong> : 데이터 수집 방법을 고민
+    <ul>
+      <li>데이터셋을 만드는 일은 반복적인 작업 : 이를 위해 Self Supervised Learning 등을 사용해서 유사 레이블을 만드는 방법도 존재</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Multiple Objective Optimization</p>
+
+<ul>
+  <li>최적화하고 싶은 목적함수가 여러가지 있는 경우, 서로 충돌할 수 있음</li>
+  <li>품질에 따른 게시물 랭킹 선정 vs. 참여에 따른 게시물 랭킹 선정
+    <ul>
+      <li>예를들면, 게시물이 매우 매력적이지만 품질이 의심스러운 경우 어떻게?</li>
+    </ul>
+  </li>
+  <li>품질에 따른 게시물 : 게시물 품질 예측(게시물 예상 품질 - 실제 품질 : quality_loss)</li>
+  <li>참여에 따른 게시물 : 게시물 클릭수(게시물 예상 클릭수 - 실제 클릭수 : engagement_loss)</li>
+  <li>방법 1
+    <ul>
+      <li><strong>단일 모델</strong>, 두 loss를 하나의 loss로 결합하고 해당 loss를 최소화</li>
+      <li>loss = $\alpha$ quality_loss + $\beta$ engagement_loss</li>
+      <li>알파와 베타를 필요에 따라 조정해야 함</li>
+    </ul>
+  </li>
+  <li>방법 2
+    <ul>
+      <li><strong>2개의 모델</strong>(각각의 loss를 최소화) → quality_model, engage_model</li>
+      <li>Rank : $\alpha$ quality_model(post) + $\beta$ engage_model(post)</li>
+      <li>모델을 재학습하지 않아도 조정할 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Objectives가 여러개인 경우 분리하는 것이 좋음</p>
+
+<ul>
+  <li>학습하기 쉬워야 함 : 하나의 objectives를 최적화하는 것이 여러 objectives를 최적화하는 것보다 쉬움</li>
+  <li>모델을 재학습하지 않도록 모델을 분리 : objectives는 수정해야 하는 유지보수 일정이 모두 다를 수 있음
+    <ul>
+      <li>예를들어, 스팸 필터링은 품질 순위 시스템보다 더 빠르게 업데이트해야 함</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="프로젝트-설계---제약-조건">프로젝트 설계 - 제약 조건</h3>
+
+<ul>
+  <li>일정 : 프로젝트에 사용할 수 있는 시간</li>
+  <li>예산 : 사용할 수 있는 최대 예산?</li>
+  <li>관련된 사람 : 이 프로젝트로 인해 영향을 받는 사람은?
+    <ul>
+      <li>수동으로 하던 사람들에게 어떤것이 자동화되는 것이 좋은가요?라고 물어볼 수 있음</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Privacy</strong> : Storage, 외부 솔루션, 클라우드 서비스 등에 대한 개인정보 보호 요구</p>
+
+<ul>
+  <li>기술적 제약 : 레거시 환경(인프라)가 머신러닝을 적용할 때 큰 제약일 수 있다.</li>
+  <li>윤리적 이슈 : 윤리적으로 어긋난 결과</li>
+</ul>
+
+<p><strong>성능</strong></p>
+
+<ul>
+  <li>Baseline : 새로 만든 모델을 무엇과 비교할 것인가? 기존에 사람이 진행하던 성능 or 간단한 회귀?</li>
+  <li>Threshold : 확률값이 0.5 이상일 경우 강아지라고 할 것인지, 0.7 이상일 경우 강아지라고 할 것인지?</li>
+  <li>Performance Trade-off : 속도가 빠른데 Acc 0.95 vs. 속도는 느린데 Acc 0.93</li>
+  <li>해석 가능 여부 : 결과가 왜 발생했는지 해석이 필요할까? 해석이 필요한 사람은?
+    <ul>
+      <li>해석이 필요한 대상 : 머신러닝을 아는 사람 vs. 머신러닝을 모르는 사람</li>
+    </ul>
+  </li>
+  <li>Confidence Measurement : False Negative가 있어도 괜찮은지? 오탐이 있으면 안되는지?</li>
+</ul>
+
+<h3 id="프로젝트-설계---베이스라인-프로토타입">프로젝트 설계 - 베이스라인, 프로토타입</h3>
+
+<p>모델이 더 좋아졌다고 판단할 수 있는 Baseline이 필요하다.</p>
+
+<p>간단한 모델부터 시작하는 이유?</p>
+
+<ul>
+  <li>어떻게든 모델의 위험을 낮추는 것이 목표가 되어야 함</li>
+  <li>가장 좋은 방법은 최악의 성능을 알기 위해 허수아비 모델로 시작하는 것</li>
+  <li>초기엔 단순하게 사용자가 이전에 선택한 행동을 제안할 수도 있고, 추천 시스템에선 제일 많이 구매한 것을 추천할 수도 있음</li>
+  <li>유사한 문제를 해결하고 있는 SOTA 논문 파악해보기 → 우리의 문제에선 어떤 시도를 해볼 수 있는가?</li>
+</ul>
+
+<p>베이스라인 이후에 간단한 모델을 만들고 피드백을 들어보면 도움됨(동료에게 모델을 활용할 수 있는 환경을 준비하자) → 프로토타입을 만들어서 제공</p>
+
+<ul>
+  <li>Input을 입력하면 Output을 반환하는 웹페이지</li>
+  <li>여기선 모델의 동장이 중요 → 프론트엔드 버리고 모델에 집중</li>
+  <li>Volia, Streamlit, Gradio 등을 활용</li>
+</ul>
+
+<h3 id="metric-evaluation">Metric Evaluation</h3>
+
+<p>앞에서 Objectives를 구해서 모델의 성능 지표는 확인했다. 그러나 모델의 성능 지표와 별개로 비즈니스 목표에 영향을 파악하는 것도 중요하다.</p>
+
+<p><strong>앞선 문제를 해결할 경우 어떤 지표가 좋아질까?</strong>를 고민해야 한다.</p>
+
+<p>이 부분은 작게는 <strong>모델의 성능지표(RMSE)</strong>일 수도 있고, 크게는 <strong>비즈니스 지표</strong>일 수 있다.(<strong>고객의 재방문율</strong>, <strong>매출</strong> 등)</p>
+
+<p>지표를 잘 정의해야 우리의 <strong>Action이 기존보다 더 성과를 냈는지 아닌지를 파악할 수있다.</strong>(<strong>이를 위해 A/B Test를 진행하기도 한다.</strong>)</p>
+
+<p>만든 모델이 비즈니스에 어떤 임팩트를 미쳤을지 고려하자</p>
+
+<p>개발 및 배포중에 시스템의 성능은 어떻게 판단할 수 있을까?</p>
+
+<ul>
+  <li>정답 레이블이 필요한 경우 사용자 반응에서 어떻게 레이블을 추론할 수 있을까?</li>
+  <li>모델 성능 비즈니스 Goal과 Objectives를 어떻게 연결할 수 있을까?</li>
+</ul>
+
+<p>위의 질문들을 고려하자.</p>
+
+<h3 id="action모델-개발-후-배포--모니터링">Action(모델 개발 후 배포 &amp; 모니터링)</h3>
+
+<p>앞서 정의한 지표가 어떻게 변하는지 파악한다.</p>
+
+<ul>
+  <li>현재 만든 모델이 어떤 결과를 내고 있는가?</li>
+  <li>잘못 예측하고 있다면 어떤 부분이 문제일까?</li>
+  <li>어떤 부분을 기반으로 예측하고 있을까?</li>
+  <li>Feature의 어떤 값을 사용할 때 특히 잘못 예측하고 있는가?</li>
+</ul>
+
+<h3 id="추가-원인-분석">추가 원인 분석</h3>
+
+<p>새롭게 발견한 상황을 파악해 어떤 방식으로 문제를 해결할지 모색한다.</p>
+
+<p>그 과정에서 앞서 진행한 과정을 반복한다.</p>
+
+<h2 id="비즈니스-모델">비즈니스 모델</h2>
+
+<p>회사는 비즈니스 모델을 만들고, 비즈니스 모델을 통해 매출이 발생한다.</p>
+
+<p>해당 비즈니스 모델에서 어떤 데이터가 존재하고 그 데이터를 기반으로 어떤 것을 만들 수 있을지 생각하자.</p>
+
+<ul>
+  <li>회사의 비즈니스 파악</li>
+  <li>데이터를 활용할 수 있는 부분은 어디인가?</li>
+  <li>모델을 활용한다고 하면 예측의 결과가 어떻게 활용되는가?</li>
+</ul>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="serving" /><summary type="html"><![CDATA[문제 정의의 중요성]]></summary></entry><entry><title type="html">Model Serving 정리</title><link href="http://localhost:4000/boostcamp/model-serving/" rel="alternate" type="text/html" title="Model Serving 정리" /><published>2021-12-20T00:00:00+09:00</published><updated>2021-12-20T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/model-serving</id><content type="html" xml:base="http://localhost:4000/boostcamp/model-serving/"><![CDATA[<h2 id="serving-basic">Serving Basic</h2>
+
+<h3 id="serving">Serving</h3>
+
+<blockquote>
+  <p>머신러닝 모델을 개발하고, 현실 세계(앱, 웹, Production 환경)에서 사용할 수 있게 만드는 행위</p>
+
+</blockquote>
+
+<p>크게 2가지 방식 존재</p>
+
+<ul>
+  <li>Online Serving</li>
+  <li>Batch Serving</li>
+  <li>그 외에 클라이언트(모바일 기기, IoT Device 등)에서 Edge Serving도 존재</li>
+  <li>Inference : 모델에 데이터가 제공되어 예측하는 경우, 사용하는 관점, Serving과 용어가 혼재되어 사용되는 경우도 존재</li>
+</ul>
+
+<h2 id="online-serving">Online Serving</h2>
+
+<ul>
+  <li>웹 서버
+    <ul>
+      <li>HTTP를 통해 웹 브라우저에서 요청하는 HTML 문서나 오브젝트를 전송해주는 서비스 프로그램</li>
+      <li>요청(Request)을 받으면 요청한 내용을 보내주는(Response) 프로그램</li>
+    </ul>
+  </li>
+  <li>API(Application Programming Interface)
+    <ul>
+      <li>운영체제나 프로그래밍 언어가 제공하는 기능을 제어할 수 있게 만든 인터페이</li>
+    </ul>
+  </li>
+  <li>Online Serving
+    <ul>
+      <li>요청(Request)이 올 때마다 <strong>실시간으로 예측</strong></li>
+      <li>클라이언트(Application)에서 ML 모델 서버에 HTTP 요청(Reqeust)하고, 머신러닝 모델 서버에서 예측한 후, 예측값(응답)을 반환(Response)한다.</li>
+      <li>Serving Input - Single Data Point
+        <ul>
+          <li><strong>단일 데이터</strong>를 받아 실시간으로 예측을 하는 예제</li>
+          <li>기계 고장 예측 모델
+            <ul>
+              <li>센서의 실시간 데이터가 제공되면 특정 기계 부품이 앞으로 N분안에 고장날지 아닐지를 예측</li>
+            </ul>
+          </li>
+          <li>음식 배달 소요 시간 예측
+            <ul>
+              <li>해당 지역의 과거 평균 배달 시간, 실시간 교통 정보, 음식 데이터 등을 기반으로 음식 배달 소요 시간 예측</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>ML모델 서버에 요청할 때, 필요시 ML 모델 서버에서 데이터 전처리를 해야할 수 있음(혹은 분리를 위해 전처리 서버 / ML 모델 서버로 나눌 수 있음)</li>
+      <li>서비스의 서버에 ML 서버를 포함하는 경우도 있고 ML 서버를 별도로 운영하는 경우도 존재</li>
+      <li>Online Serving을 구현하는 방식
+        <ul>
+          <li>직접 API 웹 서버 개발 : Flask, FastAPI</li>
+          <li>클라우드 서비스 활용 : AWS의 SageMaker, GCP의 Vertex AI</li>
+          <li>Serving 라이브러리 활용 : Tensorflow Serving, Torch Serve, MLFlow, BentoML 등</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Online Serving에서 고려할 부분
+    <ul>
+      <li>실시간 예측을 하기 때문에 <strong>지연시간</strong>(Latency)를 최소화해야 함</li>
+      <li>Input 데이터를 기반으로 Database에 있는 데이터를 추출해서 모델 예측해야 하는 경우 데이터 추출을 위한 쿼리 실행, 결과를 받기까지의 시간 소요</li>
+      <li>모델이 수행하는 연산 시간 → 경량화 작업이 필요할수도</li>
+      <li>결과값에 대한 보정이 필요한 시간 → 유효하지 않은 예측값이 반환될 경우</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="클라우드-서비스-활용">클라우드 서비스 활용</h3>
+
+<ul>
+  <li>클라우드 서비스 장점
+    <ul>
+      <li>직접 구축해야 하는 MLOps의 다양한 부분이 만들어짐</li>
+      <li>사용자 관점에선 PyTorch 사용하듯 학습 코드만 제공하면 API 서버가 만들어짐</li>
+    </ul>
+  </li>
+  <li>클라우드 서비스 단점
+    <ul>
+      <li>클라우드 서비스가 익숙해야 잘 활용할 수 있음</li>
+      <li>비용문제 : 직접 만드는 것보단 더 많은 비용이 나갈 수 있음</li>
+    </ul>
+  </li>
+  <li>소수의 인원만 존재하며, 소수의 인원이 많은 업무를 해야 하는 경우 유용</li>
+  <li>클라우드 내부 실행 구조를 잘 알아야 문제 상황이 발견되었을 때 잘 해결할 수 있음</li>
+  <li>클라우드 서비스에선 어떤 방식으로 AI제품을 만들었는지 확인할 수 있어서 사용해본느 것도 좋음</li>
+</ul>
+
+<h3 id="serving-라이브러리-활용">Serving 라이브러리 활용</h3>
+
+<ul>
+  <li>다양한 방식으로 개발할 수 있지만, 매번 추상화된 패턴을 가질 수 있음</li>
+  <li>추상화된 패턴을 잘 제공하는 오픈소스를 활용하는 방식</li>
+</ul>
+
+<h3 id="serving-방법을-선택하는-가이드">Serving 방법을 선택하는 가이드</h3>
+
+<ul>
+  <li>어떤 방법을 쓰느냐는 주어진 환경(회사에서 주어진 일정, 인력, 예산, 요구 성능 등)에 따라 다름</li>
+</ul>
+
+<h3 id="online-serving에서-고려할-부분">Online Serving에서 고려할 부분</h3>
+
+<p>Serving 할 때 Python 버전, 패키지 버전 등 Dependency가 굉장히 중요하다.</p>
+
+<p>“재현 가능”하지 않은 코드는 Risk를 가지고 있는 코드이므로 배포할 수 없다.</p>
+
+<p>관련한 도구로는 Virtualenv, Poetry, Docker 등이 있다.</p>
+
+<h2 id="batch-serving">Batch Serving</h2>
+
+<ul>
+  <li>주기적으로 학습을 하거나 예측을 하는 경우</li>
+  <li>일정 주기 마다 <strong>최근 데이터</strong>를 가지고 예측</li>
+  <li>Batch 묶음, 한번에 많은 예측을 실행</li>
+  <li>Batch Serving 관련한 라이브러리는 따로 존재하지 않고 Airflow, Cron Job 등으로 스케쥴링 작업(<strong>Workflow Scheduler</strong>)을 진행한다.
+    <ul>
+      <li>학습 주기와 예측 주기가 다를 수도 있다.</li>
+      <li>아파치의 Airflow가 데이터 엔지니어링에서 자주 활용된다.</li>
+    </ul>
+  </li>
+  <li>예를들면, 추천시스템은 1일 전에 생성된 컨텐츠에 대한 추천 리스트를 예측한다.</li>
+  <li>실시간이 필요 없는 대부분의 방식에서 활용 가능하다.</li>
+  <li>장점으로는 코드를 함수화한 후 주기적으로 실행만 하면 되므로 간단한 구조를 가지고 있으며 한번에 많은 데이터를 처리하기 때문에 Latency 문제가 없음</li>
+  <li>단점으로는 실시간으로 활용할 수 없고 Cold Start 문제가 있다.
+    <ul>
+      <li>Cold Start 문제 : 오늘 새로 생긴 컨텐츠는 추천할 수 없음</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="online-serving-vs-batch-serving">Online Serving vs. Batch Serving</h2>
+
+<h3 id="input-관점">Input 관점</h3>
+
+<ul>
+  <li>데이터 하나씩 요청하는 경우 : Online</li>
+  <li>여러가지 데이터가 한꺼번에 처리되는 경우 : Batch</li>
+</ul>
+
+<h3 id="output-관점">Output 관점</h3>
+
+<ul>
+  <li>Inference output을 어떻게 활용하는지에 따라 다름
+    <ul>
+      <li>API형태로 바로 결과를 반환 → Online</li>
+      <li>서버와 통신 필요 → Online</li>
+      <li>1시간에 1번씩 예측해도 좋은 경우 → Batch</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="serving-형태-선택">Serving 형태 선택</h3>
+
+<p>실시간 모델 결과가 어떻게 활용되는지에 대한 생각이 중요하다.</p>
+
+<p>예측해도 활용이 되지 않는다면 Batch로 진행해도 무방하다.</p>
+
+<p>Batch Serving의 결과를 Database에 저장하고, 서버는 Database의 데이터를 쿼리해서 주기적으로 조회하는 방식으로 사용할 수 있음</p>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="serving" /><summary type="html"><![CDATA[Serving Basic]]></summary></entry><entry><title type="html">MLOps 정리</title><link href="http://localhost:4000/boostcamp/MLOps/" rel="alternate" type="text/html" title="MLOps 정리" /><published>2021-12-19T00:00:00+09:00</published><updated>2021-12-19T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/MLOps</id><content type="html" xml:base="http://localhost:4000/boostcamp/MLOps/"><![CDATA[<h2 id="모델-개발-프로세스">모델 개발 프로세스</h2>
+
+<h3 id="research">Research</h3>
+
+<ul>
+  <li>문제정의 → EDA → Feature Engineering → Train → Predict</li>
+  <li>위 프로세스는 보통 자신의 컴퓨터, 서버 인스턴스 등에서 실행하고 <strong>고정(Static)된 데이터</strong>를 사용해 학습한다.</li>
+  <li>학습된 모델을 앱, 웹 서비스에서 사용할 수 있도록 만드는 과정이 필요하다.
+    <ul>
+      <li>이런 경우 <strong>Real World, Production 환경에 모델을 배포</strong>한다고 표현한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="production">Production</h3>
+
+<ul>
+  <li>웹, 앱 서비스에서 활용할 수 있게 만드는 과정 = “<strong>모델에게 데이터(input)을 제공하면서, (Output) 예측해주세요</strong>“라고 <strong>요청</strong></li>
+  <li>모델을 배포했을 때, 모델의 <strong>결과값이 이상한 경우</strong>가 존재한다.
+    <ul>
+      <li>원인 파악 필요</li>
+      <li>Input 데이터가 이상한 경우가 존재</li>
+      <li>Research 할 땐 Outlier로 제외할 수 있지만, 실제 서비스에선 제외가 힘든 상황일 수 있다(또는 별도 처리가 필요)</li>
+    </ul>
+  </li>
+  <li><strong>모델의 성능이 계속 변경</strong>
+    <ul>
+      <li>모델의 성능은 어떻게 확인할 수 있는가?</li>
+      <li>예측값과 실제 레이블을 알아야 함</li>
+      <li>정형(Tabular) 데이터에서는 정확히 알 수 있지만, 비정형 데이터(이미지 등)는 잘 모를 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>새로운 모델이 더 안 좋다면?</strong>
+    <ul>
+      <li>과거의 모델을 다시 사용해야 하는지 고민해야 함</li>
+      <li>Research 환경에선 성능이 더 좋았던 모델이 Production 환경에선 더 좋지 않을 수 있음</li>
+      <li>이전 모델을 다시 사용하기 위한 작업이 필요</li>
+    </ul>
+  </li>
+  <li>그 외에도 다양한 이슈가 존재</li>
+</ul>
+
+<h2 id="mlops란">MLOps란?</h2>
+
+<blockquote>
+  <p>MLOps = ML(Machine Learning) + Ops(Operations)<br />
+머신러닝 모델을 운용하면서 <strong>반복적으로 필요한 업무를 자동화</strong>시키는 과정</p>
+
+</blockquote>
+
+<ul>
+  <li>머신러닝 엔지니어링 + 데이터 엔지니어링 + 클라우드 + 인프라</li>
+  <li><strong>머신런이 모델 개발(ML Dev)과 머신러닝 모델 운영(Ops)에서 사용되는 문제, 반복을 최소화하고 비즈니스 가치를 창출하는 것이 목표</strong></li>
+  <li>모델링에 집중할 수 있도록 관련된 인프라를 만들고, 자동으로 운영되도록 만드는 일</li>
+  <li>최근엔 비즈니스 문제에 머신러닝/딥러닝을 적용하는 케이스가 많아짐</li>
+  <li>Production 환경에 배포하는 과정엔 <strong>Research의 모델이 재현 가능해야 하며</strong> 현실의 Risk 환경에서 잘 버틸 수 있어야 함</li>
+  <li><strong>MLOps의 목표는 빠른 시간 내에 가장 적은 위험을 부담하며 아이디어 단계부터 Production 단계까지 ML프로젝트를 진행할 수 있도록 기술적 마찰을 줄이는 것</strong></li>
+</ul>
+
+<h3 id="research와-production의-차이">Research와 Production의 차이</h3>
+
+<ul>
+  <li>Research ML에서는 모델 성능이 중요지만 Production ML에서는 모델성능, 빠른 Inference 속도, 해석 가능함이 중요하다.</li>
+  <li>Research에서는 더 좋은 모델을 발견하는 것이 도전과제이지만 Production에서는 안정적인 운영, 전체 시스템 구조가 도전과제이다.</li>
+</ul>
+
+<h3 id="mlops-학습-방법">MLOps 학습 방법</h3>
+
+<ul>
+  <li>MLOps의 각 <strong>Component에서 해결하고 싶은 문제는 무엇</strong>이고, <strong>그 문제를 해결하기 위한 방법으로 어떤 방식을 활용할 수 있는지</strong>를 학습하자.</li>
+</ul>
+
+<h2 id="mlops-component">MLOps Component</h2>
+
+<h3 id="infra">Infra</h3>
+
+<ul>
+  <li>고려해야할 점
+    <ul>
+      <li>예상되는 트래픽이 얼마나 되는가?</li>
+      <li>서버의 자원을 어느정도 할당 받을 것인가?</li>
+      <li>스케일 업, 스케일 아웃이 가능한가?</li>
+      <li>자체 서버 구축 or 클라우드?</li>
+    </ul>
+  </li>
+  <li>클라우드 : AWS, GCP, Azure, NCP 등</li>
+  <li>온 프레미스 : 회사나 대학원의 전산실에 서버를 직접 설치</li>
+</ul>
+
+<h3 id="serving">Serving</h3>
+
+<ul>
+  <li>정기배송처럼 <strong>일정 주기</strong>로 서빙하는 경우를 <strong>Batch Serving</strong>이라 한다</li>
+  <li><strong>Online Serving</strong>은 <strong>실시간</strong>으로 예측해서 서빙하는 경우를 말하고 동시에 많은 트래픽이 몰려도 <strong>병목이 없어야</strong> 하고, <strong>확장 가능</strong>하도록 구현해야 한다.</li>
+</ul>
+
+<h3 id="experiment-model-management">Experiment, Model Management</h3>
+
+<ul>
+  <li>실험시 사용한 하이퍼파라미터나 모델 정보 등을 기록할 수 있는 도구가 필요하다.</li>
+  <li>공통의 포맷상에서 코드로 작성하도록 하여 기록의 누락을 방지한다.</li>
+  <li>대표적으로 MLFlow가 있다.</li>
+</ul>
+
+<h3 id="feature-store">Feature Store</h3>
+
+<ul>
+  <li>데이터를 가공하여 저장한 곳</li>
+  <li>데이터 전처리를 할 때 시간을 줄일 수 있다.</li>
+  <li>또한, Research나 Production 모두 사용가능한 곳에 저장되므로 균일한 데이터를 사용할 수 있다.</li>
+  <li>대표적으로 FEAST 라이브러리가 있다.</li>
+</ul>
+
+<h3 id="data-validation">Data Validation</h3>
+
+<ul>
+  <li>이전에 사용한 데이터와 Feature의 분포를 비교할 수 있다.</li>
+  <li>Data Drift, Model Drift, Concep Drift</li>
+  <li>TFDV라는 도구나 AWS Deequ라는 도구가 있다.</li>
+</ul>
+
+<h3 id="continuous-training">Continuous Training</h3>
+
+<ul>
+  <li>새로운 데이터가 들어왔거나 일정 시간 혹은 Metric 기반으로 성능이 떨어졌음을 인지하게 되면 다시 학습한다.</li>
+</ul>
+
+<h3 id="monitoring">Monitoring</h3>
+
+<ul>
+  <li>모델의 지표, 인프라의 성능 지표 등을 기록하여 모니터링을 한다.</li>
+</ul>
+
+<h3 id="automl">AutoML</h3>
+
+<ul>
+  <li>모델 구조를 자동으로 만드는 기능</li>
+  <li>NNI가 있다.</li>
+</ul>
+
+<h3 id="정리">정리</h3>
+
+<p>MLOps는 회사의 비즈니스 상황과 모델 운영 상황에 따라 우선 순위가 달라진다.</p>
+
+<p><strong>앞선 모든 요소가 항상 존재해야 하는 것은 아니다.</strong></p>
+
+<p>MLOps를 처음부터 진행하는 것이 오히려 비효율적일 수 있다.</p>
+
+<p>처음엔 작은 단위의 MVP(Minimal Value Product)로 시작해서 점점 운영 리소스가 많이 소요될 때 하나씩 구축하는 방식을 활용</p>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="MLOps" /><summary type="html"><![CDATA[모델 개발 프로세스]]></summary></entry></feed>

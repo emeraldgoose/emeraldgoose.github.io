@@ -1,0 +1,693 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>RNN 정리 - gooooooooooose</title>
+<meta name="description" content="시퀀스 데이터    소리, 문자열, 주가 등의 데이터를 시퀀스(sequence) 데이터로 분류한다.   시퀀스 데이터는 독립동등분포(Independent and Identically Distributed, i.i.d.)가정을 잘 위배하기 때문에 순서를 바꾸거나 과거 정보에 손실이 발생하면 데이터의 확률분포도 바뀌게 된다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="RNN 정리">
+<meta property="og:url" content="http://localhost:4000/boostcamp/rnn/">
+
+
+  <meta property="og:description" content="시퀀스 데이터    소리, 문자열, 주가 등의 데이터를 시퀀스(sequence) 데이터로 분류한다.   시퀀스 데이터는 독립동등분포(Independent and Identically Distributed, i.i.d.)가정을 잘 위배하기 때문에 순서를 바꾸거나 과거 정보에 손실이 발생하면 데이터의 확률분포도 바뀌게 된다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-08-06T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/rnn/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="RNN 정리">
+    <meta itemprop="description" content="시퀀스 데이터  소리, 문자열, 주가 등의 데이터를 시퀀스(sequence) 데이터로 분류한다.  시퀀스 데이터는 독립동등분포(Independent and Identically Distributed, i.i.d.)가정을 잘 위배하기 때문에 순서를 바꾸거나 과거 정보에 손실이 발생하면 데이터의 확률분포도 바뀌게 된다.">
+    <meta itemprop="datePublished" content="2021-08-06T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">RNN 정리
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-08-06T00:00:00+09:00">August 06, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#시퀀스-데이터">시퀀스 데이터</a><ul><li><a href="#시퀀스-데이터-핸들링">시퀀스 데이터 핸들링</a></li></ul></li><li><a href="#rnnrecurrent-nerual-network">RNN(Recurrent Nerual Network)</a></li><li><a href="#bptt">BPTT</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="시퀀스-데이터">시퀀스 데이터</h2>
+<ul>
+  <li>소리, 문자열, 주가 등의 데이터를 시퀀스(sequence) 데이터로 분류한다.</li>
+  <li>시퀀스 데이터는 독립동등분포(Independent and Identically Distributed, i.i.d.)가정을 잘 위배하기 때문에 순서를 바꾸거나 과거 정보에 손실이 발생하면 데이터의 확률분포도 바뀌게 된다.</li>
+</ul>
+
+<h3 id="시퀀스-데이터-핸들링">시퀀스 데이터 핸들링</h3>
+<ul>
+  <li>이전 시퀀스 정보를 가지고 앞으로 발생할 데이터의 확률분포를 다루기 위해 조건부확률을 이용할 수 있다.
+    <ul>
+      <li>$P(X_1,…,X_t) = P(X_t|X_1,…,X_{t-1})P(X1,…,X_{t-1})$ (베이즈 정리)</li>
+      <li>다시, $P(X_t|X_1,…,X_{t-1})P(X_{t-1}|X_1,…,X_{t-2})P(X_1,…,X_{t-2})$ 로 만들 수 있다.</li>
+      <li>정리하면 $\prod_{s=1}^{t}P(X_s|X_{s-1},…,X_1)$</li>
+    </ul>
+  </li>
+  <li>시퀸스 데이터를 다루기 위해선 길이가 가변적인 데이터를 다룰 수 있는 모델이 필요하다.
+    <ul>
+      <li>$X_t \sim P(X_t|X_{t-1},…,X_1)$</li>
+      <li>$X_{t+1} \sim P(X_{t+1}|X_{t},X_{t-1}…,X_1)$</li>
+    </ul>
+  </li>
+  <li>몇 문장만이나 가까운 과거까지의 데이터만으로 모델링이 가능하다면 고정된 길이 $\tau$만큼의 시퀀스를 사용할 수 있다.
+    <ul>
+      <li>이런 경우를 $AR(\tau)$, 자기회귀모델(Autoregressive Model)이라고 한다.</li>
+      <li>$\tau$는 하이퍼 파라미터로서 모델링을 하기전에 정해줘야 하는 값이다.</li>
+    </ul>
+  </li>
+  <li>다른 방법으로는 이전 정보를 제외한 나머지 정보들을 $H_t$라는 잠재변수로 인코딩해서 활용하는 잠재 AR 모델이 있다.
+    <ul>
+      <li>$X_t \sim P(X_t|X_{t-1},H_t)$</li>
+      <li>$X_{t+1} \sim P(X_{t+1}|X_{t},H_{t+1})$</li>
+      <li>$H_t = Net_\theta(H_{t-1},X_{t-1})$</li>
+      <li>잠재변수 $H_t$를 신경망을 통해 반복하여 사용하여 시퀀스 데이터의 패턴을 학습하는 모델이 RNN이다</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="rnnrecurrent-nerual-network">RNN(Recurrent Nerual Network)</h2>
+<ul>
+  <li>기본적인 RNN 모형은 MLP와 유사한 모양이다.
+    <ul>
+      <li>$O = HW^{(2)}+b^{(2)}$</li>
+      <li>$H = \sigma(XW^{(1)}+b^{(1)})$</li>
+      <li>$W^{(1)}, W^{(1)}$은 시퀀스와 상관없이 불변인 행렬이다.</li>
+      <li>이 모델은 과거의 정보를 다룰 수 없다.</li>
+    </ul>
+  </li>
+  <li>잠재변수인 $H_t$를 복제해서 다음 순서의 잠재변수를 인코딩하는데 사용한다.
+    <ul>
+      <li>$O_t = H_tW^{(2)}+b^{(2)}$</li>
+      <li>$H_t = \sigma(X_tW_x^{(1)}+H_{t-1}W_H^{(1)}+b^{(1)})$</li>
+    </ul>
+  </li>
+  <li>RNN의 역전파는 잠재변수의 연결그래프에 따라 순차적으로 계산한다. 이를 Backpropagation Through Time(BPTT)라 한다.
+    <ul>
+      <li>다음 시점에서의 잠재변수로부터 오는 그레디언트 벡터와 출력에서 들어오는 그레디언트 벡터를 통해 현재 잠재변수에 전달이 된다.</li>
+      <li>잠재변수의 그레디언트 벡터를 입력과 이전 시점의 잠재변수로 다시 전달한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="bptt">BPTT</h2>
+<ul>
+  <li>$\partial_{w_h}h_t = \partial_{w_h}f(x_t,h_{t-1},w_h)+\sum_{i=1}^{t-1}(\prod_{j=i+1}^{t}\partial_{h_{j-1}}f(x_j,h_{j-1},w_h))\partial_{w_h}f(x_i,h_{i-1},w_h)$</li>
+  <li>$\prod_{j=i+1}^{t}\partial_{h_{j-1}}f(x_j,h_{j-1},w_h)$은 i+1시점에서부터 t시점까지 모든 히든변수(잠재변수)에 대한 미분텀이 곱해지면서 더해진다.
+    <ul>
+      <li>만약 시퀀스 길이가 길어지면(즉, 현재시점부터 예측이 끝나는 t시점까지) 곱해지는 텀들이 불안정해지기 쉬워진다. 만약 이 값이 1보다 크게 되면 굉장히 크게 커지고 1보다 작게되면 굉장히 작은 값으로 떨어진다. 미분값이 엄청 커지거나 엄청 작아지게 될 확률이 높아진다.</li>
+      <li>그래서 일반적으로 BPTT를 모든 시점에 적용하게되면 RNN의 학습이 굉장히 불안정해지기 쉬워진다.</li>
+    </ul>
+  </li>
+  <li>시퀀스 길이가 길어지는 경우 역전파 알고리즘의 계산이 불안정해질 수 있으므로 길이를 끊는 것이 중요해진다. 이를 truncated BPTT라 한다.
+    <ul>
+      <li>이런 문제를 해결하기 위해 등장한 RNN 네트워크가 LSTM과 GRU이다.</li>
+    </ul>
+  </li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#rnn" class="page__taxonomy-item p-category" rel="tag">rnn</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-08-06T00:00:00+09:00">August 6, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/probability/" class="pagination--pager" title="Probability 정리
+">Previous</a>
+    
+    
+      <a href="/boostcamp/statistics/" class="pagination--pager" title="Statistics 정리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

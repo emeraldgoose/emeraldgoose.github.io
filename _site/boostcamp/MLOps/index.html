@@ -1,0 +1,766 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>MLOps 정리 - gooooooooooose</title>
+<meta name="description" content="모델 개발 프로세스">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="MLOps 정리">
+<meta property="og:url" content="http://localhost:4000/boostcamp/MLOps/">
+
+
+  <meta property="og:description" content="모델 개발 프로세스">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-12-19T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/MLOps/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="MLOps 정리">
+    <meta itemprop="description" content="모델 개발 프로세스">
+    <meta itemprop="datePublished" content="2021-12-19T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">MLOps 정리
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-12-19T00:00:00+09:00">December 19, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#모델-개발-프로세스">모델 개발 프로세스</a><ul><li><a href="#research">Research</a></li><li><a href="#production">Production</a></li></ul></li><li><a href="#mlops란">MLOps란?</a><ul><li><a href="#research와-production의-차이">Research와 Production의 차이</a></li><li><a href="#mlops-학습-방법">MLOps 학습 방법</a></li></ul></li><li><a href="#mlops-component">MLOps Component</a><ul><li><a href="#infra">Infra</a></li><li><a href="#serving">Serving</a></li><li><a href="#experiment-model-management">Experiment, Model Management</a></li><li><a href="#feature-store">Feature Store</a></li><li><a href="#data-validation">Data Validation</a></li><li><a href="#continuous-training">Continuous Training</a></li><li><a href="#monitoring">Monitoring</a></li><li><a href="#automl">AutoML</a></li><li><a href="#정리">정리</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="모델-개발-프로세스">모델 개발 프로세스</h2>
+
+<h3 id="research">Research</h3>
+
+<ul>
+  <li>문제정의 → EDA → Feature Engineering → Train → Predict</li>
+  <li>위 프로세스는 보통 자신의 컴퓨터, 서버 인스턴스 등에서 실행하고 <strong>고정(Static)된 데이터</strong>를 사용해 학습한다.</li>
+  <li>학습된 모델을 앱, 웹 서비스에서 사용할 수 있도록 만드는 과정이 필요하다.
+    <ul>
+      <li>이런 경우 <strong>Real World, Production 환경에 모델을 배포</strong>한다고 표현한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="production">Production</h3>
+
+<ul>
+  <li>웹, 앱 서비스에서 활용할 수 있게 만드는 과정 = “<strong>모델에게 데이터(input)을 제공하면서, (Output) 예측해주세요</strong>“라고 <strong>요청</strong></li>
+  <li>모델을 배포했을 때, 모델의 <strong>결과값이 이상한 경우</strong>가 존재한다.
+    <ul>
+      <li>원인 파악 필요</li>
+      <li>Input 데이터가 이상한 경우가 존재</li>
+      <li>Research 할 땐 Outlier로 제외할 수 있지만, 실제 서비스에선 제외가 힘든 상황일 수 있다(또는 별도 처리가 필요)</li>
+    </ul>
+  </li>
+  <li><strong>모델의 성능이 계속 변경</strong>
+    <ul>
+      <li>모델의 성능은 어떻게 확인할 수 있는가?</li>
+      <li>예측값과 실제 레이블을 알아야 함</li>
+      <li>정형(Tabular) 데이터에서는 정확히 알 수 있지만, 비정형 데이터(이미지 등)는 잘 모를 수 있음</li>
+    </ul>
+  </li>
+  <li><strong>새로운 모델이 더 안 좋다면?</strong>
+    <ul>
+      <li>과거의 모델을 다시 사용해야 하는지 고민해야 함</li>
+      <li>Research 환경에선 성능이 더 좋았던 모델이 Production 환경에선 더 좋지 않을 수 있음</li>
+      <li>이전 모델을 다시 사용하기 위한 작업이 필요</li>
+    </ul>
+  </li>
+  <li>그 외에도 다양한 이슈가 존재</li>
+</ul>
+
+<h2 id="mlops란">MLOps란?</h2>
+
+<blockquote>
+  <p>MLOps = ML(Machine Learning) + Ops(Operations)<br />
+머신러닝 모델을 운용하면서 <strong>반복적으로 필요한 업무를 자동화</strong>시키는 과정</p>
+
+</blockquote>
+
+<ul>
+  <li>머신러닝 엔지니어링 + 데이터 엔지니어링 + 클라우드 + 인프라</li>
+  <li><strong>머신런이 모델 개발(ML Dev)과 머신러닝 모델 운영(Ops)에서 사용되는 문제, 반복을 최소화하고 비즈니스 가치를 창출하는 것이 목표</strong></li>
+  <li>모델링에 집중할 수 있도록 관련된 인프라를 만들고, 자동으로 운영되도록 만드는 일</li>
+  <li>최근엔 비즈니스 문제에 머신러닝/딥러닝을 적용하는 케이스가 많아짐</li>
+  <li>Production 환경에 배포하는 과정엔 <strong>Research의 모델이 재현 가능해야 하며</strong> 현실의 Risk 환경에서 잘 버틸 수 있어야 함</li>
+  <li><strong>MLOps의 목표는 빠른 시간 내에 가장 적은 위험을 부담하며 아이디어 단계부터 Production 단계까지 ML프로젝트를 진행할 수 있도록 기술적 마찰을 줄이는 것</strong></li>
+</ul>
+
+<h3 id="research와-production의-차이">Research와 Production의 차이</h3>
+
+<ul>
+  <li>Research ML에서는 모델 성능이 중요지만 Production ML에서는 모델성능, 빠른 Inference 속도, 해석 가능함이 중요하다.</li>
+  <li>Research에서는 더 좋은 모델을 발견하는 것이 도전과제이지만 Production에서는 안정적인 운영, 전체 시스템 구조가 도전과제이다.</li>
+</ul>
+
+<h3 id="mlops-학습-방법">MLOps 학습 방법</h3>
+
+<ul>
+  <li>MLOps의 각 <strong>Component에서 해결하고 싶은 문제는 무엇</strong>이고, <strong>그 문제를 해결하기 위한 방법으로 어떤 방식을 활용할 수 있는지</strong>를 학습하자.</li>
+</ul>
+
+<h2 id="mlops-component">MLOps Component</h2>
+
+<h3 id="infra">Infra</h3>
+
+<ul>
+  <li>고려해야할 점
+    <ul>
+      <li>예상되는 트래픽이 얼마나 되는가?</li>
+      <li>서버의 자원을 어느정도 할당 받을 것인가?</li>
+      <li>스케일 업, 스케일 아웃이 가능한가?</li>
+      <li>자체 서버 구축 or 클라우드?</li>
+    </ul>
+  </li>
+  <li>클라우드 : AWS, GCP, Azure, NCP 등</li>
+  <li>온 프레미스 : 회사나 대학원의 전산실에 서버를 직접 설치</li>
+</ul>
+
+<h3 id="serving">Serving</h3>
+
+<ul>
+  <li>정기배송처럼 <strong>일정 주기</strong>로 서빙하는 경우를 <strong>Batch Serving</strong>이라 한다</li>
+  <li><strong>Online Serving</strong>은 <strong>실시간</strong>으로 예측해서 서빙하는 경우를 말하고 동시에 많은 트래픽이 몰려도 <strong>병목이 없어야</strong> 하고, <strong>확장 가능</strong>하도록 구현해야 한다.</li>
+</ul>
+
+<h3 id="experiment-model-management">Experiment, Model Management</h3>
+
+<ul>
+  <li>실험시 사용한 하이퍼파라미터나 모델 정보 등을 기록할 수 있는 도구가 필요하다.</li>
+  <li>공통의 포맷상에서 코드로 작성하도록 하여 기록의 누락을 방지한다.</li>
+  <li>대표적으로 MLFlow가 있다.</li>
+</ul>
+
+<h3 id="feature-store">Feature Store</h3>
+
+<ul>
+  <li>데이터를 가공하여 저장한 곳</li>
+  <li>데이터 전처리를 할 때 시간을 줄일 수 있다.</li>
+  <li>또한, Research나 Production 모두 사용가능한 곳에 저장되므로 균일한 데이터를 사용할 수 있다.</li>
+  <li>대표적으로 FEAST 라이브러리가 있다.</li>
+</ul>
+
+<h3 id="data-validation">Data Validation</h3>
+
+<ul>
+  <li>이전에 사용한 데이터와 Feature의 분포를 비교할 수 있다.</li>
+  <li>Data Drift, Model Drift, Concep Drift</li>
+  <li>TFDV라는 도구나 AWS Deequ라는 도구가 있다.</li>
+</ul>
+
+<h3 id="continuous-training">Continuous Training</h3>
+
+<ul>
+  <li>새로운 데이터가 들어왔거나 일정 시간 혹은 Metric 기반으로 성능이 떨어졌음을 인지하게 되면 다시 학습한다.</li>
+</ul>
+
+<h3 id="monitoring">Monitoring</h3>
+
+<ul>
+  <li>모델의 지표, 인프라의 성능 지표 등을 기록하여 모니터링을 한다.</li>
+</ul>
+
+<h3 id="automl">AutoML</h3>
+
+<ul>
+  <li>모델 구조를 자동으로 만드는 기능</li>
+  <li>NNI가 있다.</li>
+</ul>
+
+<h3 id="정리">정리</h3>
+
+<p>MLOps는 회사의 비즈니스 상황과 모델 운영 상황에 따라 우선 순위가 달라진다.</p>
+
+<p><strong>앞선 모든 요소가 항상 존재해야 하는 것은 아니다.</strong></p>
+
+<p>MLOps를 처음부터 진행하는 것이 오히려 비효율적일 수 있다.</p>
+
+<p>처음엔 작은 단위의 MVP(Minimal Value Product)로 시작해서 점점 운영 리소스가 많이 소요될 때 하나씩 구축하는 방식을 활용</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#mlops" class="page__taxonomy-item p-category" rel="tag">MLOps</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-12-19T00:00:00+09:00">December 19, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/lightweight-bert/" class="pagination--pager" title="BERT 경량화
+">Previous</a>
+    
+    
+      <a href="/boostcamp/model-serving/" class="pagination--pager" title="Model Serving 정리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

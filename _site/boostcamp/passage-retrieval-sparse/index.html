@@ -1,0 +1,764 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Passage Retrieval - Sparse Embedding - gooooooooooose</title>
+<meta name="description" content="Introduction to Passage Retrieval">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Passage Retrieval - Sparse Embedding">
+<meta property="og:url" content="http://localhost:4000/boostcamp/passage-retrieval-sparse/">
+
+
+  <meta property="og:description" content="Introduction to Passage Retrieval">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-10-14T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/passage-retrieval-sparse/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Passage Retrieval - Sparse Embedding">
+    <meta itemprop="description" content="Introduction to Passage Retrieval">
+    <meta itemprop="datePublished" content="2021-10-14T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Passage Retrieval - Sparse Embedding
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-10-14T00:00:00+09:00">October 14, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#introduction-to-passage-retrieval">Introduction to Passage Retrieval</a><ul><li><a href="#passage-retrieval">Passage Retrieval</a></li><li><a href="#passage-retrieval-with-mrc">Passage Retrieval with MRC</a></li><li><a href="#overview-of-passage-retrieval">Overview of Passage Retrieval</a></li></ul></li><li><a href="#passage-embedding-and-sparse-embedding">Passage Embedding and Sparse Embedding</a><ul><li><a href="#passage-embedding">Passage Embedding</a></li><li><a href="#passage-embedding-space">Passage Embedding Space</a></li><li><a href="#sparse-embedding-소개">Sparse Embedding 소개</a></li><li><a href="#sparse-embedding-특징">Sparse Embedding 특징</a></li></ul></li><li><a href="#tf-idf">TF-IDF</a><ul><li><a href="#tf-idf-term-frequency---inverse-document-frequency-소개">TF-IDF (Term Frequency - Inverse Document Frequency) 소개</a></li><li><a href="#term-frequency-tf">Term Frequency (TF)</a></li><li><a href="#inverse-document-frequency-idf">Inverse Document Frequency (IDF)</a></li><li><a href="#combine-tf--df">Combine TF &amp; DF</a></li><li><a href="#bm25">BM25</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="introduction-to-passage-retrieval">Introduction to Passage Retrieval</h2>
+
+<h3 id="passage-retrieval">Passage Retrieval</h3>
+
+<blockquote>
+  <p>질문(query)에 맞는 문서(passage)를 찾는 것.</p>
+
+</blockquote>
+
+<h3 id="passage-retrieval-with-mrc">Passage Retrieval with MRC</h3>
+
+<p>Open-domain Question Answering: 대규모의 문서 중에서 질문에 대한 답을 찾기</p>
+
+<ul>
+  <li>
+    <p>Passage Retrieval과 MRC를 이어서 2-Stage로 만들 수 있음</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=14iurFvUnXIiLZj_XEwNbh5M2ze3ZeDxV" alt="" /></p>
+  </li>
+</ul>
+
+<h3 id="overview-of-passage-retrieval">Overview of Passage Retrieval</h3>
+
+<p>Query와 Passage를 임베딩한 뒤 유사도로 랭킹을 매기고, 유사도가 가장 높은 Passage를 선택함</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1BE1hDFSaRXPx3aTVvuP5BRSe_NU1S210" alt="" /></p>
+
+<p>질문이 들어왔을 때, 질문을 어떤 vector space로 임베딩하고 마찬가지로 Passage 또한 같은 vector space에 임베딩한다. Passage의 임베딩은 미리 해놓아 효율성을 높인다.<br />
+다음, 쿼리와 문서의 Similarity를 측정하여 Ranking을 매기게 된다. 이때 Score는 nearest neighbor(고차원 space에서 서로의 거리를 측정)와 inner product 방법을 사용한다.</p>
+
+<h2 id="passage-embedding-and-sparse-embedding">Passage Embedding and Sparse Embedding</h2>
+
+<h3 id="passage-embedding">Passage Embedding</h3>
+
+<blockquote>
+  <p>구절(Passage)을 벡터로 변환하는 것</p>
+
+</blockquote>
+
+<h3 id="passage-embedding-space">Passage Embedding Space</h3>
+
+<blockquote>
+  <p>Passage Embedding의 벡터 공간
+벡터화된 Passage를 이용하여 Passage 간 유사도 등을 알고리즘으로 계산할 수 있음</p>
+
+</blockquote>
+
+<h3 id="sparse-embedding-소개">Sparse Embedding 소개</h3>
+
+<ul>
+  <li>Bag-of-Word(BoW)
+    <ul>
+      <li>BoW를 구성하는 방법 → n-gram
+        <ul>
+          <li>unigram (1-gram)</li>
+          <li>bigram (2-gram)</li>
+        </ul>
+      </li>
+      <li>Term value를 결정하는 방법
+        <ul>
+          <li>Term이 document에 등장하는지 안하는지 (binary)</li>
+          <li>Term이 몇번 등장하는지 (term frequency), 등. (eg. TF-IDF)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="sparse-embedding-특징">Sparse Embedding 특징</h3>
+
+<ol>
+  <li>Dimension of embedding vector = number of terms
+    <ol>
+      <li>등장하는 단어가 많아질수록 증가</li>
+      <li>N-gram의 n이 커질수록 증가</li>
+    </ol>
+  </li>
+  <li>Term overlap을 정확하게 잡아 내야 할 때 유용</li>
+  <li>반면, 의미(semantic)가 비슷하지만 다른 단어인 경우 비교가 불가</li>
+</ol>
+
+<h2 id="tf-idf">TF-IDF</h2>
+
+<h3 id="tf-idf-term-frequency---inverse-document-frequency-소개">TF-IDF (Term Frequency - Inverse Document Frequency) 소개</h3>
+
+<ul>
+  <li>Term Frequency (TF) : 단어의 등장빈도</li>
+  <li>Inverse Document Frequency (IDF) : 단어가 제공하는 정보의 양</li>
+  <li>ex) It was the best of times
+    <ul>
+      <li>It, was, the, of : 자주 등장하지만 제공하는 정보의 양이 적음</li>
+      <li>best, times : 좀 더 많은 정보를 제공, 문서에서 등장하는 정도가 적다 = 중요한 정보</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="term-frequency-tf">Term Frequency (TF)</h3>
+
+<blockquote>
+  <p>해당 문서 내 단어의 등장 빈도</p>
+</blockquote>
+
+<ol>
+  <li>Raw count</li>
+  <li>Adjusted for doc length: raw count / num words (TF)</li>
+  <li>Other variants: binary, log normalization, etc.</li>
+</ol>
+
+<h3 id="inverse-document-frequency-idf">Inverse Document Frequency (IDF)</h3>
+
+<blockquote>
+  <p>단어가 제공하는 정보의 양</p>
+</blockquote>
+
+<ul>
+  <li>$IDF(t) = log\frac{N}{DF(t)}$</li>
+  <li>Document Frequency (DF) = Term $t$가 등장한 document의 개수</li>
+  <li>$N$ = 총 document의 개수</li>
+  <li>모든 문서에 등장하는 단어의 경우 N = DF이기 때문에 log를 씌어주면 0이 된다.</li>
+</ul>
+
+<h3 id="combine-tf--df">Combine TF &amp; DF</h3>
+
+<p>TF-IDF($t$, $d$): TF-IDF for term $t$ in document $d$, $TF(t, d) \times IDF(t)$</p>
+
+<ul>
+  <li>‘a’, ‘the’ 등 관사 → Low TF-IDF
+    <ul>
+      <li>TF는 높지만 IDF가 0에 가까울 것 (거의 모든 document에 등장 → log(N/DF) = 0)</li>
+    </ul>
+  </li>
+  <li>자주 등장하지 않는 고유명사 (ex. 사람 이름, 지명 등) → High TF-IDF (IDF가 커지면서 전체적인 TF-IDF가 증가)</li>
+</ul>
+
+<h3 id="bm25">BM25</h3>
+
+<blockquote>
+  <p>TF-IDF의 개념을 바탕으로, 문서의 길이까지 고려하여 점수를 매김</p>
+</blockquote>
+
+<ul>
+  <li>TF 값에 한계를 지정해두어 일정한 범위를 유지하도록 함</li>
+  <li>평균적인 문서의 길이 보다 더 작은 문서에서 단어가 매칭된 경우 그 문서에 대해 가중치 부여</li>
+  <li>실제 검색엔진, 추천 시스템 등에서 아직까지도 많이 사용되는 알고리즘</li>
+</ul>
+
+<p>$Score(D, Q) = \sum_{term \in Q} IDF(term) \cdot \frac{TFIDF(term, D) \cdot (k_1 + 1)}{TFIDF(term, D) + k_1 \cdot (1 - b + b \cdot \frac{\vert D \vert}{avgdl})}$</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#mrc" class="page__taxonomy-item p-category" rel="tag">MRC</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-10-14T00:00:00+09:00">October 14, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/passage-retrieval-dense/" class="pagination--pager" title="Passage Retrieval - Dense Embedding
+">Previous</a>
+    
+    
+      <a href="/boostcamp/scaling-up-with-faiss/" class="pagination--pager" title="Scaling Up with FAISS
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,749 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>원시 데이터 수집과 가공 - gooooooooooose</title>
+<meta name="description" content="원시 데이터 정의">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="원시 데이터 수집과 가공">
+<meta property="og:url" content="http://localhost:4000/boostcamp/crawling-data/">
+
+
+  <meta property="og:description" content="원시 데이터 정의">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-11-09T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/boostcamp/crawling-data/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="원시 데이터 수집과 가공">
+    <meta itemprop="description" content="원시 데이터 정의">
+    <meta itemprop="datePublished" content="2021-11-09T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">원시 데이터 수집과 가공
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2021-11-09T00:00:00+09:00">November 09, 2021</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#원시-데이터-정의">원시 데이터 정의</a><ul><li><a href="#원시-텍스트-수집-시-검토-사항">원시 텍스트 수집 시 검토 사항</a></li><li><a href="#원시-텍스트-데이터-사용역장르에-따른-분류">원시 텍스트 데이터 사용역(장르)에 따른 분류</a></li><li><a href="#원시-텍스트-데이터의-메타-정보">원시 텍스트 데이터의 메타 정보</a></li></ul></li><li><a href="#원시-데이터-수집-시-고려-사항">원시 데이터 수집 시 고려 사항</a><ul><li><a href="#저작권">저작권</a></li><li><a href="#데이터-윤리">데이터 윤리</a></li></ul></li><li><a href="#원시-데이터-전처리">원시 데이터 전처리</a><ul><li><a href="#전처리-단계">전처리 단계</a></li></ul></li><li><a href="#원시-데이터-가공---주석-도구">원시 데이터 가공 - 주석 도구</a><ul><li><a href="#주석annotation-labeling">주석(annotation, labeling)</a></li></ul></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="원시-데이터-정의">원시 데이터 정의</h2>
+
+<blockquote>
+  <p>원시 데이터란? 과제를 해결허기 위해 특정 도메인, 장르, 주제 등에 대하여 조건에 맞춰 수집하였으나, 주석 단계를 거치지 않은 상태의 데이터</p>
+</blockquote>
+
+<p>원하는 형태로 가공하기 이전의 데이터로 목적에 맞는 전처리 과정을 거쳐 가공이 되어야 활용할 수 있음</p>
+
+<h3 id="원시-텍스트-수집-시-검토-사항">원시 텍스트 수집 시 검토 사항</h3>
+
+<ul>
+  <li>What (수집 대상, 포함 요소(메타정보)) : 시간별, 주제별, 지역별, 매체별 대상, 텍스트 생성 주체, 텍스트 생성 시기 등</li>
+  <li>When (수집 기간) : 수집 작업 기간</li>
+  <li>Where (수집 장소(수집 대상, 저장 대상)) : 크라우드 소싱 플랫폼, SNS, 크롤링 서버, 로컬 저장소 등</li>
+  <li>Who (담당자) : 수집 작업 담당자</li>
+  <li>How (수집 방법, 수집 주기, 데이터 형식, 규모) : 크롤링, 모델 생성, 크라우드 소싱, JSON, txt 등</li>
+  <li>Why (수집 목적, 기대 결과) : 과제별 목적 및 기대 결과</li>
+  <li>크라우드 소싱의 경우 개인정보 수집 동의와 저작권 활용 계약이 중요함</li>
+</ul>
+
+<h3 id="원시-텍스트-데이터-사용역장르에-따른-분류">원시 텍스트 데이터 사용역(장르)에 따른 분류</h3>
+
+<ul>
+  <li>문어 : 신문기사, 소설, 수필, 논문, 잡지, 보고서 등</li>
+  <li>구어(음성 파일을 텍스트로 전사) : 일상 대화, 연설, 강연
+    <ul>
+      <li>준구어 : 방송 대본, 영화 대본 등</li>
+    </ul>
+  </li>
+  <li>웹 : SNS, 커뮤니티 게시판, 메신저 대화, 블로그, 이메일 등</li>
+</ul>
+
+<h3 id="원시-텍스트-데이터의-메타-정보">원시 텍스트 데이터의 메타 정보</h3>
+
+<p>텍스트 외에 텍스트를 설명하는 정보.</p>
+
+<p>텍스트 ID, 이름, 저장 정보, 매체 정보, 주석 정보, 출처, 형태/구문 분석 정보 등을 사전에 정해진 양식에 맞춰 기록</p>
+
+<ul>
+  <li>Dataset.identifier : type(string)</li>
+  <li>Dataset.name : type(string)</li>
+  <li>Dataset.src_path : type(string)</li>
+  <li>Dataset.label_path : type(string)</li>
+  <li>Dataset.category : type(number)</li>
+  <li>Dataset.type : type(number)</li>
+</ul>
+
+<h2 id="원시-데이터-수집-시-고려-사항">원시 데이터 수집 시 고려 사항</h2>
+
+<ul>
+  <li>획득 가능성
+    <ul>
+      <li>획득이 불가능하거나 통제 불가능한 주기를 가지고 있다면 원시데이터의 정책에 의존하게 되므로 바람직하지 않음 → 사실상 수집이 불가능</li>
+      <li>획득이 용이하더라도 서비스 활용 측면에서 데이터를 활용하기 위해 가공 처리에 많은 비용이 드는 데이터는 선정하기 어려움</li>
+      <li>직접 산출이 어려운 경우 획득 난이도 측면에서 트래픽량과 저장처리 장치의 용량 등을 고려 대상, 획득 대상의 대안 필요</li>
+    </ul>
+  </li>
+  <li>데이터 균형과 다양성
+    <ul>
+      <li>개체의 다양성, 목적 및 상황의 다양성, 시간별, 종류별, 사람별, 지역별 다양성</li>
+    </ul>
+  </li>
+  <li>신뢰성
+    <ul>
+      <li>데이터의 품질이 신뢰할 수 있는지 검토</li>
+    </ul>
+  </li>
+  <li>범 제도 준수
+    <ul>
+      <li>개인정보 및 사생활 보호가 필요한 항목 획득 시, 개인정보보호법 등에 따라 적절한 법적, 기술적 절차를 거친 데이터를 활용하며, 그렇지 않은 데이터는 정제 과정에서 처리될 수 있도록 함</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="저작권">저작권</h3>
+
+<p>원시 데이터에 주석 작업을 하는 경우, 결과물은 2차적 저작물로 간주되며 라이센스는 원시 데이터를 따름</p>
+
+<p>CC BY-SA : 주석 작업 가능 → 라이센스 CC-BY-SA 가능</p>
+
+<p>CC BY-ND : 주석 작업 불가능</p>
+
+<p>CC BY-NC-SA : 주석 작업 가능 → 라이센스 CC-BY-SA 불가능</p>
+
+<h3 id="데이터-윤리">데이터 윤리</h3>
+
+<p>윤리기준은 관련 규범이 불확실하거나 법제도가 급속한 기술발전을 따라가지 못할 경우에도 사회가 나아가야 할 방향을 제시하는 의의</p>
+
+<p>→ 인공지능 국가전략에 따른 ‘사람 중심의 인공지능’구현을 위해 글로벌 기준과의 정합성을 갖춘 ‘인공지능 윤리기준’마련 추진</p>
+
+<h2 id="원시-데이터-전처리">원시 데이터 전처리</h2>
+
+<h3 id="전처리-단계">전처리 단계</h3>
+
+<ul>
+  <li>추출 대상 확인
+    <ul>
+      <li>메타정보</li>
+      <li>주석 대상 텍스트 : 주석 대상 표현 포함 텍스트 여부, 텍스트 길이 범위</li>
+    </ul>
+  </li>
+  <li>불필요 요소 제거 및 변환
+    <ul>
+      <li>개인정보 비식별화</li>
+      <li>비윤리적 표현 정제</li>
+    </ul>
+  </li>
+  <li>정제 대상 확인
+    <ul>
+      <li>숫자, 외국어, 기호, 이모지</li>
+      <li>띄어쓰기, 맞춤법, 오탈자</li>
+      <li>개인 정보</li>
+      <li>문장 분리</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="원시-데이터-가공---주석-도구">원시 데이터 가공 - 주석 도구</h2>
+
+<h3 id="주석annotation-labeling">주석(annotation, labeling)</h3>
+
+<p>원시 데이터를 가공하여 원하는 정보를 부착하는 작업.</p>
+
+<p>텍스트를 단순히 분류하여(긍부정, 주제) 해당 분류를 텍스트에 삽입하거나 개체명, 관계 정보 등의 정보를 문자열에 직접 주석할 수 있음.</p>
+
+<ul>
+  <li>구글 스프레드 시트 : 여러 명 작업자 가능, 데이터 관리 용이, CSV 형식으로 export 가능</li>
+  <li>구글 폼 : 단순 분류 문제 등 복잡한 주석 도구가 필요하지 않은 경우에 적합. 작업자 모집에도 활용</li>
+  <li>Brat : 오픈 소스 데이터 주석기</li>
+  <li>Doccano : NER, 감정분석, 기계 번역 등 주석 기능 제공. 서버 또는 로컬에 설치하여 사용</li>
+  <li>Tagtog : 웹 기반 주석 도구. 다양한 형식 지원. 무료 이용시 데이터 공개해야 함</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#dataset" class="page__taxonomy-item p-category" rel="tag">dataset</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#boostcamp" class="page__taxonomy-item p-category" rel="tag">BoostCamp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-11-09T00:00:00+09:00">November 9, 2021</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/boostcamp/nlp-data/" class="pagination--pager" title="자연어 처리 데이터 기초
+">Previous</a>
+    
+    
+      <a href="/boostcamp/nlp-data-introduction/" class="pagination--pager" title="자연어 처리 데이터 소개
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>
