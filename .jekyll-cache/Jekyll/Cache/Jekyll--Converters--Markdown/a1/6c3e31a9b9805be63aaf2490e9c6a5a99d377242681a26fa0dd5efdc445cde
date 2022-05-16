@@ -1,0 +1,99 @@
+I"�A<h2 id="a-count-items-matching-a-rule">A. Count Items Matching a Rule</h2>
+
+<p>입력으로 주어지는 <code class="language-plaintext highlighter-rouge">items</code>배열에서 <code class="language-plaintext highlighter-rouge">rulekey</code>와 <code class="language-plaintext highlighter-rouge">ruleValue</code>에 맞는 항목의 개수를 리턴하는 문제이다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">countMatches</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&gt;&amp;</span> <span class="n">items</span><span class="p">,</span> <span class="n">string</span> <span class="n">ruleKey</span><span class="p">,</span> <span class="n">string</span> <span class="n">ruleValue</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">find</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">ruleKey</span><span class="o">==</span><span class="s">"type"</span><span class="p">)</span> <span class="n">find</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">ruleKey</span><span class="o">==</span><span class="s">"color"</span><span class="p">)</span> <span class="n">find</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span> <span class="n">find</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">it</span> <span class="o">:</span> <span class="n">items</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">it</span><span class="p">[</span><span class="n">find</span><span class="p">]</span><span class="o">==</span><span class="n">ruleValue</span><span class="p">)</span> <span class="n">ans</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-closest-dessert-cost">B. Closest Dessert Cost</h2>
+
+<p>주어진 <code class="language-plaintext highlighter-rouge">base</code>와 <code class="language-plaintext highlighter-rouge">toppingCosts</code>를 조합하여 아이스크림 가격을 <code class="language-plaintext highlighter-rouge">target</code>에 가깝게 만드는 문제이다.</p>
+
+<p>완전탐색을 사용하여 해결할 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">;</span>
+    <span class="n">set</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">cur</span><span class="p">,</span> <span class="kt">int</span> <span class="n">base</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">cnt</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">toppingCosts</span><span class="p">,</span><span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">sum</span><span class="o">=</span><span class="n">base</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">sum</span><span class="o">+=</span><span class="n">toppingCosts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">abs</span><span class="p">(</span><span class="n">target</span><span class="o">-</span><span class="n">sum</span><span class="p">),</span><span class="n">sum</span><span class="p">});</span>
+        
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">cur</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">dfs</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">base</span><span class="p">,</span><span class="n">cnt</span><span class="p">,</span><span class="n">toppingCosts</span><span class="p">,</span><span class="n">target</span><span class="p">);</span>
+                <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">closestCost</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">baseCosts</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">toppingCosts</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n</span><span class="o">=</span><span class="n">baseCosts</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="n">m</span><span class="o">=</span><span class="n">toppingCosts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">base</span><span class="o">=</span><span class="n">baseCosts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">abs</span><span class="p">(</span><span class="n">target</span><span class="o">-</span><span class="n">base</span><span class="p">),</span><span class="n">base</span><span class="p">});</span>
+            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">cnt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+            <span class="n">dfs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">base</span><span class="p">,</span><span class="n">cnt</span><span class="p">,</span><span class="n">toppingCosts</span><span class="p">,</span><span class="n">target</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">auto</span> <span class="n">it</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">ret</span><span class="o">=</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+        
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-equal-sum-arrays-with-minimum-number-of-operations">C. Equal Sum Arrays With Minimum Number of Operations</h2>
+
+<p><code class="language-plaintext highlighter-rouge">nums1</code>의 합계와 <code class="language-plaintext highlighter-rouge">nums2</code>의 합계가 같게 하기 위해 배열의 원소를 1과 6사의 자연수로 변경할 수 있는데 이런 연산의 최솟값을 구하는 문제이다.</p>
+
+<p>각 배열의 합계 차이를 구해준다. 그 후에 각 배열의 원소들을 1 또는 6으로 변하게 하는 비용(?)의 수를 구해준다. (비용의 범위는 0과 5사이가 된다.)</p>
+
+<p>두 배열의 합계 차이를 비용을 내림차순으로 깎아 없애는 방법으로 최솟값을 구해준다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">minOperations</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">nums2</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">&lt;</span> <span class="n">nums1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">||</span> <span class="n">nums1</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">&lt;</span> <span class="n">nums2</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        
+        <span class="kt">int</span> <span class="n">sum1</span><span class="o">=</span><span class="n">accumulate</span><span class="p">(</span><span class="n">nums1</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nums1</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">sum2</span><span class="o">=</span><span class="n">accumulate</span><span class="p">(</span><span class="n">nums2</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">nums2</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">diff</span><span class="o">=</span><span class="n">abs</span><span class="p">(</span><span class="n">sum1</span><span class="o">-</span><span class="n">sum2</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">ret</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">cnt</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="p">{};</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">sum1</span><span class="o">&gt;</span><span class="n">sum2</span><span class="p">)</span> <span class="n">swap</span><span class="p">(</span><span class="n">nums1</span><span class="p">,</span><span class="n">nums2</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">n</span> <span class="o">:</span> <span class="n">nums1</span><span class="p">)</span> <span class="n">cnt</span><span class="p">[</span><span class="mi">6</span><span class="o">-</span><span class="n">n</span><span class="p">]</span><span class="o">++</span><span class="p">;</span> <span class="c1">// 작은 원소들을 가진 배열을 6으로 만드는 비용(?)의 수</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">n</span> <span class="o">:</span> <span class="n">nums2</span><span class="p">)</span> <span class="n">cnt</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span> <span class="c1">// 큰 원소들을 가진 배열을 1로 만드는 비용(?)의 수</span>
+        
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">diff</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 비용(?)이 큰 수부터 시작해서 diff를 줄여준다</span>
+            <span class="kt">int</span> <span class="n">tmp</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">diff</span><span class="o">/</span><span class="n">i</span><span class="o">+</span><span class="p">(</span><span class="n">diff</span><span class="o">%</span><span class="n">i</span><span class="o">!=</span><span class="mi">0</span><span class="p">));</span>
+            <span class="n">diff</span><span class="o">-=</span><span class="n">tmp</span><span class="o">*</span><span class="n">i</span><span class="p">;</span>
+            <span class="n">ret</span><span class="o">+=</span><span class="n">tmp</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-car-fleet-ii">D. Car Fleet II</h2>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+:ET

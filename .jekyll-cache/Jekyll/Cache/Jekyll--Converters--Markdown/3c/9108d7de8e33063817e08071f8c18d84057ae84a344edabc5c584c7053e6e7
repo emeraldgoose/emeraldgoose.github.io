@@ -1,0 +1,164 @@
+I"�,<h2 id="passage-retrieval-and-similarity-search">Passage Retrieval and Similarity Search</h2>
+
+<blockquote>
+  <p>How to find the passage in real time? ⇒ Similarity Search</p>
+
+</blockquote>
+
+<h3 id="mips-maximum-inner-product-search">MIPS (Maximum Inner Product Search)</h3>
+
+<p>주어진 질문(query) 벡터 q에 대해 Passage 벡터 v들 중 가장 질문과 관련된 벡터를 찾아야함<br />
+여기서 관련성은 내적(inner product)이 가장 큰 것</p>
+
+<h3 id="mips--challenge">MIPS &amp; Challenge</h3>
+
+<p>실제로 검색해야 할 데이터는 훨씬 방대함 → 더 이상 모든 문서 임베딩을 일일히 보면서 검색할 수 없음</p>
+
+<h3 id="tradeoffs-of-similarity-search">Tradeoffs of Similarity search</h3>
+
+<ol>
+  <li>Search speed
+    <ol>
+      <li>쿼리 당 유사한 벡터를 k개 찾는데 얼마나 걸리는지? → 가지고 있는 벡터량이 클 수록 더 오래 걸림</li>
+      <li>해결방법 : Pruning</li>
+    </ol>
+  </li>
+  <li>Memory Usage
+    <ol>
+      <li>벡터를 사용할 때, 어디에서 가져올 것인지? → 모든 임베딩을 RAM에 올릴 수 없다</li>
+      <li>해결방법 : Compression</li>
+    </ol>
+  </li>
+  <li>Accuracy
+    <ol>
+      <li>brute-force 검색결과와 얼마나 비슷한지? → 속도 증가시 정확도 하락을 피할 수 없음</li>
+      <li>해결방법 : Exhaustive search</li>
+    </ol>
+  </li>
+</ol>
+
+<ul>
+  <li>속도(search time)와 재현율(recall)의 관계 : 더 정확한 검색을 하려면 더 오랜 시간이 소모됨</li>
+</ul>
+
+<h3 id="increasing-search-speed-by-bigger-corpus">Increasing search speed by bigger corpus</h3>
+
+<p>코퍼스 크기가 커질수록 → 탐색공간이 커지고, 저장해 둘 메모리 공간 또한 커짐. 그리고 sparse embedding의 경우 이러한 문제가 훨씬 커짐</p>
+
+<h2 id="approximating-similarity-search">Approximating Similarity Search</h2>
+
+<h3 id="compression---scalar-quantization-sq">Compression - Scalar Quantization (SQ)</h3>
+
+<blockquote>
+  <p>Compression: vector를 압축하여, 하나의 vector가 적은 용량을 차지 → 압축량 증가로 메모리 공간 감소하지만 정보손실이 증가한다</p>
+
+</blockquote>
+
+<h3 id="pruning---inverted-file-ivf">Pruning - Inverted File (IVF)</h3>
+
+<blockquote>
+  <p>Pruning: Search space를 줄여 search 속도 개선 (dataset의 subset만 방문) → Clustering + Inverted file을 활용한 search</p>
+</blockquote>
+
+<ul>
+  <li>Clustering의 경우 가장 자주 사용하는 방법은 k-means clustering이다.</li>
+  <li>원하는 Cluster만 방문하여 Exhaustive Search 수행</li>
+  <li>Inverted File (IVF) : vector의 index = inverted list structure → (각 cluster의 centroid id)와 (해당 cluster의 vector들)이 연결되어 있는 형태</li>
+</ul>
+
+<h2 id="introduction-to-faiss">Introduction to FAISS</h2>
+
+<h2 id="faiss">FAISS</h2>
+
+<blockquote>
+  <p>Faiss is a library for efficient similarity search and clustering of dense vectors.</p>
+</blockquote>
+
+<ul>
+  <li>인덱싱을 도와주고 인코딩에는 관련없다</li>
+</ul>
+
+<h3 id="passage-retrieval-with-faiss">Passage Retrieval with FAISS</h3>
+
+<ol>
+  <li>Train index and map vectors
+    <ol>
+      <li>Scaling을 하기위해 min, max index value를 알아야 하고 무작정 랜덤하게 고를 수는 없기 때문에 이를 학습해야 하는 과정이 필요하다.</li>
+      <li>train 단계와 add 단계가 있는데 train을 통해 cluster와 SQ8를 정의한 뒤에 add 단계를 통해 cluster에 실제 벡터를 SQ8형태로 투입한다.</li>
+      <li>전부를 학습하기에는 비효율적일때 일부를 샘플링해서 학습한다.</li>
+    </ol>
+  </li>
+  <li>Search based on FAISS index
+    <ol>
+      <li>*nprobe : 몇 개의 가장 가까운 cluster를 방문하여 search 할 것인지</li>
+      <li>query 벡터가 들어오면 nprobe개의 cluster를 SQ8 베이스로 search하고 top-k개를 Search Result로 내보낸다.</li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="scaling-up-with-faiss">Scaling up with FAISS</h2>
+
+<h3 id="faiss-basics">FAISS basics</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">d</span> <span class="o">=</span> <span class="mi">64</span> <span class="c1"># 벡터의 차원
+</span><span class="n">nb</span> <span class="o">=</span> <span class="mi">100000</span> <span class="c1"># 데이터베이스 크기
+</span><span class="n">nq</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># 쿼리 개수
+</span><span class="n">xb</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">((</span><span class="n">nb</span><span class="p">,</span><span class="n">d</span><span class="p">)).</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span> <span class="c1"># 데이터베이스 예시
+</span><span class="n">xq</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">((</span><span class="n">nq</span><span class="p">,</span><span class="n">d</span><span class="p">)).</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">)</span> <span class="c1"># 쿼리 예시
+</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1"># 인덱스 빌드
+</span><span class="n">index</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="c1"># 인덱스에 벡터 추가
+</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># 가장 가까운 벡터 4개를 찾기
+</span><span class="n">D</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">xq</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="c1"># 검색하기
+# D : 쿼리와의 거리
+# I : 검색된 벡터의 인덱스
+</span></code></pre></div></div>
+
+<ul>
+  <li>이 예제에서는 scaling up quantization을 활용하지 않기 때문에 학습 과정이 필요없다.</li>
+</ul>
+
+<h3 id="ivf-with-faiss">IVF with FAISS</h3>
+
+<ul>
+  <li>IVF 인덱스를 만들고 클러스터링을 통해 가까운 클러스터 내 벡터들만 비교함</li>
+  <li>빠른 검색이 가능하며 클러스터 내에서는 여전히 전체 벡터와 거리 비교(Flat)</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nlist</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># 클러스터 개수
+</span><span class="n">quantizer</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexIVFFlat</span><span class="p">(</span><span class="n">quantizer</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">nlist</span><span class="p">)</span> <span class="c1"># Inverted File 만들기
+</span><span class="n">index</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="c1"># 클러스터 학습
+</span>
+<span class="n">index</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="c1"># 클러스터에 벡터 투입
+</span><span class="n">D</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">xq</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="c1"># k개의 벡터 검색
+</span></code></pre></div></div>
+
+<h3 id="using-gpu-with-faiss">Using GPU with FAISS</h3>
+
+<ul>
+  <li>GPU의 빠른 연산 속도를 활용하여 거리 계산을 위한 행렬곱 등에서 유리</li>
+  <li>GPU 메모리 제햔이나 메모리 random access 시간이 느린 것 등이 단점</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rss</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">StandardGpuResources</span><span class="p">()</span> <span class="c1"># 단일 GPU 사용
+</span>	
+<span class="n">index_flat</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="c1"># 인덱스 (CPU) 빌드하기
+</span>
+<span class="n">gpu_index_flat</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">index_cpu_to_gpu</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">index_flat</span><span class="p">)</span> <span class="c1"># GPU 인덱스로 옮기기
+</span>
+<span class="n">gpu_index_flat</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
+<span class="n">D</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">gpu_index_flat</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">xq</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="c1"># 검색하기
+</span></code></pre></div></div>
+
+<h3 id="using-multiple-gpus-with-faiss">Using Multiple GPUs with FAISS</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cpu_index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="n">gpu_index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">index_cpu_to_all_gpus</span><span class="p">(</span><span class="n">cpu_index</span><span class="p">)</span>
+
+<span class="n">gpu_index</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
+<span class="n">D</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="n">gpu_index</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">xq</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</code></pre></div></div>
+:ET

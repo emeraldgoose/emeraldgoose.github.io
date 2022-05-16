@@ -1,0 +1,151 @@
+I"F<h2 id="a-i-scream">A. I Scream</h2>
+
+<p><code class="language-plaintext highlighter-rouge">milk solid</code>와 <code class="language-plaintext highlighter-rouge">milk fat</code>을 비교하여 ice cream, ice milk, lacto ice, flavored ice로 나누는 문제</p>
+
+<p>입력으로 주어지는 <code class="language-plaintext highlighter-rouge">milk-solid-not fat</code>과 <code class="language-plaintext highlighter-rouge">milk fat</code>을 더하면 <code class="language-plaintext highlighter-rouge">milk solid</code>의 값을 알 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">//freopen("input.txt","r",stdin);</span>
+    <span class="kt">int</span> <span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">A</span><span class="o">&gt;&gt;</span><span class="n">B</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="n">B</span><span class="o">&gt;=</span><span class="mi">15</span> <span class="o">&amp;&amp;</span> <span class="n">B</span><span class="o">&gt;=</span><span class="mi">8</span><span class="p">)</span> <span class="n">ans</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="n">B</span><span class="o">&gt;=</span><span class="mi">10</span> <span class="o">&amp;&amp;</span> <span class="n">B</span><span class="o">&gt;=</span><span class="mi">3</span><span class="p">)</span> <span class="n">ans</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="n">B</span><span class="o">&gt;=</span><span class="mi">3</span><span class="p">)</span> <span class="n">ans</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-job-assignment">B. Job Assignment</h2>
+
+<p>A와 B가 일을 동시에 하게 될 때 오래 걸리는 시간의 최솟값을 구하는 문제이다.</p>
+
+<p>만약 혼자서 두 일을 연달아 하게되는 것이 시간이 덜 든다면 그것이 정답이 된다.</p>
+
+<p>$N$의 범위가 1000이내이기 때문에 완전탐색으로 계산하면 된다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">//freopen("input.txt","r",stdin);</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mf">1e9</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">!=</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">ans</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]));</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="n">ans</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-squared-error">C. Squared Error</h2>
+
+<p>$\sum_{i=2}^n\sum_{j=1}^{i-1}(A_i-A_j)^2$의 값을 계산하는 문제이다.</p>
+
+<p>n의 범위가 $3\times10^5$까지 이므로 $O(n^2)$은 TLE를 발생시킨다. 위의 식을 다음과 같이 정리하면  $O(n)$에 해결할 수 있다.</p>
+
+<p>$\begin{matrix} \sum_{i=2}^n\sum_{j=1}^{i-1}(A_i-A_j)^2 &amp;=&amp; \frac{1}{2}(\sum_{i=1}^n\sum_{j=1}^n(A_i-A_j)^2) \space(\because (A_i-A_i)^2=0) \\ &amp;=&amp; \frac{1}{2}(\sum_{i=1}^{n}\sum_{j=1}^{n}(A_i^2+A_j^2-2A_iA_j)) \\ &amp;=&amp; \frac{1}{2}(2N\sum_{i=1}^{n}A_i^2-2\sum_{i=1}^n(A_i\sum_{j=1}^{n}A_j)) \\ &amp;=&amp; N\sum_{i=1}^nA_i^2-(\sum_{i=1}^nA_i)^2\end{matrix}$</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">//freopen("input.txt","r",stdin);</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+    <span class="n">ll</span> <span class="n">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sum2</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ll</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">sum</span><span class="o">+=</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">);</span>
+        <span class="n">sum2</span><span class="o">+=</span><span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">sum</span><span class="o">-</span><span class="n">sum2</span><span class="o">*</span><span class="n">sum2</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-journey">D. Journey</h2>
+
+<p>N개의 정점이 존재하고 어떠한 간선도 없는 경우 Takahashi가 1번 정점에서 어떠한 정점으로 $\frac{1}{N}$의 확률로 이동가능하고 간선도 만들 수 있을 때 그래프를 연결시키기 위한 평균 횟수를 구하는 문제이다.</p>
+
+<p>다음 증명은 editorial을 보고 정리했다.</p>
+
+<p>어떠한 X를 기댓값으로 가정하자. 이동에 성공하면 다음 정점으로 이동하고 실패하면 현재 정점에 있어야 하므로 다음과 같은 식을 만들 수 있다.</p>
+<ul>
+  <li>$X=1+(1-p)X$</li>
+</ul>
+
+<p>즉, $pX=1$이므로 $X=\frac{1}{p}$이다.</p>
+
+<p>이 문제에서 Takahashi가 이동에 성공하면 두 정점이 이어지는데 이것을 집합 $S$으로 표현할 수 있다. 또한, $\left\lvert S \right\rvert$는 $S$의 원소 개수라고 정의한다.</p>
+
+<p>$\left\lvert S \right\rvert$의 값이 1이 증가하는 것은 집합 $S$에 포함되지 않은 정점에 Takahashi가 확률을 뚫고 이동에 성공한 것과 같다.</p>
+
+<p>그렇다면 우리는 집합 $S$에 포함되지 않은 정점을 처음으로 선택할 때 예상되는 횟수는 $\frac{1}{\frac{N-\left\lvert S \right\rvert}{N}} = \frac{N}{N-\left\lvert S \right\rvert}$이다.</p>
+
+<p>우리는 정점 1개부터 시작하므로 $\frac{N}{N-1}+\frac{N}{N-2}+…+\frac{N}{1}$이 답이 된다.</p>
+
+<p>따라서 $O(N)$의 시간 복잡도로 문제를 해결할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#define endl '\n'
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="n">ll</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e10</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="c1">//freopen("input.txt","r",stdin);</span>
+    <span class="n">ll</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ans</span><span class="o">+=</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">fixed</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

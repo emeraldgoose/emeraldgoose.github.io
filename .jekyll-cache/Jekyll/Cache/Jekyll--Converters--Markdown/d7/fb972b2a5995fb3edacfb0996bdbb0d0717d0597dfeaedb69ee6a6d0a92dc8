@@ -1,0 +1,10 @@
+I"|<h2 id="쿠버네티스를-사용해야-하는-이유">쿠버네티스를 사용해야 하는 이유</h2>
+<p>애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://www.inflearn.com/course/%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EA%B8%B0%EC%B4%88/dashboard">대세는 쿠버네티스(인프런)</a></li>
+  <li><a href="https://subicura.com/k8s/">https://subicura.com/k8s/</a></li>
+  <li><a href="https://samsungsds.com/kr/story/220222_kubernetes1.html">쿠버네티스 알아보기 1편</a></li>
+</ul>
+:ET

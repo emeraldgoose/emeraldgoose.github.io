@@ -1,0 +1,128 @@
+I"�2<blockquote>
+  <p>이번 데이터셋 구축을 진행하면서 klue/bert-base처럼 pretraining한 모델을 업로드해보는 경험이 필요하다고 생각하게 되어 실행에 옮겼습니다.</p>
+</blockquote>
+
+<h2 id="사전학습-준비">사전학습 준비</h2>
+<p>먼저, 확보한 데이터는 문장단위였습니다. bert는 MLM(Masked Language Model)과 NSP(Next Sentence Prediction) task를 수행하는데 문장 단위의 데이터로 NSP를 수행할 수 없었습니다.</p>
+
+<p>그래서 bert의 MLM만을 이용하여 pretraining을 진행하였습니다.</p>
+
+<h2 id="tokenizer-학습">tokenizer 학습</h2>
+<p>bert 뿐만 아니라 tokenizer 또한 확보한 문장에 맞춰 학습을 해야합니다. tokenizer의 학습 결과로 <code class="language-plaintext highlighter-rouge">vocab.txt</code>을 저장할 수 있기 때문입니다.</p>
+
+<p>Wordpiece와 Sentencepiece 두 가지가 있고 저는 Wordpiece를 이용하여 문장을 분리하고 vocab을 저장하려고 했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">tokenizer_train</span><span class="p">():</span>
+  <span class="c1"># load sentences
+</span>  <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">BertWordPieceTokenizer</span><span class="p">(</span>
+    <span class="n">vocab</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">clean_text</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">handle_chinese_chars</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">strip_accents</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">lowercase</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">wordpieces_prefix</span><span class="o">=</span><span class="s">"##"</span><span class="p">,</span>
+  <span class="p">)</span>
+
+  <span class="n">limit_alphabet</span> <span class="o">=</span> <span class="mi">1000</span>
+  <span class="n">vocab_size</span> <span class="o">=</span> <span class="mi">30000</span>
+
+  <span class="n">tokenizer</span><span class="p">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">files</span><span class="o">=</span><span class="s">'./sentence.txt'</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span>
+    <span class="n">limit_alphabet</span><span class="o">=</span><span class="n">limit_alphabet</span><span class="p">,</span>
+  <span class="p">)</span>
+
+  <span class="n">tokenizer</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"./tokenizer.json"</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>  <span class="c1"># save tokenizer.json, pretty=True로 두시면 json 형식이 보기좋게 저장됩니다
+</span>  <span class="n">tokenizer</span><span class="p">.</span><span class="n">save_model</span><span class="p">(</span><span class="s">'./'</span><span class="p">)</span>  <span class="c1"># save vocab.txt
+</span></code></pre></div></div>
+
+<h2 id="bert-데이터-준비">Bert 데이터 준비</h2>
+<p>bert의 MLM을 수행하기 위해 먼저 필요한 데이터를 확인합니다.</p>
+<ul>
+  <li>input_ids, token_type_ids, attention_mask, labels</li>
+</ul>
+
+<p>input_ids 토큰들 중 랜덤으로 마스킹하는데 labels은 마스킹된 토큰들만 들어가는 것이 아닌 원래 input_ids 토큰 리스트이어야 합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+  <span class="s">""" preprocessing(random word convert to "[MASK]") """</span>
+
+  <span class="n">mask</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># [MASK] 토큰번호
+</span>  <span class="n">label</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">words</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s">'input_ids'</span><span class="p">]):</span>
+    <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span> <span class="c1"># [PAD], [SEP]을 제외한 나머지 토큰들의 범위
+</span>      <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+      <span class="n">masked_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span> <span class="c1"># 간단하게 전체 중의 15%의 토큰 중 80%의 토큰만 마스킹합니다
+</span>        <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">maxlen</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mf">0.15</span><span class="o">*</span><span class="mf">0.8</span><span class="p">),),</span> <span class="n">low</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">maxlen</span><span class="p">)</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="n">words</span><span class="p">.</span><span class="n">clone</span><span class="p">().</span><span class="n">detach</span><span class="p">()</span> <span class="c1"># label은 원래의 input_ids를 복사한 것입니다
+</span>      <span class="n">label</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+
+      <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">masked_idx</span><span class="p">:</span>
+        <span class="n">words</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
+      <span class="n">dataset</span><span class="p">[</span><span class="s">'input_ids'</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">words</span>
+
+  <span class="k">return</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">label</span>
+</code></pre></div></div>
+
+<h2 id="모델-학습">모델 학습</h2>
+<p>위에서 bert가 MLM만을 수행해야 하므로 transformer에서 <code class="language-plaintext highlighter-rouge">BertForMaskedLM</code>모델을 불러옵니다. 참고로 <code class="language-plaintext highlighter-rouge">BertForPretraining</code>모델은 MLM 데이터와 NSP 데이터 모두 필요하므로 현재 가지고 있는 데이터로는 사전학습을 할 수 없었습니다.</p>
+
+<p>또한, <code class="language-plaintext highlighter-rouge">BertConfig을</code> 불러와서 원하는 설정을 한 후 <code class="language-plaintext highlighter-rouge">BertForMaskedLM</code>에 config설정을 해줍니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c1"># training 준비
+</span>  <span class="n">config</span> <span class="o">=</span> <span class="n">BertConfig</span><span class="p">(</span>
+      <span class="p">...</span>
+  <span class="p">)</span>
+
+  <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">'tokenizer path'</span><span class="p">)</span> <span class="c1"># 학습한 토크나이저가 저장된 경로로 지정해줍니다
+</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">BertForMaskedLM</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+  <span class="n">model</span><span class="p">.</span><span class="n">resize_token_embeddings</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">vocab_size</span><span class="p">)</span> <span class="c1"># 기본으로 설정된 vocab size를 우리가 만든 vocab size로 임베딩 크기를 맞춰야 합니다
+</span>  <span class="n">model</span><span class="p">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>여기서 vocab size가 맞지 않으면 CUDA 에러가 발생합니다.<br />
+아래 에러들은 발생했던 에러들입니다. 아래 에러들의 공통점은 레이어의 사이즈가 맞지 않을 때 발생합니다.</p>
+<ul>
+  <li>CUDA error: CUBLAS_STATUS_ALLOC_FAILED when calling ‘cublasCreate(handle)’</li>
+  <li>RuntimeError: CUDA error: CUBLAS_STATUS_INVALID_VALUE when calling ‘cublasSgemm( handle, opa, opb, m, n, k, &amp;alpha, a, lda, b, ldb, &amp;beta, c, ldc)’</li>
+  <li>CUDA error: device-side assert triggered</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">training_args</code> 를 설정한 후 <code class="language-plaintext highlighter-rouge">Trainer</code>를 통해 모델을 학습하면 됩니다.<br />
+<code class="language-plaintext highlighter-rouge">trainer.save_model(output_dir='')</code>를 통해 <code class="language-plaintext highlighter-rouge">pytorch_model.bin</code>을 포함하여 여러가지 파일들이 저장이 됩니다.</p>
+
+<h2 id="허깅페이스-업로드">허깅페이스 업로드</h2>
+<p>모델 학습이 완료되면 output_dir 경로에 학습된 결과물들이 저장되어있습니다.</p>
+
+<p>이 모델들을 허깅페이스에 업로드하기 전에 허깅페이스 가입을 완료한 후 New Model을 통해 레포지토리를 생성하고 git clone 해옵니다.</p>
+
+<p>아까 output_dir 위치에 있는 파일들을 clone된 디렉토리에 옮긴 후에 git lfs를 활성화 해야 합니다.</p>
+
+<blockquote>
+  <p>git lfs란? 기존 git 명령은 최대 10M을 초과하는 파일을 원격 레포지토리에 업로드 할 수 없습니다. git lfs를 통해 큰 파일을 옮길 수 있게됩니다.</p>
+</blockquote>
+
+<p>git lfs는 <code class="language-plaintext highlighter-rouge">sudo apt-get install git lfs</code>를 통해 git lfs를 설치하고 아까 clone한 디렉토리에 가서 <code class="language-plaintext highlighter-rouge">git lfs install</code> 명령어를 통해 해당 디렉토리가 git lfs를 사용할 수 있도록 합니다.</p>
+
+<p>이후에는 <code class="language-plaintext highlighter-rouge">git add .</code>, <code class="language-plaintext highlighter-rouge">git commit -m "message"</code>, <code class="language-plaintext highlighter-rouge">git push</code> 순으로 명령어를 치시면 git lfs를 통해 레포지토리로 업로드를 시작합니다.</p>
+
+<h3 id="tokenizer_configjson">tokenizer_config.json</h3>
+<p><code class="language-plaintext highlighter-rouge">tokenizer_config.json</code>은 허깅페이스의 inference api를 이용하는데 필요한 파일입니다.</p>
+
+<p>이 파일을 보면 never_split 이후에 여러가지 항목들이 있을 텐데 나머지를 날리고 허깅페이스로 업로드 하시면 inference api를 정상적으로 사용할 수 있게 됩니다.</p>
+
+<p>또한, inference api의 example을 바꾸고 싶다면 READEME.md에 아래와 같은 글을 상단에 넣으시면 됩니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+language: ko
+mask_token: "[MASK]"
+widget:
+  - text: 산악 자전거 경기는 상대적으로 새로운 [MASK] 1990년대에 활성화 되었다.
+---
+</code></pre></div></div>
+
+:ET

@@ -610,4 +610,10 @@ var store = [{
         "tags": ["ABC"],
         "url": "/atcoder/abc250/",
         "teaser": null
+      },{
+        "title": "Kubernetes",
+        "excerpt":"컨테이너 기반 배포 애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다. 컨테이너 기반 배포가 등장하면서 Host OS 위에 컨테이너 런타임이 올라가고 그 위로...","categories": ["Ops"],
+        "tags": ["k8s"],
+        "url": "/ops/kubenetes-overview/",
+        "teaser": null
       }]

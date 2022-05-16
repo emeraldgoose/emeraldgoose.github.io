@@ -1,0 +1,67 @@
+I"{<h2 id="problem">Problem</h2>
+<blockquote>
+  <p>도둑이 보석가게에 부피 W인 배낭을 매고 침입했다. 도둑은 매장에 진열된 보석의 크기 v와 가격 p을 알고 있다. 이때 도둑이 훔친 보석의 가격의 최대 합은 얼마인가?</p>
+</blockquote>
+
+<h2 id="0-1-knapsack-문제의-이해">0-1 Knapsack 문제의 이해</h2>
+<hr />
+<p>한번 생각해보면 매장에 진열된 보석들의 가격을 기준으로 정렬한 후 가장 큰 가격이 있는 순대로 집어넣으면 될 것처럼 보인다. 그러나 아래와 같은 반례를 만들 수 있다.</p>
+<ul>
+  <li>크기 10의 배낭이 있다. 다음 보석들이 (크기,가치)의 순으로 입력이 주어진다.</li>
+</ul>
+
+<p>보석 = (10, 10), (8, 5), (5, 3), (3, 5), (2, 3)</p>
+<ul>
+  <li>이때, 가장 큰 가치를 가진 보석부터 넣으면 10이 최대가 되겠지만 크기 5, 3, 2를 넣으면 11의 가치를 얻을 수 있다.</li>
+</ul>
+
+<p>그래서 DP(Dynamic Programming)를 이용하여 이 문제를 해결할 수 있다. dp의 정의는 다음과 같다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">dp[i][j]</code> : <code class="language-plaintext highlighter-rouge">i</code>번째 보석까지 배낭에 넣었을 때 <code class="language-plaintext highlighter-rouge">j</code>크기가 되는 경우의 최대 가치</li>
+</ul>
+
+<p>$i$번째 보석을 배낭에 넣었을 때 $j$의 크기가 된다면 다음 두 가지 경우를 생각할 수 있다.</p>
+<ol>
+  <li>$j$의 크기가 배낭의 크기를 넘어서는 경우 $(j &gt; W)$</li>
+  <li>배낭의 크기를 넘지 않아 최대 가격을 갱신하게 되는 경우
+    <ul>
+      <li>$dp[i][j]=max(dp[i-1][j-v_i]+p_i, \space dp[i-1][j])$</li>
+    </ul>
+  </li>
+</ol>
+
+<p>위의 경우를 다시 정리하면 다음과 같다.<br />
+$dp[i][j] = \cases{dp[i-1][j], &amp; \text{if } j+v_i &gt; W \cr \max(dp[i-1][j-v_i]+p_i, \space dp[i-1][j]), &amp; \text{if } j+v_i ≤ W}$</p>
+
+<h2 id="0-1-knapsack-구현">0-1 Knapsack 구현</h2>
+<hr />
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">W</span><span class="o">=</span><span class="mi">10</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">};</span> <span class="c1">// 인덱스 1부터 시작</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">p</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">};</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">W</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">));</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">W</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 배낭에 넣을 수 있다면</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">+</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">W</span><span class="p">];</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="0-1-knapsack-성능">0-1 Knapsack 성능</h2>
+<hr />
+<p>반복문을 보면 $N$번 반복하면서 $W$를 다시 반복한다. 따라서 $O(NW)$의 시간 복잡도를 가진다.</p>
+:ET

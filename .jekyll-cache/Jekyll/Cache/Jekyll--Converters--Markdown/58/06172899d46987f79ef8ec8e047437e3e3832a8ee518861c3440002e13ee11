@@ -1,0 +1,6 @@
+I"�<h2 id="attention-is-all-you-need">Attention is all you need</h2>
+<ul>
+  <li>No more RNN or CNN modules</li>
+  <li>Attention만으로 sequence 입력, 출력이 가능하다.</li>
+</ul>
+:ET

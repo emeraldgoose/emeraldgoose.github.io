@@ -1,0 +1,52 @@
+I"�<h2 id="lcs">LCS</h2>
+
+<p>LCS는 Longest Common Substring의 약자로 최장 공통 부분 문자열이라 한다. LCS(Longest Common Subsequence)와 혼동해서는 안됩니다.</p>
+
+<p><strong>Substring</strong>이라면 연속된 부분 문자열이고 <strong>Subsequence</strong>라면 연속되지 않아도 되는 부분 문자열을 말합니다.</p>
+
+<h2 id="problem">Problem</h2>
+
+<blockquote>
+  <p>String A와 String B의 연속된 공통 문자열의 길이를 찾는 알고리즘을 작성하라.</p>
+</blockquote>
+
+<h2 id="dynamic-programming">Dynamic Programming</h2>
+
+<hr />
+
+<p>브루트포스나 두 개의 포인터를 이용하는 것보다 DP를 사용하는 방법이 쉽고 간단하기 때문에 DP 방법만 소개하려고 한다.</p>
+
+<p>이제 DP를 다음과 같이 정의할 수 있다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">dp[i][j]</code> : <code class="language-plaintext highlighter-rouge">A</code>의 $i-1$번째와 <code class="language-plaintext highlighter-rouge">B</code>의 $j-1$번째까지 LCS를 이루는 문자열의 길이</li>
+</ul>
+
+<p>만약, <code class="language-plaintext highlighter-rouge">A</code>의 $i-1$번째 문자와 <code class="language-plaintext highlighter-rouge">B</code>의 $j-1$번째 문자가 같다면 $dp[i][j]=dp[i-1][j-1]+1$이 될 것이다.</p>
+
+<p>다르다면  $dp[i][j]=0$이 저장되어야 한다</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">lcs</span><span class="p">(</span><span class="n">string</span> <span class="n">a</span><span class="p">,</span> <span class="n">string</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">ret</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="c1">// lcs의 길이</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">dp</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">));</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+        <span class="n">ret</span><span class="o">=</span><span class="n">max</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="성능">성능</h2>
+
+<hr />
+
+<p>문자열 <code class="language-plaintext highlighter-rouge">a</code>의 길이를 $N$, 문자열 <code class="language-plaintext highlighter-rouge">b</code>의 길이를 $M$이라 했을 때, 반복문으로 인해 $O(NM)$의 시간 복잡도를 가진다.</p>
+:ET

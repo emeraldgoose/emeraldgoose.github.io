@@ -1,0 +1,76 @@
+I"�<h2 id="대회-목적">대회 목적</h2>
+
+<hr />
+
+<p>Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.</p>
+
+<h2 id="성능향상을-위한-실험">성능향상을 위한 실험</h2>
+
+<hr />
+
+<h3 id="베이스라인">베이스라인</h3>
+
+<p>기존 베이스라인 코드에서 Huggingface의 AutoModelForQuestionAnswering을 불러 학습 시킨 후 Sparse Embedding을 이용한 Retriever를 통해 얻은 문서에서 답을 찾는 구성이었습니다. 직접 klue/roberta-large모델을 불러 tuning 했을 때 Public LB 32를 기록했습니다.</p>
+
+<h3 id="robertaforquestionanswering">RobertaForQuestionAnswering</h3>
+
+<p>저는 NLP 모델 중에 성능이 꽤 좋은 Roberta 모델을 이용하기로 하고 Huggingface의 RobertaForQuestionAnswering 모델의 구성을 알아보았습니다.</p>
+
+<p>모델의 구성은 Roberta모델 위에 Dense모델이 하나 올라간 형태를 가지고 있었고 이를 Fine tuning하면 Train set의 validation 기준 Exact Match(EM) 72 위로 넘지 못하고 66으로 떨어진 후 다시 올라가는 반복적인 현상이 일어났습니다.</p>
+
+<p>하나의 Dense 레이어의 가중치 사이즈보다 학습해야 할 정보가 더 많다고 생각하게 되어 hidden layer의 수를 늘리는 방법을 사용했습니다.</p>
+
+<h3 id="bilstm">BiLSTM</h3>
+
+<p>가장 처음 시도한 방법인데 BiLSTM을 올리고 그 위에 Dense 레이어를 올려 roberta의 출력 sequence를 LSTM이 학습하도록 구성했습니다. Retriever가 1개의 문서를 가져왔을 때는 답을 어느정도 찾았지만 많은 문서를 찾고 concat했을 때는 답변에 해당하는 문장을 가져와버리는 문제가 있었습니다.</p>
+
+<p>LSTM 레이어를 늘려보거나 Dense 레이어를 늘린 후에 fine tuning을 시도해도 RobertaForQuestionAnswering보다 낮은 성능을 보여주었습니다.</p>
+
+<p>그래서 RNN 구조 대신 MLP를 올려 토큰 전체의 관계를 학습하는 쪽으로 구성했습니다.</p>
+
+<h3 id="mlp">MLP</h3>
+
+<p>Roberta와 Dense 레이어 사이에 여러개의 레이어를 두어 성능이 향상되는지 실험했습니다.</p>
+
+<p>(1024, 1024)사이즈의 Dense 레이어를 1개에서 2개를 넣었을 때가 성능이 향상되었고 3개 이상 넣었을 때부터 오히려 성능이 떨어졌습니다. 여기서 Dense 레이어 2개를 넣고 Fine tuning하여 Public LB 57을 달성했습니다.</p>
+
+<p>그러나 이 모델 역시 validation set에서 성능의 상승과 하락이 반복되는 현상이 보여 두 가지 가설을 만들고 실험했습니다.</p>
+<ul>
+  <li>learning rate가 너무 커서 optima에 수렴하지 못함 → learning rate를 줄이거나 epoch를 늘리는 방법을 사용</li>
+  <li>hidden layer size가 아직도 작아 학습한 것들을 수용하지 못함 → hidden layer의 사이즈를 2배와 4배로 늘리는 방법을 사용</li>
+</ul>
+
+<p>learning rate를 줄이거나 epoch를 늘리는 방법을 사용하는 방법은 오히려 성능 하락을 불러왔습니다.</p>
+
+<p>hidden layer size를 2배와 4배로 늘린 방법을 사용했을 때 성능이 향상되었지만 2배로 늘린 경우(EM 74)가 4배로 늘린 경우(EM 73)보다 성능이 좋았습니다. 2배로 늘린 모델을 최적화하여 Public LB 60을 달성했습니다.</p>
+
+<h3 id="overfitting-방지">Overfitting 방지</h3>
+
+<p>EM의 반복적인 상승과 하락때문에 Overfitting이 의심되어 이를 해결하기 위한 방법들을 찾고 적용해보았습니다.</p>
+
+<p>데이터 양이 적기 때문에 유리한 Group Normalization, NLP에서 많이 사용하는 Layer Normalization을 적용해보고 Activation function으로 gelu를 적용했습니다.</p>
+
+<p>Dropout까지 사용하여 결과를 비교했을 때 Dropout 0.2를 주었을 때 가장 성능이 좋았습니다.</p>
+
+<h3 id="다른-모델">다른 모델</h3>
+
+<p>Bert와 Electra를 백본으로 하여 MLP를 올렸을 때 모두 Validation 기준 57.08를 받았습니다.</p>
+
+<p>Bert는 Klue/bert-base, Electra는 monologg/koElectra-base-v3-discriminator를 사용했습니다.</p>
+
+<p>시간이 없어서 RobertaQA모델과 같이 hidden layer의 사이즈를 출력의 2배로 하여 같은 레이어를 쌓았습니다. 세 모델을 hard voting했을 때 Public LB 58.75를 기록했습니다.</p>
+
+<p>voting할 때 가중치를 주었을 때도 같은 스코어를 기록했습니다.</p>
+
+<h2 id="회고">회고</h2>
+
+<hr />
+
+<p>이번 대회는 베이스라인부터 너무 어려웠습니다. 2위를 한 조는 첫 주부터 베이스라인을 뜯기 시작했는데 저는 2번째 주부터 뜯기 시작해서 베이스라인을 이해하는데 늦었습니다. 코드가 굉장히 복잡하게 얽혀있기 때문에 완전히 분리하는 데 오래걸렸습니다.</p>
+
+<p>모델을 구성하는데 정말 다양한 오류를 발생했고 huggingface 코드로 들어가서 하나하나 print를 찍어볼 수 밖에 없었습니다. 많은 시간을 투자한 덕분에 huggingface의 모델 소스의 이해나 다양한 방법을 좀 더 쉽게 적용할 수 있었습니다.</p>
+
+<p>초반에 Sparse Retriever의 성능을 확인하지 못하여 빠르게 Dense Retriever로 옮기지 못한 것도 아쉽습니다. Retriver가 좋지 않아 제출을 해도 비교가 어려울 정도였어서 validation 기준으로 비교했습니다. 그래도 빠르게 엘라스틱 서치를 적용하여 LB를 올리긴 했지만 많이 아쉬운 대회였습니다.</p>
+
+<p>추가적으로 처음 Wandb sweep을 이용하여 fine tuning을 시도했었는데 굉장히 편해서 나중에도 사용할 것 같습니다.</p>
+:ET

@@ -1,0 +1,76 @@
+I"�	<h2 id="neural-networks">Neural Networks</h2>
+<blockquote>
+  <p>Neural Networks are function approximators that stack affine transformations followed by nonlinear transforms.</p>
+</blockquote>
+
+<ul>
+  <li>뉴럴 네트워크는 수학적이고 비선형 연산이 반복적으로 일어나는 어떤 함수를 모방(근사)하는 것이다.</li>
+</ul>
+
+<h2 id="linear-neural-networks">Linear Neural Networks</h2>
+<ul>
+  <li>간단한 예제를 들어보자
+    <ul>
+      <li>Data : $D = (x_i,j_i)_{i=1}^N$</li>
+      <li>Model : $\hat{y} = wx + b$</li>
+      <li>Loss : loss$= \frac{1}{N}\sum_{i=1}^N (y_i-\hat{y_i})^2$</li>
+    </ul>
+  </li>
+  <li>그러면 최적화 변수에 대해서 편미분을 계산할 수 있다
+    <ul>
+      <li>$\frac{\partial loss}{\partial w} = \frac{\partial}{\partial w}\frac{1}{N}\sum_{i=1}^N(y_i-\hat{y})^2 = \frac{\partial}{\partial w}\frac{1}{N}\sum_{i=1}^N(y_i - wx_i - b)^2 = -\frac{1}{N}\sum_{i=1}^N-2(y_i-wx_i-b)x_i$</li>
+    </ul>
+  </li>
+  <li>이제 최적화 변수를 반복적으로 업데이트할 수 있다.
+    <ul>
+      <li>$w \leftarrow w - \eta\frac{\partial loss}{\partial w}$</li>
+      <li>$b \leftarrow b - \eta\frac{\partial loss}{\partial b}$</li>
+    </ul>
+  </li>
+  <li>물론 multi dimension에 대해서도 핸들할 수 있다.
+    <ul>
+      <li>$y = W^Tx + b$</li>
+      <li>위와 같은 식을 $x \overset{\underset{\text{{ w,b }}}{}} {\rightarrow} y$</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="beyond-linear-neural-networks">Beyond Linear Neural Networks</h2>
+<ul>
+  <li>What if we stack more?
+    <ul>
+      <li>$y = W_2^Th = W_2^TW_1^Tx$</li>
+    </ul>
+  </li>
+  <li>비선형 방식도 가능
+    <ul>
+      <li>$y = W_2^Th = W_2^T\rho(W_1^Tx)$, $\rho$는 Nonlinear transform이다.</li>
+    </ul>
+  </li>
+  <li>Activation functions
+    <ul>
+      <li>ReLU</li>
+      <li>Sigmoid</li>
+      <li>Hyperbolic Tangent</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="multi-layer-perceptron">Multi-Layer Perceptron</h2>
+<ul>
+  <li>$y = W_2^Th = W_2^T\rho(W_1^Tx)$</li>
+  <li>출력을 다시 입력으로 넣어 레이어를 쌓은 모델을 MLP라 한다.</li>
+  <li>물론 더 깊게 쌓을 수 있다.
+    <ul>
+      <li>$y =  W_3^T h = W_3^T\rho(W_2^Th_1)$ $ = W_3^T\rho(W_2^T \rho(W_1^T x))$</li>
+    </ul>
+  </li>
+  <li>loss function은 다음과 같이 사용될 수 있지만 상황에 따라 달라질 수 있다.
+    <ul>
+      <li>Regression Task : MSE</li>
+      <li>Classification Task : CE</li>
+      <li>Probabilistic Task : MLE</li>
+    </ul>
+  </li>
+</ul>
+:ET

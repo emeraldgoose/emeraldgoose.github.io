@@ -1,0 +1,62 @@
+I"�<h3 id="problem">Problem</h3>
+<blockquote>
+  <p>$V$ 정점과 $E$ 간선들을 가지고 있는 그래프 $G$가 있다고 가정하자. 이 그래프의 간선들은 0과 1의 가중치를 가지고 있다. $source$ 로부터 가장 짧은 거리를 계산할 수 있는 효율적인 코드를 작성하라.</p>
+</blockquote>
+
+<h3 id="naive-solution">Naive Solution</h3>
+<hr />
+<p>위의 문제에서 나이브한 솔루션으로는 다익스트라 알고리즘이다. 다익스트라 알고리즘은 $O(E+VlogV)$의 시간 복잡도를 가지지만 모든 상황에서 빠르지 않다.</p>
+
+<h3 id="0-1-bfs-이해">0-1 BFS 이해</h3>
+<hr />
+<p>이름에서 알 수 있듯이 간선들의 가중치가 0또는 1일때만 사용가능한 알고리즘이다.<br />
+기본적인 방법은 다익스트라 처럼 이전 정점에서 최단 거리가 줄어든 정점을 큐에 삽입하는 방법이다.<br />
+우리가 임의의 정점 $u$에 있을 때, 연결된 정점 $v$는 두 가지 경우를 가진다. (간선의 가중치는 0 또는 1이기 때문)</p>
+<ol>
+  <li>$v$는 $u$와 같은 레벨이다.</li>
+  <li>$v$는 $u$보다 1 레벨 아래이다.</li>
+</ol>
+
+<p>또한, 우리는 BFS를 하는 동안 큐에 두 가지 레벨만을 유지하는 것도 알 수 있다.</p>
+<ol>
+  <li>$L[v]=L[u]$</li>
+  <li>$L[v]=L[u]+1$</li>
+</ol>
+
+<p>이제 deque를 사용해서 간선 $(u,v)$에 대해 다음의 작업을 진행한다.</p>
+<ol>
+  <li>최단거리가 줄어들었고 같은 레벨이라면, deque 앞에 정점 $v$를 삽입한다.</li>
+  <li>다음 레벨이라면, deque 뒤에 정점 $v$를 삽입한다.
+    <ul>
+      <li>일반적인 queue를 사용하면 양쪽 삽입과 정렬을 $O(1)$에 할 수 없고, priority queue는 정렬에만 $O(logN)$의 시간 복잡도를 가지기 때문에 적절하지 않다. 따라서 deque를 사용하는 것이다.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>다음은 구현하기 위한 수도코드이다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">all</span> <span class="n">v</span> <span class="n">in</span> <span class="n">vertices</span><span class="o">:</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">inf</span>
+<span class="n">dist</span><span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">deque</span> <span class="n">d</span>
+<span class="n">d</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">d</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">==</span> <span class="nb">false</span><span class="o">:</span>
+    <span class="n">vertex</span> <span class="o">=</span> <span class="n">get</span> <span class="n">front</span> <span class="n">element</span> <span class="n">and</span> <span class="n">pop</span> <span class="n">as</span> <span class="n">in</span> <span class="n">BFS</span><span class="p">.</span>
+    <span class="k">for</span> <span class="n">all</span> <span class="n">edges</span> <span class="n">e</span> <span class="n">of</span> <span class="n">form</span> <span class="p">(</span><span class="n">vertex</span> <span class="p">,</span> <span class="n">u</span><span class="p">)</span><span class="o">:</span>
+        <span class="k">if</span> <span class="n">travelling</span> <span class="n">e</span> <span class="n">relaxes</span> <span class="n">distance</span> <span class="n">to</span> <span class="n">u</span><span class="o">:</span>
+            <span class="n">relax</span> <span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">e</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span>
+                <span class="n">d</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">else</span><span class="o">:</span>
+                <span class="n">d</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>관련된 문제로는 백준의 <a href="https://www.notion.so/3-cf6b9a4168f04a1583f00ff8970907c5">숨박꼭질 3</a>이다.</p>
+
+<h3 id="0-1-bfs의-성능">0-1 BFS의 성능</h3>
+<hr />
+<p>코드 자체는 BFS와 다익스트라를 섞은 것처럼 보이지만, 다익스트라보다 더 효율적인 $O(E+V)$의 시간 복잡도를 가진다.</p>
+
+<h3 id="reference">Reference</h3>
+<hr />
+<p><a href="https://codeforces.com/blog/entry/22276">0-1 BFS [Tutorial] - Codeforces</a></p>
+:ET

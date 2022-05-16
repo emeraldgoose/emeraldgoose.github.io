@@ -1,0 +1,14 @@
+I"A<h2 id="a-10yen-stamp">A. 10yen Stamp</h2>
+<p>10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.<br />
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.<br />
+```cpp
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <algorithm>
+#include <queue>
+#include <cmath>
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+using namespace std;</cmath></queue></algorithm></cstring></vector></iostream></p>
+:ET

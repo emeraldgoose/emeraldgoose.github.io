@@ -1,0 +1,77 @@
+I"�<h2 id="트라이-이해">트라이 이해</h2>
+
+<hr />
+
+<p>트라이(Trie)는 문자열 집합을 표현하는 아래 그림과 같은 자료구조이다.</p>
+
+<p><img src="https://blog.kakaocdn.net/dn/cdUI8k/btqILMmbnMk/1LaembajZ6NOeV7lZNjfwk/img.png" alt="" /></p>
+
+<ul>
+  <li>출처 : <a href="https://aerocode.net/377">https://aerocode.net/377</a></li>
+</ul>
+
+<p>기본적으로 K진 트리구조를 이루고 있으며 문자열의 prefix를 빠르게 찾을 수 있다.</p>
+
+<p>그러나 많은 공간이 필요하다는 단점이 존재한다. 예를들어 알파벳의 경우 총 26자리의 배열을 각 노드마다 확보해야 한다.</p>
+
+<p>따라서 공간 복잡도는 O(포인터 크기 * 포인터 배열 개수 * 트라이 노드 개수)가 된다.</p>
+
+<h2 id="트라이-구현">트라이 구현</h2>
+
+<hr />
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cstring&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="kt">int</span> <span class="n">ALPHABETS</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">toNumber</span><span class="p">(</span><span class="kt">char</span> <span class="n">ch</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ch</span><span class="o">-</span><span class="sc">'A'</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="c1">// 트라이의 한 노드를 나타내는 객체</span>
+<span class="k">struct</span> <span class="nc">TrieNode</span> <span class="p">{</span>
+    <span class="n">TrieNode</span><span class="o">*</span> <span class="n">children</span><span class="p">[</span><span class="n">ALPHABETS</span><span class="p">];</span>
+
+    <span class="c1">// 이 노드가 종료 노드인가?</span>
+    <span class="kt">bool</span> <span class="n">terminal</span><span class="p">;</span>
+    <span class="n">TrieNode</span><span class="p">()</span> <span class="o">:</span> <span class="n">terminal</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">memset</span><span class="p">(</span><span class="n">children</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">children</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="o">~</span><span class="n">TrieNode</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ALPHABETS</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> 
+            <span class="k">if</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">delete</span> <span class="n">children</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>		
+    <span class="p">}</span>
+	<span class="c1">// 이 노드를 루트로 하는 트라이에 문자열 key를 추가한다.</span>
+
+    <span class="kt">void</span> <span class="n">insert</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 문자열이 끝나면 terminal만 참으로 바꾸고 종료</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">terminal</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">next</span><span class="o">=</span><span class="n">toNumber</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="p">);</span>
+            <span class="c1">// 해당 자식 노드가 없다면 생성한다.</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="n">children</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">=</span><span class="k">new</span> <span class="n">TrieNode</span><span class="p">();</span>
+            <span class="c1">// 해당 자식 노드로 재귀호출</span>
+            <span class="n">children</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 이 노드를 루트로 하는 트라이에 문자열 key와 대응되는 노드를 찾는다.</span>
+    <span class="c1">// 없으면 NULL을 반환</span>
+    <span class="n">TrieNode</span><span class="o">*</span> <span class="n">find</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+        
+        <span class="kt">int</span> <span class="n">next</span><span class="o">=</span><span class="n">toNumber</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="p">);</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">children</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="트라이-성능">트라이 성능</h2>
+
+<hr />
+
+<p>$N$개의 원소가 들어있는 문자열 집합에서 길이 $M$인 접두사(prefix)를 찾기위한 시간 복잡도는 $O(M)$을 가진다. 그러나 메모리가 너무 많이 필요하기 때문에 대회에 출제된다면 문자열의 개수가 적은 경우가 나온다.</p>
+:ET

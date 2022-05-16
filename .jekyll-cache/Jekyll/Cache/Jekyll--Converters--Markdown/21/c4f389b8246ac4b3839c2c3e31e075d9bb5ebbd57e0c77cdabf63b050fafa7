@@ -1,0 +1,114 @@
+I"�D<h2 id="acheck-if-binary-string-has-at-most-one-segment-of-ones">A.Check if Binary String Has at Most One Segment of Ones</h2>
+
+<p>‘1’이 연속으로 붙어있는 부분이 있는지 확인하는 문제이다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">checkOnesSegment</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">last</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="sc">'1'</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">last</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">last</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="sc">'0'</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-minimum-elements-to-add-to-form-a-given-sum">B. Minimum Elements to Add to Form a Given Sum</h2>
+
+<p><code class="language-plaintext highlighter-rouge">nums</code>배열의 합계를 <code class="language-plaintext highlighter-rouge">goal</code>에 맞추기 위해 더해야하는 <code class="language-plaintext highlighter-rouge">limit</code>보다 작거나 같은 정수들의 최소 수를 구하는 문제이다.</p>
+
+<p>단순하게 <code class="language-plaintext highlighter-rouge">nums</code>의 합계와 <code class="language-plaintext highlighter-rouge">goal</code>의 차이를 구한 후에 <code class="language-plaintext highlighter-rouge">limit</code>으로 나눠 나머지가 남게되면 1을 추가하는 방법으로 구할 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">minElements</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">limit</span><span class="p">,</span> <span class="kt">int</span> <span class="n">goal</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="n">sum</span><span class="o">+=</span><span class="n">it</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">diff</span><span class="o">=</span><span class="n">abs</span><span class="p">(</span><span class="n">goal</span><span class="o">-</span><span class="n">sum</span><span class="p">);</span>
+        <span class="n">limit</span><span class="o">=</span><span class="n">abs</span><span class="p">(</span><span class="n">limit</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">diff</span><span class="o">/</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)(</span><span class="n">limit</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">diff</span><span class="o">%</span><span class="n">limit</span><span class="o">!=</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-number-of-restricted-paths-from-first-to-last-node">C. Number of Restricted Paths From First to Last Node</h2>
+
+<p>주어진 그래프에서 최단거리를 의미하는 <code class="language-plaintext highlighter-rouge">distanceToLastNode(x)</code>를 구하고 <code class="language-plaintext highlighter-rouge">distanceToLastNode(zi) &gt; distanceToLastNode(zi+1), 0 &lt;= i &lt;= k-1</code>를 만족하는 경로의 수를 구하는 문제이다.</p>
+
+<p>다익스트라로 최단거리를 구해준 후 dfs로 위의 식을 만족하는 경로의 수를 구해주면 된다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">graph</span><span class="p">[</span><span class="mi">20001</span><span class="p">];</span>
+    <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">mod</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">7</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">dist</span><span class="p">[</span><span class="mi">20001</span><span class="p">];</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">dp</span><span class="p">[</span><span class="mi">20001</span><span class="p">];</span>
+    
+    <span class="kt">void</span> <span class="n">dijkstra</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">long</span> <span class="kt">long</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">pq</span><span class="p">;</span>
+        <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">});</span>
+        <span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">pq</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+            <span class="kt">long</span> <span class="kt">long</span> <span class="n">distance</span><span class="o">=-</span><span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">first</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">node</span><span class="o">=</span><span class="n">pq</span><span class="p">.</span><span class="n">top</span><span class="p">().</span><span class="n">second</span><span class="p">;</span>
+            <span class="n">pq</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">&lt;</span><span class="n">distance</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">next</span><span class="o">=</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="kt">long</span> <span class="n">next_distance</span><span class="o">=</span><span class="n">graph</span><span class="p">[</span><span class="n">node</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="o">+</span><span class="n">distance</span><span class="p">;</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">&gt;</span><span class="n">next_distance</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">dist</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">=</span><span class="n">next_distance</span><span class="p">;</span>
+                    <span class="n">pq</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="o">-</span><span class="n">next_distance</span><span class="p">,</span><span class="n">next</span><span class="p">});</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">dfs</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kt">long</span> <span class="kt">long</span> <span class="o">&amp;</span><span class="n">ret</span><span class="o">=</span><span class="n">dp</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">ret</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="n">ret</span><span class="o">%</span><span class="n">mod</span><span class="p">;</span>
+        <span class="n">ret</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">graph</span><span class="p">[</span><span class="n">n</span><span class="p">].</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">next</span><span class="o">=</span><span class="n">graph</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">next</span><span class="p">]</span><span class="o">&gt;</span><span class="n">dist</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">ret</span><span class="o">+=</span><span class="n">dfs</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>
+                <span class="n">ret</span><span class="o">%=</span><span class="n">mod</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">ret</span><span class="o">%</span><span class="n">mod</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="kt">int</span> <span class="n">countRestrictedPaths</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">u</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">w</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span>
+            <span class="n">graph</span><span class="p">[</span><span class="n">u</span><span class="p">].</span><span class="n">push_back</span><span class="p">({</span><span class="n">v</span><span class="p">,</span><span class="n">w</span><span class="p">});</span>
+            <span class="n">graph</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">push_back</span><span class="p">({</span><span class="n">u</span><span class="p">,</span><span class="n">w</span><span class="p">});</span>
+        <span class="p">}</span>
+        
+        <span class="n">memset</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span><span class="n">mod</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">dist</span><span class="p">));</span>
+        <span class="n">dijkstra</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+        
+        <span class="n">memset</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">dp</span><span class="p">));</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">dfs</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">%</span><span class="n">mod</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-make-the-xor-of-all-segments-equal-to-zero">D. Make the XOR of All Segments Equal to Zero</h2>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code></code></pre></div></div>
+:ET

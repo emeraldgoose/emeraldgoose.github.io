@@ -1,0 +1,708 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Kubernetes - gooooooooooose</title>
+<meta name="description" content="컨테이너 기반 배포 애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Kubernetes">
+<meta property="og:url" content="http://localhost:4000/ops/kubenetes-overview/">
+
+
+  <meta property="og:description" content="컨테이너 기반 배포 애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-05-15T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/ops/kubenetes-overview/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Kubernetes">
+    <meta itemprop="description" content="컨테이너 기반 배포애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.">
+    <meta itemprop="datePublished" content="2022-05-15T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Kubernetes
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2022-05-15T00:00:00+09:00">May 15, 2022</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#컨테이너-기반-배포">컨테이너 기반 배포</a><ul><li><a href="#쿠버네티스">쿠버네티스</a></li><li><a href="#쿠버네티스-기능">쿠버네티스 기능</a></li></ul></li><li><a href="#쿠버네티스-overview">쿠버네티스 Overview</a></li><li><a href="#minikube">minikube</a><ul><li><a href="#minikube-명령어">minikube 명령어</a></li><li><a href="#kubectl-명령어">kubectl 명령어</a></li></ul></li><li><a href="#reference">Reference</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="컨테이너-기반-배포">컨테이너 기반 배포</h2>
+<p>애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.</p>
+
+<p>컨테이너 기반 배포가 등장하면서 Host OS 위에 컨테이너 런타임이 올라가고 그 위로 컨테이너가 올라가게 되었습니다. 컨테이너 기반 배포는 가상화 배포 방식과 비슷하지만 컨테이너는 Host OS의 API를 가져다 쓰는 가상머신입니다. 가상머신이라는 격리된 메모리, 디스크, 네트워크, IO 인터페이스 등을 할당받지 않아서 오버헤드를 줄일 수 있습니다.</p>
+
+<h3 id="쿠버네티스">쿠버네티스</h3>
+<p>도커는 컨테이너 기반의 오픈소스 가상화 플랫폼을 말합니다. 도커를 사용해서 애플리케이션을 서비스 단위로 분할하여 배포할 수 있지만 서비스마다 배포해야 하는 단점이 있습니다. 다수의 컨테이너를 관리할 필요가 생기면서 <strong>컨테이너 오케스트레이터</strong>라는 기능을 많은 회사들이 서비스로 내놓았습니다.</p>
+
+<p>그 중 하나가 <strong>쿠버네티스</strong>입니다. 쿠버네티스는 규모에 맞는 컨테이너를 배포하는데 필요한 오케스트레이션 및 관리기능을 제공합니다.</p>
+
+<h3 id="쿠버네티스-기능">쿠버네티스 기능</h3>
+<ul>
+  <li>시간대별로 서비스의 트래픽이 달라지는 경우 Auto Scaling 기능을 통해 자원의 양을 조절할 수 있습니다.</li>
+  <li>Auto Healing 기능을 통해 장애가 난 서버의 자리를 여분의 서버 하나가 자동으로 대체합니다.</li>
+  <li>서비스의 버전 업데이트가 있는 경우 Deployment 오브젝트를 통해 업데이트 방식에 대해 자동적으로 처리되도록 합니다.</li>
+</ul>
+
+<h2 id="쿠버네티스-overview">쿠버네티스 Overview</h2>
+<p>쿠버네티스 클러스터는 서버 하나를 Master, 다른 서버를 Node라 하고 하나의 Master에 여러 Node들이 연결되게 합니다. 마스터는 쿠버네티스의 전반적인 기능들을 컨트롤하고 노드들이 자원을 제공합니다. 만약, 클러스터의 자원을 늘리고 싶다면 노드들을 추가해주면 됩니다.</p>
+
+<p>클러스터 안에 쿠버네티스 오브젝트들은 독립된 Namespace라는 공간에 들어갑니다. Namespace에는 Pod들이 있고 외부로부터 IP를 할당해주는 서비스가 있습니다. 그리고 다른 Namespace안 Pod끼리는 연결이 불가능합니다. Pod가 문제가 생겨 재할당이 되면 기존 Pod 안 데이터들이 날라갑니다. 그래서 Volume을 만들어 데이터를 하드에 별도로 저장하게 할 수 있습니다.</p>
+
+<p>Namespace에는 ResourceQuota와 LimitRange를 달아서 하나의 Namespace에서 사용할 수 있는 자원의 양(CPU, 메모리)을 한정할 수 있습니다.</p>
+
+<p>Pod를 컨트롤하는 Controller는 다음과 같습니다.</p>
+<ul>
+  <li>ReplicaSet
+    <ul>
+      <li>Pod이 죽으면 다시 살리거나 스케일링이 가능합니다.</li>
+    </ul>
+  </li>
+  <li>Deployment
+    <ul>
+      <li>배포 후 Pod들을 업그레이드합니다. 문제 발생 시 롤백이 가능합니다.</li>
+    </ul>
+  </li>
+  <li>DaemonSet
+    <ul>
+      <li>한 노드에 Pod 하나씩만 유지되도록 합니다.</li>
+    </ul>
+  </li>
+  <li>Job
+    <ul>
+      <li>어떤 특정 작업만 하고 종료를 시켜야 할 때 사용합니다.</li>
+      <li>이런 Job을 주기적으로 실행해야 한다면 Cronjob을 사용합니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="minikube">minikube</h2>
+<p>쿠버네티스를 정확하게 실습하려면 3대의 서버가 필요하지만 간단하게 <code class="language-plaintext highlighter-rouge">minikube</code>라는 도구를 이용하여 실습해볼 수 있습니다.</p>
+<ul>
+  <li>맥 기준 홈브류를 이용해서 쉽게 설치할 수 있습니다. 윈도우는 따로 설치파일이 필요합니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">brew install minikube</code></li>
+</ul>
+
+<h3 id="minikube-명령어">minikube 명령어</h3>
+<ul>
+  <li>버전관리 <code class="language-plaintext highlighter-rouge">minikube version</code></li>
+  <li>가상머신 시작
+    <ul>
+      <li>x86 <code class="language-plaintext highlighter-rouge">minikube start -driver=hyperkit</code></li>
+      <li>M1 <code class="language-plaintext highlighter-rouge">minikube start --driver=docker</code></li>
+      <li>driver 에러 발생 시 <code class="language-plaintext highlighter-rouge">minikube start --driver=virtualbox</code></li>
+      <li>특정 버전 실행 <code class="language-plaintext highlighter-rouge">minikube start --kubernetes-version=v.1.23.1</code></li>
+    </ul>
+  </li>
+  <li>상태확인 <code class="language-plaintext highlighter-rouge">minikube status</code></li>
+  <li>정지 <code class="language-plaintext highlighter-rouge">minikube stop</code></li>
+  <li>삭제 <code class="language-plaintext highlighter-rouge">minikube delete</code></li>
+  <li>IP확인 <code class="language-plaintext highlighter-rouge">minikube ip</code></li>
+</ul>
+
+<h3 id="kubectl-명령어">kubectl 명령어</h3>
+<p><code class="language-plaintext highlighter-rouge">kubectl</code>은 쿠버네티스 클러스터에 명령어를 전달하는 도구입니다. 쿠버네티스에서는 대시보드를 제공하지만 노출되지 말아야할 값들이 노출되어서 대시보드를 권장하지 않습니다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">apply</code> : 원하는 상태를 적용, -f 옵션으로 파일과 함께 사용한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">get</code> : 리소스 목록을 보여준다.</li>
+  <li><code class="language-plaintext highlighter-rouge">describe</code> : 리소스 목록을 자세히 보여준다.</li>
+  <li><code class="language-plaintext highlighter-rouge">delete</code> : 리소스를 제거한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">logs</code> : 컨테이너 로그를 보여준다.</li>
+  <li><code class="language-plaintext highlighter-rouge">exec</code> : 컨테이너에 명령을 전달한다. 컨테이너에 접근할 때 주로 사용한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">config</code> : kubectl 설정을 관리한다.</li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://www.inflearn.com/course/%EC%BF%A0%EB%B2%84%EB%84%A4%ED%8B%B0%EC%8A%A4-%EA%B8%B0%EC%B4%88/dashboard">대세는 쿠버네티스(인프런)</a></li>
+  <li><a href="https://subicura.com/k8s/">https://subicura.com/k8s/</a></li>
+  <li><a href="https://samsungsds.com/kr/story/220222_kubernetes1.html">쿠버네티스 알아보기 1편</a></li>
+  <li><a href="https://www.redhat.com/ko/topics/containers/what-is-kubernetes">쿠버네티스(Kubernetes) 개념, 사용방법, 차이점</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#k8s" class="page__taxonomy-item p-category" rel="tag">k8s</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#ops" class="page__taxonomy-item p-category" rel="tag">Ops</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-05-15T00:00:00+09:00">May 15, 2022</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/atcoder/abc250/" class="pagination--pager" title="AtCoder Beginner Contest 250
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow/" rel="permalink">airflow 체험기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 09 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc233/" rel="permalink">AtCoder Beginner Contest 233
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 05 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. 10yen Stamp
+10엔 스탬프를 모아서 현재 $X$에서 목표치 $Y$를 달성할 때까지 몇 번을 봉투에 넣어야 하는지 계산하는 문제이다.
+$X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된다.
+```cpp
+#include 
+#include 
+#include ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,207 @@
+I"5<h2 id="a-favorite-sequence">A. Favorite Sequence</h2>
+<hr />
+<p>일반적으로, 가장 왼쪽 요소는 모든 홀수 위치에 배치하고 가장 오른쪽 요소는 모든 짝수 위치에 배치한 후
+왼쪽 포인터는 앞으로, 오른쪽 포인터는 하나씩 뒤로 이동</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">300</span><span class="p">];</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+  <span class="kt">int</span> <span class="n">ans</span><span class="p">[</span><span class="mi">300</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">arr</span><span class="p">[</span><span class="n">left</span><span class="o">++</span><span class="p">];</span>
+    <span class="k">else</span> <span class="n">ans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">arr</span><span class="p">[</span><span class="n">right</span><span class="o">--</span><span class="p">];</span>
+  <span class="p">}</span>
+  
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="o">&lt;&lt;</span><span class="sc">' '</span><span class="p">;</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="o">--</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-last-years-substring">B. Last Year’s Substring</h2>
+
+<p>입력된 문자열 $s$에서 부분 문자열 $t$를 지워 “2020”을 만들어지는지 확인하는 문제이다.</p>
+
+<p>문자열 $t$의 길이는 반드시 $n-4$이어야 한다. (“2020”의 길이는 4이기 때문)</p>
+
+<p>그렇다면 문자열 $s$에서 부분 문자열 $t$를 지웠을 때 얻을 수 있는 문자열은 다음과 같다.</p>
+
+<ul>
+  <li>$s[1], s[2],s[3],s[4]$</li>
+  <li>$s[1],s[2],s[3],s[n]$</li>
+  <li>$s[1],s[2],s[n-1],s[n]$</li>
+  <li>$s[1], s[n-2],s[n-1],s[n]$</li>
+  <li>$s[n-3],s[n-2],s[n-1],s[n]$
+```cpp
+#include <iostream>
+using namespace std;</iostream></li>
+</ul>
+
+<p>void solve() {
+  int n;
+  cin»n;
+  string s;
+  cin»s;</p>
+
+<p>for(int i=0;i&lt;=4;i++) {
+    if(s.substr(0,i) + s.substr(n-4+i, 4-i) == “2020”) {
+      cout«“YES”«endl;
+      return;
+    }
+  }
+  cout«“NO”«endl;
+  return;
+}</p>
+
+<p>int main() {
+  int t;
+  cin»t;
+  while(t– &gt;0) {
+    solve();
+  }
+  return 0;
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>---
+
+## C. Unique Number
+
+중복되지 않은 각 자리의 숫자의 합이 입력된 $x$를 만들 수 있으면서 가장 작은 수를 출력하는 문제
+
+먼저, 문제에 대한 답은 0이 포함되서는 안된다. 단지 숫자를 늘리기만 하기 때문이다.
+
+그리고 가능한 최소길이를 가져야 하고 길이가 같은 경우 가장 작은 수가 정답이기 때문에 첫 번째 숫자로 먼저 비교한 후 두 번째 숫자를 추가하여 비교해야 한다. 이때 비교하게 될 숫자는 정렬된 순서로 해야 한다.
+```cpp
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#define endl '\n'
+using namespace std;
+
+void solve() {
+  int x;
+  cin&gt;&gt;x;
+  vector&lt;int&gt; ans;
+  int sum=0, last=9;
+  while(sum &lt; x &amp;&amp; last &gt; 0) { // 큰 수부터 넣어서 가능한 수 찾기
+    ans.push_back(min(x-sum, last));
+    sum+=last;
+    last--;
+  }
+
+  if(sum&lt;x) {
+    cout&lt;&lt;-1&lt;&lt;endl;
+  }
+  else {
+    reverse(ans.begin(),ans,end());
+    for(int i=0;i&lt;ans.size();i++)
+      cout&lt;&lt;ans[i];
+      cout&lt;&lt;endl;
+  }
+  return;
+}
+
+int main() {
+  int t;
+  cin&gt;&gt;t;
+  while(t-- &gt;0) {
+    solve();
+  }
+  return 0;
+}
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-add-to-neighbour-and-remove">D. Add to Neighbour and Remove</h2>
+
+<p>먼저, $k$를 실행한 횟수라 하자. 그리고 $s$를 배열 $a$안 숫자들의 합이라 하자.</p>
+
+<p>$k$번의 실행을 한 후 모든 요소들은 같은 값을 가진 배열이 되어야 한다.</p>
+
+<p>그런데, 모두 같은 값이 가능한 숫자는 $\frac{s}{n-k}$이다.</p>
+
+<p>예를 들어 $a$배열 [1, 2, 2, 1]이 있을 때, $s$는 6이다.</p>
+
+<p>따라서 $f(k)=\frac{s}{n-k}$라 할 때, $f(1)=2,f(2)=3,f(3)=6$이 가능한 숫자이다.</p>
+
+<p>이제 $a$배열을 가지고 확인해보자.</p>
+
+<p>먼저, $k=1$일 때이다.</p>
+
+<ul>
+  <li>$a_1+a_2&gt;2$이므로 불가능</li>
+</ul>
+
+<p>다음 $k=2$일 때이다.</p>
+
+<ul>
+  <li>$a_1+a_2=3, a_3+a4=3$이므로 가능하다.</li>
+</ul>
+
+<p>따라서 답은 $n-k$인 2이다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="n">ll</span> <span class="n">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ll</span> <span class="n">x</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+    <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">x</span><span class="p">;</span>
+    <span class="n">sum</span><span class="o">+=</span><span class="n">x</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">sum</span><span class="o">%</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ll</span> <span class="n">needSum</span><span class="o">=</span><span class="n">sum</span><span class="o">/</span><span class="n">i</span> <span class="c1">// s/(n-k)</span>
+      <span class="n">ll</span> <span class="n">curSum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+      <span class="n">book</span> <span class="n">ok</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// a1부터 필요한 합이 가능한가</span>
+        <span class="n">curSum</span><span class="o">+=</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">curSum</span><span class="o">&gt;</span><span class="n">needSum</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 합이 넘어가면 불가능</span>
+          <span class="n">ok</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">curSum</span><span class="o">==</span><span class="n">needSum</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 같으면 다음 인덱스부터 확인</span>
+          <span class="n">curSum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">n</span><span class="o">-</span><span class="n">i</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="o">--</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

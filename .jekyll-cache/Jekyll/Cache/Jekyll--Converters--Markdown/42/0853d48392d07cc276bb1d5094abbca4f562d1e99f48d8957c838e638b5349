@@ -1,0 +1,209 @@
+I"�b<blockquote>
+  <p>부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의)</p>
+</blockquote>
+
+<h2 id="airflow-시작">airflow 시작</h2>
+<p>데이터 엔지니어링 도구인 airflow를 로컬에 설치한 후 몇가지를 살펴보았는데 airflow는 데이터를 관리하는 것이 아닌 함수 단위나 스크립트 단위로 실행시켜주는 도구라는 것을 깨닫게 되었습니다.<br />
+그렇다면 데이터를 생성해서 스케줄링을 돌리자!라는 생각이 들어 재밌어보여서 바로 실행에 옮겼습니다. 다시 어떤 데이터를 생성해야 하나?라는 생각에 기업이라면 로그들을 사용하므로 저도 간단한 로그를 생성해서 db에 넣는 것 까지 해볼 생각이었습니다.</p>
+
+<h3 id="데이터-형태">데이터 형태</h3>
+<p>실제 로그들을 보면 많은 양의 정보가 들어있지만 간단하게 생성할 생각이므로 (타임스탬프, level, 메시지, id, 오류 check)로 구성했습니다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">{"timestamp": 1641699997.0480268, "level": "ERROR", "id": 23, "message": "An unexpected error occurred.", "check": 0}</code></p>
+
+<p>check항목은 10%의 확률로 오류인경우 check에 1이 들어가도록 설정했습니다. 실제로는 좀 더 복잡한 데이터 검증을 하겠지만 여기서는 간단하게 에러인지 아닌지 확인하는 정도만 확인하도록 구성했습니다.</p>
+
+<h2 id="데이터-생성">데이터 생성</h2>
+<p>각종 서버에서 생성된 로그들은 한 곳에 모아지거나 어느정도 분산된 데이터베이스로 전달되는데 여기는 메시지 큐(Message Queue, MQ)를 사용하고 싶었습니다. 로그들이 메시지 큐로 들어가 에어플로우 worker들이 큐에서 하나씩 빼와서 에러 체크한 후 db에 넣어주는 것을 생각했습니다.<br />
+메시지 큐는 RabbitMQ, Redis 등이 있는데 어디서 들어본 Redis를 사용해서 큐를 구축했습니다. <a href="https://blog.naver.com/wideeyed/221370229153">링크</a>에서 코드들을 가져와 코드들을 다시 재구성했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># producer.py
+</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">redisqueue</span> <span class="kn">import</span> <span class="n">RedisQueue</span>
+<span class="kn">from</span> <span class="nn">constant</span> <span class="kn">import</span> <span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">REDIS_PORT</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">RedisQueue</span><span class="p">(</span><span class="s">'my-queue'</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">REDIS_PORT</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">level</span> <span class="o">=</span> <span class="p">[</span><span class="s">'INFO'</span><span class="p">,</span> <span class="s">'WARNING'</span><span class="p">,</span> <span class="s">'ERROR'</span><span class="p">]</span>
+<span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="s">'All passed.'</span><span class="p">,</span> <span class="s">'Incorrect access'</span><span class="p">,</span> <span class="s">'An unexpected error occurred.'</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="c1"># message put
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+        <span class="n">cur_time</span> <span class="o">=</span> <span class="s">'{"timestamp":'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">())</span> <span class="o">+</span> <span class="s">'}'</span>
+        <span class="n">element</span>  <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cur_time</span><span class="p">)</span>
+
+        <span class="c1"># Add Your Own Data
+</span>        <span class="n">ridx</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">rndn</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'level'</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span><span class="p">[</span><span class="n">ridx</span><span class="p">]</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'message'</span><span class="p">]</span> <span class="o">=</span> <span class="n">message</span><span class="p">[</span><span class="n">ridx</span><span class="p">]</span>
+        <span class="n">element</span><span class="p">[</span><span class="s">'check'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">rndn</span> <span class="o">&gt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="mi">1</span>
+
+        <span class="n">element_str</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">element_str</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">element_str</span><span class="p">)</span>
+        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+</code></pre></div></div>
+<p>먼저, <code class="language-plaintext highlighter-rouge">producer.py</code>는 로그를 생성하는 파일입니다. 랜덤으로 [‘INFO’, ‘WARNING’, ‘ERROR’]를 선택하게 하고 그에 맞는 메시지도 포함시키도록 했습니다. 에러는 위에서 말한대로 10%의 확률로 일어나고 json 포맷 형태로 큐에 들어가고 1초마다 생성하도록 구성했습니다.</p>
+
+<h2 id="redis-세팅">Redis 세팅</h2>
+<p>Redis를 사용하려면 Redis가 돌아가는 서버를 돌려야 하는데 참고한 블로그와 마찬가지로 도커를 이용하기로 했습니다. 이후에 airflow까지 도커로 돌릴 생각이었기 때문입니다. (사실 맥북 용량이 얼마 안남았습니다. 조만간 포맷해야…)
+도커에서 이미지를 가져와야 하는데 저는 블로그와 똑같이 redis:latest 위에서 작업했습니다. dockerfile을 만들지는 않고 컨테이너 위에서 설치했습니다.</p>
+
+<p>먼저, redis-server라는 이름의 컨테이너에서 6379번 포트를 열어서 redis 이미지를 실행시킵니다.
+<code class="language-plaintext highlighter-rouge">docker run --name redis-server -p 6379:6379 -it redis:latest /bin/bash</code></p>
+
+<p>redis 서버를 사용하려면 host 주소와 포트번호를 알아야 하는데 이를 위해 ifconfig를 설치할 것입니다.<br />
+<code class="language-plaintext highlighter-rouge">apt-get update &amp;&amp; apt-get install net-tools &amp;&amp; ifconfig</code>
+그러면 eth0에 172.17.0.x의 주소가 보이는데 이것을 기록해놓으면 됩니다.</p>
+
+<ul>
+  <li>나중에 알았는데 vsc에서 도커 익스텐션을 설치한 후 bridge에서 검사를 누르면 열러있는 도커들의 주소들을 알 수 있습니다.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">redis-server</code>실행하게 되면 redis 서버가 실행되면서 세팅은 끝나게 됩니다.</p>
+
+<h3 id="redis-client-세팅">Redis-client 세팅</h3>
+<p>이 컨테이너는 <code class="language-plaintext highlighter-rouge">producer.py</code>를 실행시켜 로그를 생성해 큐에 메시지를 넣는 컨테이너입니다. python 이미지 위에서 redis를 설치하면 끝납니다. 직접 실행시켜도 되고 watch 명령어로 주기적으로 실행시켜도 됩니다.</p>
+
+<h2 id="airflow-세팅">Airflow 세팅</h2>
+<p>airflow는 이전에 세팅한 경험이 있어서 비교적 쉽게 할 수 있었습니다. 이번에는 python 이미지 위에서 작업했습니다.<br />
+<code class="language-plaintext highlighter-rouge">docker run --name airflow-server -p 8080:8080 -it python:3.7.0 /bin/bash</code><br />
+저는 <code class="language-plaintext highlighter-rouge">-v</code>옵션을 통해서 file sharing을 활성화했습니다. 이 옵션을 선택하면 로컬에 있는 폴더에서 컨테이너 내부로 파일을 쉽게 옮길 수 있습니다. vsc로 코드를 작성하면 <code class="language-plaintext highlighter-rouge">cp</code>명령어로 업데이트까지 편하게 할 수 있습니다.</p>
+
+<p>먼저, airflow는 airflow webserver와 airflow scheduler를 동시에 실행시켜야 합니다. 그래서 screen을 이용하기로 했습니다.
+<code class="language-plaintext highlighter-rouge">apt-get update &amp;&amp; apt-get install screen</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code>을 비롯해 DB 초기화, Admin 계정을 만들어 줍니다. 이제 screen으로 서버와 스케줄러를 돌려줍니다. 스크린에서 빠져나오는 키는 <code class="language-plaintext highlighter-rouge">ctrl+a+d</code>입니다.<br />
+<code class="language-plaintext highlighter-rouge">screen -S airflow-scheduler</code><br />
+<code class="language-plaintext highlighter-rouge">airflow scheduler</code><br />
+<code class="language-plaintext highlighter-rouge">screen -S airflow-server</code><br />
+<code class="language-plaintext highlighter-rouge">airflow webserver -p 8080</code></p>
+
+<h2 id="dag작성">Dag작성</h2>
+<p>airflow가 돌아가는 컨테이너에서 <code class="language-plaintext highlighter-rouge">AIRFLOW_HOME</code> 위치에서 <code class="language-plaintext highlighter-rouge">mkdir dags</code>로 dag를 넣어줄 디렉토리를 생성합니다.<br />
+dag는 다음과 같이 작성합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># func.py
+</span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">sqlite3.dbapi2</span> <span class="kn">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">redisqueue</span> <span class="kn">import</span> <span class="n">RedisQueue</span>
+<span class="kn">from</span> <span class="nn">constant</span> <span class="kn">import</span> <span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">REDIS_PORT</span>
+
+<span class="k">def</span> <span class="nf">consumer</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">RedisQueue</span><span class="p">(</span><span class="s">'my-queue'</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">REDIS_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">REDIS_PORT</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">isBlocking</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">msg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">msg_json</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">msg_json</span><span class="p">[</span><span class="s">'check'</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">'sqltie.db'</span><span class="p">)</span> <span class="k">as</span> <span class="n">con</span><span class="p">:</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">con</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+                    <span class="n">_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]))</span> \
+                        <span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d %H:%M:%S'</span><span class="p">)</span>
+                    <span class="n">cur</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span>
+                        <span class="s">"INSERT INTO table </span><span class="se">\
+</span><span class="s">                        (time, level, id) VALUES (?,?,?)"</span><span class="p">,</span>
+                        <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">_date</span><span class="p">),</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'level'</span><span class="p">],</span><span class="n">msg_json</span><span class="p">[</span><span class="s">'id'</span><span class="p">]))</span>
+            <span class="k">except</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">con</span><span class="p">.</span><span class="n">rollback</span><span class="p">()</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>          
+        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+<p>위의 코드에서 <code class="language-plaintext highlighter-rouge">isBlocking=True</code>로 두면 큐가 비어있을 때 무한정 대기한다는 뜻입니다. False로 두어서 큐가 비어있으면 태스크를 끝내도록 작성했습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># mydags.py
+</span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+
+<span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">airflow.utils.dates</span> <span class="kn">import</span> <span class="n">days_ago</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.bash</span> <span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.python</span> <span class="kn">import</span> <span class="n">PythonOperator</span>
+
+<span class="kn">from</span> <span class="nn">func</span> <span class="kn">import</span> <span class="n">consumer</span>
+
+<span class="k">with</span> <span class="n">DAG</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s">'data_collector'</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s">'My dag'</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="o">=</span><span class="n">days_ago</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">,</span>
+    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">"0 0/5 * * *"</span><span class="p">,</span> <span class="c1"># 5분간격
+</span>    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'my_dags'</span><span class="p">],</span>
+    <span class="n">concurrency</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">dag</span><span class="p">:</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'start_schedule'</span><span class="p">,</span>
+        <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo START DATA COLLECTOR'</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'gooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_0'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t3</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_1'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t4</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'collector_2'</span><span class="p">,</span>
+        <span class="n">python_callable</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
+        <span class="n">depends_on_past</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'goose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">t5</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'end_schedule'</span><span class="p">,</span>
+        <span class="n">bash_command</span><span class="o">=</span><span class="s">'echo END DATA COLLECTOR'</span><span class="p">,</span>
+        <span class="n">owner</span><span class="o">=</span><span class="s">'gooose'</span><span class="p">,</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">retry_delay</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># 태스크 순서 정의
+</span>    <span class="n">t1</span><span class="o">&gt;&gt;</span><span class="p">[</span><span class="n">t2</span><span class="p">,</span> <span class="n">t3</span><span class="p">,</span> <span class="n">t4</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="n">t5</span>
+</code></pre></div></div>
+
+<h2 id="몰랐던-airflowcfg">몰랐던 airflow.cfg</h2>
+<p>처음 생각은 consumer역할을 맡은 t2, t3, t4에서 큐에서 하나씩 로그를 빼낸 후 에러 검증 후 db에 넣는 것을 생각했습니다.</p>
+
+<p>그러나, collector_0만 실행되고 나머지 collector는 큐에 대기하다가 실행이 끝났습니다.<br />
+airflow의 병렬처리를 할 수 있는 방법에 대해 찾아보니 celery를 사용하는 것을 볼 수 있었습니다.</p>
+
+<p>airflow 설정파일인 <code class="language-plaintext highlighter-rouge">airflow.cfg</code>를 보면 다음과 같은 항목이 보입니다.<br />
+<code class="language-plaintext highlighter-rouge">executor = SequentialExecutor</code><br />
+airflow의 초기 세팅은 SequentialExecutor이었고 collector_0만 실행되는 이유도 같은 것이었습니다.</p>
+
+<p>그렇다면 celery만 사용하면 되는것이 아닌가?하는 의문이 생길 수 있는데 여기부터 좀 어려웠습니다.<br />
+celery가 지원하는 db는 postgresql, mysql 정도이고 세팅하려면 새로 컨테이너를 올려야 한다는 판단을 했습니다.</p>
+
+<h2 id="현재-위치">현재 위치</h2>
+<p>mysql을 선택하고 컨테이너에 올렸는데 <code class="language-plaintext highlighter-rouge">Authentication plugin 'caching_sha2_password' cannot be loaded: dlopen(/usr/local/mysql/lib/plugin/caching_sha2_password.so, 2): image not found</code>이런 에러로 더이상 진행되지 못하고 있습니다.</p>
+
+<p>해결방법인 <code class="language-plaintext highlighter-rouge">ALTER USER root@localhost IDENTIFIED WITH mysql_natvie_password by 'password'</code>까지 시도했지만 해결되지 않았습니다.</p>
+
+<p>다른 DB인 postgresql로 바꾼 뒤에 다시 시도해보고 성공하면 다음 포스트에 후기를 남길 수 있을 것 같습니다.</p>
+:ET

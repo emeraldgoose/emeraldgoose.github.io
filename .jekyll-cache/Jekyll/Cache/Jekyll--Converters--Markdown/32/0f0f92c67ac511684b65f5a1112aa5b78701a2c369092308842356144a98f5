@@ -1,0 +1,144 @@
+I")I<h2 id="a-abc-string">A. ABC String</h2>
+
+<p>문자열 <code class="language-plaintext highlighter-rouge">s</code>는 <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code>, <code class="language-plaintext highlighter-rouge">C</code>로 이루어져 있고, 각 문자열은 <code class="language-plaintext highlighter-rouge">'('</code> 또는 <code class="language-plaintext highlighter-rouge">')'</code>로 치환 될 수 있다. 이때, <code class="language-plaintext highlighter-rouge">"()"</code>, <code class="language-plaintext highlighter-rouge">"(()())"</code> 처럼 정상적인 괄호 표현식으로 나타낼 수 있는지 확인하는 문제</p>
+
+<p>문자 <code class="language-plaintext highlighter-rouge">A</code>, <code class="language-plaintext highlighter-rouge">B</code>, <code class="language-plaintext highlighter-rouge">C</code>에 대해 <code class="language-plaintext highlighter-rouge">'('</code> 와 <code class="language-plaintext highlighter-rouge">')'</code>를 완전탐색 해야 문제를 해결할 수 있다.</p>
+
+<p>정규 괄호식 테스트하는 함수 <code class="language-plaintext highlighter-rouge">test()</code>는 <code class="language-plaintext highlighter-rouge">a</code>,<code class="language-plaintext highlighter-rouge">b</code>,<code class="language-plaintext highlighter-rouge">c</code> 인자를 받게 되는데 0이면 <code class="language-plaintext highlighter-rouge">'('</code>, 0이 아니면 <code class="language-plaintext highlighter-rouge">')'</code>로 작동하도록 했습니다.</p>
+
+<p>완전탐색의 경우 1부터 6까지 비트마스크를 이용하여 탐색을 진행했습니다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#define endl '\n'
+#define ll long long
+#define pii pair&lt;int,int&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">test</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">remain</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">char</span> <span class="n">C</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">remain</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">C</span><span class="o">==</span><span class="sc">'A'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">!</span><span class="n">a</span> <span class="o">?</span> <span class="n">remain</span><span class="o">++</span> <span class="o">:</span> <span class="n">remain</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">C</span><span class="o">==</span><span class="sc">'B'</span><span class="p">)</span> <span class="p">{</span>
+      <span class="o">!</span><span class="n">b</span> <span class="o">?</span> <span class="n">remain</span><span class="o">++</span> <span class="o">:</span> <span class="n">remain</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="o">!</span><span class="n">c</span> <span class="o">?</span> <span class="n">remain</span><span class="o">++</span> <span class="o">:</span> <span class="n">remain</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">remain</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">string</span> <span class="n">s</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">s</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">test</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">i</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="o">&amp;</span><span class="mi">4</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"YES"</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"NO"</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-berland-crossword">B. Berland Crossword</h2>
+
+<p>n$\times$n 배열에 <code class="language-plaintext highlighter-rouge">U</code>, <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">D</code>, <code class="language-plaintext highlighter-rouge">L</code> 만큼 모서리에 색칠을 할 수 있는지 확인하는 문제</p>
+
+<p>먼저, 이 문제의 경우 두 가지 경우를 생각해야 한다.</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">U</code>, <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">D</code>, <code class="language-plaintext highlighter-rouge">L</code>이 <code class="language-plaintext highlighter-rouge">n</code>개의 셀을 색칠해야 할 때</li>
+  <li><code class="language-plaintext highlighter-rouge">U</code>, <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">D</code>, <code class="language-plaintext highlighter-rouge">L</code>이 0개의 셀을 색칠해야 할 때</li>
+</ol>
+
+<p>위 두 가지 경우는 모두 인접 모서리에 영향을 준다.</p>
+
+<p>즉, 4개의 모서리 양 끝을 체크하면서 한 모서리당 남은 <code class="language-plaintext highlighter-rouge">n-2</code>개의 셀에 나머지를 색칠할 수 있는가 확인해야 한다.</p>
+
+<p>총 4개의 꼭지점 부분을 비트마스킹하면서 색을 칠할 수 있는지 완전탐색 한다.</p>
+
+<p>여기 등장하는 <code class="language-plaintext highlighter-rouge">u</code>, <code class="language-plaintext highlighter-rouge">r</code>, <code class="language-plaintext highlighter-rouge">d</code>, <code class="language-plaintext highlighter-rouge">l</code>은 이미 칠해진 수이다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">mask</code>가 1110 이라면, <code class="language-plaintext highlighter-rouge">(1,n)</code>, <code class="language-plaintext highlighter-rouge">(n,1)</code>, <code class="language-plaintext highlighter-rouge">(n,n)</code>이 칠해진 경우이다.</li>
+</ul>
+
+<p>이미 칠해진 개수 <code class="language-plaintext highlighter-rouge">u</code>, <code class="language-plaintext highlighter-rouge">r</code>, <code class="language-plaintext highlighter-rouge">d</code>, <code class="language-plaintext highlighter-rouge">l</code>은 칠해야 하는 개수 <code class="language-plaintext highlighter-rouge">U</code>, <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">D</code>, <code class="language-plaintext highlighter-rouge">L</code>의 수를 넘을 수 없다.</p>
+
+<p>또한, 이미 칠해진 개수 <code class="language-plaintext highlighter-rouge">u</code>, <code class="language-plaintext highlighter-rouge">r</code>, <code class="language-plaintext highlighter-rouge">d</code>, <code class="language-plaintext highlighter-rouge">l</code>과 양쪽 끝을 제외한 남은 모서리 공간 <code class="language-plaintext highlighter-rouge">n-2</code>개를 더한 값이 칠해야 하는 개수 <code class="language-plaintext highlighter-rouge">U</code>, <code class="language-plaintext highlighter-rouge">R</code>, <code class="language-plaintext highlighter-rouge">D</code>, <code class="language-plaintext highlighter-rouge">L</code>보다 적어서는 안된다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#define endl '\n'
+#define ll long long
+#define pii pair&lt;int,int&gt;
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">U</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">L</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">U</span><span class="o">&gt;&gt;</span><span class="n">R</span><span class="o">&gt;&gt;</span><span class="n">D</span><span class="o">&gt;&gt;</span><span class="n">L</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">mask</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">mask</span><span class="o">&lt;</span><span class="mi">16</span><span class="p">;</span><span class="n">mask</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">check</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">mask</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">)</span> <span class="n">u</span><span class="o">++</span><span class="p">,</span> <span class="n">l</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">mask</span><span class="o">&amp;</span><span class="mi">2</span><span class="p">)</span> <span class="n">d</span><span class="o">++</span><span class="p">,</span> <span class="n">l</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">mask</span><span class="o">&amp;</span><span class="mi">4</span><span class="p">)</span> <span class="n">d</span><span class="o">++</span><span class="p">,</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">mask</span><span class="o">&amp;</span><span class="mi">8</span><span class="p">)</span> <span class="n">r</span><span class="o">++</span><span class="p">,</span> <span class="n">u</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">u</span><span class="o">&gt;</span><span class="n">U</span> <span class="o">||</span> <span class="n">u</span><span class="o">+</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">U</span><span class="p">)</span> <span class="n">check</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">r</span><span class="o">&gt;</span><span class="n">R</span> <span class="o">||</span> <span class="n">r</span><span class="o">+</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">R</span><span class="p">)</span> <span class="n">check</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">&gt;</span><span class="n">D</span> <span class="o">||</span> <span class="n">d</span><span class="o">+</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">D</span><span class="p">)</span> <span class="n">check</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">l</span><span class="o">&gt;</span><span class="n">L</span> <span class="o">||</span> <span class="n">l</span><span class="o">+</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;</span><span class="n">L</span><span class="p">)</span> <span class="n">check</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">check</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"YES"</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>  
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"NO"</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-1d-sokoban">C. 1D Sokoban</h2>
+
+<hr />
+
+<h2 id="d-dogeforces">D. Dogeforces</h2>
+:ET

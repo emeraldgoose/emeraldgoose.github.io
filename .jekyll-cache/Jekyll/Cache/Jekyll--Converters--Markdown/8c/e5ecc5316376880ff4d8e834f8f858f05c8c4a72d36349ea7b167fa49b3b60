@@ -1,0 +1,9 @@
+I"^<h2 id="a-favorite-sequence">A. Favorite Sequence</h2>
+<hr />
+
+<p>일반적으로, 가장 왼쪽 요소는 모든 홀수 위치에 배치하고 가장 오른쪽 요소는 모든 짝수 위치에 배치한 후
+왼쪽 포인터는 앞으로, 오른쪽 포인터는 하나씩 뒤로 이동
+```cpp
+#include <iostream>
+using namespace std;</iostream></p>
+:ET

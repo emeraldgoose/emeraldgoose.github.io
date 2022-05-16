@@ -1,0 +1,112 @@
+I"� <p>사이클 탐지기법은 dfs를 사용하는 방법과 union-find 방식이 있는데 여기서는 dfs를 사용한 방법을 소개하고자 한다.</p>
+
+<p>dfs를 실행하게 되면 dfs spanning tree가 만들어지는데, 사이클이 있다는 것은 tree에서 back edge(역방향 간선)가 존재한다는 것이다.</p>
+
+<p>즉, 이 back edge를 찾게되면 사이클이 있다는 것을 알 수 있다.</p>
+
+<h3 id="back-edge">Back edge</h3>
+
+<hr />
+
+<p>Back edge란, 다음의 그림에서 빨간색 선이다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1CVQ7T6HLMMPYy9e6dMvojEF_aiB5QGca" alt="" /></p>
+
+<p>정점 1, 2, 5가 사이클을 형성하는 것을 볼 수 있다. 사이클을 찾기 위해서는 Back edge를 찾아야 한다.</p>
+
+<h2 id="undirected-graph">Undirected Graph</h2>
+
+<hr />
+
+<p>방향성이 없는 그래프는 이전에 방문한 노드를 다시 방문하면 cycle이 존재한다.(단, 직전 방문한 노드는 해당되지 않는다.)</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">edges</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">isCycle</span><span class="p">(</span><span class="kt">int</span> <span class="n">u</span><span class="p">,</span> <span class="kt">int</span> <span class="n">parent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">visited</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">isCycle</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">u</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">v</span><span class="o">!=</span><span class="n">parent</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 직전 방문한 노드가 아니면서 방문한 적이 있는 노드라면</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="directed-graph">Directed Graph</h2>
+
+<hr />
+
+<p>방향성이 있는 그래프는 조금 다르다. 무향 그래프와 다르게 이전 방문한 노드와 사이클을 이룰 수 있다.</p>
+
+<p>그리고 무향 그래프에서 사용했던 코드를 다시 사용할 수는 없다.</p>
+
+<p>예를들면, 아래 그래프에서 dfs로 1 → 2 → 3 → 4까지 내려간 후 길이 없어 2번 정점까지 리턴 될 것이다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1f_T-Jk36ZmbibyOv9ugiW6IKnqpmHXgu" alt="" /></p>
+
+<p>이제, 2번에서 5번으로 이동 후 4번으로 가려고 했을 때 4번이 이미 방문한 지점이라 위의 코드에서 true를 반환하게 될 것이다. 하지만 실제로는 사이클이 아니다.</p>
+
+<p>그래서 이번에는 stack처럼 사용할 다른 배열의 공간이 필요하다. 이것을 <code class="language-plaintext highlighter-rouge">recStack[]</code>이라 하자.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1Fx6rRNCjZMXGubDT-LZhS2T27y3yW3wi" alt="" /></p>
+
+<p>처음 1번에서 시작하여 dfs를 진행한다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1r_alnZpEfMHMWlMK8yQsISnDJr4Z2EXn" alt="" /></p>
+
+<p>차례대로 4번 정점까지 들어가면 두 배열의 상태는 다음과 같다.</p>
+
+<ul>
+  <li>visited[] : [1,1,1,1,0]</li>
+  <li>recStack[] : [1,1,1,1,0]</li>
+</ul>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1-4pqEpBFCIeuCCp_XVvvyCzQdeOnO-QK" alt="" /></p>
+
+<p>다시 반환되어 2번 정점까지 되돌아온다. 이때 배열의 상태는 다음과 같다.</p>
+
+<ul>
+  <li>visited[] : [1,1,1,1,0]</li>
+  <li>recStack[] : [1,1,0,0,0]</li>
+</ul>
+
+<p>다음 2번에서 5번으로 진행한다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lvNfnHRWhqanV1vo4IybgEP_nWnozieb" alt="" /></p>
+
+<p>이때 배열의 상태는 다음과 같다.</p>
+
+<ul>
+  <li>visited[] : [1,1,1,1,1]</li>
+  <li>recStack[] : [1,1,0,0,1]</li>
+</ul>
+
+<p>마지막으로 5번 정점에서 1번 정점으로 진행하면 recStack[1]=1이므로 true가 반환되어 이 그래프가 사이클이 있다는 것을 판단할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">edges</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">visited</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">recStack</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">isCycle</span><span class="p">(</span><span class="kt">int</span> <span class="n">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">visited</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+    <span class="n">recStack</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">=</span><span class="nb">true</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">v</span> <span class="o">:</span> <span class="n">edges</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">isCycle</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">recStack</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// 스택에 있는 정점이라면 사이클이 존재</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">recStack</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span> <span class="c1">// 사이클을 형성하지 못하는 노드는 스택에서 제거</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

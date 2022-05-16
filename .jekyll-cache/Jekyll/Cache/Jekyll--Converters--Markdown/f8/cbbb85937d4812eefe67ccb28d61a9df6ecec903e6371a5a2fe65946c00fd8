@@ -1,0 +1,4 @@
+I"<h2 id="대회-목적">대회 목적</h2>
+<hr />
+<p>이번 대회는 KLUE의 Relation Extraction Task를 수행을 평가합니다. 문장 내 단어의 관계를 알아내면 knowledge graph를 생성하는데 key역할을 하며 생성된 knowlege graph를 통해 QA나 Summarization과 같은 Task를 수행하는데 도움을 줄 수 있습니다. 저는 이번 대회에서 적절한 성능을 내는 모델과 special token을 넣어 성능에 어떤 변화를 일으키는지 확인하는 실험을 진행했습니다.</p>
+:ET

@@ -1,0 +1,185 @@
+I"�"<h2 id="introduction-to-mrc">Introduction to MRC</h2>
+
+<h3 id="machine-reading-comprehensionmrc의-개념">Machine Reading Comprehension(MRC)의 개념</h3>
+
+<blockquote>
+  <dl>
+    <dt>기계독해(Machine Reading Comprehension)</dt>
+    <dd>주어진 지문(Context)를 이해하고, 주어진 질의(Query/Question)의 답변을 추론하는 문제</dd>
+  </dl>
+</blockquote>
+
+<h3 id="mrc의-종류">MRC의 종류</h3>
+
+<ol>
+  <li>
+    <dl>
+      <dt>Extraction Answer Datasets</dt>
+      <dd>질의(question)에 대한 답이 항상 주어진 지문(context)의 segment (or span)으로 존재</dd>
+    </dl>
+    <ul>
+      <li>SQuAD, KorQuAD, NewsQQ, Natural Questions, etc</li>
+    </ul>
+  </li>
+  <li>
+    <dl>
+      <dt>Descriptive/Narrative Answer Datasets</dt>
+      <dd>답이 지문 내에서 추출한 span이 아니라, 질의를 보고 생성 된 sentence (or free-form)의 형태</dd>
+    </dl>
+    <ul>
+      <li>MS MARCO, Narrative QA</li>
+    </ul>
+  </li>
+  <li>
+    <dl>
+      <dt>Multiple-choice Datasets</dt>
+      <dd>질의에 대한 답을 여러 개의 answer candidates 중 하나로 고르는 형태</dd>
+    </dl>
+    <ul>
+      <li>MCTest, RACE, ARC, tec</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="chanllenges-in-mrc">Chanllenges in MRC</h3>
+
+<ul>
+  <li>단어들의 구성이 유사하지는 않지만 동일한 문장을 이해 (DuoRC (paraphrased paragraph) / QuoRef (coreference resolution))</li>
+  <li>Unanswerable questions → ‘No Answer’ (SQuAD 2.0)</li>
+  <li>
+    <dl>
+      <dt>Multi-hop reasoning</dt>
+      <dd>여러 개의 document에서 질의에 대한 supporting fact를 찾아야지만 답을 찾을 수 있음 (HotpotQA, QAnagroo)</dd>
+    </dl>
+  </li>
+</ul>
+
+<h3 id="mrc의-평가방법">MRC의 평가방법</h3>
+
+<ol>
+  <li>Exact Match / F1 Score : For <strong>extractive</strong> answer and <strong>multiple-choice</strong> answer datasets
+    <ul>
+      <li>Exact Match (EM) or Accuracy : 예측한 답과 ground-truth가 정확히 일치하는 샘플의 비율</li>
+      <li>F1 Score : 예측한 답과 ground-truth 사이의 token overlap을 F1으로 계산</li>
+    </ul>
+  </li>
+  <li>ROUGE-L / BLEU : For descriptive answer datasets → Ground-truth과 예측한 답 사이의 overlap을 계산
+    <ul>
+      <li>ROUGE-L Score : 예측한 값과 ground-truth 사이의 overlap recall (ROUGE-L ⇒ LCS(Longest common subsequence))</li>
+      <li>BLEU : 예측한 답과 ground-truth 사이의 precision (BLEU-n ⇒ uniform n-gram weight)</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="unicode--tokenization">Unicode &amp; Tokenization</h2>
+
+<h3 id="unicode란">Unicode란?</h3>
+
+<blockquote>
+  <p>전 세계의 모든 문자를 일관되게 표현하고 다룰 수 있도록 만들어진 문자셋. 각 문자마다 숫자 하나에 매핑한다.</p>
+</blockquote>
+
+<h3 id="인코딩--utf-8">인코딩 &amp; UTF-8</h3>
+
+<blockquote>
+  <p>인코딩이란, 문자를 컴퓨터에서 저장 및 처리할 수 있게 이진수로 바꾸는 것을 말한다.</p>
+</blockquote>
+
+<blockquote>
+  <p>UTF-8 (Unicode Transformation Format)는 현재 가장 많이 쓰이는 인코딩 방식이며 문자 타입에 따라다른 길이의 바이트를 할당한다.</p>
+</blockquote>
+
+<ul>
+  <li>1 byte : Standard ASCII</li>
+  <li>2 bytes : Arabic, Hebrew, most European scripts</li>
+  <li>3 bytes : BMP(Basic Multilingual Plane) - 대부분의 현대 글자 (한글 포함)</li>
+  <li>4 bytes : All Unicode characters - 이모지 등</li>
+</ul>
+
+<h3 id="python에서-unicode-다루기">Python에서 Unicode 다루기</h3>
+
+<ul>
+  <li>Python3 부터 string 타입은 유니코드 표준을 사용한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">ord()</code> : 문자를 유니코드 code print로 변환한다.</li>
+  <li><code class="language-plaintext highlighter-rouge">chr()</code> : Code print를 문자로 변환한다.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ord</span><span class="p">(</span><span class="s">'A'</span><span class="p">)</span> <span class="c1"># 65
+</span><span class="nb">hex</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s">'A'</span><span class="p">))</span> <span class="c1"># '0x41'
+</span><span class="nb">chr</span><span class="p">(</span><span class="mi">65</span><span class="p">)</span> <span class="c1"># 'A'
+</span><span class="nb">chr</span><span class="p">(</span><span class="mh">0x41</span><span class="p">)</span> <span class="c1"># 'A'
+</span>
+<span class="nb">ord</span><span class="p">(</span><span class="s">'가'</span><span class="p">)</span> <span class="c1"># 44032
+</span><span class="nb">hex</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="s">'가'</span><span class="p">))</span> <span class="c1"># '0xac00'
+</span><span class="nb">chr</span><span class="p">(</span><span class="mi">44032</span><span class="p">)</span> <span class="c1"># '가'
+</span><span class="nb">chr</span><span class="p">(</span><span class="mh">0xac00</span><span class="p">)</span> <span class="c1"># '가'
+</span></code></pre></div></div>
+
+<h3 id="unicode와-한국어">Unicode와 한국어</h3>
+
+<p>한국어는 한자 다음으로 유니코드에서 많은 부분을 차지하고 있는 문자이다.</p>
+
+<ul>
+  <li>완성형 : 현대 한국어의 자모 조합으로 나타낼 수 있는 모든 완성형 한글 11,172자
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">len('가') # 1</code></li>
+    </ul>
+  </li>
+  <li>조합형 : 조합하여 글자를 만들 수 있는 초성, 중성, 종성
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">len('가') # 2</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="토크나이징">토크나이징</h3>
+
+<p>텍스트를 토큰 단위로 나누는 것. 단어(띄어쓰기 기준), 형태소, subword 등 여러 토큰 기준이 사용된다.</p>
+
+<ul>
+  <li>Subword 토크나이징
+    <ul>
+      <li>자주 쓰이는 글자 조합은 한 단위로 취급하고, 자주 쓰이지 않는 조합은 subword로 쪼갠다.</li>
+      <li>‘아버지 가방에 들어가신다’ = ‘아버지’, ‘가’, ‘##방’, ‘##에’, ‘들어’, ‘##가’, ‘##신’, ‘##다’</li>
+    </ul>
+  </li>
+  <li>BPE (Byte-Pair Encoding)
+    <ul>
+      <li>데이터 압축용으로 제안된 알고리즘. NLP에서 토크나이징용으로 활발하게 사용되고 있다.</li>
+      <li>방법
+        <ol>
+          <li>가장 자주 나오는 글자 단위 Bigram(or Byte Pair)를 다른 글자로 치환한다.</li>
+          <li>치환된 글자를 저장해둔다.</li>
+          <li>1~2번을 반복한다.</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="looking-into-the-dataset">Looking into the Dataset</h2>
+
+<h3 id="korquad">KorQuAD</h3>
+
+<blockquote>
+  <p>LG CNS가 AI 언어지능 연구를 위해 공개한 질의응답/기계독해 한국어 데이터셋</p>
+</blockquote>
+
+<ul>
+  <li>SQuAD v1.0의 데이터 수집 방식을 벤치마크하여 표준성을 확보함</li>
+  <li>HuggingFace datasets 라이브러리에서 <code class="language-plaintext highlighter-rouge">squad_kor_v1</code>, <code class="language-plaintext highlighter-rouge">squad_kor_v2</code>로 불러올 수 있음</li>
+</ul>
+
+<h3 id="korquad-예시">KorQuAD 예시</h3>
+
+<p>‘Title’ : 알렉산더_헤이그</p>
+
+<p>‘Context’: 알렉산더 메이그스 헤이그 2세(영어:AlexanderMeigsHaig,Jr.,1924년 12월 2일 ~2010년 2월 20일)는 미국의 국무장관을 지낸 미국의 군인,관료 및 정치인이다.로널드 레이건 대통령 밑에서 국무장관을 지냈으며,리처드 닉슨과 제럴드 포드 대통령 밑에서 백악관 비서실장을 지냈다.또한 그는 미국 군대에서 2번째로 높은 직위인 미국 육군 부참모 총장과 나토 및 미국 군대의 유럽연합군 최고사령관이었다. 한국 전쟁 시절 더글러스 맥아더 유엔군 사령관의 참모로 직접 참전하였으며,로널드 레이건 정부 출범당시 초대 국무장관직을 맡아 1980년대 대한민국과 미국의 관계를 조율해 왔다.저서로 회고록 《경고:현실주의, 레이건과 외교 정책》(1984년 발간)이 있다.</p>
+
+<p>‘Question-Answer Pairs’: [
+{‘question’:’미국 군대 내 두번째로 높은 직위는 무엇인가?’, 
+‘answers’:[{‘answer_start’:204,’text’:’미국 육군 부참모 총장’}],’id’:’6521755-0-0’,} 
+{‘question’:’알렉산더 헤이그가 로널드 레이건 대통령 밑에서 맡은 직책은 무엇이었나?, 
+‘‘answers’:[{‘answer_start’:345,’text’:’국무장관’}], ‘id’:’6539187-0-1’,}
+]</p>
+:ET

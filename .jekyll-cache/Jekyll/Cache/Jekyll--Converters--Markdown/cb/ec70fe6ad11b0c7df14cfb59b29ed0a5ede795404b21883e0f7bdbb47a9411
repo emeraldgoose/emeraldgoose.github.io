@@ -1,0 +1,165 @@
+I" t<h2 id="a-largest-odd-number-in-string">A. Largest Odd Number in String</h2>
+
+<p>주어진 숫자 문자열에서 연속된 부분문자열(substring)에서 가장 큰 홀수를 찾는 문제이다.</p>
+
+<p>단순하게 <code class="language-plaintext highlighter-rouge">num</code>이 홀수인지 확인한 후 뒤에서부터 잘라가면서 홀수인지 판단하여 홀수일 때 리턴하면 된다.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+  <span class="n">string</span> <span class="n">largestOddNumber</span><span class="p">(</span><span class="n">string</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">((</span><span class="n">num</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">-</span><span class="sc">'0'</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">num</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">num</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">((</span><span class="n">num</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">-</span><span class="sc">'0'</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">num</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+      <span class="k">else</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">num</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-the-number-of-full-rounds-you-have-played">B. The Number of Full Rounds You Have Played</h2>
+
+<p>시작 시간과 끝나는 시간 사이에 15분 경기를 얼마나 할 수 있는지 계산하는 문제이다.</p>
+
+<p>15분 경기는 반드시 00분, 15분, 30분, 45분에 시작하고 끝나야 하는 것을 주의하고 끝나는 시간이 다음날까지 가능하기 때문에 <code class="language-plaintext highlighter-rouge">startTime</code>이 <code class="language-plaintext highlighter-rouge">finishTime</code>보다 크다면 <code class="language-plaintext highlighter-rouge">finishTime</code>에 24시간을 더한 후 계산한다.</p>
+
+<p>시간을 분으로 바꾸면 $(24\times60\times2)+1$분으로 나타낼 수 있고 분이 15로 나누어 떨어지는 곳부터 15분동안 경기가 가능한지 체크하면 된다.</p>
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+  <span class="kt">int</span> <span class="n">numberOfRounds</span><span class="p">(</span><span class="n">string</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">string</span> <span class="n">finishTime</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">start</span><span class="o">=</span><span class="n">stoi</span><span class="p">(</span><span class="n">startTime</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="mi">60</span><span class="o">+</span><span class="n">stoi</span><span class="p">(</span><span class="n">startTime</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">));</span>
+    <span class="kt">int</span> <span class="n">finish</span><span class="o">=</span><span class="n">stoi</span><span class="p">(</span><span class="n">finishTime</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="mi">60</span><span class="o">+</span><span class="n">stoi</span><span class="p">(</span><span class="n">finishTime</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">));</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">start</span><span class="o">&gt;</span><span class="n">finish</span><span class="p">)</span> <span class="n">finish</span><span class="o">+=</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">times</span><span class="p">(</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">start</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">finish</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">finish</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">15</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">able</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">+</span><span class="mi">15</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">times</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">able</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">able</span><span class="p">)</span> <span class="n">ans</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-count-sub-islands">C. Count Sub Islands</h2>
+
+<p>grid2의 island가 grid1에 완전히 속하는지 확인하는 문제이다.</p>
+
+<p>먼저, grid1과 grid2의 섬들이 겹치는 부분을 grid3로 체크했다.</p>
+
+<p>다음, grid2를 BFS로 탐색하면서 해당 섬이 grid3와 겹치는지 확인하면 된다. 만약, 두 섬이 겹친다면 grid2의 섬이 grid1의 섬에 완전히 속한다고 볼 수 있다.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+  <span class="kt">int</span> <span class="n">countSubIslands</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">grid1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">grid2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">row</span><span class="o">=</span><span class="n">grid1</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">col</span><span class="o">=</span><span class="n">grid1</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">dx</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">dy</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">};</span>
+    <span class="c1">// make grid3</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">grid3</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">col</span><span class="p">));</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">row</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">col</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="n">grid3</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="n">grid1</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">&amp;</span><span class="n">grid2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span> <span class="c1">// AND</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// subIsland?</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">visit</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">col</span><span class="p">));</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">row</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">col</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">visit</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">grid2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="p">{</span>
+          <span class="n">visit</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+          <span class="n">queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">q</span><span class="p">;</span>
+          <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">});</span>
+          <span class="kt">bool</span> <span class="n">able</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+          <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span> <span class="c1">// bfs</span>
+            <span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">first</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">second</span><span class="p">;</span>
+            <span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">grid3</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">!=</span><span class="n">grid2</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">])</span> <span class="p">{</span>
+              <span class="n">able</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+              <span class="kt">int</span> <span class="n">nx</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="n">dx</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="n">dy</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+              <span class="k">if</span><span class="p">(</span><span class="n">nx</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nx</span><span class="o">&lt;</span><span class="n">row</span> <span class="o">&amp;&amp;</span> <span class="n">ny</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">ny</span><span class="o">&lt;</span><span class="n">col</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">grid2</span><span class="p">[</span><span class="n">nx</span><span class="p">][</span><span class="n">ny</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">visit</span><span class="p">[</span><span class="n">nx</span><span class="p">][</span><span class="n">ny</span><span class="p">])</span> <span class="p">{</span>
+                  <span class="n">visit</span><span class="p">[</span><span class="n">nx</span><span class="p">][</span><span class="n">ny</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+                  <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="p">});</span>
+                <span class="p">}</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+          <span class="k">if</span><span class="p">(</span><span class="n">able</span><span class="p">)</span> <span class="n">ans</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-minimum-absolute-difference-queries">D. Minimum Absolute Difference Queries</h2>
+
+<p>먼저, 문제가 어려워서 <a href="https://leetcode.com/problems/minimum-absolute-difference-queries/discuss/1284205/C%2B%2B-Solution.-binary-search.">링크</a>를 보고 참고했습니다.</p>
+
+<p>쿼리로 주어지는 두 인덱스 사이의 원소 두 개의 차이의 최솟값을 구하는 문제이다. 부분 집합의 모든 원소가 같은 경우 -1을 리턴하고 다른 경우 최솟값은 0이 될 수 없다.</p>
+
+<p>참고한 글에서는 각 원소들의 인덱스를 따로 저장하여 쿼리의 두 인덱스 중 하나라도 포함한다면 현재 값과 이전 값의 차이를 계산하여 최솟값을 찾는 방법을 사용한다.</p>
+
+<p>예를들어, 예제 테스트케이스인 <code class="language-plaintext highlighter-rouge">4 5 2 2 7 10</code>이 들어왔고 쿼리 $(0,2)$가 들어왔다고 가정하자.</p>
+
+<p><code class="language-plaintext highlighter-rouge">index</code>배열은 다음과 같이 저장되어 있을 것이다.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">index[2] = {2, 3}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">index[4] = {0}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">index[5] = {1}</code></li>
+</ul>
+
+<p>for문을 통해 2 -&gt; 4 -&gt; 5 순으로 탐색을 진행한다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">low</code>는 <code class="language-plaintext highlighter-rouge">lower_bound</code>, <code class="language-plaintext highlighter-rouge">high</code>는 <code class="language-plaintext highlighter-rouge">upper_bound</code>를 통해 인덱스를 구하게 되는데 <code class="language-plaintext highlighter-rouge">low</code>와 <code class="language-plaintext highlighter-rouge">high</code>이 같은 경우는, 범위안에 해당 원소가 들어있지 않다는 의미를 가진다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">i=2</code>일 때, <code class="language-plaintext highlighter-rouge">low=0, high=1</code>이므로 <code class="language-plaintext highlighter-rouge">low</code>와 <code class="language-plaintext highlighter-rouge">high</code>이 다르다. 즉, 2가 쿼리 범위안에 들어있음을 나타낸다. 범위안에 있는 값은 <code class="language-plaintext highlighter-rouge">prev</code>에 저장해준다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">i=4</code>일 때, <code class="language-plaintext highlighter-rouge">low=0, high=1</code>이므로 <code class="language-plaintext highlighter-rouge">low</code>와 <code class="language-plaintext highlighter-rouge">high</code>이 다르다. 즉, 4가 범위안에 있으므로 <code class="language-plaintext highlighter-rouge">d=4-2=2</code>가 저장된다. 현재까지 최소 거리는 2이다.</p>
+
+<p><code class="language-plaintext highlighter-rouge">i=5</code>일 때, <code class="language-plaintext highlighter-rouge">low=0, high=1</code>이므로 <code class="language-plaintext highlighter-rouge">low</code>와 <code class="language-plaintext highlighter-rouge">high</code>이 다르다. 즉, 5가 범위안에 있으므로 <code class="language-plaintext highlighter-rouge">d=5-4=1</code>이 저장된다. 현재까지 최소 거리가 1이므로 반복문을 종료한다.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">minDifference</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">queries</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">index</span><span class="p">[</span><span class="mi">101</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">x</span> <span class="o">:</span> <span class="n">nums</span><span class="p">)</span> <span class="n">index</span><span class="p">[</span><span class="n">x</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="o">++</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ans</span><span class="p">(</span><span class="n">queries</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="c1">// ans index</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span> <span class="o">:</span> <span class="n">queries</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">l</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="o">=</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+      <span class="kt">int</span> <span class="n">prev</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="kt">int</span> <span class="n">d</span><span class="o">=</span><span class="n">INT_MAX</span><span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">100</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">low</span><span class="o">=</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span><span class="n">l</span><span class="p">)</span><span class="o">-</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">high</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span><span class="n">r</span><span class="p">)</span><span class="o">-</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">low</span><span class="o">&gt;=</span><span class="n">high</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">prev</span><span class="o">!=-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">d</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">prev</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span> <span class="c1">// 차이가 1보다 작은 값은 없기 때문에 break</span>
+        <span class="n">prev</span><span class="o">=</span><span class="n">i</span><span class="p">;</span> <span class="c1">// 범위안에 있는 원소를 저장</span>
+      <span class="p">}</span>
+      <span class="n">ans</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">]</span><span class="o">=</span><span class="n">d</span><span class="o">==</span><span class="n">INT_MAX</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">d</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+:ET

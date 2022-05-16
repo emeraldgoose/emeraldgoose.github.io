@@ -1,0 +1,4 @@
+I"�<h2 id="a-adjacent-squares">A. Adjacent Squares</h2>
+<p>(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.<br />
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.</p>
+:ET

@@ -1,0 +1,21 @@
+I"�<h2 id="convolution">Convolution</h2>
+<ul>
+  <li>Continuous convolution
+    <ul>
+      <li>$(f * g)(t) = \int f(\tau)g(t-\tau)d\tau = \int f(t-\tau)g(t)d\tau$</li>
+    </ul>
+  </li>
+  <li>Discrete convolution
+    <ul>
+      <li>$(f * g)(t) = \sum_{i=-\infty}^{\infty} f(\tau)g(t-\tau)d\tau = \sum_{i=-\infty}^{\infty} f(t-\tau)g(t)d\tau$</li>
+    </ul>
+  </li>
+  <li>2D image convolution
+    <ul>
+      <li>$(I * K)(i,j) = \sum_m \sum_n I(m,n)K(i-m,j-n) = \sum_m \sum_n I(i-m,i-n)K(m,n)$</li>
+    </ul>
+  </li>
+  <li>filter 값과 이미지의 값을 컨볼루션 연산한 값을 출력한다.</li>
+  <li>2D 컨볼루션 연산으로 Blur, Emboss, Outline 등의 결과를 얻을 수 있다.</li>
+</ul>
+:ET

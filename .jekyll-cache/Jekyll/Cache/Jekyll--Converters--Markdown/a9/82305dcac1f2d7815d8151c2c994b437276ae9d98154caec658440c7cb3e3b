@@ -1,0 +1,142 @@
+I"�A<h2 id="a-discount">A. Discount</h2>
+
+<p>A엔에서 B엔으로 할인할 때의 할인율을 구하는 문제</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+#define endl '\n'
+#define ll long long
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">fixed</span><span class="p">;</span>
+    <span class="n">cout</span><span class="p">.</span><span class="n">precision</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="o">/</span><span class="n">a</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-play-snuke">B. Play Snuke</h2>
+
+<p>0.5, 1.5, 2.5, … 분 마다 Snuke가 1씩 사라지므로 Snuke의 재고가 $A_i$보다 많으면 구매할 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#define endl '\n'
+#define ll long long
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="k">const</span> <span class="n">ll</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e10</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">N</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">N</span><span class="p">;</span>
+    <span class="n">ll</span> <span class="n">ans</span><span class="o">=</span><span class="n">INF</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ll</span> <span class="n">a</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">x</span><span class="p">;</span>
+        <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">p</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="o">&lt;</span><span class="n">x</span><span class="p">)</span> <span class="n">ans</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span><span class="n">p</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">ans</span><span class="o">=</span><span class="n">ans</span><span class="o">==</span><span class="n">INF</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">ans</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-unexpressed">C. Unexpressed</h2>
+
+<p>$1 ≤ N ≤ 10^{10}$의 범위를 갖는 $N$에 대해 1부터 $N$까지 정수 중에서 $a^b (a,b ≥ 2)$의 형태를 갖지 않는 수의 개수를 계산하는 문제</p>
+
+<p>에라토스테네스의 체를 구하는 방식을 거듭제곱을 계산하는 방식으로 변형하여 해결</p>
+
+<p>메모리가 1024MB이어서 $N$만큼의 배열을 잡으면 MLE를 받게 되므로 set을 사용하여 거듭제곱의 수를 계산하도록 했다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp">
+#define endl '\n'
+#define ll long long
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">ll</span> <span class="n">N</span><span class="p">;</span>
+    <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">N</span><span class="p">;</span>
+    <span class="n">set</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">);</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">N</span><span class="p">;</span><span class="n">j</span><span class="o">*=</span><span class="n">i</span><span class="p">)</span> <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">N</span><span class="o">-</span><span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-poker">D. Poker</h2>
+
+<p>문제를 풀지 못해서 editorial의 설명을 가져왔다.</p>
+
+<p>먼저, 앞면이 아닌 카드의 수는 $9K-8$개이다.</p>
+
+<p>Takahashi가 이길 수 있는 확률 = (Takahashi가 이길 수 있는 카드들의 조합)/(전체 카드 조합)</p>
+
+<ul>
+  <li>전체 카드 조합은 $(9K-8)\times (9K-9)$이다.</li>
+</ul>
+
+<p>이제 Takahashi가 이길 수 있는 카드들만 구하면 된다. 가능한 카드 조합을 완전탐색하여 찾아낸다.</p>
+
+<p>만약, i번 카드가 뒤집혀 있는 경우의 수를 $C_i$라 하자.  Takahashi가 x를 가져가고, Aoki가 y를 가져갔을 때, 조합의 수는 다음과 같다.</p>
+
+<ul>
+  <li>$C_x\times C_y \space(x ≠ y)$</li>
+  <li>$C_x\times (C_x-1) \space(x = y)$</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;numeric&gt;</span><span class="c1"> // accumulate header</span><span class="cp">
+#define endl '\n';
+#define ll long long // 카드 수가 많기 때문에 long long 필요
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">ll</span> <span class="nf">score</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">cnt</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+   <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">9</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+   <span class="k">for</span><span class="p">(</span><span class="kt">char</span> <span class="n">i</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="n">cnt</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="sc">'0'</span><span class="p">]</span><span class="o">*=</span><span class="mi">10</span><span class="p">;</span>
+   <span class="k">return</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">cnt</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">cnt</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="n">ios</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+   <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+   <span class="c1">//freopen("input.txt","r",stdin);</span>
+   <span class="kt">int</span> <span class="n">K</span><span class="p">;</span>
+   <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">K</span><span class="p">;</span>
+   <span class="n">string</span> <span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">;</span>
+   <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">S</span><span class="o">&gt;&gt;</span><span class="n">T</span><span class="p">;</span>
+   <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">cnt</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">K</span><span class="p">);</span>
+   <span class="k">for</span><span class="p">(</span><span class="kt">char</span> <span class="n">s</span> <span class="o">:</span> <span class="n">S</span><span class="o">+</span><span class="n">T</span><span class="p">)</span> <span class="n">cnt</span><span class="p">[</span><span class="n">s</span><span class="o">-</span><span class="sc">'0'</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
+   <span class="n">ll</span> <span class="n">win</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+   <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">x</span><span class="o">&lt;=</span><span class="mi">9</span><span class="p">;</span><span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">y</span><span class="o">&lt;=</span><span class="mi">9</span><span class="p">;</span><span class="n">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+         <span class="n">S</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">=</span><span class="sc">'0'</span><span class="o">+</span><span class="n">x</span><span class="p">;</span>
+         <span class="n">T</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">=</span><span class="sc">'0'</span><span class="o">+</span><span class="n">y</span><span class="p">;</span>
+         <span class="k">if</span><span class="p">(</span><span class="n">score</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">score</span><span class="p">(</span><span class="n">T</span><span class="p">))</span> <span class="k">continue</span><span class="p">;</span>
+         <span class="n">win</span><span class="o">+=</span><span class="n">cnt</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">==</span><span class="n">y</span><span class="p">));</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+   <span class="k">const</span> <span class="n">ll</span> <span class="n">rem</span><span class="o">=</span><span class="mi">9</span><span class="o">*</span><span class="n">K</span><span class="o">-</span><span class="mi">8</span><span class="p">;</span>
+   <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="kt">double</span><span class="p">(</span><span class="n">win</span><span class="p">)</span><span class="o">/</span><span class="n">rem</span><span class="o">/</span><span class="p">(</span><span class="n">rem</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

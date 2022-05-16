@@ -1,0 +1,223 @@
+I"%C<h2 id="a-odd-divisor">A. Odd Divisor</h2>
+<p>정수 $n$이 주어질 때 홀수인 수 $x$로 나누어 떨어지는지 확인하는 문제이다.</p>
+
+<p>먼저, $n$이 홀수일 때 홀수인 수 $x$로 반드시 나누어 떨어진다.</p>
+
+<p>다음, $n$이 짝수일 때 $n$을 만드는 방법은 세 가지가 있다.</p>
+
+<ol>
+  <li>짝수 * 짝수 = 짝수</li>
+  <li>짝수 * 홀수 = 짝수</li>
+  <li>홀수 * 짝수 = 짝수</li>
+</ol>
+
+<p>$n$을 짝수로 이루어진 수를 제외하면 모두 홀수 $x$를 가지고 있다는 이야기이다. 그리고 소수인 짝수는 2가 유일하기 때문에 $n$을 2로 계속 나누다 마지막에 1이 남았을 때 $n$이 2의 제곱수의 형태를 갖는다는 것을 알 수 있다.</p>
+
+<ul>
+  <li>만약, $n$ &amp; $(n-1)$이 0이 아니라면 n은 홀수인 $x$를 가지고 있다.</li>
+  <li>$n$ &amp; $(n-1)$이 0이라면 2로 이루어진 제곱수의 형태를 가지고 있어서 $x$가 없다.</li>
+</ul>
+
+<p>예를들면, $n$이 6이라면 이진수로 110과 101을 AND연산했을 때 100 = 4가 출력되면서 홀수가 존재하는 것을 알 수 있다.</p>
+
+<p>반면에, $n$이 4라면 이진수로 100과 011을 AND연산했을 때 0이 출력되면서 홀수가 존재하지 않음을 알 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">ll</span> <span class="o">=</span> <span class="kt">long</span> <span class="kt">long</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">ll</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"YES</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"NO</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="b-new-years-number">B. New Year’s Number</h2>
+
+<p>정수 $n$이 주어질 때 2020과 2021의 합으로 이루어졌는지 확인하는 문제이다.</p>
+
+<p>$x$를 2020의 개수, $y$를 2021의 개수라 가정하면 $n=2020\times x + 2021\times y$가 성립되어야 한다.</p>
+
+<p>위의 식을 다시 정리하면 $n=2020(x+y)+y$이며, $n-y$는 $2020$으로 나누어 떨어져야 한다. 즉, 다음의 식이 성립되어야 한다.</p>
+
+<p>$x=\frac{n-y}{2020}-y$</p>
+
+<p>만약, $x$가 0보다 크거나 같다면 $n$은 2020과 2021로 표현될 수 있다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;utility&gt;</span><span class="cp">
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">using</span> <span class="n">pii</span> <span class="o">=</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">cnt2021</span> <span class="o">=</span> <span class="n">n</span><span class="o">%</span><span class="mi">2020</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">cnt2020</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="n">cnt2021</span><span class="p">)</span><span class="o">/</span><span class="mi">2020</span> <span class="o">-</span> <span class="n">cnt2021</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">cnt2020</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="mi">2020</span><span class="o">*</span><span class="n">cnt2020</span> <span class="o">+</span> <span class="mi">2021</span> <span class="o">*</span> <span class="n">cnt2021</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"YES</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"NO</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">t</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="c-ball-in-berland">C. Ball in Berland</h2>
+
+<p>주어지는 준비된 페어 ($a,b$)에 대해 가능한 순서쌍을 구하는 문제이다.</p>
+
+<p>먼저, boys와 girls를 그래프의 정점이라 생각하면 우리는 ($a,b$)에 대해 이분그래프라 생각할 수 있다. 그리고 ($a,b$)는 $a$와 $b$에 edge(간선)가 생긴 것이라 하자.</p>
+
+<p>그러면 우리는 이 그래프에서 두 간선를 찾는데 서로 교차하지 않는 간선들을 찾아야 한다.</p>
+
+<p>이제 $deg(x)$를 정점 $x$가 포함된 간선의 개수라 하자.</p>
+
+<p>어떠한 간선을 연결하는 두 정점을 $a,b$가 있을 때 $a,b$를 연결하는 간선과 교차하지 않은 간선의 개수는 $k-deg(a)-deg(b)+1$이다. (집합의 개념)</p>
+
+<ul>
+  <li>+1을 하는 이유는 $deg(a)$와 $deg(b)$에 ($a,$$b$)를 연결하는 간선이 두 번 중복되기 때문이다.</li>
+</ul>
+
+<p>따라서 모든 간선에 대해 전부 더해주고 두 번더해지므로 마지막에 2를 나누면 된다.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp">
+#define ll long long
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">solve</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">A</span> <span class="o">&gt;&gt;</span> <span class="n">B</span> <span class="o">&gt;&gt;</span> <span class="n">k</span><span class="p">;</span>
+
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">(</span><span class="n">A</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">b</span><span class="p">(</span><span class="n">B</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">edges</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">ll</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">x</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">;</span>
+        <span class="n">ans</span> <span class="o">+=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">-</span> <span class="n">b</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ans</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">t</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">solve</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<h2 id="d-cleaning-the-phone">D. Cleaning the Phone</h2>
+
+<p>필요한 메모리를 확보하면서 가장 적은 convience points를 잃어야 하는 문제이다.</p>
+
+<p>convience points는 2가지이며 $b_i=1$ 또는 $b_i=2$이다. 우리는 1과 2에 해당하는 app을 따로 저장해야 한다.</p>
+
+<ul>
+  <li>$b_i=1$인 app의 메모리는 <code class="language-plaintext highlighter-rouge">vector&lt;int&gt; a</code>에, $b_i=2$인 app의 메모리는 <code class="language-plaintext highlighter-rouge">vector&lt;int&gt; b</code>에 저장하도록 한다.</li>
+  <li>다음 <code class="language-plaintext highlighter-rouge">a</code>,<code class="language-plaintext highlighter-rouge">b</code> 모두 내림차순으로 정렬한다.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">a</code>에서 먼저 필요한 app을 합친 후 나머지를 <code class="language-plaintext highlighter-rouge">b</code>에서 가져오면서 필요한 메모리 <code class="language-plaintext highlighter-rouge">m</code>을 확보할 수 있는지 확인한다.</p>
+
+<ul>
+  <li>먼저, $b$의 메모리 총합을 시작으로 $a_i$를 하나씩 추가하면서 필요한 메모리 한해서 필요없는 $b_i$를 빼준다.
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric> // accumulate함수 헤더
+#define ll long long
+#define INF 987654321
+using namespace std;</numeric></algorithm></vector></iostream></li>
+</ul>
+
+<p>void solve() {
+  int n, m;
+  cin»n»m;
+  vector<int> a,b;
+  vector<int> v(n);
+  for(int i=0;i&lt;n;i++) cin&gt;&gt;v[i];
+  for(int i=0;i&lt;n;i++) { // bi=1, bi=2인 앱을 따로 저장
+    int x;
+    cin&gt;&gt;x;
+    if(x==1) a.push_back(v[i]);
+    else b.push_back(v[i]);
+  }</int></int></p>
+
+<p>// a, b 내림차순 정렬
+  sort(a.rbegin(),a.rend());
+  sort(b.rbegin(),b.rend());</p>
+
+<p>ll curSumA=0;
+  int r=b.size();
+  ll curSumB=accumulate(b.begin(),b.end(),0ll); // b의 메모리 총합
+  int ans=INF;
+  for(int l=0;l&lt;=a.size();l++) { // a를 하나 늘려주면
+    while(r&gt;0 &amp;&amp; (curSumA+curSumB-b[r-1] &gt;= m)) { // m을 지키는 한에서 b에서 하나 뺄 수있다.
+      r–;
+      curSumB-=b[r];
+    }</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if(curSumB+curSumA &gt;= m) {
+  ans=min(ans,2*r+l);
+}
+if(l!=a.size()) {
+  curSumA+=a[l];
+}   }
+</code></pre></div></div>
+
+<p>cout«(ans==INF ? -1 : ans)«endl;
+}</p>
+
+<p>int main() {
+  freopen(“input.txt”,”r”,stdin);
+  int t;
+  cin » t;
+  while (t–) {
+    solve();
+  }
+  return 0;
+}
+```</p>
+:ET

@@ -1,0 +1,148 @@
+I"�<h2 id="introduction-to-passage-retrieval">Introduction to Passage Retrieval</h2>
+
+<h3 id="passage-retrieval">Passage Retrieval</h3>
+
+<blockquote>
+  <p>질문(query)에 맞는 문서(passage)를 찾는 것.</p>
+
+</blockquote>
+
+<h3 id="passage-retrieval-with-mrc">Passage Retrieval with MRC</h3>
+
+<p>Open-domain Question Answering: 대규모의 문서 중에서 질문에 대한 답을 찾기</p>
+
+<ul>
+  <li>
+    <p>Passage Retrieval과 MRC를 이어서 2-Stage로 만들 수 있음</p>
+
+    <p><img src="https://drive.google.com/uc?export=view&amp;id=14iurFvUnXIiLZj_XEwNbh5M2ze3ZeDxV" alt="" /></p>
+  </li>
+</ul>
+
+<h3 id="overview-of-passage-retrieval">Overview of Passage Retrieval</h3>
+
+<p>Query와 Passage를 임베딩한 뒤 유사도로 랭킹을 매기고, 유사도가 가장 높은 Passage를 선택함</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1BE1hDFSaRXPx3aTVvuP5BRSe_NU1S210" alt="" /></p>
+
+<p>질문이 들어왔을 때, 질문을 어떤 vector space로 임베딩하고 마찬가지로 Passage 또한 같은 vector space에 임베딩한다. Passage의 임베딩은 미리 해놓아 효율성을 높인다.<br />
+다음, 쿼리와 문서의 Similarity를 측정하여 Ranking을 매기게 된다. 이때 Score는 nearest neighbor(고차원 space에서 서로의 거리를 측정)와 inner product 방법을 사용한다.</p>
+
+<h2 id="passage-embedding-and-sparse-embedding">Passage Embedding and Sparse Embedding</h2>
+
+<h3 id="passage-embedding">Passage Embedding</h3>
+
+<blockquote>
+  <p>구절(Passage)을 벡터로 변환하는 것</p>
+
+</blockquote>
+
+<h3 id="passage-embedding-space">Passage Embedding Space</h3>
+
+<blockquote>
+  <p>Passage Embedding의 벡터 공간
+벡터화된 Passage를 이용하여 Passage 간 유사도 등을 알고리즘으로 계산할 수 있음</p>
+
+</blockquote>
+
+<h3 id="sparse-embedding-소개">Sparse Embedding 소개</h3>
+
+<ul>
+  <li>Bag-of-Word(BoW)
+    <ul>
+      <li>BoW를 구성하는 방법 → n-gram
+        <ul>
+          <li>unigram (1-gram)</li>
+          <li>bigram (2-gram)</li>
+        </ul>
+      </li>
+      <li>Term value를 결정하는 방법
+        <ul>
+          <li>Term이 document에 등장하는지 안하는지 (binary)</li>
+          <li>Term이 몇번 등장하는지 (term frequency), 등. (eg. TF-IDF)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="sparse-embedding-특징">Sparse Embedding 특징</h3>
+
+<ol>
+  <li>Dimension of embedding vector = number of terms
+    <ol>
+      <li>등장하는 단어가 많아질수록 증가</li>
+      <li>N-gram의 n이 커질수록 증가</li>
+    </ol>
+  </li>
+  <li>Term overlap을 정확하게 잡아 내야 할 때 유용</li>
+  <li>반면, 의미(semantic)가 비슷하지만 다른 단어인 경우 비교가 불가</li>
+</ol>
+
+<h2 id="tf-idf">TF-IDF</h2>
+
+<h3 id="tf-idf-term-frequency---inverse-document-frequency-소개">TF-IDF (Term Frequency - Inverse Document Frequency) 소개</h3>
+
+<ul>
+  <li>Term Frequency (TF) : 단어의 등장빈도</li>
+  <li>Inverse Document Frequency (IDF) : 단어가 제공하는 정보의 양</li>
+  <li>ex) It was the best of times
+    <ul>
+      <li>It, was, the, of : 자주 등장하지만 제공하는 정보의 양이 적음</li>
+      <li>best, times : 좀 더 많은 정보를 제공, 문서에서 등장하는 정도가 적다 = 중요한 정보</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="term-frequency-tf">Term Frequency (TF)</h3>
+
+<blockquote>
+  <p>해당 문서 내 단어의 등장 빈도</p>
+</blockquote>
+
+<ol>
+  <li>Raw count</li>
+  <li>Adjusted for doc length: raw count / num words (TF)</li>
+  <li>Other variants: binary, log normalization, etc.</li>
+</ol>
+
+<h3 id="inverse-document-frequency-idf">Inverse Document Frequency (IDF)</h3>
+
+<blockquote>
+  <p>단어가 제공하는 정보의 양</p>
+</blockquote>
+
+<ul>
+  <li>$IDF(t) = log\frac{N}{DF(t)}$</li>
+  <li>Document Frequency (DF) = Term $t$가 등장한 document의 개수</li>
+  <li>$N$ = 총 document의 개수</li>
+  <li>모든 문서에 등장하는 단어의 경우 N = DF이기 때문에 log를 씌어주면 0이 된다.</li>
+</ul>
+
+<h3 id="combine-tf--df">Combine TF &amp; DF</h3>
+
+<p>TF-IDF($t$, $d$): TF-IDF for term $t$ in document $d$, $TF(t, d) \times IDF(t)$</p>
+
+<ul>
+  <li>‘a’, ‘the’ 등 관사 → Low TF-IDF
+    <ul>
+      <li>TF는 높지만 IDF가 0에 가까울 것 (거의 모든 document에 등장 → log(N/DF) = 0)</li>
+    </ul>
+  </li>
+  <li>자주 등장하지 않는 고유명사 (ex. 사람 이름, 지명 등) → High TF-IDF (IDF가 커지면서 전체적인 TF-IDF가 증가)</li>
+</ul>
+
+<h3 id="bm25">BM25</h3>
+
+<blockquote>
+  <p>TF-IDF의 개념을 바탕으로, 문서의 길이까지 고려하여 점수를 매김</p>
+</blockquote>
+
+<ul>
+  <li>TF 값에 한계를 지정해두어 일정한 범위를 유지하도록 함</li>
+  <li>평균적인 문서의 길이 보다 더 작은 문서에서 단어가 매칭된 경우 그 문서에 대해 가중치 부여</li>
+  <li>실제 검색엔진, 추천 시스템 등에서 아직까지도 많이 사용되는 알고리즘</li>
+</ul>
+
+<p>$Score(D, Q) = \sum_{term \in Q} IDF(term) \cdot \frac{TFIDF(term, D) \cdot (k_1 + 1)}{TFIDF(term, D) + k_1 \cdot (1 - b + b \cdot \frac{\vert D \vert}{avgdl})}$</p>
+:ET
