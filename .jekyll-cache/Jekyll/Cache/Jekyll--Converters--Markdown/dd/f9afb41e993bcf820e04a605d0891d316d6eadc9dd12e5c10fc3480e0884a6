@@ -1,0 +1,66 @@
+I"�<blockquote>
+  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 세미나에 참가하여 발표를 듣고 논문을 다시 읽어보고 리뷰하려고 합니다.</p>
+</blockquote>
+
+<h2 id="motivation">Motivation</h2>
+<p>GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다.</p>
+
+<h3 id="in-context-learning">In-context Learning</h3>
+<p>In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는 방식을 말합니다. 예제에 따라 zero-shot, one-shot, few-shot learning으로 나뉘어집니다.</p>
+<ul>
+  <li>Task description + example(zero/one/few shot) -&gt; answer</li>
+</ul>
+
+<h2 id="task-definition">Task Definition</h2>
+<p>모델은 HyperCLOVA를 사용하고 1.3B의 파라미터를 가지고 있습니다.</p>
+
+<p>Corpus는 네이버블로그, 네이버카페, 네이버뉴스, 네이버댓글, 네이버지식인, 위키피디아, 모두의말뭉치를 사용합니다.</p>
+
+<p>Downstream Task로는 NSMC(영화리뷰), KorQuAD, KLUE-YNAT(뉴스제목분류), AI hub(한영/영한 번역)로 진행합니다.</p>
+
+<h2 id="experimental-results">Experimental Results</h2>
+<h3 id="effect-of-corpus-source">Effect of Corpus Source</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" /><br />
+테이블에서 말뭉치의 종류에 따라 다르게 in-context learning 성능이 나타는 것을 볼 수 있습니다.</p>
+<ul>
+  <li>블로그 데이터(Blog)로 학습한 모델이 카페(Cafe)나 뉴스(News)로 학습한 모델보다 few-shot 성능이 ALL 모델에 근접합니다.
+    <ul>
+      <li>ALL 모델은 모든 데이터를 학습한 모델을 말합니다.</li>
+    </ul>
+  </li>
+  <li>모두의말뭉치(Modu)로 학습한 모델은 카페나 뉴스로 학습한 모델보다 좋은 성능을 냅니다. 하지만 Modu 사이즈는 카페나 뉴스 말뭉치의 1/10배보다 작습니다.</li>
+</ul>
+
+<h3 id="effect-of-corpus-size">Effect of Corpus size</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" /><br />
+말뭉치 사이즈를 150B에서 56B로 줄였을 때는 성능이 비슷합니다. 말뭉치 사이즈가 성능을 감소시키는 것은 아닙니다.<br />
+하지만 6B 토큰으로 학습한 모델은 150B 토큰의 카페와 뉴스 말뭉치로 학습한 모델의 성능보다 낮게 나옵니다.<br />
+위의 Table 2에서는 블로그 54B 토큰과 27B 토큰 데이터를 학습한 결과가 있습니다. 블로그 150B 토큰 데이터와 54B 토큰 데이터로 학습한 모델의 성능이 비슷하지만 ALL 6B 토큰과 블로그 27B 토큰 데이터는 블로그 54B 토큰 데이터로 학습한 모델보다 성능이 나오지 않습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" /></p>
+
+<p>fig 3에서 모델의 사이즈와 토큰 사이즈에 대해 학습한 결과를 보여줍니다. 
+150B 토큰으로 학습한 모델보다 56B 토큰으로 학습한 모델의 성능 감소가 크게 나타나지는 않습니다.</p>
+
+<h3 id="effect-of-combining-corpora">Effect of Combining Corpora</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" /><br />
+Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해 발생될 수 있음을 보여줍니다.</p>
+<ul>
+  <li>지식인(KiN) + 위키피디아(Ency) 모델은 대부분의 태스크에서 성능이 좋습니다.</li>
+  <li>카페(Cafe) + 지식인(KiN) 모델도 대부분의 태스크에서 성능이 좋아졌습니다. 카페와 지식인 각각의 데이터로만 학습한 모델들은 해당 태스크에서 성능이 좋지 못했습니다.(Table 2)</li>
+  <li>Zero-shot의 경우 두 모델의 패턴이 비슷합니다.</li>
+</ul>
+
+<p>이런 현상은 Multi Task Learning에 의해 발생한 것으로 생각됩니다. Multi Task Learning은 연관있는 Task를 같이 학습하는 방법을 말하며 지식인 데이터와 위키피디아 데이터는 MRC task를 학습한 것으로 보여집니다. Object function이 다양한 Next Word Prediction을 학습하기 때문에 일반화 과정이 없는 능력을 촉진한 것으로 보입니다.</p>
+
+<p>그러나 말뭉치 조합이 항상 성능을 향상시키지는 않습니다.</p>
+<ul>
+  <li>카페와 뉴스 데이터를 조합한 경우 KorQuAD 태크스에서 각각 말뭉치로 학습한 성능보다 조금 나아지지만 나머지 태스크(NSMC, KLUE-YNAT)에서 기준보다 낮아집니다.</li>
+</ul>
+
+<h3 id="effect-of-domain-relevance">Effect of Domain Relevance</h3>
+
+<h3 id="perplexity-and-downstream-task">Perplexity and Downstream Task</h3>
+
+<h2 id="conclusion">Conclusion</h2>
+:ET

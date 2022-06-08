@@ -1,4 +1,118 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-05-16T20:54:15+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">Kubernetes</title><link href="http://localhost:4000/ops/kubenetes-overview/" rel="alternate" type="text/html" title="Kubernetes" /><published>2022-05-15T00:00:00+09:00</published><updated>2022-05-15T00:00:00+09:00</updated><id>http://localhost:4000/ops/kubenetes-overview</id><content type="html" xml:base="http://localhost:4000/ops/kubenetes-overview/"><![CDATA[<h2 id="컨테이너-기반-배포">컨테이너 기반 배포</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-06-08T17:37:17+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect/"><![CDATA[<blockquote>
+  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 세미나에 참가하여 발표를 듣고 논문을 다시 읽어보고 리뷰하려고 합니다.</p>
+</blockquote>
+
+<h2 id="motivation">Motivation</h2>
+<p>GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다.</p>
+
+<h3 id="in-context-learning">In-context Learning</h3>
+<p>In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는 방식을 말합니다. 예제에 따라 zero-shot, one-shot, few-shot learning으로 나뉘어집니다.</p>
+<ul>
+  <li>Task description + example(zero/one/few shot) -&gt; answer</li>
+</ul>
+
+<h2 id="task-definition">Task Definition</h2>
+<p>모델은 HyperCLOVA를 사용하고 1.3B의 파라미터를 가지고 있습니다.</p>
+
+<p>Corpus는 네이버블로그, 네이버카페, 네이버뉴스, 네이버댓글, 네이버지식인, 위키피디아, 모두의말뭉치를 사용합니다.</p>
+
+<p>Downstream Task로는 NSMC(영화리뷰), KorQuAD, KLUE-YNAT(뉴스제목분류), AI hub(한영/영한 번역)로 진행합니다.</p>
+
+<h2 id="experimental-results">Experimental Results</h2>
+<h3 id="effect-of-corpus-source">Effect of Corpus Source</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" /><br />
+테이블에서 말뭉치의 종류에 따라 다르게 in-context learning 성능이 나타는 것을 볼 수 있습니다.</p>
+<ul>
+  <li>블로그 데이터(Blog)로 학습한 모델이 카페(Cafe)나 뉴스(News)로 학습한 모델보다 few-shot 성능이 ALL 모델에 근접합니다.
+    <ul>
+      <li>ALL 모델은 모든 데이터를 학습한 모델을 말합니다.</li>
+    </ul>
+  </li>
+  <li>모두의말뭉치(Modu)로 학습한 모델은 카페나 뉴스로 학습한 모델보다 좋은 성능을 냅니다. 하지만 Modu 사이즈는 카페나 뉴스 말뭉치의 1/10배보다 작습니다.</li>
+</ul>
+
+<h3 id="effect-of-corpus-size">Effect of Corpus size</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" /><br />
+말뭉치 사이즈를 150B에서 56B로 줄였을 때는 성능이 비슷합니다. 말뭉치 사이즈가 성능을 감소시키는 것은 아닙니다.<br />
+하지만 6B 토큰으로 학습한 모델은 150B 토큰의 카페와 뉴스 말뭉치로 학습한 모델의 성능보다 낮게 나옵니다.<br />
+위의 Table 2에서는 블로그 54B 토큰과 27B 토큰 데이터를 학습한 결과가 있습니다. 블로그 150B 토큰 데이터와 54B 토큰 데이터로 학습한 모델의 성능이 비슷하지만 ALL 6B 토큰과 블로그 27B 토큰 데이터는 블로그 54B 토큰 데이터로 학습한 모델보다 성능이 나오지 않습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" /></p>
+
+<p>fig 3에서 모델의 사이즈와 토큰 사이즈에 대해 학습한 결과를 보여줍니다. 
+150B 토큰으로 학습한 모델보다 56B 토큰으로 학습한 모델의 성능 감소가 크게 나타나지는 않습니다.</p>
+
+<h3 id="effect-of-combining-corpora">Effect of Combining Corpora</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" /><br />
+Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해 발생될 수 있음을 보여줍니다.</p>
+<ul>
+  <li>지식인(KiN) + 위키피디아(Ency) 모델은 대부분의 태스크에서 성능이 좋습니다.</li>
+  <li>카페(Cafe) + 지식인(KiN) 모델도 대부분의 태스크에서 성능이 좋아졌습니다. 카페와 지식인 각각의 데이터로만 학습한 모델들은 해당 태스크에서 성능이 좋지 못했습니다.(Table 2)</li>
+</ul>
+
+<p>이런 현상은 Multi Task Learning에 의해 발생한 것으로 생각됩니다. Multi Task Learning은 연관있는 Task를 같이 학습하는 방법을 말하며 Object function이 다양한 Next Word Prediction을 학습하기 때문에 일반화 과정이 없는 능력을 촉진한 것으로 보입니다. 지식인 데이터와 위키피디아 데이터로 Next Word Prediction을 수행하면서 MRC task를 학습한 것으로 보여집니다.</p>
+
+<p>그러나 말뭉치 조합이 항상 성능을 향상시키지는 않습니다.</p>
+<ul>
+  <li>카페와 뉴스 데이터를 조합한 경우 KorQuAD 태크스에서 각각 말뭉치로 학습한 성능보다 조금 나아지지만 나머지 태스크(NSMC, KLUE-YNAT)에서 성능이 낮아집니다.</li>
+</ul>
+
+<h3 id="effect-of-domain-relevance">Effect of Domain Relevance</h3>
+<p>Table 2에서 말뭉치와 Downstream task와의 관계가 few-shot 성능을 항상 보장하지는 않습니다.</p>
+<ul>
+  <li>지식인(KiN)과 위키피디아(Ency) 모델은 KorQuAD 태스크를 잘 수행하지 못합니다.</li>
+  <li>KLUE-YNAT에는 뉴스 헤드라인 쿼리가 포함되어 있음에도 뉴스(News) 모델은 KLUE-YNAT 태스크를 잘 수행하지 못합니다.</li>
+</ul>
+
+<p>Table 4에서 뉴스 + 지식인 + 위키 모델이 지식인 + 위키 모델보다 KLUE-YNAT F1 스코어가 낮습니다.</p>
+<ul>
+  <li>YNAT에서 성능이 좋았던 지식인 + 위키 모델에서 뉴스를 추가한 것뿐인데 성능이 낮아졌습니다.</li>
+</ul>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1EeNiav_njdPKMivohvgnTnGyrvosFUCn" alt="" /><br />
+말뭉치와 태스크와의 Vocabulary overlap을 조사한 히트맵입니다.<br />
+높은 Vocabulary overlap이 높은 Downstream task 성능을 가져오지는 못합니다.</p>
+<ul>
+  <li>모두의말뭉치(Modu)는 번역(AI Hub)태스크와 높은 오버래핑을 보이지만 블로그(Blog)나 지식인(KiN) 모델보다 성능이 낮습니다.</li>
+</ul>
+
+<p>하지만 지식인(KiN) 모델에서 번역(AI Hub) 태스크에서 반례가 존재합니다.</p>
+<ul>
+  <li>지식인 데이터는 한국어로 영어에 대한 질문이 많습니다. 지식인 모델은 한영 문장 패턴들을 학습할 수 있습니다.</li>
+  <li>지식인 모델이 한영 번역 태스크는 성능이 나오지만 나머지 태스크에서는 성능이 낮게 나옵니다.</li>
+</ul>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=11aNe9bnSwZhtoYQJuy5hu1hMtqLTQMfs" alt="" /><br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1-z_oVEl3f5ubpMoLls8QXcLn1lsGR5D5" alt="" /></p>
+
+<p>Zero-shot에서 도메인 관련성이 이런 현상을 더 잘 나타냅니다.</p>
+<ul>
+  <li>뉴스 말뭉치는 KLUE-YNAT 태스크에 도움을 줍니다. Table 3, 5에서 뉴스 말뭉치를 추가했을 때 성능이 오르는 것을 볼 수 있습니다. 모든 데이터를 학습하는 ALL 모델보다 나은 성능을 보입니다.</li>
+  <li>지식인 말뭉치 자체로는 Zero-shot에서 few-shot보다 낮은 성능을 보입니다. 그러나 지식인 데이터를 다른 말뭉치와 조합하는 경우 성능이 오르는 것을 볼 수 있습니다.</li>
+</ul>
+
+<h3 id="perplexity-and-downstream-task">Perplexity and Downstream Task</h3>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU" alt="" /><br />
+Figure 2는 각 in-context learning 성능을 ALL 모델의 성능으로 나눠 Normalizing한 결과입니다. Perplexity와 in-context 성능간의 관계를 알아보기 위해 진행했으나 둘의 관계가 있다는 가설을 세울 수 없었습니다.</p>
+<ul>
+  <li>Table 2에서 블로그 모델은 낮은 PPL을 가지지만 높은 성능을 가집니다. 반면, 위키피디아 모델은 높은 PPL을 가지지만 낮은 성능을 가집니다.</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>이번 연구에서 발견한 점은 다음과 같습니다.</p>
+<ol>
+  <li>말뭉치에 따라 성능이 크게 달라질 수 있다. Perplexity가 높다고 성능이 꼭 높은 것은 아니다.
+    <ul>
+      <li>학습 말뭉치 선정 시 Few-shot에서 PPL 기반이 적합하지 않을 수 있습니다.</li>
+    </ul>
+  </li>
+  <li>말뭉치를 섞으면 없던 능력이 생기기도 한다.</li>
+  <li>태스크와 비슷한 말뭉치가 사전훈련에 포함되더라도 성능이 꼭 좋아지는 것은 아니다.</li>
+</ol>
+
+<p>이번 연구에서는 하이퍼클로바를 이용하여 말뭉치 역할이 중요함을 알 수 있었습니다. 아쉬운 점으로는 한국어 데이터와 한국어 모델에 대해서만 실험했기 때문에 영어로 확장할 필요가 있어 보입니다. 그리고 사전학습 방법이 Next Word Prediction만 있는 것도 추가 연구가 필요해보입니다.</p>
+
+<p>하지만 모델 관점이 아닌 Corpus 관점에서 연구가 진행된 점에서 생각보다 재밌었던 논문이었습니다.</p>]]></content><author><name>goooose</name></author><category term="paper" /><category term="Corpus" /><summary type="html"><![CDATA[모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 세미나에 참가하여 발표를 듣고 논문을 다시 읽어보고 리뷰하려고 합니다.]]></summary></entry><entry><title type="html">Kubernetes</title><link href="http://localhost:4000/ops/kubenetes-overview/" rel="alternate" type="text/html" title="Kubernetes" /><published>2022-05-15T00:00:00+09:00</published><updated>2022-05-15T00:00:00+09:00</updated><id>http://localhost:4000/ops/kubenetes-overview</id><content type="html" xml:base="http://localhost:4000/ops/kubenetes-overview/"><![CDATA[<h2 id="컨테이너-기반-배포">컨테이너 기반 배포</h2>
 <p>애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.</p>
 
 <p>컨테이너 기반 배포가 등장하면서 Host OS 위에 컨테이너 런타임이 올라가고 그 위로 컨테이너가 올라가게 되었습니다. 컨테이너 기반 배포는 가상화 배포 방식과 비슷하지만 컨테이너는 Host OS의 API를 가져다 쓰는 가상머신입니다. 가상머신이라는 격리된 메모리, 디스크, 네트워크, IO 인터페이스 등을 할당받지 않아서 오버헤드를 줄일 수 있습니다.</p>
@@ -1528,166 +1642,4 @@ EXPOSE 80
   <li>회사의 비즈니스 파악</li>
   <li>데이터를 활용할 수 있는 부분은 어디인가?</li>
   <li>모델을 활용한다고 하면 예측의 결과가 어떻게 활용되는가?</li>
-</ul>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="serving" /><summary type="html"><![CDATA[문제 정의의 중요성]]></summary></entry><entry><title type="html">Model Serving 정리</title><link href="http://localhost:4000/boostcamp/model-serving/" rel="alternate" type="text/html" title="Model Serving 정리" /><published>2021-12-20T00:00:00+09:00</published><updated>2021-12-20T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/model-serving</id><content type="html" xml:base="http://localhost:4000/boostcamp/model-serving/"><![CDATA[<h2 id="serving-basic">Serving Basic</h2>
-
-<h3 id="serving">Serving</h3>
-
-<blockquote>
-  <p>머신러닝 모델을 개발하고, 현실 세계(앱, 웹, Production 환경)에서 사용할 수 있게 만드는 행위</p>
-
-</blockquote>
-
-<p>크게 2가지 방식 존재</p>
-
-<ul>
-  <li>Online Serving</li>
-  <li>Batch Serving</li>
-  <li>그 외에 클라이언트(모바일 기기, IoT Device 등)에서 Edge Serving도 존재</li>
-  <li>Inference : 모델에 데이터가 제공되어 예측하는 경우, 사용하는 관점, Serving과 용어가 혼재되어 사용되는 경우도 존재</li>
-</ul>
-
-<h2 id="online-serving">Online Serving</h2>
-
-<ul>
-  <li>웹 서버
-    <ul>
-      <li>HTTP를 통해 웹 브라우저에서 요청하는 HTML 문서나 오브젝트를 전송해주는 서비스 프로그램</li>
-      <li>요청(Request)을 받으면 요청한 내용을 보내주는(Response) 프로그램</li>
-    </ul>
-  </li>
-  <li>API(Application Programming Interface)
-    <ul>
-      <li>운영체제나 프로그래밍 언어가 제공하는 기능을 제어할 수 있게 만든 인터페이</li>
-    </ul>
-  </li>
-  <li>Online Serving
-    <ul>
-      <li>요청(Request)이 올 때마다 <strong>실시간으로 예측</strong></li>
-      <li>클라이언트(Application)에서 ML 모델 서버에 HTTP 요청(Reqeust)하고, 머신러닝 모델 서버에서 예측한 후, 예측값(응답)을 반환(Response)한다.</li>
-      <li>Serving Input - Single Data Point
-        <ul>
-          <li><strong>단일 데이터</strong>를 받아 실시간으로 예측을 하는 예제</li>
-          <li>기계 고장 예측 모델
-            <ul>
-              <li>센서의 실시간 데이터가 제공되면 특정 기계 부품이 앞으로 N분안에 고장날지 아닐지를 예측</li>
-            </ul>
-          </li>
-          <li>음식 배달 소요 시간 예측
-            <ul>
-              <li>해당 지역의 과거 평균 배달 시간, 실시간 교통 정보, 음식 데이터 등을 기반으로 음식 배달 소요 시간 예측</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li>ML모델 서버에 요청할 때, 필요시 ML 모델 서버에서 데이터 전처리를 해야할 수 있음(혹은 분리를 위해 전처리 서버 / ML 모델 서버로 나눌 수 있음)</li>
-      <li>서비스의 서버에 ML 서버를 포함하는 경우도 있고 ML 서버를 별도로 운영하는 경우도 존재</li>
-      <li>Online Serving을 구현하는 방식
-        <ul>
-          <li>직접 API 웹 서버 개발 : Flask, FastAPI</li>
-          <li>클라우드 서비스 활용 : AWS의 SageMaker, GCP의 Vertex AI</li>
-          <li>Serving 라이브러리 활용 : Tensorflow Serving, Torch Serve, MLFlow, BentoML 등</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>Online Serving에서 고려할 부분
-    <ul>
-      <li>실시간 예측을 하기 때문에 <strong>지연시간</strong>(Latency)를 최소화해야 함</li>
-      <li>Input 데이터를 기반으로 Database에 있는 데이터를 추출해서 모델 예측해야 하는 경우 데이터 추출을 위한 쿼리 실행, 결과를 받기까지의 시간 소요</li>
-      <li>모델이 수행하는 연산 시간 → 경량화 작업이 필요할수도</li>
-      <li>결과값에 대한 보정이 필요한 시간 → 유효하지 않은 예측값이 반환될 경우</li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="클라우드-서비스-활용">클라우드 서비스 활용</h3>
-
-<ul>
-  <li>클라우드 서비스 장점
-    <ul>
-      <li>직접 구축해야 하는 MLOps의 다양한 부분이 만들어짐</li>
-      <li>사용자 관점에선 PyTorch 사용하듯 학습 코드만 제공하면 API 서버가 만들어짐</li>
-    </ul>
-  </li>
-  <li>클라우드 서비스 단점
-    <ul>
-      <li>클라우드 서비스가 익숙해야 잘 활용할 수 있음</li>
-      <li>비용문제 : 직접 만드는 것보단 더 많은 비용이 나갈 수 있음</li>
-    </ul>
-  </li>
-  <li>소수의 인원만 존재하며, 소수의 인원이 많은 업무를 해야 하는 경우 유용</li>
-  <li>클라우드 내부 실행 구조를 잘 알아야 문제 상황이 발견되었을 때 잘 해결할 수 있음</li>
-  <li>클라우드 서비스에선 어떤 방식으로 AI제품을 만들었는지 확인할 수 있어서 사용해본느 것도 좋음</li>
-</ul>
-
-<h3 id="serving-라이브러리-활용">Serving 라이브러리 활용</h3>
-
-<ul>
-  <li>다양한 방식으로 개발할 수 있지만, 매번 추상화된 패턴을 가질 수 있음</li>
-  <li>추상화된 패턴을 잘 제공하는 오픈소스를 활용하는 방식</li>
-</ul>
-
-<h3 id="serving-방법을-선택하는-가이드">Serving 방법을 선택하는 가이드</h3>
-
-<ul>
-  <li>어떤 방법을 쓰느냐는 주어진 환경(회사에서 주어진 일정, 인력, 예산, 요구 성능 등)에 따라 다름</li>
-</ul>
-
-<h3 id="online-serving에서-고려할-부분">Online Serving에서 고려할 부분</h3>
-
-<p>Serving 할 때 Python 버전, 패키지 버전 등 Dependency가 굉장히 중요하다.</p>
-
-<p>“재현 가능”하지 않은 코드는 Risk를 가지고 있는 코드이므로 배포할 수 없다.</p>
-
-<p>관련한 도구로는 Virtualenv, Poetry, Docker 등이 있다.</p>
-
-<h2 id="batch-serving">Batch Serving</h2>
-
-<ul>
-  <li>주기적으로 학습을 하거나 예측을 하는 경우</li>
-  <li>일정 주기 마다 <strong>최근 데이터</strong>를 가지고 예측</li>
-  <li>Batch 묶음, 한번에 많은 예측을 실행</li>
-  <li>Batch Serving 관련한 라이브러리는 따로 존재하지 않고 Airflow, Cron Job 등으로 스케쥴링 작업(<strong>Workflow Scheduler</strong>)을 진행한다.
-    <ul>
-      <li>학습 주기와 예측 주기가 다를 수도 있다.</li>
-      <li>아파치의 Airflow가 데이터 엔지니어링에서 자주 활용된다.</li>
-    </ul>
-  </li>
-  <li>예를들면, 추천시스템은 1일 전에 생성된 컨텐츠에 대한 추천 리스트를 예측한다.</li>
-  <li>실시간이 필요 없는 대부분의 방식에서 활용 가능하다.</li>
-  <li>장점으로는 코드를 함수화한 후 주기적으로 실행만 하면 되므로 간단한 구조를 가지고 있으며 한번에 많은 데이터를 처리하기 때문에 Latency 문제가 없음</li>
-  <li>단점으로는 실시간으로 활용할 수 없고 Cold Start 문제가 있다.
-    <ul>
-      <li>Cold Start 문제 : 오늘 새로 생긴 컨텐츠는 추천할 수 없음</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="online-serving-vs-batch-serving">Online Serving vs. Batch Serving</h2>
-
-<h3 id="input-관점">Input 관점</h3>
-
-<ul>
-  <li>데이터 하나씩 요청하는 경우 : Online</li>
-  <li>여러가지 데이터가 한꺼번에 처리되는 경우 : Batch</li>
-</ul>
-
-<h3 id="output-관점">Output 관점</h3>
-
-<ul>
-  <li>Inference output을 어떻게 활용하는지에 따라 다름
-    <ul>
-      <li>API형태로 바로 결과를 반환 → Online</li>
-      <li>서버와 통신 필요 → Online</li>
-      <li>1시간에 1번씩 예측해도 좋은 경우 → Batch</li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="serving-형태-선택">Serving 형태 선택</h3>
-
-<p>실시간 모델 결과가 어떻게 활용되는지에 대한 생각이 중요하다.</p>
-
-<p>예측해도 활용이 되지 않는다면 Batch로 진행해도 무방하다.</p>
-
-<p>Batch Serving의 결과를 Database에 저장하고, 서버는 Database의 데이터를 쿼리해서 주기적으로 조회하는 방식으로 사용할 수 있음</p>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="serving" /><summary type="html"><![CDATA[Serving Basic]]></summary></entry></feed>
+</ul>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="serving" /><summary type="html"><![CDATA[문제 정의의 중요성]]></summary></entry></feed>
