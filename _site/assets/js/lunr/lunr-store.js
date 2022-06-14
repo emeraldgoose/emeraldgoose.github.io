@@ -618,8 +618,8 @@ var store = [{
         "teaser": null
       },{
         "title": "On the Effect of Pretraining Corpora on In-context Learning by a LLM",
-        "excerpt":"모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 세미나에 참가하여 발표를 듣고 논문을 다시 읽어보고 리뷰하려고 합니다. Motivation GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다. In-context Learning In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는...","categories": ["paper"],
+        "excerpt":"모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다. Motivation GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다. In-context Learning In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는 방식을 말합니다....","categories": ["paper"],
         "tags": ["Corpus"],
-        "url": "/paper/On-the-effect/",
+        "url": "/paper/On-the-effect-of-corpora/",
         "teaser": null
       }]
