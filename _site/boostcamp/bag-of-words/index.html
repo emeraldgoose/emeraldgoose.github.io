@@ -308,7 +308,7 @@
             <nav class="toc">
               
                 <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-                <ul class="toc__menu"><li><a href="#bag-of-words-representation">Bag-of-Words Representation</a></li></ul>
+                <ul class="toc__menu"><li><a href="#bag-of-words-representation">Bag-of-Words Representation</a></li><li><a href="#naivebayes-classifier-for-document-classification">NaiveBayes Classifier for Document Classification</a></li></ul>
 
               
             </nav>
@@ -363,36 +363,36 @@
         </ul>
       </li>
     </ul>
+  </li>
+</ul>
 
-    <p>## NaiveBayes Classifier for Document Classification</p>
+<h2 id="naivebayes-classifier-for-document-classification">NaiveBayes Classifier for Document Classification</h2>
 
+<ul>
+  <li>Bag-of-Words for Document Classification
     <ul>
-      <li>Bag-of-Words for Document Classification
-        <ul>
-          <li>Bag-of-Words vector를 정해진 카테코리 혹은 클래스 중의 하나로 분류할 수 있는 대표적인 방법</li>
-        </ul>
-      </li>
-      <li>Bayes’ Rule Applied to Documents and Classes
-        <ul>
-          <li>MAP is “maximum a posterion” → most likely class</li>
-          <li>a document $d$ and a class $c$, the number of class is $C$</li>
-          <li>$C_{MAP} = argmax_{c \in C} \space P(c|d) = argmax_{c \in C}\space \frac{P(d|c)P(c)}{P(d)} = argmax_{c \in C} P(d|c)P(c)$
-            <ul>
-              <li>Bayes Rule에 의해 $P(d)$가 필요하지만 argmax operation으로 인해 필요하지 않게 된다.</li>
-            </ul>
-          </li>
-          <li>$P(d|c)P(c) = P(w_1, w_2, …, w_n|c)P(c) → P(c)\Pi_{w_i \in W}P(w_i|c)$
-            <ul>
-              <li>by conditional independence assumption</li>
-              <li>특정 카테코리 $c$가 고정되었을 때 문서 $d$가 나타날 확률 $P(d|c)$은 문서 안 word $w_1$부터 $w_n$까지 동시 사건으로서 볼 수 있다.</li>
-              <li>각 단어들의 확률이 $c$가 고정되었을 경우 독립으로 가정할 수 있다면 각 단어들의 확률을 모두 곱한 것으로 나타낼 수 있다.</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li>학습 데이터 내에 특정 단어가 전혀 발견되지 않았을 경우 확률 계산 시 그 단어에 대한 확률값은 0이 되면서 그 단어가 문장과 밀접한 관련이 있어도 해당 클래스로 절대 분류되지 않는다는 단점이 있다.</li>
+      <li>Bag-of-Words vector를 정해진 카테코리 혹은 클래스 중의 하나로 분류할 수 있는 대표적인 방법</li>
     </ul>
   </li>
+  <li>Bayes’ Rule Applied to Documents and Classes
+    <ul>
+      <li>MAP is “maximum a posterion” → most likely class</li>
+      <li>a document $d$ and a class $c$, the number of class is $C$</li>
+      <li>$C_{MAP} = argmax_{c \in C} \space P(c|d) = argmax_{c \in C}\space \frac{P(d|c)P(c)}{P(d)} = argmax_{c \in C} P(d|c)P(c)$
+        <ul>
+          <li>Bayes Rule에 의해 $P(d)$가 필요하지만 argmax operation으로 인해 필요하지 않게 된다.</li>
+        </ul>
+      </li>
+      <li>$P(d|c)P(c) = P(w_1, w_2, …, w_n|c)P(c) → P(c)\Pi_{w_i \in W}P(w_i|c)$
+        <ul>
+          <li>by conditional independence assumption</li>
+          <li>특정 카테코리 $c$가 고정되었을 때 문서 $d$가 나타날 확률 $P(d|c)$은 문서 안 word $w_1$부터 $w_n$까지 동시 사건으로서 볼 수 있다.</li>
+          <li>각 단어들의 확률이 $c$가 고정되었을 경우 독립으로 가정할 수 있다면 각 단어들의 확률을 모두 곱한 것으로 나타낼 수 있다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>학습 데이터 내에 특정 단어가 전혀 발견되지 않았을 경우 확률 계산 시 그 단어에 대한 확률값은 0이 되면서 그 단어가 문장과 밀접한 관련이 있어도 해당 클래스로 절대 분류되지 않는다는 단점이 있다.</li>
 </ul>
 
         
