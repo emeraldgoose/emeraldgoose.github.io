@@ -1,0 +1,38 @@
+I"�
+<h2 id="motivation">Motivation</h2>
+<blockquote>
+  <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
+numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
+</blockquote>
+
+<h2 id="계획">계획</h2>
+<p>데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.</p>
+
+<p>레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Softmax) -&gt; output 으로 생각하고 각 모듈을 구현을 시작했습니다.</p>
+
+<p>처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.</p>
+
+<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마지어를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
+
+<h2 id="계산">계산</h2>
+<p>모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.</p>
+
+<p>먼저, input -&gt; (linear, sigmoid) -&gt; (linear, softmax) -&gt; output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴봐야 합니다.</p>
+<ul>
+  <li>$y_1 = \sigma z_1 = \sigma(w_1x + b_1)$</li>
+  <li>$y_2 = \text{softmax}(z_2) = \text{softmax}(w_2y_1+b_2)$</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>벡터 계산이나 다른 수식 계산에 도움이 되는 numpy 없이 구현하려고 하니 코드에서 실수를 많이 했습니다.</p>
+
+<p>계산 결과를 확인하기 위해 torch나 numpy에 있는 똑같은 함수를 불러오고 저의 코드를 불러와 계산결과가 맞는지 계속 확인했습니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="http://taewan.kim/post/sigmoid_diff/">http://taewan.kim/post/sigmoid_diff/</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
+  <li></li>
+</ul>
+:ET

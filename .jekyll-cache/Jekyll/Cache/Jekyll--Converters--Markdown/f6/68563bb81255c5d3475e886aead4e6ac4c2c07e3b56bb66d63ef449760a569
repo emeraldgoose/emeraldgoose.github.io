@@ -1,0 +1,117 @@
+I"�=<h2 id="motivation">Motivation</h2>
+<blockquote>
+  <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
+numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
+</blockquote>
+
+<h2 id="계획">계획</h2>
+<p>데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.</p>
+
+<p>레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Softmax) -&gt; output 으로 생각하고 각 모듈을 구현을 시작했습니다.</p>
+
+<p>처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.</p>
+
+<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마지어를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
+
+<h2 id="modules">Modules</h2>
+<h3 id="linear-layer">Linear Layer</h3>
+<p>Linear layer는 weight와 bias를 정의하고 y=WX+b를 계산합니다.</p>
+
+<p>weight와 bias를 선언할 때는 torch.nn.Linear()에서 초기화하는 방법을 따라했습니다.</p>
+
+<p>backward()함수를 통해 weight와 bias를 업데이트할 dw, db를 계산합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">):</span>
+    <span class="n">squared_k</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">in_features</span><span class="p">)</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[[</span>\
+        <span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">squared_k</span><span class="p">,</span><span class="n">squared_k</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_features</span><span class="p">)]</span> \
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_features</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="p">[[</span>\
+        <span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">squared_k</span><span class="p">,</span><span class="n">squared_k</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_features</span><span class="p">)]]</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span> <span class="c1"># dz/dw = x, dz/db = 1, self.X = input, self.Z = output
+</span>
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">inputs</span> <span class="c1"># (batch, in_f)
+</span>    <span class="n">mat</span> <span class="o">=</span> <span class="n">dot_numpy</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">)</span> <span class="c1"># (batch, out_f)
+</span>    <span class="bp">self</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="bp">self</span><span class="p">.</span><span class="n">bias</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mat</span><span class="p">))]</span> <span class="c1"># (batch, out_features)
+</span>    <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">Z</span>
+
+  <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
+    <span class="n">dw</span> <span class="o">=</span> <span class="n">dot_numpy</span><span class="p">(</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">X</span><span class="p">),</span> <span class="n">dz</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">sum</span><span class="p">([</span><span class="n">dz</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">))])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]]</span>
+    <span class="k">return</span> <span class="n">dw</span><span class="p">,</span> <span class="n">db</span>
+</code></pre></div></div>
+
+<h3 id="activation-function">Activation Function</h3>
+<p>활성화 함수로는 Softmax()와 Sigmoid()를 사용했습니다. 처음 딥러닝을 공부하면 가장 많이 보게 되는 함수들이고 MLP에 사용되기 쉬운 함수들이기 때문입니다.</p>
+
+<p>활성화 함수들은 클래스로 정의되어 있는데 역전파때 각각 입력값에 대해 미분값을 출력해야 하기 때문입니다.</p>
+
+<p>먼저, Sigmoid함수는 다음의 미분식을 가집니다.</p>
+<ul>
+  <li>$f’(x) = f(x)(1-f(x))$</li>
+</ul>
+
+<p>다음, Softmax함수는 Cross Entropy와 함께 쓰일 때 다음의 미분식을 가집니다.</p>
+<ul>
+  <li>$y_i - t_i$</li>
+  <li>$t$는 정답레이블의 원핫인코딩된 벡터를 말합니다.</li>
+</ul>
+
+<p>exp와 관련된 수식에 반올림하는 함수가 적용되어 있는데 e^x 함수에서 x가 조금만 커져도 overflow가 발생하기 때문입니다. 이를 제어하기 위해 소수점 4자리까지만 사용하도록 5자리에서 반올림시켰습니다.</p>
+<ul>
+  <li>발생한 에러는 <code class="language-plaintext highlighter-rouge">Overflow, (34, Numerical result out of range)</code> 입니다.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Softmax</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="c1"># inputs = 2 dim
+</span>    <span class="n">sum_</span> <span class="o">=</span> <span class="p">[</span>\
+            <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">exp</span><span class="o">**</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">[</span><span class="n">j</span><span class="p">]]),</span> <span class="mi">4</span><span class="p">)</span> \
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="p">[</span>\
+            <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">exp</span><span class="o">**</span><span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="o">/</span><span class="n">sum_</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> \
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))]</span>
+    
+  <span class="k">def</span> <span class="nf">deriv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">y_true</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)):</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">y_true</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">inputs</span>
+
+<span class="k">class</span> <span class="nc">Sigmoid</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[</span>\
+         <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="nb">round</span><span class="p">(</span><span class="n">exp</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span><span class="mi">4</span><span class="p">)),</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> \
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">r</span>
+
+  <span class="k">def</span> <span class="nf">deriv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>\
+            <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span> \
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+</code></pre></div></div>
+
+<h3 id="loss-function">Loss Function</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<h3 id="optimizer">Optimizer</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+<p>##</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>벡터 계산이나 다른 수식 계산에 도움이 되는 numpy 없이 구현하려고 하니 코드에서 실수를 많이 했습니다.</p>
+
+<p>계산 결과를 확인하기 위해 torch나 numpy에 있는 똑같은 함수를 불러오고 저의 코드를 불러와 계산결과가 맞는지 계속 확인했습니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="http://taewan.kim/post/sigmoid_diff/">http://taewan.kim/post/sigmoid_diff/</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
+  <li></li>
+</ul>
+:ET

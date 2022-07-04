@@ -1,0 +1,679 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>최대한 기본 라이브러리로만 딥러닝 구현하기 - gooooooooooose</title>
+<meta name="description" content="Motivation    모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다. numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="최대한 기본 라이브러리로만 딥러닝 구현하기">
+<meta property="og:url" content="http://localhost:4000/pytorch/dl-implement/">
+
+
+  <meta property="og:description" content="Motivation    모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다. numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2022-07-04T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/pytorch/dl-implement/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          gooooooooooose
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Dev blog.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="최대한 기본 라이브러리로만 딥러닝 구현하기">
+    <meta itemprop="description" content="Motivation  모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.">
+    <meta itemprop="datePublished" content="2022-07-04T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">최대한 기본 라이브러리로만 딥러닝 구현하기
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2022-07-04T00:00:00+09:00">July 04, 2022</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              
+                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+                <ul class="toc__menu"><li><a href="#motivation">Motivation</a></li><li><a href="#계획">계획</a></li><li><a href="#계산">계산</a></li><li><a href="#결과">결과</a><ul><li><a href="#문제점">문제점</a></li></ul></li><li><a href="#reference">Reference</a></li></ul>
+
+              
+            </nav>
+            <!-- devinlife comment : right-sidebar ads -->
+            <nav class="toc-custom">
+              
+            </nav>
+          </aside>
+        
+        <h2 id="motivation">Motivation</h2>
+<blockquote>
+  <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
+numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
+</blockquote>
+
+<h2 id="계획">계획</h2>
+<p>데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.</p>
+
+<p>레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Softmax) -&gt; output 으로 생각하고 각 모듈을 구현을 시작했습니다.</p>
+
+<p>처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.</p>
+
+<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마지어를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
+
+<h2 id="계산">계산</h2>
+<p>모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.</p>
+
+<p>먼저, input -&gt; (linear, sigmoid) -&gt; (linear, softmax) -&gt; output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴봐야 합니다.</p>
+<ul>
+  <li>$y_1 = \sigma_{1} z_1 = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$</li>
+  <li>$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$</li>
+  <li>$Loss_{MSE} = \sum(\hat{y}-{y})$</li>
+</ul>
+
+<p>이제, 위 식을 거꾸로 돌려가면서 역전파를 진행합니다.</p>
+
+<p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
+<ul>
+  <li>$\frac{dL}{dw_2}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
+  <li>$\frac{dL}{dw_2} = \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
+</ul>
+
+<p>$W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.</p>
+<ul>
+  <li>$\frac{dL}{dw_1}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
+  <li>$\frac{dL}{dw_1}= \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
+</ul>
+
+<p>두 weight에 대해 공통된 점은 마지막 곱에는 입력값에 대해 dot product하고 입력 레이어로 움직일 때마다 이전 레이어의 가중치를 dot product한다는 특징이 있습니다.</p>
+
+<p>또한, sigmoid와 softmax를 통과한 출력값들은 역전파때 element-wise product를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다.</p>
+
+<p>이 과정을 구현하기 위해 레이어마다 backward()함수를 추가하여 편미분을 계산하도록 코드를 작성했습니다.</p>
+
+<h2 id="결과">결과</h2>
+<p>MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1k18xXPI4qMx31qgSTajBwQ6NwjycTpkr" alt="" width="400" />
+<img src="https://drive.google.com/uc?export=view&amp;id=1Pzta5dtXVxduFsIgHGaSqsHOtKsh6jSh" alt="" width="400" /></p>
+
+<p>10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다.</p>
+
+<p>벡터 계산이나 다른 수식 계산에 도움이 되는 numpy 없이 구현하려고 하니 코드에서 실수를 많이 했습니다. 계산 결과를 확인하기 위해 torch나 numpy에 있는 똑같은 함수를 불러오고 저의 코드를 불러와 계산결과가 맞는지 계속 확인했습니다.</p>
+
+<p>torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다. 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다. (딥러닝 라이브러리 개발자분들에게 정말 감사합니다.)</p>
+
+<h3 id="문제점">문제점</h3>
+<p>가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다. 이를 방지하기 위해 round 함수로 소수점 아래 4자리까지만 사용하도록 했지만 가끔씩 overflow가 터지는 현상이 있습니다.</p>
+
+<p>다음은, softmax 함수의 편미분 식을 계산하지 못했습니다. 원래는 Loss에 대한 편미분 * softmax에 대한 편미분으로 계산하는 것이 맞지만 현재는 softmax와 CrossEntropy를 사용하면서 옵티마이저에서 softmax 편미분 코드를 빼고 Loss함수에서 간단하게 도출된 식을 사용하고 있습니다. 나중에 모듈들이 추가될 경우 이 부분에 대해 수정이 필요하다고 생각합니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="http://taewan.kim/post/sigmoid_diff/">http://taewan.kim/post/sigmoid_diff/</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#torch" class="page__taxonomy-item p-category" rel="tag">torch</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#pytorch" class="page__taxonomy-item p-category" rel="tag">Pytorch</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-07-04T00:00:00+09:00">July 4, 2022</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/paper/On-the-effect-of-corpora/" class="pagination--pager" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/paper/On-the-effect-of-corpora/" rel="permalink">On the Effect of Pretraining Corpora on In-context Learning by a LLM
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> June 06 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ops/kubenetes-overview/" rel="permalink">Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 15 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">컨테이너 기반 배포
+애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc250/" rel="permalink">AtCoder Beginner Contest 250
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 10 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Adjacent Squares
+(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-final/" rel="permalink">airflow 체험기_최종
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> January 11 2022</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다.
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2022 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>
