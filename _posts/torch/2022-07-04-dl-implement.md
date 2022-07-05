@@ -37,10 +37,45 @@ $W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.
 - $\frac{dL}{dw_1}= \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$
 
 두 weight의 공통된 점은 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어로 움직일 때마다 **이전 레이어의 가중치**를 dot product한다는 특징이 있습니다.
+```python
+class Linear:
+    ...
+    def backward(self, dz):
+        dw = dot_numpy(transpose(self.X), dz)
+        db = [\
+          [sum([dz[i][j] for i in range(len(dz))])/len(dz) \
+          for j in range(len(dz[0]))]]
+        return dw, db
+```
 
 또한, sigmoid와 softmax를 통과한 출력값들은 역전파때 **element-wise product**를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다.
 
 이 과정을 구현하기 위해 레이어마다 backward()함수를 추가하여 편미분을 계산하도록 코드를 작성했습니다.
+```python
+# optim.py
+class Optimizer:
+  def __init__(self, Net, lr_rate):
+    self.modules = Net.sequential
+    self.lr_rate = lr_rate
+  
+  def update(self, dz):
+    for i in range(len(self.modules)-1,-1,-1):
+      module = self.modules[i]
+      if module.__class__.__name__ == "Sigmoid":
+        dsig = module.deriv(self.modules[i-1].Z)
+        dz = [[a*b for a,b in zip(dsig[i],dz[i])] for i in range(len(dz))]
+      elif module.__class__.__name__ == "Softmax":
+        dz = module.deriv(dz)
+      elif module.__class__.__name__ == "Linear":
+        dw, db = module.backward(dz)
+        dz = dot_numpy(dz,transpose(module.weight))
+        module.weight = [\
+          [a-(self.lr_rate)*b for a,b in zip(module.weight[i],dw[i])] \
+          for i in range(len(dw))]
+        module.bias = [\
+          [a-(self.lr_rate)*b for a,b in zip(module.bias[i],db[i])] \
+          for i in range(len(db))]
+```
 
 ## 결과
 MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.
@@ -52,12 +87,13 @@ MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터�
 
 벡터 계산이나 다른 수식 계산에 도움이 되는 numpy 없이 구현하려고 하니 코드에서 실수를 많이 했습니다. 계산 결과를 확인하기 위해 torch나 numpy에 있는 똑같은 함수를 불러오고 저의 코드를 불러와 계산결과가 맞는지 계속 확인했습니다.  
 
-torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다. 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.
+torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다.(라이브러리 개발자분들 존경합니다.) 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.
 
 ### 문제점
 가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다. 이를 방지하기 위해 round 함수로 소수점 아래 4자리까지만 사용하도록 했지만 가끔씩 overflow가 터지는 현상이 있습니다.
 
 다음은, softmax 함수의 편미분 식을 계산하지 못했습니다. 원래는 Loss에 대한 편미분 * softmax에 대한 편미분으로 계산하는 것이 맞지만 현재는 softmax와 CrossEntropy를 사용하면서 옵티마이저에서 softmax 편미분 코드를 빼고 Loss함수에서 간단하게 도출된 식을 사용하고 있습니다. 나중에 모듈들이 추가될 경우 이 부분에 대해 수정이 필요하다고 생각합니다.
+- 현재 추가되었습니다.
 
 ## Reference
 - [http://taewan.kim/post/sigmoid_diff/](http://taewan.kim/post/sigmoid_diff/)
