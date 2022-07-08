@@ -29,12 +29,12 @@ tags: [torch]
 이제, 위 식을 거꾸로 돌려가면서 역전파를 진행합니다.
 
 $W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.
-- $\frac{dL}{dw_2}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dw_2}$
-- $\frac{dL}{dw_2} = \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$
+- $\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$
+- $\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$
 
 $W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.
-- $\frac{dL}{dw_1}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$
-- $\frac{dL}{dw_1}= \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$
+- $\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$
+- $\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$
 
 두 weight의 공통된 점은 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어로 움직일 때마다 **이전 레이어의 가중치**를 dot product한다는 특징이 있습니다.
 ```python

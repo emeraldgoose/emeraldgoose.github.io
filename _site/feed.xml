@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-07-08T16:24:30+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="motivation">Motivation</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-07-08T20:20:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="motivation">Motivation</h2>
 <blockquote>
   <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
@@ -27,14 +27,14 @@
 
 <p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
 <ul>
-  <li>$\frac{dL}{dw_2}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
-  <li>$\frac{dL}{dw_2} = \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
+  <li>$\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
+  <li>$\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
 </ul>
 
 <p>$W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.</p>
 <ul>
-  <li>$\frac{dL}{dw_1}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
-  <li>$\frac{dL}{dw_1}= \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
+  <li>$\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
+  <li>$\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
 </ul>
 
 <p>두 weight의 공통된 점은 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어로 움직일 때마다 <strong>이전 레이어의 가중치</strong>를 dot product한다는 특징이 있습니다.</p>

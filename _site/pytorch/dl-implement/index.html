@@ -347,14 +347,14 @@
 
 <p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
 <ul>
-  <li>$\frac{dL}{dw_2}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
-  <li>$\frac{dL}{dw_2} = \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
+  <li>$\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
+  <li>$\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
 </ul>
 
 <p>$W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.</p>
 <ul>
-  <li>$\frac{dL}{dw_1}=\frac{dL}{d\sigma_{2}} \cdot \frac{d\sigma_{2}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
-  <li>$\frac{dL}{dw_1}= \frac{1}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
+  <li>$\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
+  <li>$\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
 </ul>
 
 <p>두 weight의 공통된 점은 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어로 움직일 때마다 <strong>이전 레이어의 가중치</strong>를 dot product한다는 특징이 있습니다.</p>
