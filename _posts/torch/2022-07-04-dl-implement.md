@@ -95,6 +95,10 @@ torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 �
 다음은, softmax 함수의 편미분 식을 계산하지 못했습니다. 원래는 Loss에 대한 편미분 * softmax에 대한 편미분으로 계산하는 것이 맞지만 현재는 softmax와 CrossEntropy를 사용하면서 옵티마이저에서 softmax 편미분 코드를 빼고 Loss함수에서 간단하게 도출된 식을 사용하고 있습니다. 나중에 모듈들이 추가될 경우 이 부분에 대해 수정이 필요하다고 생각합니다.
 - 현재 추가되었습니다.
 
+## 앞으로
+MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용할 수 있도록 레이어들을 추가할 생각입니다. 구현하기 위해서 수식이나 역전파 과정들을 찾아보니 난이도가 있어 보여서 언제 추가할 수 있을지는 잘 모르겠습니다...  
+
+
 ## Reference
 - [http://taewan.kim/post/sigmoid_diff/](http://taewan.kim/post/sigmoid_diff/)
 - [https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/](https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/)
