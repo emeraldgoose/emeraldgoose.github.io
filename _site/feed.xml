@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-07-08T20:20:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="motivation">Motivation</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-07-09T14:09:37+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="motivation">Motivation</h2>
 <blockquote>
   <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
@@ -98,6 +98,12 @@
 
 <h2 id="앞으로">앞으로</h2>
 <p>MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용할 수 있도록 레이어들을 추가할 생각입니다. 구현하기 위해서 수식이나 역전파 과정들을 찾아보니 난이도가 있어 보여서 언제 추가할 수 있을지는 잘 모르겠습니다…</p>
+
+<h2 id="코드">코드</h2>
+<blockquote>
+  <p>구현된 코드는 깃허브에 있습니다.<br />
+<a href="https://github.com/emeraldgoose/DL-Impl">https://github.com/emeraldgoose/DL-Impl</a></p>
+</blockquote>
 
 <h2 id="reference">Reference</h2>
 <ul>
