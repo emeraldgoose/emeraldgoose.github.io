@@ -1,0 +1,17 @@
+I"U<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.</p>
+</blockquote>
+
+<h2 id="cnn">CNN</h2>
+<p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
+구현해보려는 CNN의 구조는 다음과 같습니다.</p>
+<ul>
+  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Flatten Layer</li>
+  <li>Linear Layer</li>
+</ul>
+
+<h2 id="conv2d">Conv2d</h2>
+:ET

@@ -5,9 +5,9 @@ categories:
 tags: [torch]
 ---
 
-## Motivation
+## 동기
 > 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
-> 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.
+> 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없어서 도전해봤습니다.
 
 ## 계획
 데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.  
@@ -21,7 +21,7 @@ tags: [torch]
 ## 계산
 모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.
 
-먼저, input -> (linear, sigmoid) -> (linear, softmax) -> output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴봐야 합니다.
+먼저, input -> (linear, sigmoid) -> (linear, softmax) -> output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.
 - $y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$
 - $\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$
 - $Loss_{MSE} = \sum(\hat{y}-{y})^2$
@@ -30,13 +30,13 @@ tags: [torch]
 
 $W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.
 - $\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$
-- $\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$
+- $\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot y_1$
 
 $W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.
 - $\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$
-- $\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$
+- $\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot w_2 \cdot d\sigma_{1} \cdot x$
 
-두 weight의 공통된 점은 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어로 움직일 때마다 **이전 레이어의 가중치**를 dot product한다는 특징이 있습니다.
+gradient의 계산에서 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어 방향으로 **이전 레이어의 weight**를 dot product해야 합니다.
 ```python
 class Linear:
     ...
@@ -90,10 +90,7 @@ MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터�
 torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다.(라이브러리 개발자분들 존경합니다.) 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.
 
 ### 문제점
-가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다. 이를 방지하기 위해 round 함수로 소수점 아래 4자리까지만 사용하도록 했지만 가끔씩 overflow가 터지는 현상이 있습니다.
-
-다음은, softmax 함수의 편미분 식을 계산하지 못했습니다. 원래는 Loss에 대한 편미분 * softmax에 대한 편미분으로 계산하는 것이 맞지만 현재는 softmax와 CrossEntropy를 사용하면서 옵티마이저에서 softmax 편미분 코드를 빼고 Loss함수에서 간단하게 도출된 식을 사용하고 있습니다. 나중에 모듈들이 추가될 경우 이 부분에 대해 수정이 필요하다고 생각합니다.
-- 현재 추가되었습니다.
+가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다. 
 
 ## 앞으로
 MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용할 수 있도록 레이어들을 추가할 생각입니다. 구현하기 위해서 수식이나 역전파 과정들을 찾아보니 난이도가 있어 보여서 언제 추가할 수 있을지는 잘 모르겠습니다...  

@@ -1,0 +1,159 @@
+I"�]<h2 id="a-adjacent-squares">A. Adjacent Squares</h2>
+<p>(H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다.<br />
+H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+ 
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">h</span><span class="p">,</span><span class="n">w</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">h</span><span class="o">&gt;&gt;</span><span class="n">w</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">r</span><span class="o">&gt;&gt;</span><span class="n">c</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">ans</span><span class="o">=</span><span class="mi">4</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">h</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="n">ans</span><span class="o">-=</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">w</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="n">ans</span><span class="o">-=</span><span class="mi">2</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">h</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">r</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">r</span><span class="o">==</span><span class="n">h</span><span class="p">))</span> <span class="n">ans</span><span class="o">--</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">w</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">c</span><span class="o">==</span><span class="mi">1</span> <span class="o">||</span> <span class="n">c</span><span class="o">==</span><span class="n">w</span><span class="p">))</span> <span class="n">ans</span><span class="o">--</span><span class="p">;</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="b-enlarged-checker-board">B. Enlarged Checker Board</h2>
+<p>B번 ‘.’출력하고 B번 ‘#’출력하면서 전체 길이 $N \times B$를 $N \times A$번 출력하면 된다.<br />
+단, A번 마다 먼저 출력하는 ‘.’와 ‘#’의 순서가 바뀐다.<br />
+테스트케이스를 보면 쉽게 이해할 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">bool</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">b</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"."</span><span class="p">;</span>
+      <span class="k">else</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"#"</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">b</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"#"</span><span class="p">;</span>
+      <span class="k">else</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"."</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">a</span><span class="o">&gt;&gt;</span><span class="n">b</span><span class="p">;</span>
+  <span class="kt">bool</span> <span class="n">f</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">*</span><span class="n">a</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="n">a</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="n">f</span><span class="o">^=</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">)</span> <span class="n">foo</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">else</span> <span class="n">foo</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="c-adjacent-swaps">C. Adjacent Swaps</h2>
+<p>$2 ≤ N ≤ 2 \times 10^5$ 범위를 가진 N이 주어졌을 때, 1부터 N까지 적혀있는 공이    일렬로 정렬되어 있다.<br />
+$x_i$인 쿼리가 입력될 때 해당 숫자가 적혀있는 공의 위치와 오른쪽에 있는 공의 위치를 교환한다. 가장 오른쪽에 있는 공의 경우 왼쪽 공과 바꿔준다.<br />
+$1 ≤ Q ≤ 2 \times 10^5$ 인 쿼리가 들어오면서 시간 복잡도 $O(Q)$에 문제를 해결해야 한다.<br />
+숫자가 적혀있는 공의 위치를 저장하는 배열(v2p)과 어떤 위치에 있는 공의 번호를 저장하는 배열(p2v)을 두어 $O(1)$의 시간복잡도로 두 공의 위치를 찾을 수 있다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">q</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="o">&gt;&gt;</span><span class="n">q</span><span class="p">;</span>
+  <span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v2p</span><span class="p">,</span><span class="n">p2v</span><span class="p">;</span> <span class="c1">// idx-&gt;lo, lo-&gt;idx</span>
+  <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">v2p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">p2v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">i</span><span class="p">;</span>
+  <span class="k">while</span><span class="p">(</span><span class="n">q</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">n</span><span class="p">)</span> <span class="n">y</span><span class="o">=</span><span class="n">p2v</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">else</span> <span class="n">y</span><span class="o">=</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">]],</span><span class="n">p2v</span><span class="p">[</span><span class="n">v2p</span><span class="p">[</span><span class="n">y</span><span class="p">]]);</span>
+    <span class="n">swap</span><span class="p">(</span><span class="n">v2p</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">v2p</span><span class="p">[</span><span class="n">y</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">:</span> <span class="n">p2v</span><span class="p">)</span> <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">it</span><span class="p">.</span><span class="n">second</span><span class="o">&lt;&lt;</span><span class="sc">' '</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="d-250-like-number">D. 250-like Number</h2>
+<p>$1 ≤ N ≤ 10^{18}$인 $N$이 주어졌을 때 아래 조건을 만족하는 $k$의 개수를 출력하는 문제이다.</p>
+<ul>
+  <li>$k = p \times q^3$, ($p &lt; q$ 를 만족하는 소수 $p$, $q$)</li>
+  <li>$k ≤ N$ 조건에서 $p \times q^3 ≤ N \rightarrow q^3 ≤ N/p$을 알 수 있다.</li>
+</ul>
+
+<p>따라서, $p^3 &lt; X ≤ N/p$인 $X$의 개수를 upperbound로 세어주면 된다.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
+#define endl '\n'
+#define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+</span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">ll</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pii</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">pair</span><span class="o">&lt;</span><span class="n">ll</span><span class="p">,</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">pll</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">INF</span><span class="o">=</span><span class="mf">1e9</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">fastio</span>
+  <span class="c1">//freopen("input.txt","r",stdin);</span>
+  <span class="n">ll</span> <span class="n">n</span><span class="p">;</span> <span class="n">cin</span><span class="o">&gt;&gt;</span><span class="n">n</span><span class="p">;</span>
+  <span class="c1">// k&lt;=n -&gt; p * q^3 &lt;= n -&gt; q^3 &lt;= (n/p) -&gt; upperbound?</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temp</span><span class="p">(</span><span class="mf">1e6</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">mul</span><span class="p">;</span>
+  <span class="n">set</span><span class="o">&lt;</span><span class="n">ll</span><span class="o">&gt;</span> <span class="n">prime</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mf">1e6</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">prime</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">)</span> <span class="n">mul</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">);</span>
+      <span class="k">for</span><span class="p">(</span><span class="n">ll</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="n">i</span><span class="p">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="mf">1e6</span><span class="p">;</span><span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span> <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">sort</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="n">ll</span> <span class="n">ans</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">:</span> <span class="n">prime</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;=</span><span class="n">n</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+      <span class="n">ll</span> <span class="n">lim</span><span class="o">=</span><span class="n">n</span><span class="o">/</span><span class="n">i</span><span class="p">;</span>
+      <span class="n">ll</span> <span class="n">uidx</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">lim</span><span class="p">)</span><span class="o">-</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+      <span class="n">ll</span> <span class="n">lidx</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">mul</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="o">-</span><span class="n">mul</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">uidx</span><span class="o">&gt;</span><span class="n">lidx</span><span class="p">)</span> <span class="n">ans</span><span class="o">+=</span><span class="n">uidx</span><span class="o">-</span><span class="n">lidx</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

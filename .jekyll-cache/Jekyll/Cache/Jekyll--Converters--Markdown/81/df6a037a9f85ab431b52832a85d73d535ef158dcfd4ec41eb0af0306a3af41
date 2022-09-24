@@ -1,0 +1,6 @@
+I"C<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
+여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥에서 구현하실때 도움이 되었으면 좋겠습니다.</p>
+</blockquote>
+:ET

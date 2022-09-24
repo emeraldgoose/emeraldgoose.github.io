@@ -1,0 +1,117 @@
+I"�1<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.</p>
+</blockquote>
+
+<h2 id="cnn">CNN</h2>
+<p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
+구현해보려는 CNN의 구조는 다음과 같습니다.</p>
+<ul>
+  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Flatten Layer</li>
+  <li>Linear Layer</li>
+</ul>
+
+<h2 id="conv2d">Conv2d</h2>
+<h3 id="convolution">Convolution</h3>
+<p>단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.</p>
+<ul>
+  <li>Numpy를 이용하는 방법</li>
+  <li>FFT를 이용하는 방법</li>
+</ul>
+
+<p>FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 어려워서 포기하고 첫 번째 방법인 Numpy를 사용하는 방법을 선택하고 스택 오버플로우에 있는 코드를 가져와서 사용했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">convolve2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">strd</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">lib</span><span class="p">.</span><span class="n">stride_tricks</span><span class="p">.</span><span class="n">as_strided</span>
+    <span class="n">subM</span> <span class="o">=</span> <span class="n">strd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">strides</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'ij,ijkl-&gt;kl'</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">subM</span><span class="p">)</span>
+</code></pre></div></div>
+<p>동작방법은 다음과 같습니다.</p>
+<ul>
+  <li>적용할 이미지를 커널 크기의 맞게 잘라서 저장합니다.</li>
+  <li>잘려진 이미지들을 하나씩 꺼내 커널과 element-wise product를 진행하여 더한 값들을 리턴합니다.</li>
+  <li>for문으로 커널을 움직일 필요 없어 곱셈과 합 연산만 진행하므로 속도가 빠릅니다.</li>
+</ul>
+
+<h3 id="forward">Forward</h3>
+<p>Conv2d 레이어의 forward를 먼저 보겠습니다.<br />
+(3,3)인 X, (2,2)인 W를 convolution해서 (2,2)인 O를 계산한다고 가정합니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1a6BSuYgNy41-ibtokSbW-q-6qinfs01l" alt="" /></p>
+<ul>
+  <li>$o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</li>
+  <li>$o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$</li>
+  <li>$o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$</li>
+  <li>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</li>
+</ul>
+
+<h3 id="backward">Backward</h3>
+<p>이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 이전 역전파에서 들어오는 gradient를 의미합니다.<br />
+가장 먼저, forward에서 계산한 모든 식을 weight에 대해 편미분을 시도합니다.</p>
+
+<ul>
+  <li>$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</li>
+  <li>$\frac{do_{12}}{dk_{11}}=x_{12} \quad \frac{do_{12}}{dk_{12}}=x_{13} \quad \frac{do_{12}}{dk_{21}}=x_{22} \quad \frac{do_{12}}{dk_{22}}=x_{23}$</li>
+  <li>$\frac{do_{21}}{dk_{11}}=x_{21} \quad \frac{do_{21}}{dk_{12}}=x_{22} \quad \frac{do_{21}}{dk_{21}}=x_{31} \quad \frac{do_{21}}{dk_{22}}=x_{32}$</li>
+  <li>$\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$</li>
+</ul>
+
+<p>이제 Weight의 gradient 하나만 계산해보면 다음과 같습니다.</p>
+<ul>
+  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</li>
+</ul>
+
+<p>위에서 계산한 값을 대입하면 다음과 같습니다.</p>
+<ul>
+  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</li>
+</ul>
+
+<p>따라서, weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.<br />
+bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.</p>
+
+<p>conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달</p>
+
+<h2 id="crossentropyloss">CrossEntropyLoss</h2>
+<p>NLL(Negative Log Likelihood)를 이용한 Loss function입니다. Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss로 구성되어 있습니다.</p>
+
+<p>이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러를 일으켰습니다. 반면에 Softmax와 NLLLoss로 구현하게 되면 음수 입력에 대해서도 cross entropy 값을 구할 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">NLLLoss</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>\
+        <span class="p">[</span><span class="o">-</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">)])</span> <span class="o">/</span> <span class="n">batch</span>
+
+<span class="k">def</span> <span class="nf">NLLLoss_deriv</span><span class="p">(</span><span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>\
+        <span class="p">[</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">/</span><span class="n">batch</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span> \
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">log_softmax</span><span class="p">(</span><span class="n">y_pred</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="n">r_</span> <span class="o">=</span> <span class="n">softmax_</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>\
+        <span class="p">[</span><span class="n">math</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span> \
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_</span><span class="p">))]</span>
+
+<span class="k">def</span> <span class="nf">log_softmax_deriv</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="n">r_</span> <span class="o">=</span> <span class="n">softmax_</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span>\
+        <span class="p">[</span><span class="n">r_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="n">j</span> <span class="k">else</span> <span class="n">r_</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> \
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span> \
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_</span><span class="p">))]</span>
+</code></pre></div></div>
+<p>NLLLoss 함수의 입력으로는 log_softmax를 통과한 값이 들어가도록 구현했습니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://stackoverflow.com/a/43087771">Convolve2d(StackOverflow)</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/">https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/</a></li>
+  <li><a href="https://velog.io/@changdaeoh/backpropagationincnn">https://velog.io/@changdaeoh/backpropagationincnn</a></li>
+  <li><a href="https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509">https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509</a></li>
+  <li><a href="https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec">https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec</a></li>
+</ul>
+:ET

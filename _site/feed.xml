@@ -1,7 +1,170 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-07-09T14:09:37+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="motivation">Motivation</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-09-24T13:37:29+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">최대한 기본 라이브러리로만 CNN 구현하기</title><link href="http://localhost:4000/pytorch/cnn-implementation/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 CNN 구현하기" /><published>2022-09-21T00:00:00+09:00</published><updated>2022-09-21T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/cnn-implementation</id><content type="html" xml:base="http://localhost:4000/pytorch/cnn-implementation/"><![CDATA[<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
+여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.</p>
+</blockquote>
+
+<h2 id="cnn">CNN</h2>
+<p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
+구현해보려는 CNN의 구조는 다음과 같습니다.</p>
+<ul>
+  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Flatten Layer</li>
+  <li>Linear Layer</li>
+</ul>
+
+<h2 id="conv2d">Conv2d</h2>
+<h3 id="convolution">Convolution</h3>
+<p>단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.</p>
+<ul>
+  <li>Numpy를 이용하는 방법</li>
+  <li>FFT를 이용하는 방법</li>
+</ul>
+
+<p>FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 어려워서 포기하고 첫 번째 방법인 Numpy를 사용하는 방법을 선택했습니다. 코드는 스택 오버플로우에 있는 코드를 가져와서 사용했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">convolve2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">strd</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">lib</span><span class="p">.</span><span class="n">stride_tricks</span><span class="p">.</span><span class="n">as_strided</span>
+    <span class="n">subM</span> <span class="o">=</span> <span class="n">strd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">strides</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'ij,ijkl-&gt;kl'</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">subM</span><span class="p">)</span>
+</code></pre></div></div>
+<p>동작방법은 다음과 같습니다.</p>
+<ul>
+  <li>적용할 이미지를 커널 크기의 맞게 잘라서 저장합니다.</li>
+  <li>잘려진 이미지들을 하나씩 꺼내 커널과 element-wise product를 진행하여 더한 값들을 리턴합니다.</li>
+  <li>for문으로 커널을 움직일 필요 없이 곱셈과 합 연산만 진행하므로 속도가 빠릅니다.</li>
+</ul>
+
+<h3 id="forward">Forward</h3>
+<p>Conv2d 레이어의 forward를 먼저 보겠습니다.<br />
+(3,3)인 X, (2,2)인 W를 convolution해서 (2,2)인 O를 계산한다고 가정합니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1a6BSuYgNy41-ibtokSbW-q-6qinfs01l" alt="" /></p>
+<ul>
+  <li>$o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</li>
+  <li>$o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$</li>
+  <li>$o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$</li>
+  <li>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</li>
+</ul>
+
+<h3 id="backward">Backward</h3>
+<p>이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.<br />
+Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 것을 추천드립니다.</p>
+
+<p>가장 먼저, forward에서 계산한 모든 식을 weight에 대해 편미분을 시도합니다.</p>
+<ul>
+  <li>$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</li>
+  <li>$\frac{do_{12}}{dk_{11}}=x_{12} \quad \frac{do_{12}}{dk_{12}}=x_{13} \quad \frac{do_{12}}{dk_{21}}=x_{22} \quad \frac{do_{12}}{dk_{22}}=x_{23}$</li>
+  <li>$\frac{do_{21}}{dk_{11}}=x_{21} \quad \frac{do_{21}}{dk_{12}}=x_{22} \quad \frac{do_{21}}{dk_{21}}=x_{31} \quad \frac{do_{21}}{dk_{22}}=x_{32}$</li>
+  <li>$\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$</li>
+</ul>
+
+<p>이제 weight의 gradient 하나만 계산해보면 다음과 같습니다.</p>
+<ul>
+  <li>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}  \quad \text{by the chain rule}$</li>
+  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</li>
+</ul>
+
+<p>위에서 계산한 값을 대입하면 다음과 같습니다.</p>
+<ul>
+  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</li>
+</ul>
+
+<p>따라서, <strong>weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.</strong><br />
+bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.</p>
+
+<p>이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.</p>
+
+<p>이번에는 O를 계산하는 forward 식에서 x에 대해 편미분을 계산해두겠습니다.</p>
+<ul>
+  <li>$\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$</li>
+  <li>$\frac{do_{12}}{dx_{12}}=k_{11} \quad \frac{do_{12}}{dx_{13}}=k_{12} \quad \frac{do_{12}}{dx_{22}}=k_{21} \quad \frac{do_{12}}{dx_{23}}=k_{22}$</li>
+  <li>$\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$</li>
+  <li>$\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$</li>
+</ul>
+
+<p>다음 입력값 각각에 대한 gradient인 $\frac{dL}{dX}$값을 다음과 같이 유도할 수 있습니다.</p>
+<ul>
+  <li>$\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$</li>
+  <li>$\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$</li>
+  <li>$\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$</li>
+  <li>$\frac{dL}{dx_{21}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{21}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{21}}$</li>
+  <li>$\frac{dL}{dx_{22}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{22}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{22}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{22}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{22}}$</li>
+  <li>$\frac{dL}{dx_{23}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{23}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{23}}$</li>
+  <li>$\frac{dL}{dx_{31}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{31}}$</li>
+  <li>$\frac{dL}{dx_{32}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{32}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{32}}$</li>
+  <li>$\frac{dL}{dx_{33}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{33}}$</li>
+</ul>
+
+<p>위의 식에 다시 정리해둔 값을 대입하면 다음과 같습니다.</p>
+<ul>
+  <li>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</li>
+  <li>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</li>
+  <li>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</li>
+  <li>$\frac{dL}{dx_{21}} = d_{21} \cdot k_{11} + d_{11} \cdot k_{21}$</li>
+  <li>$\frac{dL}{dx_{22}} = d_{22} \cdot k_{11} + d_{21} \cdot k_{12} + d_{12} \cdot k_{21} + d_{11} \cdot k_{22}$</li>
+  <li>$\frac{dL}{dx_{23}} = d_{22} \cdot k_{12} + d_{12} \cdot k_{22}$</li>
+  <li>$\frac{dL}{dx_{31}} = d_{21} \cdot k_{21}$</li>
+  <li>$\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$</li>
+  <li>$\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$</li>
+</ul>
+
+<p>식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 계산이 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.</p>
+<ul>
+  <li>
+    <p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
+<img src="https://drive.google.com/uc?export=view&amp;id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW" alt="" width="300" /></p>
+  </li>
+  <li>
+    <p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$
+<img src="https://drive.google.com/uc?export=view&amp;id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V" alt="" width="200" /></p>
+  </li>
+  <li>
+    <p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
+<img src="https://drive.google.com/uc?export=view&amp;id=1RdI042LLWwvWM6g64K8RBDiYfLhGfl04" alt="" width="300" /></p>
+  </li>
+</ul>
+
+<p>파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k21로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.<br />
+따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong></p>
+
+<h2 id="crossentropyloss">CrossEntropyLoss</h2>
+<p>이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러가 일어납니다.</p>
+
+<p>Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss(Negative Log Likelihood)로 구성되어 있습니다. Softmax와 NLLLoss로 구현하게 되면 음수 입력에 대해서도 cross entropy 값을 구할 수 있습니다.</p>
+
+<h2 id="result">Result</h2>
+<p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="500" /><br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="500" /></p>
+
+<p>이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.</p>
+
+<p>이번 구현에서 가장 어려웠던 점은 Conv2d의 backward 구현이었습니다. 정리된 내용은 2차원 배열을 가지고 계산한 내용인데 직접 구현한 Conv2d Layer는 channel까지 포함시킨 3차원(Channel, Height, Width) 입출력을 계산해야 합니다.</p>
+
+<p>수식을 다시 계산하고 구현된 코드를 보면서 어디에 값이 저장되어야 하는지 새롭게 정리해서 다시 구현을 진행할 수 있었습니다. 그리고 numpy 없이 구현하기 위해 numpy의 함수들도 새롭게 작성했습니다. 만약 구현을 한다면 Numpy 사용을 적극 권장합니다…</p>
+
+<h3 id="code">Code</h3>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a>
+    <ul>
+      <li>branch: Conv2d</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://stackoverflow.com/a/43087771">Convolve2d(StackOverflow)</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/">https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/</a></li>
+  <li><a href="https://velog.io/@changdaeoh/backpropagationincnn">https://velog.io/@changdaeoh/backpropagationincnn</a></li>
+  <li><a href="https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509">https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509</a></li>
+  <li><a href="https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec">https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec</a></li>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.]]></summary></entry><entry><title type="html">최대한 기본 라이브러리로만 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="최대한 기본 라이브러리로만 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="동기">동기</h2>
 <blockquote>
   <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
-그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.</p>
+그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없어서 도전해봤습니다.</p>
 </blockquote>
 
 <h2 id="계획">계획</h2>
@@ -11,12 +174,12 @@
 
 <p>처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.</p>
 
-<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마지어를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
+<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마이저를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
 
 <h2 id="계산">계산</h2>
 <p>모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.</p>
 
-<p>먼저, input -&gt; (linear, sigmoid) -&gt; (linear, softmax) -&gt; output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴봐야 합니다.</p>
+<p>먼저, input -&gt; (linear, sigmoid) -&gt; (linear, softmax) -&gt; output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.</p>
 <ul>
   <li>$y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$</li>
   <li>$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$</li>
@@ -28,16 +191,16 @@
 <p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
 <ul>
   <li>$\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
-  <li>$\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot y_1$</li>
+  <li>$\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot y_1$</li>
 </ul>
 
 <p>$W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.</p>
 <ul>
   <li>$\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
-  <li>$\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2}(z_2) \cdot w_2 \cdot d\sigma(z_1) \cdot x$</li>
+  <li>$\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot w_2 \cdot d\sigma_{1} \cdot x$</li>
 </ul>
 
-<p>두 weight의 공통된 점은 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어로 움직일 때마다 <strong>이전 레이어의 가중치</strong>를 dot product한다는 특징이 있습니다.</p>
+<p>gradient의 계산에서 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어 방향으로 <strong>이전 레이어의 weight</strong>를 dot product해야 합니다.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
     <span class="p">...</span>
     <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
@@ -89,12 +252,7 @@
 <p>torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다.(라이브러리 개발자분들 존경합니다.) 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.</p>
 
 <h3 id="문제점">문제점</h3>
-<p>가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다. 이를 방지하기 위해 round 함수로 소수점 아래 4자리까지만 사용하도록 했지만 가끔씩 overflow가 터지는 현상이 있습니다.</p>
-
-<p>다음은, softmax 함수의 편미분 식을 계산하지 못했습니다. 원래는 Loss에 대한 편미분 * softmax에 대한 편미분으로 계산하는 것이 맞지만 현재는 softmax와 CrossEntropy를 사용하면서 옵티마이저에서 softmax 편미분 코드를 빼고 Loss함수에서 간단하게 도출된 식을 사용하고 있습니다. 나중에 모듈들이 추가될 경우 이 부분에 대해 수정이 필요하다고 생각합니다.</p>
-<ul>
-  <li>현재 추가되었습니다.</li>
-</ul>
+<p>가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다.</p>
 
 <h2 id="앞으로">앞으로</h2>
 <p>MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용할 수 있도록 레이어들을 추가할 생각입니다. 구현하기 위해서 수식이나 역전파 과정들을 찾아보니 난이도가 있어 보여서 언제 추가할 수 있을지는 잘 모르겠습니다…</p>
@@ -111,7 +269,7 @@
   <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
   <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
   <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
-</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[Motivation 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다. 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없었습니다. 그래서 도전해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[동기 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다. 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없어서 도전해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
   <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.</p>
 </blockquote>
 
@@ -434,7 +592,7 @@ $1 ≤ Q ≤ 2 \times 10^5$ 인 쿼리가 들어오면서 시간 복잡도 $O(Q)
   <li>$k ≤ N$ 조건에서 $p \times q^3 ≤ N \rightarrow q^3 ≤ N/p$을 알 수 있다.</li>
 </ul>
 
-<p>$p^3 &lt; X ≤ N/p$인 $X$의 개수를 upperbound로 세어주면 된다.</p>
+<p>따라서, $p^3 &lt; X ≤ N/p$인 $X$의 개수를 upperbound로 세어주면 된다.</p>
 
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;bits/stdc++.h&gt;</span><span class="cp">
 #define endl '\n'
@@ -882,7 +1040,7 @@ $X$가 $Y$보다 큰 경우 0을 출력해주는 예외처리만 해주면 된�
 <h2 id="c-product">C. Product</h2>
 <p>$i$번째 가방에 $L_i$개의 공이 있고 각 공은 $a_{ij}$의 숫자가 적혀있다.<br />
 모든 가방에서 공을 하나씩 선택하고 각 공에 적힌 수의 곱이 $X$인 경우의 수를 계산하는 문제이다.<br />
-중요한 정보로 $\sum_{i}^N L_i = 10^5$ 이라는 조건이 문제에 있다. 그래서 dp처럼 접근하는 것도 가능할 것 같아서 다음과 같이 접근했다. 사실 통과할 줄 몰랐다.<br />
+중요한 정보로 $\sum_{i}^N L_i = 10^5$ 이라는 조건이 문제에 있다. 그래서 dp처럼 접근하는 것도 가능할 것 같아서 다음과 같이 접근했다.<br />
 map을 사용해서 위에서부터 어떤 공을 선택했을 때 이전 값에 나눈 몫을 다음 값으로 저장하는 방법을 사용했다.<br />
 <code class="language-plaintext highlighter-rouge">current</code>는 위에서 선택한 수를 나누어 현재 필요한 수를 의미하고 <code class="language-plaintext highlighter-rouge">ball</code>은 $i$번째 가방에서 꺼낸 어떤 공에 적힌 수를 의미한다.<br />
 그렇다면 <code class="language-plaintext highlighter-rouge">current</code>를 <code class="language-plaintext highlighter-rouge">ball</code>로 나누어 떨어질 때 <code class="language-plaintext highlighter-rouge">m[i][current/ball] += m[i-1][current]</code>와 같은 식을 사용할 수 있게된다.<br />
@@ -1171,7 +1329,7 @@ steps에 <code class="language-plaintext highlighter-rouge">-</code>단위로 �
 
 <p>이후 이 파라미터들은 <code class="language-plaintext highlighter-rouge">self.reset_parameters()</code>에 의해 초기화가 진행됩니다.</p>
 
-<h2 id="reset_parameters">reset_parameters()</h2>
+<h2 id="reset-parameters">reset parameters()</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
     <span class="n">init</span><span class="p">.</span><span class="n">kaiming_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
@@ -1219,185 +1377,4 @@ steps에 <code class="language-plaintext highlighter-rouge">-</code>단위로 �
   <li><a href="https://yeomko.tistory.com/40">갈아먹는 딥러닝 기초 [2] weight initialization</a></li>
   <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">Pytorch</a></li>
   <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">StackOverflow</a></li>
-</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><category term="initialize" /><summary type="html"><![CDATA[모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다. 그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.]]></summary></entry><entry><title type="html">악성채팅 탐지 시스템 구현</title><link href="http://localhost:4000/boostcamp/final-project/" rel="alternate" type="text/html" title="악성채팅 탐지 시스템 구현" /><published>2021-12-26T00:00:00+09:00</published><updated>2021-12-26T00:00:00+09:00</updated><id>http://localhost:4000/boostcamp/final-project</id><content type="html" xml:base="http://localhost:4000/boostcamp/final-project/"><![CDATA[<h2 id="목적">목적</h2>
-
-<blockquote>
-  <p>유저가 많은 방의 채팅 속도가 빨라 모든 악성채팅을 거르지 못하기 때문에 실시간으로 탐지하여 관리자에게 악성유저들을 리포트할 수 있는 애플리케이션을 개발하고자 했습니다.</p>
-
-</blockquote>
-
-<h2 id="계획">계획</h2>
-
-<hr />
-
-<h3 id="모델">모델</h3>
-
-<p>실시간으로 문장의 성향을 파악하기 위해서는 매우 무겁고 느리기 때문에 기존 언어모델을 사용할 수 없었습니다.</p>
-
-<p>그리고 Toxicity text detection은 비교적 쉬운 task에 속합니다.</p>
-
-<p>또한, 서버의 환경을 생각해보면 보통 GPU가 있기보단 좋은 CPU와 많은 메모리를 사용하여 서버를 구동하고 있습니다.</p>
-
-<p>따라서 빠른 속도를 가진 CNN 기반의 모델을 구현하여 성능을 어느정도 손해보더라도 속도를 가져가려고 했습니다.</p>
-
-<h3 id="데이터">데이터</h3>
-
-<p>악성채팅은 보통 욕설, 혐오표현, 공격적인 표현 등으로 구성되어 있습니다.</p>
-
-<p>하지만 이런 분류 모두 사람의 주관적 시선으로 만들어져 기준이 모두 다를 수 있습니다. 따라서 저희는 욕설과 혐오표현을 위주로 학습을 진행했고 해당 채팅을 친 유저의 판단은 관리자에게 맡기는 방향으로 계획했습니다.</p>
-
-<h2 id="악성채팅의-유형">악성채팅의 유형</h2>
-
-<hr />
-
-<h3 id="욕설-혐오표현의-유형">욕설, 혐오표현의 유형</h3>
-
-<p>욕설의 경우, 한 단어로 이루어진 경우가 많습니다.  하지만 필터링 기술이 발전함에 따라 필터링을 피하기 위해 욕설 사이에 의미없는 문자를 넣는 방식을 많이 사용합니다.</p>
-
-<p>혐오표현의 경우 혐오적인 단어를 보통 포함합니다. 특히 특정 집단을 일컫는 단어를 사용합니다.</p>
-
-<h3 id="트위치-채팅의-유형">트위치 채팅의 유형</h3>
-
-<p>트위치는 스트리머마다 특정 밈(Meme)을 사용하는 경우가 많습니다. 젊은 사람들이 많이 보기 때문에 인터넷 커뮤니티 단어들이 사용되고 짧은 문장의 채팅이 자주 올라옵니다.</p>
-
-<p>그러나, 트위치는 구독을 했을 시 스트리머마다 다른 이모지를 제공하며 그 이름도 다릅니다. 그리고 그림을 그리는 경우(예를들면, 빅딕맨)도 존재합니다.</p>
-
-<h2 id="challenge">Challenge</h2>
-
-<hr />
-
-<h3 id="word-embedding">Word embedding</h3>
-
-<p>문장을 그대로 사용할 수는 없으므로 Huggingface의 Tokenizer를 사용하여 Word embedding을 진행했습니다.</p>
-
-<p>corpus만 확보하면 BertWordPieceTokenizer로 빠르게 학습할 수 있고 다루기 쉬운 장점이 있습니다.</p>
-
-<p>그리고 Rust로 구현되어있기 때문에 굉장히 빠릅니다.</p>
-
-<h3 id="punctuation">Punctuation</h3>
-
-<p>인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다. 오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해야 하므로 문장의 단어 중간에 Punctuation을 삽입하여 모델이 Robust하도록 유도했습니다.</p>
-
-<p>단어 사이에 Punctuation을 넣는 것도 생각해보았지만 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하면서 성능이 떨어졌습니다.</p>
-
-<p>이후, Meta Pseudo labeling을 구현하면서 위의 전처리 방법을 augmentation하는데 사용했습니다.</p>
-
-<h3 id="cnn">CNN</h3>
-
-<p>NLP task를 위한 CNN 모델을 구현하는 것이 처음이라서 여러가지 블로그들을 찾아봤는데 공통적인 구조는 Embedding layer에서 Conv layer로 쓸고 pooling을 하는식으로 설계되어 있습니다. 저 또한 이러한 구조를 크게 벗어나지 않게 설계했습니다.</p>
-
-<h3 id="bilstm">BiLSTM</h3>
-
-<p>CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내주지만 성능에 대한 욕심이 조금 더 있었고 NLP에 적합한 BiLSTM을 사용하여 성능을 더 올릴 수 있었습니다.</p>
-
-<h3 id="benchmark">Benchmark</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Model</th>
-      <th>Best Acc</th>
-      <th>Best F1</th>
-      <th>Inference time(128 batch, CPU)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Rule based</td>
-      <td>0.81</td>
-      <td>0.690</td>
-      <td><strong>0.01s</strong>(1300 words)</td>
-    </tr>
-    <tr>
-      <td>CNN</td>
-      <td>0.90</td>
-      <td>0.878</td>
-      <td>0.03s</td>
-    </tr>
-    <tr>
-      <td>BiLSTM</td>
-      <td><strong>0.93</strong></td>
-      <td>0.90</td>
-      <td>0.28s</td>
-    </tr>
-    <tr>
-      <td>CNN + BiLSTM</td>
-      <td>0.92</td>
-      <td><strong>0.911</strong></td>
-      <td>0.3s</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>CNN과 BiLSTM을 같이 사용할 때 CNN 대비 10배 느려지지만 좀 더 다양한 표현을 잡으려면 꼭 사용해야 한다고 판단했습니다.<br />
-병렬처리를 사용한다면 시간이 빨라지긴 하겠지만 아직 공부하지 않았으므로 패스합니다.</p>
-
-<h3 id="semi-supervised-learning">Semi-Supervised Learning</h3>
-
-<p>저희의 목적은 트위치 채팅 데이터의 성향을 판단하는 것이므로 트위치 문장들을 데이터로 모델에 먹일 필요가 있습니다. 그러나 레이블링되지 않은 데이터를 사람 손으로 레이블링하기에는 데이터의 양이 너무 많습니다.</p>
-
-<p>Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에 의존해야 하며 사용하려는 모델이 Pseudo label을 생성하고 다시 학습하게되면 Bias가 증폭되는 단점을 갖고 있습니다.</p>
-
-<p>이를 해결하기 위해 Meta Pseudo Labels라는 방법을 사용하여 좀 더 정확한 레이블링을 할 수 있도록 구현하고자 했습니다.</p>
-
-<h3 id="meta-pseudo-labels">Meta Pseudo Labels</h3>
-
-<ul>
-  <li>Reference : <a href="https://arxiv.org/abs/2003.10580">https://arxiv.org/abs/2003.10580</a></li>
-</ul>
-
-<p>겉핥기로 공부해서 논문 내용을 정확하게 보지는 않았지만 대략적인 설명은 다음 그림과 같습니다.</p>
-
-<p><img src="https://drive.google.com/uc?export=view&amp;id=14HfiaSGFEWCmyNdNaD-_aTCrXWZg0o3B" alt="" /></p>
-
-<p>기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정이지만 MPL 방법은 Student가 Pseudo label을 학습하지만 Student의 loss를 Teacher가 학습합니다.</p>
-
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1VB9geH6mpHxgfR827u8iUHsPiFs2uG3m" alt="" /></p>
-
-<p>Supervised learning보다 MPL이 더 좋은 퍼포먼스를 보여준다는 일러스트입니다.</p>
-
-<p>그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 현재 SOTA급의 성능을 내고 있는 중입니다.</p>
-
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1vFXRUOcIu5g-eKLLqo2TvPz2Gc4WPg-0" alt="" /></p>
-
-<p>가장 중요한 점은 Teacher-Student 형태를 가지고 있지만 Teacher의 좀 더 정확한 Pseudo Labels를 생성하기 위해 최적화하는 과정입니다.</p>
-
-<h3 id="mlflow">MLflow</h3>
-
-<p>모델 버전관리와 배포가 쉬운 도구인 MLflow를 사용했습니다.</p>
-
-<p>MLflow의 tracking server를 GCP(Google Cloud Platform)으로 지정했는데 이때 Docker를 사용하면 굉장히 쉽게 배포가 가능합니다.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM python:3.10.1-slim-buster
-
-COPY . /mlflow
-WORKDIR /mlflow
-
-RUN apt-get update &amp;&amp; \
-    pip install pip --upgrade &amp;&amp; \
-    pip install -r requirements.txt
-
-ENV BACKEND_STORE_URI=mysql+pymysql://{Google-cloud-storage}
-ENV DEFAULT_ARTIFACT_ROOT=gs://{tracking-server}
-ENV MLFLOW_TRACKING_URI=http://localhost:5000
-EXPOSE 80
-</code></pre></div></div>
-<p>python 이미지 위에 mlflow를 설치하고 환경변수를 넣어주는 방법을 사용했습니다. 원래는 환경변수를 넣어주는 것이 좋지는 않지만 CLI에서 넣을때 에러가 발생하는 경우가 있어서 dockerfile에 넣어주는 걸로 결정했습니다.</p>
-
-<p>또한, 새로운 기능을 넣거나 버전을 다운그레이드 시킬때도 아티팩트들이 그대로 google-cloud-storage에 저장되어 있기 때문에 새롭게 학습시킬 필요가 없습니다.</p>
-
-<p>그러나 <a href="https://github.com/mlflow/mlflow/issues/4749">[BUG] ‘mlflow.pyfunc.load_model()’ need to be added keyword argument #4749</a>와 같이 gpu상에서 학습시킨 모델을 cpu상의 시스템에서 사용할 수 없습니다.</p>
-
-<p>torch에서는 gpu에서 학습한 모델을 cpu만 사용하는 시스템에서 불러올 수 있게 <code class="language-plaintext highlighter-rouge">torch.load()</code>시 <code class="language-plaintext highlighter-rouge">map_location</code>의 인자를 ‘cpu’로 주어 cpu상의 시스템으로 옮길 수 있도록 하지만 mlflow는 이런것을 지원하지 않았습니다.</p>
-
-<p>그래서 gpu가 없는 서버에 모델을 배포하려면 cpu로 학습시켜야 한다는 단점이 있었습니다. 다행히 애플리케이션을 제공받은 gpu가 있는 서버에서 시연하기로 해서 cuda로 학습할 수 있었습니다.</p>
-
-<h2 id="회고">회고</h2>
-
-<hr />
-
-<p>airflow까지 해보고 싶었는데 SQLAlchemy하고 충돌때문인지 <code class="language-plaintext highlighter-rouge">airflow db init</code> 를 실행하면 자꾸 에러나서 다운그레이드도 해봤는데 결국 해결하지 못했습니다.</p>
-
-<p>그리고 MLflow의 파이프라인 작성을 해보지 못해서 이와 관련된 airflow와 mlflow의 파이프라인 작성을 연습해보려고 합니다.</p>
-
-<p>마지막으로 Docker를 제대로 써본건 이번이 처음인데 정말 편한 도구였습니다. k8s도 해보고 싶네요.</p>]]></content><author><name>goooose</name></author><category term="BoostCamp" /><category term="cnn" /><category term="nlp" /><summary type="html"><![CDATA[목적]]></summary></entry></feed>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><category term="initialize" /><summary type="html"><![CDATA[모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다. 그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.]]></summary></entry></feed>

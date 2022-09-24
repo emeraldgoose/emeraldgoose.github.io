@@ -1,0 +1,37 @@
+I"�<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.</p>
+</blockquote>
+
+<h2 id="cnn">CNN</h2>
+<p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
+구현해보려는 CNN의 구조는 다음과 같습니다.</p>
+<ul>
+  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
+  <li>Flatten Layer</li>
+  <li>Linear Layer</li>
+</ul>
+
+<h2 id="conv2d">Conv2d</h2>
+<h3 id="convolution">Convolution</h3>
+<p>단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.</p>
+<ul>
+  <li>Numpy를 이용하는 방법</li>
+  <li>FFT를 이용하는 방법<br />
+FFT(Fast Fourie Transform)를 사용하는 방법은 구현방법도 어려워서 바로 포기하고 첫 번째 방법인 스택 오버플로우의 코드를 가져와서 사용했습니다.
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">convolve2d_</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+  <span class="n">a</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="n">strd</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">lib</span><span class="p">.</span><span class="n">stride_tricks</span><span class="p">.</span><span class="n">as_strided</span>
+  <span class="n">subM</span> <span class="o">=</span> <span class="n">strd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">strides</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'ij,ijkl-&gt;kl'</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">subM</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li>https://stackoverflow.com/a/43087771</li>
+</ul>
+:ET

@@ -54,7 +54,7 @@ class Linear(Module):
 
 이후 이 파라미터들은 `self.reset_parameters()`에 의해 초기화가 진행됩니다.
 
-## reset_parameters()
+## reset parameters()
 
 ```python
 def reset_parameters(self) -> None:
