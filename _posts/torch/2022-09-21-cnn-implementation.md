@@ -74,7 +74,7 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 - $\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$
 - $\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$
 
-다음 입력값 각각에 대한 gradient인 $\frac{dL}{dX}$값을 다음과 같이 유도할 수 있습니다.
+다음 입력값 각각에 대한 gradient인 $\frac{dL}{dX}$값을 다음과 같이 계산할 수 있습니다.
 - $\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$
 - $\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$
 - $\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$
@@ -106,7 +106,7 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 - $\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
 ![](https://drive.google.com/uc?export=view&id=1RdI042LLWwvWM6g64K8RBDiYfLhGfl04){:width="300"}
 
-파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k21로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
+파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
 따라서, **dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.**  
 
 ## CrossEntropyLoss
