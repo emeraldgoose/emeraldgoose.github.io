@@ -128,7 +128,6 @@ Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss(Negative Log Likelihood)로 �
 
 ### Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
-    - branch: Conv2d
 
 ## Reference
 - [Convolve2d(StackOverflow)](https://stackoverflow.com/a/43087771)
