@@ -40,7 +40,7 @@ def convolve2d(a, f):
 ### Forward
 Conv2d 레이어의 forward를 먼저 보겠습니다.  
 (3,3)인 X, (2,2)인 W를 convolution해서 (2,2)인 O를 계산한다고 가정합니다.  
-![](https://drive.google.com/uc?export=view&id=1a6BSuYgNy41-ibtokSbW-q-6qinfs01l)
+![](https://drive.google.com/uc?export=view&id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH)
 - $o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$
 - $o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$
 - $o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$
