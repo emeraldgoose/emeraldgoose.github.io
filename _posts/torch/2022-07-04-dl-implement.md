@@ -97,7 +97,7 @@ MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용�
 
 ## 코드
 > 구현된 코드는 깃허브에 있습니다.  
-[https://github.com/emeraldgoose/DL-Impl](https://github.com/emeraldgoose/DL-Impl)
+[https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
 
 ## Reference
 - [http://taewan.kim/post/sigmoid_diff/](http://taewan.kim/post/sigmoid_diff/)
