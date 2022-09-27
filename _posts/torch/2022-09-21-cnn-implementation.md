@@ -96,7 +96,7 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 - $\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$
 - $\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$
 
-식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 계산이 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.  
+식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 이해가 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.  
 - $\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
 ![](https://drive.google.com/uc?export=view&id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW){:width="300"}
 
