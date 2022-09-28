@@ -104,7 +104,7 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 ![](https://drive.google.com/uc?export=view&id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V){:width="200"}
 
 - $\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
-![](https://drive.google.com/uc?export=view&id=1RdI042LLWwvWM6g64K8RBDiYfLhGfl04){:width="300"}
+![](https://drive.google.com/uc?export=view&id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ){:width="300"}
 
 파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
 따라서, **dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.**  
