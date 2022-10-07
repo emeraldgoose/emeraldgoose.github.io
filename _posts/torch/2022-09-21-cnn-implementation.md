@@ -66,6 +66,15 @@ Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 �
 따라서, **weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.**  
 bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.
 
+```python
+# Image (B,C,H,W)
+for b in range(batch):
+  for cout in range(out_channel):
+      for cin in range(in_channel):
+          ret[b][cout] += convolution(x[b][cin], weight[cout][cin])
+      ret[b][cout] += bias[cout]
+```
+
 이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.  
 
 이번에는 출력 O를 계산하는 forward 식에서 입력 x에 대해 편미분을 계산해두겠습니다.
@@ -108,6 +117,20 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 
 파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
 따라서, **dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.**  
+
+```python
+for b in range(batch):
+  for cout in range(out_channel):
+    for cin in range(in_channel):
+      flip_w = flip(weight[cout][cin])
+      dz[b][cin] += convolution(dout[b][cin], flip_w)
+
+# padding한 부분은 제거해야 한다.
+B, C, _, _ = shape(dz) 
+for b in range(B):
+  for c in range(C):
+    dz[b][c] = remove_pad(dz[b][c], (pad_h, pad_w))
+```
 
 ## CrossEntropyLoss
 이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러가 일어납니다.
