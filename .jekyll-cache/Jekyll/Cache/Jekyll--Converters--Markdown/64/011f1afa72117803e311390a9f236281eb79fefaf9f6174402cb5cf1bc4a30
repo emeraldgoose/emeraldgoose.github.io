@@ -1,0 +1,14 @@
+I"K<h3 id="motivation">Motivation</h3>
+<blockquote>
+  <p><strong>빅데이터를 지탱하는 기술</strong>을 읽어보면서 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
+이 사이드 프로젝트를 진행하게 되었습니다.</p>
+</blockquote>
+
+<h3 id="data">Data</h3>
+<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려웠습니다. 그래서 python 코드로 임의의 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
+
+<p>생산되는 로그는 다음과 같습니다.<br />
+<code class="language-plaintext highlighter-rouge">206.176.215.237 - - [02/Dec/2022:18:57:34 +0900] "GET /api/items HTTP/1.1" 200 3456 477 "https://www.dummmmmy.com" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"</code></p>
+
+<h3 id="producer">Producer</h3>
+:ET

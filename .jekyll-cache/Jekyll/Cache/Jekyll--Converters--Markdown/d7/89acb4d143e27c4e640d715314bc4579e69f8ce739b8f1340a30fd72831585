@@ -1,0 +1,61 @@
+I"<h3 id="motivation">Motivation</h3>
+<blockquote>
+  <p><strong>빅데이터를 지탱하는 기술</strong>을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
+이 사이드 프로젝트를 진행하게 되었습니다.</p>
+</blockquote>
+
+<h3 id="data">Data</h3>
+<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려웠습니다. 그래서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
+
+<p>생산되는 로그는 다음과 같습니다.<br />
+<code class="language-plaintext highlighter-rouge">206.176.215.237 - - [02/Dec/2022:18:57:34 +0900] "GET /api/items HTTP/1.1" 200 3456 477 "https://www.dummmmmy.com" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"</code></p>
+
+<h3 id="producerfilebeat">Producer(FileBeat)</h3>
+<p>서버 접속 기록을 로깅하는 서버에서 로그를 외부로 보내주는 무언가 필요했습니다. 로그 파일을 ELK 스택의 logstash로 읽는 방법이 있지만 저는 접속 서버에서 logstash를 사용하는 것은 자원 부담이 있다고 생각했습니다. 그래서 losgtash를 밖으로 빼내 수집 서버를 따로 두고 logstash와 잘 맞는 FileBeat를 서버에 동작시켰습니다. FileBeat는 /var/log/httpd/access_log/*.log 파일을 읽어 Logstash 서버로 추가된 로그를 전달하는 역할을 합니다.</p>
+
+<p>FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. 로그파일의 경로를 설정하면 offset을 기억해 추가되는 로그를 외부로 전달하는 역할을 합니다. 비슷한 수집기로 FluentBit가 있고 Fluentd의 무겁다는 단점을 보완한 수집기입니다.</p>
+
+<h3 id="logstash">Logstash</h3>
+<p>Logstash는 전달받은 로그를 Elasticsearch나 다른 곳으로 전달하는 역할을 합니다. Logstash를 사용한 이유는 람다 아키텍처같은 파이프라인을 생각하고 있기 때문입니다.</p>
+
+<p>람다 아키텍처처럼 실시간으로 수집되어 보여주는 뷰와 배치 처리되어 보여주는 뷰를 제공하는 구조인데 logstash는 여러 경로의 Output을 지원하고 있기 때문에 적합하다고 생각했습니다. 저는 Logstash 서버에 Elasticsearch와 Redis를 연결했습니다.</p>
+
+<p>logstash는 *.conf 파일을 사용하여 사용자가 원하는 데이터 가공이 가능합니다. 저는 각 항목과 ip의 위치주소, User Agent 정보를 파싱하는 필터를 넣어 파싱할 수 있었습니다. 로그를 파싱할때는 grok을 사용했고 다음과 같은 설정값을 사용했습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter {
+  grok {
+    match =&gt; {
+      "message" =&gt; "%{IPORHOST:remote_addr} - %{USER:remote_user} \[%{HTTPDATE:time_local}\] \"%{WORD:method} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})\" %{NUMBER:status} (?:%{NUMBER:body_bytes_sent}|-) (?:%{NUMBER:response_time}|-) \"%{GREEDYDATA:referrer}\" \"%{GREEDYDATA:UA}\""
+    }
+  }
+  geoip {
+    source =&gt; "remote_addr"
+    target =&gt; "clientgeoip"
+  }
+  useragent {
+    source =&gt; "UA"
+  }
+}
+</code></pre></div></div>
+
+<h3 id="elasticsearch-kibana">Elasticsearch, Kibana</h3>
+<p>Elasticsearch는 logstash로부터 전달받은 데이터를 저장하는 DB역할을 합니다. Kibana는 Elasticsearch의 데이터를 보여주는 대시보드 역할을 합니다. Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도커로 올리면 맥북이 감당하지 못할 것 같아서 서버를 빌려주는 플랫폼을 알아보게 되었습니다.</p>
+
+<p>처음에는 GCP 프리티어를 생각했다가 <a href="https://ide.goorm.io">구름</a>이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다. 아래 주소로 Kibana에 접속할 수 있지만 동작이 느리므로 조금 기다려주세요.</p>
+<ul>
+  <li><a href="https://dashboard-kibana.run.goorm.io">dashboard-kibana.run.goorm.io</a></li>
+  <li>만약, logstash로 구름에 있는 elasticsearch로 연결하려면 port는 443으로 접근해야 합니다.</li>
+</ul>
+
+<h3 id="hdfs">HDFS</h3>
+<p>로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. AWS S3같은 오브젝트 스토리지를 보통 사용하는 것 같은데 Apache Ozone이 있지만 아직 잘 사용되지는 않은 것 같아서 하둡으로 결정했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.</p>
+
+<p>하둡이 설치되는 도커를 더 늘리기는 어려워서 단일 노드를 사용하지만 설정은 분산 설정이 되어있는 모드인 Pseudo Distribute 모드로 사용했습니다.</p>
+
+<p>Logstash는 webhdfs를 통해 데이터를 전달할 수 있는데 webhdfs를 사용하기 위해 /etc/hosts를 수정해야 하는 점이 있었습니다. Pseudo Distribute 모드를 사용하게 되면 Data Node의 주소가 컨테이너 id로 적용되어 /etc/hosts의 <code class="language-plaintext highlighter-rouge">컨테이너ip localhost</code>를 추가해야 합니다. hosts 파일을 수정하는 것이 싫어서 webhdfs를 사용하지 않는 방법으로 hdfs에 데이터를 적재했습니다.</p>
+
+<h3 id="redis">Redis</h3>
+<p>Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다.<br />
+in-memory db로 사용되는 것 중에 kafka, redis, rabbitmq가 있었고 redis를 선택하게 되었습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다. redis는 도커 이미지로 바로 사용할 수 있어 사용했습니다.</p>
+
+<p>Logstash는 redis로 보낼때 key를 지정해야합니다.</p>
+:ET
