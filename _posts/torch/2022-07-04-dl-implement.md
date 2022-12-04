@@ -42,9 +42,7 @@ class Linear:
     ...
     def backward(self, dz):
         dw = dot_numpy(transpose(self.X), dz)
-        db = [\
-          [sum([dz[i][j] for i in range(len(dz))])/len(dz) \
-          for j in range(len(dz[0]))]]
+        db = [[sum([dz[i][j] for i in range(len(dz))])/len(dz) for j in range(len(dz[0]))]]
         return dw, db
 ```
 
@@ -69,12 +67,8 @@ class Optimizer:
       elif module.__class__.__name__ == "Linear":
         dw, db = module.backward(dz)
         dz = dot_numpy(dz,transpose(module.weight))
-        module.weight = [\
-          [a-(self.lr_rate)*b for a,b in zip(module.weight[i],dw[i])] \
-          for i in range(len(dw))]
-        module.bias = [\
-          [a-(self.lr_rate)*b for a,b in zip(module.bias[i],db[i])] \
-          for i in range(len(db))]
+        module.weight = [[a-(self.lr_rate)*b for a,b in zip(module.weight[i],dw[i])] for i in range(len(dw))]
+        module.bias = [[a-(self.lr_rate)*b for a,b in zip(module.bias[i],db[i])] for i in range(len(db))]
 ```
 
 ## 결과

@@ -100,7 +100,7 @@
 
   </head>
 
-  <body class="layout--single">
+  <body class="layout--single wide">
     <nav class="skip-links">
   <ul>
     <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
@@ -304,20 +304,6 @@
 
       <section class="page__content" itemprop="text">
         
-          <aside class="sidebar__right sticky">
-            <nav class="toc">
-              
-                <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
-                <ul class="toc__menu"><li><a href="#동기">동기</a></li><li><a href="#계획">계획</a></li><li><a href="#계산">계산</a></li><li><a href="#결과">결과</a><ul><li><a href="#문제점">문제점</a></li></ul></li><li><a href="#앞으로">앞으로</a></li><li><a href="#코드">코드</a></li><li><a href="#reference">Reference</a></li></ul>
-
-              
-            </nav>
-            <!-- devinlife comment : right-sidebar ads -->
-            <nav class="toc-custom">
-              
-            </nav>
-          </aside>
-        
         <h2 id="동기">동기</h2>
 <blockquote>
   <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
@@ -362,9 +348,7 @@
     <span class="p">...</span>
     <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
         <span class="n">dw</span> <span class="o">=</span> <span class="n">dot_numpy</span><span class="p">(</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">X</span><span class="p">),</span> <span class="n">dz</span><span class="p">)</span>
-        <span class="n">db</span> <span class="o">=</span> <span class="p">[</span>\
-          <span class="p">[</span><span class="nb">sum</span><span class="p">([</span><span class="n">dz</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">))])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> \
-          <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]]</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">sum</span><span class="p">([</span><span class="n">dz</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">))])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]]</span>
         <span class="k">return</span> <span class="n">dw</span><span class="p">,</span> <span class="n">db</span>
 </code></pre></div></div>
 
@@ -388,12 +372,8 @@
       <span class="k">elif</span> <span class="n">module</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">"Linear"</span><span class="p">:</span>
         <span class="n">dw</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">backward</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
         <span class="n">dz</span> <span class="o">=</span> <span class="n">dot_numpy</span><span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">transpose</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">weight</span><span class="p">))</span>
-        <span class="n">module</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[</span>\
-          <span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dw</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> \
-          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dw</span><span class="p">))]</span>
-        <span class="n">module</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="p">[</span>\
-          <span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">bias</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> \
-          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">db</span><span class="p">))]</span>
+        <span class="n">module</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dw</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dw</span><span class="p">))]</span>
+        <span class="n">module</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">bias</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">db</span><span class="p">))]</span>
 </code></pre></div></div>
 
 <h2 id="결과">결과</h2>

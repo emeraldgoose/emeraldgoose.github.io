@@ -283,13 +283,14 @@ defaults:
       type: posts
     values:
       layout: single
+      classes: wide
       author_profile: true
       read_time: false
       comments: true
       share: false
       related: true
-      toc: true
-      toc_sticky: true
+      toc: false
+      toc_sticky: false
 
   - scope:
       path: ""
