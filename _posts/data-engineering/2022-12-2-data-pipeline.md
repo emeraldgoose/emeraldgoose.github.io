@@ -57,7 +57,7 @@ Elasticsearch는 logstash로부터 전달받은 데이터를 저장하는 DB역�
 Logstash는 webhdfs를 통해 데이터를 전달할 수 있는데 webhdfs를 사용하기 위해 /etc/hosts를 수정해야 하는 점이 있었습니다. Pseudo Distribute 모드를 사용하게 되면 Data Node의 주소가 컨테이너 id로 적용되어 /etc/hosts의 `컨테이너ip localhost`를 추가해야 합니다. 저는 hosts 파일을 수정하는 것이 싫어서 webhdfs를 사용하지 않는 방법으로 hdfs에 데이터를 적재했습니다.
 
 ### Redis
-Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. in-memory db로 사용되는 것 중에 kafka, redis, rabbitmq가 있었고 redis를 선택하게 되었습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다.
+Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다. 그래서 in-memory db로 사용되는 것 중 redis를 선택하게 되었습니다. 
 
 Logstash는 redis로 보낼때 key를 지정해야합니다. key는 그날 날짜로 지정하여 연속적으로 데이터를 redis로 전달하여 하루 간격의 배치 처리 스크립트가 실행될 때 어제 날짜로 key 접근하여 데이터를 모을 수 있었습니다.
 ```
