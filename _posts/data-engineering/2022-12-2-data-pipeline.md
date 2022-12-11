@@ -77,7 +77,39 @@ Spark는 하둡이 설치된 도커에 같이 설치했습니다. 처음에는 �
 redis에 저장된 데이터를 가져오고 hdfs에 적재하는 처리를 하는 pyspark 스크립트를 실행하는 역할을 합니다. 
 
 ### Airflow
-배치 스크립트를 실행하도록 Airflow를 사용했습니다. pyspark 스크립트를 실행하도록 SSHOperator를 사용하는 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.
+배치 스크립트를 실행하도록 Airflow를 사용했습니다. pyspark 스크립트를 실행하는 spark-submit을 실행하는 커맨드를 사용하는 SSHOperator가 포함된 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.
+
+spark-submit을 사용하는 스크립트는 다음과 같습니다.
+```python
+import datetime
+import pendulum
+from airflow.decorators import dag
+from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.providers.ssh.hooks.ssh import SSHHook
+
+kst = pendulum.timezone('Asia/Seoul')
+now = datetime.datetime.now().strftime('%Y-%m-%d')
+one_day_ago = datetime.datetime.now(tz=kst) - datetime.timedelta(days=1)
+
+@dag(dag_id='logs_redis_to_hdfs', schedule_interval='@daily', start_date=one_day_ago, tags=['batch','redis','hdfs'])
+def parquet_to_hdfs_from_logstash():
+    hook = SSHHook(
+        remote_host='hadoop-spark',
+        username='root',
+        key_file='/root/.ssh/id_rsa.pub'
+    )
+
+    run_script = SSHOperator(
+        task_id='run_script',
+        ssh_hook=hook,
+        command=f'/spark/bin/spark-submit /spark/logs_redis_to_hdfs.py --start_date {now}',
+    )
+    
+    run_script
+    
+pipeline = parquet_to_hdfs_from_logstash()
+```
+ssh로 하둡이 설치된 도커로 접속하여 SSHOperator로 command를 실행하는 DAG입니다. ssh로 접속하기 위해 airflow 도커와 하둡 도커의 `~/.ssh/` 폴더를 공유시켜 하둡에서 생성된 key 파일을 airflow에서 사용할 수 있게 했습니다. 
 
 RDB로 적재하는 스크립트는 다음과 같습니다.
 ```python
