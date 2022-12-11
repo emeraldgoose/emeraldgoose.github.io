@@ -1,5 +1,5 @@
 ---
-title: 최대한 기본 라이브러리로만 딥러닝 구현하기
+title: Python으로 딥러닝 구현하기
 categories:
   - Pytorch
 tags: [torch]

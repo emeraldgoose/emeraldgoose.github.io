@@ -1,5 +1,5 @@
 ---
-title: 최대한 기본 라이브러리로만 CNN 구현하기
+title: python으로 CNN 구현하기
 categories:
   - Pytorch
 tags: [torch]
