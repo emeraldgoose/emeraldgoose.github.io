@@ -623,13 +623,13 @@ var store = [{
         "url": "/paper/On-the-effect-of-corpora/",
         "teaser": null
       },{
-        "title": "최대한 기본 라이브러리로만 딥러닝 구현하기",
+        "title": "Python으로 딥러닝 구현하기",
         "excerpt":"동기 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다. 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없어서 도전해봤습니다. 계획 데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다....","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/dl-implement/",
         "teaser": null
       },{
-        "title": "최대한 기본 라이브러리로만 CNN 구현하기",
+        "title": "python으로 CNN 구현하기",
         "excerpt":"Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다. CNN CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 구현해보려는 CNN의 구조는 다음과 같습니다. Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2) Layer2 :...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/cnn-implementation/",
@@ -639,5 +639,11 @@ var store = [{
         "excerpt":"Motivation 빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서 이 사이드 프로젝트를 진행하게 되었습니다. Data 먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려웠습니다. 그래서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다. 생산되는...","categories": ["data-engineer"],
         "tags": ["data-engineering"],
         "url": "/data-engineer/data-pipeline/",
+        "teaser": null
+      },{
+        "title": "python으로 RNN 구현하기",
+        "excerpt":"Related 이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다. RNN RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이번에 구현한 RNN 레이어를 학습하기 위해 주로 사용되는 시계열 데이터가 아닌 계속 사용하던 MNIST를 사용할 생각입니다. MNIST는 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/rnn-impl/",
         "teaser": null
       }]

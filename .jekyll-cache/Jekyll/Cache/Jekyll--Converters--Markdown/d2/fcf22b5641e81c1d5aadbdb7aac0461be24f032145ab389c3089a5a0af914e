@@ -1,4 +1,4 @@
-I"\<h3 id="motivation">Motivation</h3>
+I"Am<h3 id="motivation">Motivation</h3>
 <blockquote>
   <p><strong>빅데이터를 지탱하는 기술</strong>을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
 이 사이드 프로젝트를 진행하게 되었습니다.</p>
@@ -47,14 +47,14 @@
 </ul>
 
 <h3 id="hdfs">HDFS</h3>
-<p>로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. 보통 AWS S3같은 오브젝트 스토리지를 사용하는 것 같은데 Apache Ozone이 있지만 아직 잘 사용되지는 않은 것 같아서 하둡으로 결정했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.</p>
+<p>로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. 보통 AWS S3같은 오브젝트 스토리지를 사용하는 것 같은데 오픈소스로 Apache Ozone이 있지만 아직 잘 사용되지는 않은 것 같아서 하둡으로 결정했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.</p>
 
 <p>하둡이 설치되는 도커를 더 늘리기는 어려워서 단일 노드를 사용하지만 설정은 분산 설정이 되어있는 모드인 Pseudo Distribute 모드로 사용했습니다.</p>
 
 <p>Logstash는 webhdfs를 통해 데이터를 전달할 수 있는데 webhdfs를 사용하기 위해 /etc/hosts를 수정해야 하는 점이 있었습니다. Pseudo Distribute 모드를 사용하게 되면 Data Node의 주소가 컨테이너 id로 적용되어 /etc/hosts의 <code class="language-plaintext highlighter-rouge">컨테이너ip localhost</code>를 추가해야 합니다. 저는 hosts 파일을 수정하는 것이 싫어서 webhdfs를 사용하지 않는 방법으로 hdfs에 데이터를 적재했습니다.</p>
 
 <h3 id="redis">Redis</h3>
-<p>Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. in-memory db로 사용되는 것 중에 kafka, redis, rabbitmq가 있었고 redis를 선택하게 되었습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다.</p>
+<p>Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다. 그래서 in-memory db로 사용되는 것 중 redis를 선택하게 되었습니다.</p>
 
 <p>Logstash는 redis로 보낼때 key를 지정해야합니다. key는 그날 날짜로 지정하여 연속적으로 데이터를 redis로 전달하여 하루 간격의 배치 처리 스크립트가 실행될 때 어제 날짜로 key 접근하여 데이터를 모을 수 있었습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output {
@@ -73,7 +73,38 @@
 <p>redis에 저장된 데이터를 가져오고 hdfs에 적재하는 처리를 하는 pyspark 스크립트를 실행하는 역할을 합니다.</p>
 
 <h3 id="airflow">Airflow</h3>
-<p>배치 스크립트를 실행하도록 Airflow를 사용했습니다. pyspark 스크립트를 실행하도록 SSHOperator를 사용하는 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.</p>
+<p>배치 스크립트를 실행하도록 Airflow를 사용했습니다. 하둡 도커에서 spark-submit을 실행하는 커맨드를 사용할 수 있도록 SSHOperator가 포함된 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.</p>
+
+<p>spark-submit을 사용하는 스크립트는 다음과 같습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pendulum</span>
+<span class="kn">from</span> <span class="nn">airflow.decorators</span> <span class="kn">import</span> <span class="n">dag</span>
+<span class="kn">from</span> <span class="nn">airflow.providers.ssh.operators.ssh</span> <span class="kn">import</span> <span class="n">SSHOperator</span>
+<span class="kn">from</span> <span class="nn">airflow.providers.ssh.hooks.ssh</span> <span class="kn">import</span> <span class="n">SSHHook</span>
+
+<span class="n">kst</span> <span class="o">=</span> <span class="n">pendulum</span><span class="p">.</span><span class="n">timezone</span><span class="p">(</span><span class="s">'Asia/Seoul'</span><span class="p">)</span>
+<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span>
+<span class="n">one_day_ago</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">kst</span><span class="p">)</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">dag</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s">'logs_redis_to_hdfs'</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'@daily'</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">one_day_ago</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'batch'</span><span class="p">,</span><span class="s">'redis'</span><span class="p">,</span><span class="s">'hdfs'</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">parquet_to_hdfs_from_logstash</span><span class="p">():</span>
+    <span class="n">hook</span> <span class="o">=</span> <span class="n">SSHHook</span><span class="p">(</span>
+        <span class="n">remote_host</span><span class="o">=</span><span class="s">'hadoop-spark'</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="s">'root'</span><span class="p">,</span>
+        <span class="n">key_file</span><span class="o">=</span><span class="s">'/root/.ssh/id_rsa.pub'</span>
+    <span class="p">)</span>
+
+    <span class="n">run_script</span> <span class="o">=</span> <span class="n">SSHOperator</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="s">'run_script'</span><span class="p">,</span>
+        <span class="n">ssh_hook</span><span class="o">=</span><span class="n">hook</span><span class="p">,</span>
+        <span class="n">command</span><span class="o">=</span><span class="sa">f</span><span class="s">'/spark/bin/spark-submit /spark/logs_redis_to_hdfs.py --start_date </span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="n">run_script</span>
+    
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">parquet_to_hdfs_from_logstash</span><span class="p">()</span>
+</code></pre></div></div>
+<p>ssh로 하둡이 설치된 도커로 접속하여 SSHOperator로 command를 실행하는 DAG입니다. ssh로 접속하기 위해 airflow 도커와 하둡 도커의 <code class="language-plaintext highlighter-rouge">~/.ssh/</code> 폴더를 공유시켜 하둡에서 생성된 key 파일을 airflow에서 사용할 수 있게 했습니다.</p>
 
 <p>RDB로 적재하는 스크립트는 다음과 같습니다.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
@@ -147,7 +178,7 @@
 </code></pre></div></div>
 <p><code class="language-plaintext highlighter-rouge">transform()</code> 과정에서 df_yesterday와 df_today 데이터프레임으로 나누는 코드가 존재합니다. 이것은 logstash가 UTC로 동작하기 때문입니다. 기록되는 날이 UTC 기준이라서 한국 시간과 9시간 차이가 나기 때문에 Redis에 같은 키에 다른 날짜의 로그가 들어오게 됩니다.</p>
 
-<p>예를들면, 한국시각 2022-11-30의 데이터는 UTC기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
+<p>예를들면, 한국시각 2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
 
 <p>airflow에 SparkSession으로 세션을 생성하면 30초의 timeout으로 DAG가 등록되지 않았습니다.(정확한 이유가 맞는지는 잘 모르겠습니다.) 그래서 SparkContext를 통해 hdfs에 접근하는 방법으로 배치 파일을 구성했습니다.</p>
 
