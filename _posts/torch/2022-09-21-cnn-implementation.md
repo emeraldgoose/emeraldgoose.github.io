@@ -124,12 +124,6 @@ for b in range(batch):
     for cin in range(in_channel):
       flip_w = flip(weight[cout][cin])
       dz[b][cin] += convolution(dout[b][cin], flip_w)
-
-# padding한 부분은 제거해야 한다.
-B, C, _, _ = shape(dz) 
-for b in range(B):
-  for c in range(C):
-    dz[b][c] = remove_pad(dz[b][c], (pad_h, pad_w))
 ```
 
 ## CrossEntropyLoss
