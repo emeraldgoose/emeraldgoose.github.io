@@ -57,7 +57,7 @@ Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 �
 - $\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$
 
 이제 weight의 gradient 하나만 계산해보면 다음과 같습니다.  
-- $\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}  \quad \text{by the chain rule}$
+- $\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$
 - $\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $
 
 위에서 계산한 값을 대입하면 다음과 같습니다.

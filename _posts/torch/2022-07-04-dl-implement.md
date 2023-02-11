@@ -6,8 +6,7 @@ tags: [torch]
 ---
 
 ## 동기
-> 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각났었습니다.
-> 그리고 numpy로 구현한 코드는 많았지만 numpy도 사용하지 않고 구현한 코드는 많이 없어서 도전해봤습니다.
+> 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.
 
 ## 계획
 데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.  
@@ -41,7 +40,7 @@ gradient의 계산에서 마지막 곱에는 **입력값**에 대해 dot product
 class Linear:
     ...
     def backward(self, dz):
-        dw = dot_numpy(transpose(self.X), dz)
+        dw = dot(transpose(self.X), dz)
         db = [[sum([dz[i][j] for i in range(len(dz))])/len(dz) for j in range(len(dz[0]))]]
         return dw, db
 ```
