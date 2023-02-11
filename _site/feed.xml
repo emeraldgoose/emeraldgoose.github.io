@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-01-13T23:22:30+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-11T13:33:00+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -32,7 +32,7 @@
 <p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
 
 <p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$<br />
-fowrad에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
+foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
 
 <p>$s_t = x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh}$</p>
 
@@ -442,12 +442,6 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
     <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
       <span class="n">flip_w</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
       <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">dout</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">flip_w</span><span class="p">)</span>
-
-<span class="c1"># padding한 부분은 제거해야 한다.
-</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">shape</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> 
-<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
-    <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">remove_pad</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">c</span><span class="p">],</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">))</span>
 </code></pre></div></div>
 
 <h2 id="crossentropyloss">CrossEntropyLoss</h2>

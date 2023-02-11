@@ -448,12 +448,6 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
     <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
       <span class="n">flip_w</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
       <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">dout</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">flip_w</span><span class="p">)</span>
-
-<span class="c1"># padding한 부분은 제거해야 한다.
-</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">shape</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> 
-<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
-    <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">remove_pad</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">c</span><span class="p">],</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">))</span>
 </code></pre></div></div>
 
 <h2 id="crossentropyloss">CrossEntropyLoss</h2>

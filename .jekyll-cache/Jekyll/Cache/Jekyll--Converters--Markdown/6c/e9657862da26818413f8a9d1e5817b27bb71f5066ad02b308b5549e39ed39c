@@ -1,4 +1,4 @@
-I"8<blockquote>
+I"�7<blockquote>
   <p>모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다.
 그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.</p>
 </blockquote>
@@ -60,17 +60,12 @@
 
 <p>먼저, <code class="language-plaintext highlighter-rouge">self.weight</code>는 <code class="language-plaintext highlighter-rouge">kaiming_unifrom</code>에 의해 초기화가 진행됩니다. kaiming initialize는 검색하시면 자세한 내용이 있기 때문에 넘어가겠습니다.</p>
 
-<p>그냥 kaiming 초기화 방법을 사용하는구나 정도로 봐주세요.</p>
-
 <p>다음, <code class="language-plaintext highlighter-rouge">self.bias는</code> weight의 <code class="language-plaintext highlighter-rouge">bound</code>를 계산한 후 <code class="language-plaintext highlighter-rouge">unform(-bound, bound)</code>에 의해 초기화가 진행됩니다.</p>
 
 <h3 id="initialize-bias">initialize Bias</h3>
-<p>논문을 잠깐 읽어봤는데 kaiming 방법은 <code class="language-plaintext highlighter-rouge">bias</code>를 0으로 초기화하고 진행했습니다.</p>
+<p><code class="language-plaintext highlighter-rouge">bias</code>를 <code class="language-plaintext highlighter-rouge">uniform(-bound, bound)</code>로 초기화하고 있기 때문에 다시 찾아봤는데 <a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">In PyTorch how are layer weights and biases initialized by default?</a>에서 bias는 <strong>LeCunn 초기화 방법</strong>을 사용한다고 합니다.</p>
 
-<p>그러나 torch 코드에서는 <code class="language-plaintext highlighter-rouge">bias</code>를 <code class="language-plaintext highlighter-rouge">uniform(-bound, bound)</code>로 초기화하고 있기 때문에 다시 찾아봤는데 <a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">링크</a>에서 bias는 <strong>LeCunn 초기화 방법</strong>을 사용한다고 합니다.</p>
-
-<p><a href="https://yeomko.tistory.com/40">링크</a>에 따르면 Lecunn 초기화 방법의 아이디어는 확률분포를 <code class="language-plaintext highlighter-rouge">fan_in</code>으로 조절하고자 하는 것이라고 합니다.</p>
-
+<p>Lecunn 초기화 방법의 아이디어는 확률분포를 <code class="language-plaintext highlighter-rouge">fan_in</code>으로 조절하고자 하는 것이라고 합니다.</p>
 <ul>
   <li>bound를 계산하기 전에 <code class="language-plaintext highlighter-rouge">_calculate_fan_in_and_fan_out()</code>이라는 함수를 통해 <code class="language-plaintext highlighter-rouge">fan_in</code>이라는 값을 계산하는데 input layer의 뉴런 수를 <code class="language-plaintext highlighter-rouge">fan_in</code>, output layer의 뉴런 수를 <code class="language-plaintext highlighter-rouge">fan_out</code>이라고 합니다.</li>
 </ul>
@@ -94,7 +89,7 @@
   <li><a href="https://arxiv.org/abs/1502.01852v1">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a></li>
   <li><a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">Efficient BackProp</a></li>
   <li><a href="https://yeomko.tistory.com/40">갈아먹는 딥러닝 기초 [2] weight initialization</a></li>
-  <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">Pytorch</a></li>
-  <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">StackOverflow</a></li>
+  <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules</a></li>
+  <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default</a></li>
 </ul>
 :ET

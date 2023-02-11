@@ -67,17 +67,12 @@ def reset_parameters(self) -> None:
 
 먼저, `self.weight`는 `kaiming_unifrom`에 의해 초기화가 진행됩니다. kaiming initialize는 검색하시면 자세한 내용이 있기 때문에 넘어가겠습니다.  
 
-그냥 kaiming 초기화 방법을 사용하는구나 정도로 봐주세요.
-
 다음, `self.bias는` weight의 `bound`를 계산한 후 `unform(-bound, bound)`에 의해 초기화가 진행됩니다.
 
 ### initialize Bias
-논문을 잠깐 읽어봤는데 kaiming 방법은 `bias`를 0으로 초기화하고 진행했습니다. 
+`bias`를 `uniform(-bound, bound)`로 초기화하고 있기 때문에 다시 찾아봤는데 [In PyTorch how are layer weights and biases initialized by default?](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)에서 bias는 **LeCunn 초기화 방법**을 사용한다고 합니다.
 
-그러나 torch 코드에서는 `bias`를 `uniform(-bound, bound)`로 초기화하고 있기 때문에 다시 찾아봤는데 [링크](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)에서 bias는 **LeCunn 초기화 방법**을 사용한다고 합니다.
-
-[링크](https://yeomko.tistory.com/40)에 따르면 Lecunn 초기화 방법의 아이디어는 확률분포를 `fan_in`으로 조절하고자 하는 것이라고 합니다.
-
+Lecunn 초기화 방법의 아이디어는 확률분포를 `fan_in`으로 조절하고자 하는 것이라고 합니다.
 - bound를 계산하기 전에 `_calculate_fan_in_and_fan_out()`이라는 함수를 통해 `fan_in`이라는 값을 계산하는데 input layer의 뉴런 수를 `fan_in`, output layer의 뉴런 수를 `fan_out`이라고 합니다.
 
 lecunn init 논문인 **Efficient BackProp**의 섹션 4.6을 보면 sqrt(1/fan_in)으로 표준편자를 정하고 평균은 0인 uniform하게 초기화합니다.
@@ -98,5 +93,5 @@ lecunn init 논문인 **Efficient BackProp**의 섹션 4.6을 보면 sqrt(1/fan_
 - [Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification](https://arxiv.org/abs/1502.01852v1)
 - [Efficient BackProp](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
 - [갈아먹는 딥러닝 기초 [2] weight initialization](https://yeomko.tistory.com/40)
-- [Pytorch](https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules)
-- [StackOverflow](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)
+- [https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules](https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules)
+- [https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)
