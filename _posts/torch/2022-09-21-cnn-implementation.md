@@ -12,13 +12,24 @@ tags: [torch]
 ## CNN
 CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
 구현해보려는 CNN의 구조는 다음과 같습니다.  
-- Layer1 : Conv2d(1, 5, 5) -> ReLU -> MaxPool2d(2, 2)
-- Layer2 : Conv2d(5, 7, 5) -> ReLU -> MaxPool2d(2, 2)
-- Flatten Layer
-- Linear Layer
+```
+CNN(
+  (layer1): Sequential(
+    (0): Conv2d(1, 5, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (layer2): Sequential(
+    (0): Conv2d(5, 7, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (flatten): Flatten(start_dim=1, end_dim=-1)
+  (fc): Linear(in_features=112, out_features=10, bias=True)
+)
+```
 
-## Conv2d
-### Convolution
+## Convolution
 단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.
 - Numpy를 이용하는 방법
 - FFT를 이용하는 방법  
@@ -31,7 +42,7 @@ FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 
 - 잘려진 이미지들을 하나씩 꺼내 커널과 element-wise product를 진행하여 더한 값들을 리턴합니다.  
 - for문으로 커널을 움직일 필요 없이 곱셈과 합 연산만 진행하므로 속도가 빠릅니다.
 
-### Forward
+## Forward
 Conv2d 레이어의 forward를 먼저 보겠습니다.  
 (3,3)인 입력 X, (2,2)인 가중치 W를 convolution해서 (2,2)인 출력 O를 계산한다고 가정합니다.  
 ![](https://drive.google.com/uc?export=view&id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH)
@@ -44,7 +55,7 @@ $o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$
 $o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$
 
 
-### Backward
+## Backward
 이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.  
 Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 것을 추천드립니다.  
 
@@ -150,8 +161,8 @@ Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss(Negative Log Likelihood)로 �
 
 ## Result
 저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.  
-![](https://drive.google.com/uc?export=view&id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD){:width="500"}  
-![](https://drive.google.com/uc?export=view&id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj){:width="500"}  
+![](https://drive.google.com/uc?export=view&id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD){:width="400"}
+![](https://drive.google.com/uc?export=view&id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj){:width="400"}  
 
 이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.
 

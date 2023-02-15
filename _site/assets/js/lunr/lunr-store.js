@@ -630,7 +630,7 @@ var store = [{
         "teaser": null
       },{
         "title": "python으로 CNN 구현하기",
-        "excerpt":"Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다. CNN CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 구현해보려는 CNN의 구조는 다음과 같습니다. Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2) Layer2 :...","categories": ["Pytorch"],
+        "excerpt":"Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다. CNN CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 구현해보려는 CNN의 구조는 다음과 같습니다. CNN( (layer1): Sequential( (0): Conv2d(1, 5, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/cnn-implementation/",
         "teaser": null

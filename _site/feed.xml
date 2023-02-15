@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-15T17:40:30+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-15T17:47:42+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -85,6 +85,11 @@
 
 <h3 id="next">Next</h3>
 <p>RNN의 마지막으로 LSTM까지 구현해보려고 합니다. LSTM이 RNN의 long-term dependency 문제를 해결한 모델로 여기까지는 구현해야한다고 생각되어 진행할 생각입니다.</p>
+
+<h3 id="code">Code</h3>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+</ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
@@ -352,15 +357,23 @@ FileBeat -- Logstash -|
 <h2 id="cnn">CNN</h2>
 <p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
 구현해보려는 CNN의 구조는 다음과 같습니다.</p>
-<ul>
-  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
-  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
-  <li>Flatten Layer</li>
-  <li>Linear Layer</li>
-</ul>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CNN(
+  (layer1): Sequential(
+    (0): Conv2d(1, 5, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (layer2): Sequential(
+    (0): Conv2d(5, 7, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (flatten): Flatten(start_dim=1, end_dim=-1)
+  (fc): Linear(in_features=112, out_features=10, bias=True)
+)
+</code></pre></div></div>
 
-<h2 id="conv2d">Conv2d</h2>
-<h3 id="convolution">Convolution</h3>
+<h2 id="convolution">Convolution</h2>
 <p>단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.</p>
 <ul>
   <li>Numpy를 이용하는 방법</li>
@@ -377,7 +390,7 @@ FileBeat -- Logstash -|
   <li>for문으로 커널을 움직일 필요 없이 곱셈과 합 연산만 진행하므로 속도가 빠릅니다.</li>
 </ul>
 
-<h3 id="forward">Forward</h3>
+<h2 id="forward">Forward</h2>
 <p>Conv2d 레이어의 forward를 먼저 보겠습니다.<br />
 (3,3)인 입력 X, (2,2)인 가중치 W를 convolution해서 (2,2)인 출력 O를 계산한다고 가정합니다.<br />
 <img src="https://drive.google.com/uc?export=view&amp;id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH" alt="" />
@@ -389,7 +402,7 @@ $o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</p>
 
 <p>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</p>
 
-<h3 id="backward">Backward</h3>
+<h2 id="backward">Backward</h2>
 <p>이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.<br />
 Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 것을 추천드립니다.</p>
 
@@ -494,8 +507,8 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 
 <h2 id="result">Result</h2>
 <p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="500" /><br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="500" /></p>
+<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="400" />
+<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="400" /></p>
 
 <p>이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.</p>
 
@@ -585,7 +598,7 @@ $</p>
 
 <p>벡터 계산이나 다른 수식 계산에 도움이 되는 numpy 없이 구현하려고 하니 코드에서 실수를 많이 했습니다. 계산 결과를 확인하기 위해 torch나 numpy에 있는 똑같은 함수를 불러오고 저의 코드를 불러와 계산결과가 맞는지 계속 확인했습니다.</p>
 
-<p>torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다.(라이브러리 개발자분들 존경합니다.) 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.</p>
+<p>torch로 모델을 학습하는 방법과 최대한 유사하게 작성할 수 있도록 구현하고자 했습니다. torch에서는 autograd 기능과 텐서를 사용할 수 있어 사용자가 쉽게 모델을 학습할 수 있었습니다. 하지만 직접 구현하려면 역전파를 위해 레이어마다 미분을 진행해줘야 하는 과정이 추가되어 생각보다 구현이 어려웠습니다.</p>
 
 <h3 id="문제점">문제점</h3>
 <p>가장 큰 문제점은 e^x 함수의 Overflow 현상입니다. 입력값이 음수이면서 큰 수일 때 softmax와 sigmoid 계산에서 overflow 현상이 일어났습니다.</p>
@@ -605,7 +618,7 @@ $</p>
   <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
   <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
   <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
-  <li>[https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html](https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</li>
+  <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</a></li>
 </ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
   <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.</p>
 </blockquote>

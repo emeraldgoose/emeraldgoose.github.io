@@ -1,4 +1,4 @@
-I"�,<h2 id="related">Related</h2>
+I"Z-<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.</p>
@@ -7,15 +7,23 @@
 <h2 id="cnn">CNN</h2>
 <p>CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 
 구현해보려는 CNN의 구조는 다음과 같습니다.</p>
-<ul>
-  <li>Layer1 : Conv2d(1, 5, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
-  <li>Layer2 : Conv2d(5, 7, 5) -&gt; ReLU -&gt; MaxPool2d(2, 2)</li>
-  <li>Flatten Layer</li>
-  <li>Linear Layer</li>
-</ul>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CNN(
+  (layer1): Sequential(
+    (0): Conv2d(1, 5, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (layer2): Sequential(
+    (0): Conv2d(5, 7, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))
+    (1): ReLU()
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+  )
+  (flatten): Flatten(start_dim=1, end_dim=-1)
+  (fc): Linear(in_features=112, out_features=10, bias=True)
+)
+</code></pre></div></div>
 
-<h2 id="conv2d">Conv2d</h2>
-<h3 id="convolution">Convolution</h3>
+<h2 id="convolution">Convolution</h2>
 <p>단순하게 for문 중첩으로 Convolution을 구현하면 연산속도가 너무 느려지기 때문에 다른 방법들을 찾아봤습니다.</p>
 <ul>
   <li>Numpy를 이용하는 방법</li>
@@ -32,7 +40,7 @@
   <li>for문으로 커널을 움직일 필요 없이 곱셈과 합 연산만 진행하므로 속도가 빠릅니다.</li>
 </ul>
 
-<h3 id="forward">Forward</h3>
+<h2 id="forward">Forward</h2>
 <p>Conv2d 레이어의 forward를 먼저 보겠습니다.<br />
 (3,3)인 입력 X, (2,2)인 가중치 W를 convolution해서 (2,2)인 출력 O를 계산한다고 가정합니다.<br />
 <img src="https://drive.google.com/uc?export=view&amp;id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH" alt="" />
@@ -44,12 +52,13 @@ $o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</p>
 
 <p>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</p>
 
-<h3 id="backward">Backward</h3>
+<h2 id="backward">Backward</h2>
 <p>이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.<br />
 Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 것을 추천드립니다.</p>
 
-<p>가장 먼저, forward에서 계산한 모든 식을 weight에 대해 편미분을 시도합니다.<br />
-$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</p>
+<p>가장 먼저, forward에서 계산한 모든 식을 weight에 대해 편미분을 시도합니다.</p>
+
+<p>$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</p>
 
 <p>$\frac{do_{12}}{dk_{11}}=x_{12} \quad \frac{do_{12}}{dk_{12}}=x_{13} \quad \frac{do_{12}}{dk_{21}}=x_{22} \quad \frac{do_{12}}{dk_{22}}=x_{23}$</p>
 
@@ -58,15 +67,14 @@ $\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac
 <p>$\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$</p>
 
 <p>이제 weight의 gradient 하나만 계산해보면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$</li>
-  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</li>
-</ul>
+
+<p>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$</p>
+
+<p>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</p>
 
 <p>위에서 계산한 값을 대입하면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</li>
-</ul>
+
+<p>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</p>
 
 <p>따라서, <strong>weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.</strong><br />
 bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.
@@ -75,54 +83,68 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 <p>이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.</p>
 
 <p>이번에는 출력 O를 계산하는 forward 식에서 입력 x에 대해 편미분을 계산해두겠습니다.</p>
-<ul>
-  <li>$\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$</li>
-  <li>$\frac{do_{12}}{dx_{12}}=k_{11} \quad \frac{do_{12}}{dx_{13}}=k_{12} \quad \frac{do_{12}}{dx_{22}}=k_{21} \quad \frac{do_{12}}{dx_{23}}=k_{22}$</li>
-  <li>$\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$</li>
-  <li>$\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$</li>
-</ul>
+
+<p>$\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$</p>
+
+<p>$\frac{do_{12}}{dx_{12}}=k_{11} \quad \frac{do_{12}}{dx_{13}}=k_{12} \quad \frac{do_{12}}{dx_{22}}=k_{21} \quad \frac{do_{12}}{dx_{23}}=k_{22}$</p>
+
+<p>$\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$</p>
+
+<p>$\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$</p>
 
 <p>다음 입력값 각각에 대한 gradient인 $\frac{dL}{dX}$값을 다음과 같이 계산할 수 있습니다.</p>
-<ul>
-  <li>$\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$</li>
-  <li>$\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$</li>
-  <li>$\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$</li>
-  <li>$\frac{dL}{dx_{21}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{21}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{21}}$</li>
-  <li>$\frac{dL}{dx_{22}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{22}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{22}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{22}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{22}}$</li>
-  <li>$\frac{dL}{dx_{23}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{23}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{23}}$</li>
-  <li>$\frac{dL}{dx_{31}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{31}}$</li>
-  <li>$\frac{dL}{dx_{32}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{32}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{32}}$</li>
-  <li>$\frac{dL}{dx_{33}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{33}}$</li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$</p>
+
+<p>$\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$</p>
+
+<p>$\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$</p>
+
+<p>$\frac{dL}{dx_{21}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{21}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{21}}$</p>
+
+<p>$\frac{dL}{dx_{22}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{22}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{22}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{22}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{22}}$</p>
+
+<p>$\frac{dL}{dx_{23}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{23}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{23}}$</p>
+
+<p>$\frac{dL}{dx_{31}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{31}}$</p>
+
+<p>$\frac{dL}{dx_{32}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{32}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{32}}$</p>
+
+<p>$\frac{dL}{dx_{33}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{33}}$</p>
 
 <p>위의 식에 다시 정리해둔 값을 대입하면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</li>
-  <li>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</li>
-  <li>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</li>
-  <li>$\frac{dL}{dx_{21}} = d_{21} \cdot k_{11} + d_{11} \cdot k_{21}$</li>
-  <li>$\frac{dL}{dx_{22}} = d_{22} \cdot k_{11} + d_{21} \cdot k_{12} + d_{12} \cdot k_{21} + d_{11} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{23}} = d_{22} \cdot k_{12} + d_{12} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{31}} = d_{21} \cdot k_{21}$</li>
-  <li>$\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$</li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</p>
+
+<p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</p>
+
+<p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</p>
+
+<p>$\frac{dL}{dx_{21}} = d_{21} \cdot k_{11} + d_{11} \cdot k_{21}$</p>
+
+<p>$\frac{dL}{dx_{22}} = d_{22} \cdot k_{11} + d_{21} \cdot k_{12} + d_{12} \cdot k_{21} + d_{11} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{23}} = d_{22} \cdot k_{12} + d_{12} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{31}} = d_{21} \cdot k_{21}$</p>
+
+<p>$\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$</p>
 
 <p>식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 이해가 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.</p>
-<ul>
-  <li>
-    <p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
-<img src="https://drive.google.com/uc?export=view&amp;id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW" alt="" width="300" /></p>
-  </li>
-  <li>
-    <p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$
-<img src="https://drive.google.com/uc?export=view&amp;id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V" alt="" width="200" /></p>
-  </li>
-  <li>
-    <p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
-<img src="https://drive.google.com/uc?export=view&amp;id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ" alt="" width="300" /></p>
-  </li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW" alt="" width="300" /></p>
+
+<p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V" alt="" width="200" /></p>
+
+<p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ" alt="" width="300" /></p>
 
 <p>파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.<br />
 따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong><br />
@@ -135,8 +157,8 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 
 <h2 id="result">Result</h2>
 <p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="500" /><br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="500" /></p>
+<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="400" />
+<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="400" /></p>
 
 <p>이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.</p>
 
