@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-11T13:38:58+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-15T17:40:30+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -12,27 +12,25 @@
 
 <h2 id="forward">Forward</h2>
 <p>RNN 레이어의 수식과 파라미터들의 size들은 pytorch RNN 문서에 있는 수식으로 사용했습니다.</p>
-<ul>
-  <li>$h_t = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</li>
-</ul>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">h_t</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x_t</span><span class="p">,</span> <span class="n">wih</span><span class="p">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">bih</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">h_prev</span><span class="p">,</span> <span class="n">whh</span><span class="p">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">bhh</span><span class="p">)</span>
-</code></pre></div></div>
+<p>$h_t = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
 
 <p>그리고 pytorch의 RNN 레이어에는 <code class="language-plaintext highlighter-rouge">num_layers</code>라는 인자를 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">num_layers</code>는 하나의 순회를 담당하는 레이어를 얼마나 쌓을지 결정하는 인자이고 기본값은 1입니다. 만약, <code class="language-plaintext highlighter-rouge">num_layers = 2</code>으로 준다면 다음과 같은 그림의 RNN을 얻을 수 있습니다.</p>
 
 <p><img src="https://drive.google.com/uc?export=view&amp;id=1FXnyZZ3IY4KdRQcsupzlUi78AgEXBTsO" alt="" width="500" /></p>
 
-<p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.
-따라서 RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 length와 batch_size의 위치가 바뀝니다.</p>
+<p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
+
+<p>따라서 RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 length와 batch_size의 위치가 바뀝니다.</p>
 
 <p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>입니다. 비선형 함수로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 추가로 사용할 수 있어서 여기에서도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현했습니다.</p>
 
 <h2 id="backward">Backward</h2>
 <p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
 
-<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$<br />
-foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
+<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+
+<p>foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
 
 <p>$s_t = x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh}$</p>
 
@@ -40,24 +38,25 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 
 <p>cost function $J$를 $W_{ih}$, $W_{hh}$, ${x_t}$에 대해 편미분하여 gradient를 구해야 합니다. bias의 경우 편미분할 경우 1이 되므로 따로 유도하지 않겠습니다.</p>
 
-<ul>
-  <li>${\partial J \over \partial x_t} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial x_t}$</li>
-  <li>${\partial J \over \partial W_{ih}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{ih}}$</li>
-  <li>${\partial J \over \partial W_{hh}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{hh}}$</li>
-</ul>
+<p>${\partial J \over \partial x_t} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial x_t}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{ih}}$</p>
+
+<p>${\partial J \over \partial W_{hh}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{hh}}$</p>
 
 <p>여기서 비선형 함수가 <code class="language-plaintext highlighter-rouge">tanh</code>인 경우 <code class="language-plaintext highlighter-rouge">tanh</code> 함수의 미분은 다음과 같습니다.</p>
-<ul>
-  <li>$\text{tanh}(x)$ -&gt; $1 - \text{tanh}(x)^2$</li>
-  <li>따라서, ${\partial h_t \over \partial s_t} = 1 - \text{tanh}(s_t)^2 = 1 - h_t^2$</li>
-</ul>
+
+<p>$\text{tanh}(x)$ -&gt; $1 - \text{tanh}(x)^2$</p>
+
+<p>따라서, ${\partial h_t \over \partial s_t} = 1 - \text{tanh}(s_t)^2 = 1 - h_t^2$</p>
 
 <p>역전파 과정에서 출력층에서 들어오는 gradient가 ${\partial J \over \partial h_t} = dout$라고 생각하게 되면 다음과 같은 수식으로 구할 수 있습니다.</p>
-<ul>
-  <li>${\partial J \over \partial x_t} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</li>
-  <li>${\partial J \over \partial W_{ih}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^T \cdot x_t$</li>
-  <li>${\partial J \over \partial W_{hh}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^T \cdot h_{t-1}$</li>
-</ul>
+
+<p>${\partial J \over \partial x_t} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^T \cdot x_t$</p>
+
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^T \cdot h_{t-1}$</p>
 
 <p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
 
@@ -65,31 +64,13 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 
 <p>따라서 현제 셀에 대해 다음과 같은 코드로 구현할 수 있습니다. 가장 마지막 셀에 들어가는 <code class="language-plaintext highlighter-rouge">dhnext</code>는 0으로 초기화하여 넣어주면 됩니다. <code class="language-plaintext highlighter-rouge">h_next</code>는 t시점의 셀에서 계산된 hidden state 벡터이고 <code class="language-plaintext highlighter-rouge">h_prev</code>는 t시점의 셀로 들어온 hidden state 벡터를 말합니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dhnext</span> <span class="o">+=</span> <span class="n">dout</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-<span class="n">dhtanh</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">h_next</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dhnext</span>
-
-<span class="n">dwih</span> <span class="o">+=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
-<span class="n">dbih</span> <span class="o">+=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">dwhh</span> <span class="o">+=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="n">h_prev</span><span class="p">)</span>
-<span class="n">dbhh</span> <span class="o">+=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">dx</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">,</span> <span class="n">wih</span><span class="p">)</span>
-<span class="n">dhnext</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dhtanh</span><span class="p">,</span> <span class="n">whh</span><span class="p">)</span>
-</code></pre></div></div>
+<script src="https://gist.github.com/emeraldgoose/7d17b6e294d5f746a91b542b093a6b68.js"></script>
 
 <h2 id="result">Result</h2>
 <p>이전과 마찬가지로 MNIST 5000장을 훈련데이터, 1000장을 테스트데이터로 사용하여 <code class="language-plaintext highlighter-rouge">tanh</code>, <code class="language-plaintext highlighter-rouge">relu</code>를 사용하여 결과를 확인해봤습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">rnn</span> <span class="o">=</span> <span class="n">RNN</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">28</span><span class="p">,</span><span class="n">hidden_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span><span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">nonlinearity</span><span class="o">=</span><span class="s">'tanh'</span><span class="p">,</span><span class="n">batch_first</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">hcrot</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-        <span class="bp">self</span><span class="p">.</span><span class="n">sequential</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">rnn</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">fc</span><span class="p">]</span>
-    
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">rnn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">fc</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-</code></pre></div></div>
+
+<script src="https://gist.github.com/emeraldgoose/1a03bf1d8296cf80e74e55d46a324d68.js"></script>
+
 <p>사용된 모델은 RNN과 Linear 레이어를 사용하고 RNN의 마지막 출력 벡터를 Linear에 통과시키는 방법으로 사용했습니다.</p>
 
 <p>먼저, <code class="language-plaintext highlighter-rouge">tanh</code>을 사용한 경우 loss와 Acc의 결과입니다.<br />
@@ -117,23 +98,33 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 이 사이드 프로젝트를 진행하게 되었습니다.</p>
 </blockquote>
 
-<h3 id="data">Data</h3>
-<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려웠습니다. 그래서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
+<p><img src="https://user-images.githubusercontent.com/50171632/205239615-69152b4b-112b-492e-ae90-ef752b436f6b.png" alt="" width="700" /></p>
 
-<p>생산되는 로그는 다음과 같습니다.<br />
-<code class="language-plaintext highlighter-rouge">206.176.215.237 - - [02/Dec/2022:18:57:34 +0900] "GET /api/items HTTP/1.1" 200 3456 477 "https://www.dummmmmy.com" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"</code></p>
+<h3 id="data">Data</h3>
+<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
+
+<p>생산되는 로그는 다음과 같습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>206.176.215.237 - - [02/Dec/2022:18:57:34 +0900] "GET /api/items HTTP/1.1" 200 3456 477 "https://www.dummmmmy.com" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"
+</code></pre></div></div>
 
 <h3 id="producerfilebeat">Producer(FileBeat)</h3>
-<p>서버 접속 기록을 로깅하는 서버에서 로그를 외부로 보내주는 무언가 필요했습니다. 로그 파일을 ELK 스택의 logstash로 읽는 방법이 있지만 저는 접속 서버에서 logstash를 사용하는 것은 자원 부담이 있다고 생각했습니다. 그래서 losgtash를 밖으로 빼내 수집 서버를 따로 두고 logstash와 잘 맞는 FileBeat를 서버에 동작시켰습니다. FileBeat는 /var/log/httpd/access_log/*.log 파일을 읽어 Logstash 서버로 추가된 로그를 전달하는 역할을 합니다.</p>
+<p>서버 접속 기록을 로깅하는 서버에서 로그를 외부로 보내주는 무언가 필요했습니다. 로그 파일을 ELK 스택의 logstash로 읽는 방법이 있지만 Elasticsearch와 HDFS에 적재하려면 losgtash를 밖으로 빼내 수집 서버를 따로 두고 서버에는 logstash와 잘 맞는 FileBeat를 사용하는 것이 맞다고 생각했습니다.</p>
 
-<p>FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. 로그파일의 경로를 설정하면 offset을 기억해 추가되는 로그를 외부로 전달하는 역할을 합니다. 비슷한 수집기로 FluentBit가 있고 Fluentd의 무겁다는 단점을 보완한 수집기입니다.</p>
+<p>FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. 로그파일의 경로를 설정하면 offset을 기억해 추가되는 로그를 외부로 전달하는 역할을 합니다.</p>
+
+<p>FileBeat는 /var/log/httpd/access_log/*.log 파일을 읽어 Logstash 서버로 추가된 로그를 전달하는 역할을 합니다. FileBeat를 사용하면 Logstash에서 별다른 설정 없이 바로 사용할 수 있다는 점도 선택에 영향이 있었습니다.</p>
 
 <h3 id="logstash">Logstash</h3>
 <p>Logstash는 전달받은 로그를 Elasticsearch나 다른 곳으로 전달하는 역할을 합니다. Logstash를 사용한 이유는 람다 아키텍처같은 파이프라인을 생각하고 있기 때문입니다.</p>
 
-<p>람다 아키텍처처럼 실시간으로 수집되어 보여주는 뷰와 배치 처리되어 보여주는 뷰를 제공하는 구조인데 logstash는 여러 경로의 Output을 지원하고 있기 때문에 적합하다고 생각했습니다. 저는 Logstash 서버에 Elasticsearch와 Redis를 연결했습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                      ┌-- Elasticsearch -- Kibana
+FileBeat -- Logstash -| 
+                      └-- HDFS ------- Postgresql
+</code></pre></div></div>
 
-<p>logstash는 *.conf 파일을 사용하여 사용자가 원하는 데이터 가공이 가능합니다. 저는 각 항목과 ip의 위치주소, User Agent 정보를 파싱하는 필터를 넣어 파싱할 수 있었습니다. 로그를 파싱할때는 grok을 사용했고 다음과 같은 설정값을 사용했습니다.</p>
+<p>람다 아키텍처처럼 실시간으로 수집되어 보여주는 뷰와 배치 처리되어 보여주는 뷰를 제공하는 구조인데 logstash는 여러 경로의 Output을 지원하고 있기 때문에 적합하다고 생각했습니다.</p>
+
+<p>logstash는 *.conf 파일을 사용하여 사용자가 원하는 데이터 가공이 가능합니다. 저는 각 항목과 ip의 위치주소, User Agent 정보를 파싱하는 필터를 넣어 파싱할 수 있었습니다. 로그를 파싱할때는 grok을 사용했고 다음과 같은 설정값을 사용했습니다. geoip와 useragent 플러그인을 사용하면 IP의 위치(국가, 도시)와 접속한 브라우저, OS 등을 추가할 수 있습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter {
   grok {
     match =&gt; {
@@ -151,7 +142,15 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 </code></pre></div></div>
 
 <h3 id="elasticsearch-kibana">Elasticsearch, Kibana</h3>
-<p>Elasticsearch는 logstash로부터 전달받은 데이터를 저장하는 DB역할을 합니다. Kibana는 Elasticsearch의 데이터를 보여주는 대시보드 역할을 합니다. Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도커로 올리면 맥북이 감당하지 못할 것 같아서 서버를 빌려주는 플랫폼을 알아보게 되었습니다.</p>
+<p>Elasticsearch는 logstash로부터 전달받은 데이터를 저장하는 DB역할을 합니다. Kibana는 Elasticsearch의 데이터를 보여주는 대시보드 역할을 합니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FileBeat -- Logstash -- Elasticsearch -┬- Kibana
+                                       |
+                                       └- HDFS
+</code></pre></div></div>
+<p>위와 같은 파이프라인을 생각해보긴 했는데 낮은 사양의 ES 서버에 데이터 저장과 추출을 하는 것이 너무 부담되었습니다. 그래서 ES는 따로 두고 Logstash에서 HDFS로 전달하는 것으로 설계했습니다.</p>
+
+<p>Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도커로 올리면 맥북이 감당하지 못할 것 같아서 서버를 빌려주는 플랫폼을 알아보게 되었습니다.</p>
 
 <p>처음에는 GCP 프리티어를 생각했다가 <a href="https://ide.goorm.io">구름</a>이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다. 아래 주소로 Kibana에 접속할 수 있지만 동작이 느리므로 조금 기다려주세요.</p>
 <ul>
@@ -160,14 +159,14 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 </ul>
 
 <h3 id="hdfs">HDFS</h3>
-<p>로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. 보통 AWS S3같은 오브젝트 스토리지를 사용하는 것 같은데 오픈소스로 Apache Ozone이 있지만 아직 잘 사용되지는 않은 것 같아서 하둡으로 결정했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.</p>
+<p>로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.</p>
 
-<p>하둡이 설치되는 도커를 더 늘리기는 어려워서 단일 노드를 사용하지만 설정은 분산 설정이 되어있는 모드인 Pseudo Distribute 모드로 사용했습니다.</p>
+<p>하둡이 설치되는 도커를 더 늘리기는 어려워서 단일 노드로 사용하지만 설정은 분산 설정이 되어있는 모드인 Pseudo Distribute 모드로 사용했습니다.</p>
 
-<p>Logstash는 webhdfs를 통해 데이터를 전달할 수 있는데 webhdfs를 사용하기 위해 /etc/hosts를 수정해야 하는 점이 있었습니다. Pseudo Distribute 모드를 사용하게 되면 Data Node의 주소가 컨테이너 id로 적용되어 /etc/hosts의 <code class="language-plaintext highlighter-rouge">컨테이너ip localhost</code>를 추가해야 합니다. 저는 hosts 파일을 수정하는 것이 싫어서 webhdfs를 사용하지 않는 방법으로 hdfs에 데이터를 적재했습니다.</p>
+<p>HDFS는 특성상 파일을 여러번 수정하는데 좋지 않아 데이터를 모아 큰 파일을 한번에 적재했습니다. Logstash도 Output으로 데이터를 내보내어 중간에 저장할 공간이 필요했습니다. 저는 이 공간이 In-memory DB가 적당하다고 생각되어서 Redis를 두어 데이터를 저장하고 Spark 스크립트로 HDFS에 적재했습니다.</p>
 
 <h3 id="redis">Redis</h3>
-<p>Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다. 그래서 in-memory db로 사용되는 것 중 redis를 선택하게 되었습니다.</p>
+<p>Logstash로부터 하루 간격의 데이터를 받아 hdfs로 한번에 적재하기 위해 logstash와 HDFS사이에 임시 데이터 저장소가 필요했습니다. kafka는 현업에서 자주 쓰이는 플랫폼이지만 zookeeper가 추가로 설치되어야 하므로 도커를 추가로 올리는데 부담되어 제외했습니다. 그래서 redis를 선택하게 되었습니다.</p>
 
 <p>Logstash는 redis로 보낼때 key를 지정해야합니다. key는 그날 날짜로 지정하여 연속적으로 데이터를 redis로 전달하여 하루 간격의 배치 처리 스크립트가 실행될 때 어제 날짜로 key 접근하여 데이터를 모을 수 있었습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>output {
@@ -181,9 +180,37 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 </code></pre></div></div>
 
 <h3 id="spark">Spark</h3>
-<p>Spark는 하둡이 설치된 도커에 같이 설치했습니다. 처음에는 하둡의 Yarn의 관리를 받게 하려고 설치했지만 단일 노드로 돌리느라 local과 yarn의 차이가 잘 안나서 pyspark를 그냥 local로 돌렸습니다. 따라서 spark를 모두 활용하지는 못했습니다.</p>
+<p>Spark는 하둡이 설치된 도커에 같이 설치했습니다. 처음에는 하둡의 Yarn의 관리를 받게 하려고 설치했지만 단일 노드로 돌리느라 local과 yarn의 차이가 나지는 않았습니다. 아래 pyspark 스크립트를 spark-submit 명령어로 실행하도록 했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="p">,</span> <span class="n">argparse</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 
-<p>redis에 저장된 데이터를 가져오고 hdfs에 적재하는 처리를 하는 pyspark 스크립트를 실행하는 역할을 합니다.</p>
+<span class="k">def</span> <span class="nf">get_logs_from_redis</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rq</span> <span class="o">=</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'redis'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">rq</span><span class="p">.</span><span class="n">llen</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">rq</span><span class="p">.</span><span class="n">brpop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">value</span><span class="p">).</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s">'records'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">r</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">r</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--start_date'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">start_date</span><span class="p">,</span> <span class="s">'%Y-%m-%d'</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">start_date</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y%m%d'</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">get_logs_from_redis</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">'Warehouse'</span><span class="p">).</span><span class="n">getOrCreate</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span><span class="sa">f</span><span class="s">'hdfs://hadoop-spark:9000/warehouse/</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">.parquet'</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s">'append'</span><span class="p">)</span>
+    <span class="n">spark</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
+</code></pre></div></div>
 
 <h3 id="airflow">Airflow</h3>
 <p>배치 스크립트를 실행하도록 Airflow를 사용했습니다. 하둡 도커에서 spark-submit을 실행하는 커맨드를 사용할 수 있도록 SSHOperator가 포함된 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.</p>
@@ -199,7 +226,11 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span>
 <span class="n">one_day_ago</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">kst</span><span class="p">)</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="o">@</span><span class="n">dag</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s">'logs_redis_to_hdfs'</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'@daily'</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">one_day_ago</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'batch'</span><span class="p">,</span><span class="s">'redis'</span><span class="p">,</span><span class="s">'hdfs'</span><span class="p">])</span>
+<span class="o">@</span><span class="n">dag</span><span class="p">(</span>
+    <span class="n">dag_id</span><span class="o">=</span><span class="s">'logs_redis_to_hdfs'</span><span class="p">,</span> 
+    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'@daily'</span><span class="p">,</span> 
+    <span class="n">start_date</span><span class="o">=</span><span class="n">one_day_ago</span><span class="p">,</span> 
+    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'batch'</span><span class="p">,</span><span class="s">'redis'</span><span class="p">,</span><span class="s">'hdfs'</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">parquet_to_hdfs_from_logstash</span><span class="p">():</span>
     <span class="n">hook</span> <span class="o">=</span> <span class="n">SSHHook</span><span class="p">(</span>
         <span class="n">remote_host</span><span class="o">=</span><span class="s">'hadoop-spark'</span><span class="p">,</span>
@@ -241,8 +272,7 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
         <span class="n">sc</span> <span class="o">=</span> <span class="n">pyspark</span><span class="p">.</span><span class="n">SparkContext</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="s">'local'</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">pyspark</span><span class="p">.</span><span class="n">SparkConf</span><span class="p">())</span>
         <span class="n">sqlContext</span> <span class="o">=</span> <span class="n">pyspark</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s">'hdfs://hadoop-spark:9000/warehouse/</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">.parquet'</span>
-            <span class="p">)</span>
+            <span class="sa">f</span><span class="s">'hdfs://hadoop-spark:9000/warehouse/</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">.parquet'</span><span class="p">)</span>
         <span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span><span class="s">'data.parquet'</span><span class="p">)</span>
     
     <span class="o">@</span><span class="n">task</span>
@@ -259,7 +289,10 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
                 <span class="s">"user_agent.os.version"</span> <span class="p">:</span> <span class="s">"os_version"</span>
             <span class="p">}</span>
         <span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'time_local'</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s">'%d/%b/%Y:%H:%M:%S +0900'</span><span class="p">).</span><span class="n">dt</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%dT%H:%M:%S'</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s">'time_local'</span><span class="p">],</span> 
+            <span class="nb">format</span><span class="o">=</span><span class="s">'%d/%b/%Y:%H:%M:%S +0900'</span><span class="p">).</span><span class="n">dt</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%dT%H:%M:%S'</span><span class="p">))</span>
+
         <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
             <span class="p">[</span><span class="s">'timestamp'</span><span class="p">,</span><span class="s">'UA'</span><span class="p">,</span><span class="s">'body_bytes_sent'</span><span class="p">,</span><span class="s">'country_name'</span><span class="p">,</span><span class="s">'httpversion'</span><span class="p">,</span><span class="s">'message'</span><span class="p">,</span><span class="s">'method'</span><span class="p">,</span>
             <span class="s">'referrer'</span><span class="p">,</span><span class="s">'remote_addr'</span><span class="p">,</span><span class="s">'remote_user'</span><span class="p">,</span><span class="s">'request'</span><span class="p">,</span><span class="s">'response_time'</span><span class="p">,</span><span class="s">'status'</span><span class="p">,</span><span class="s">'device'</span><span class="p">,</span>
@@ -267,7 +300,8 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
         <span class="p">]</span>
 
         <span class="n">df_yesterday</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span>
-            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T0:0:0'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T23:59:59'</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T0:0:0'</span><span class="p">)</span> <span class="o">&amp;</span> \
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T23:59:59'</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="n">df_today</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span>
             <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T23:59:59'</span><span class="p">)</span>
@@ -281,17 +315,28 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
         <span class="n">df_yesterday</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s">'yesterday.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">)</span>
         <span class="n">df_today</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s">'today.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">)</span>
 
-        <span class="n">df_yesterday</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="n">df_today</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="p">(</span><span class="n">yesterday</span> <span class="o">+</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)).</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">df_yesterday</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
+            <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> 
+            <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span> 
+            <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        
+        <span class="n">df_today</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="p">(</span><span class="n">yesterday</span> <span class="o">+</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)).</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
+            <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+            <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
         <span class="n">engine</span><span class="p">.</span><span class="n">dispose</span><span class="p">()</span>
 
     <span class="n">get_logs_from_hdfs</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">transform</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">store_to_postgres</span><span class="p">()</span>
     
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">batch_to_rdb</span><span class="p">()</span>
 </code></pre></div></div>
+<p>데이터 처리는 Pandas를 이용했습니다. Airflow 스크립트에서 데이터 처리를 하려고 했지만 Spark DataFrame을 사용하기 위해 SparkSession을 사용해야 하는데(제가 잘 몰라서 그런것일 수도 있습니다.) 에러 때문에 사용하지 못했습니다. HDFS에서 parquet 파일을 가져와 pyarrow를 이용하여 pandas DataFrame으로 변환하여 데이터 처리를 수행했습니다.</p>
+
 <p><code class="language-plaintext highlighter-rouge">transform()</code> 과정에서 df_yesterday와 df_today 데이터프레임으로 나누는 코드가 존재합니다. 이것은 logstash가 UTC로 동작하기 때문입니다. 기록되는 날이 UTC 기준이라서 한국 시간과 9시간 차이가 나기 때문에 Redis에 같은 키에 다른 날짜의 로그가 들어오게 됩니다.</p>
 
-<p>예를들면, 한국시각 2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
+<p>예를들면, UTC   2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
 
 <p>airflow에 SparkSession으로 세션을 생성하면 30초의 timeout으로 DAG가 등록되지 않았습니다.(정확한 이유가 맞는지는 잘 모르겠습니다.) 그래서 SparkContext를 통해 hdfs에 접근하는 방법으로 배치 파일을 구성했습니다.</p>
 
@@ -322,14 +367,9 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
   <li>FFT를 이용하는 방법</li>
 </ul>
 
-<p>FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 어려워서 포기하고 첫 번째 방법인 Numpy를 사용하는 방법을 선택했습니다. 코드는 스택 오버플로우에 있는 코드를 가져와서 사용했습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">convolve2d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-    <span class="n">a</span><span class="p">,</span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">f</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">strd</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">lib</span><span class="p">.</span><span class="n">stride_tricks</span><span class="p">.</span><span class="n">as_strided</span>
-    <span class="n">subM</span> <span class="o">=</span> <span class="n">strd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span> <span class="n">strides</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">strides</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'ij,ijkl-&gt;kl'</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">subM</span><span class="p">)</span>
-</code></pre></div></div>
+<p>FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 어려워서 포기하고 첫 번째 방법인 Numpy를 사용하는 방법을 선택했습니다. 코드는 스택 오버플로우에 있는 코드를 가져와서 사용했습니다.
+<script src="https://gist.github.com/emeraldgoose/edd919bed30ae5ea2a1b021caaea33af.js"></script></p>
+
 <p>동작방법은 다음과 같습니다.</p>
 <ul>
   <li>적용할 이미지를 커널 크기의 맞게 잘라서 저장합니다.</li>
@@ -340,109 +380,112 @@ foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(�
 <h3 id="forward">Forward</h3>
 <p>Conv2d 레이어의 forward를 먼저 보겠습니다.<br />
 (3,3)인 입력 X, (2,2)인 가중치 W를 convolution해서 (2,2)인 출력 O를 계산한다고 가정합니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH" alt="" /></p>
-<ul>
-  <li>$o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</li>
-  <li>$o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$</li>
-  <li>$o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$</li>
-  <li>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</li>
-</ul>
+<img src="https://drive.google.com/uc?export=view&amp;id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH" alt="" />
+$o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$</p>
+
+<p>$o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$</p>
+
+<p>$o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$</p>
+
+<p>$o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$</p>
 
 <h3 id="backward">Backward</h3>
 <p>이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.<br />
 Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 것을 추천드립니다.</p>
 
 <p>가장 먼저, forward에서 계산한 모든 식을 weight에 대해 편미분을 시도합니다.</p>
-<ul>
-  <li>$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</li>
-  <li>$\frac{do_{12}}{dk_{11}}=x_{12} \quad \frac{do_{12}}{dk_{12}}=x_{13} \quad \frac{do_{12}}{dk_{21}}=x_{22} \quad \frac{do_{12}}{dk_{22}}=x_{23}$</li>
-  <li>$\frac{do_{21}}{dk_{11}}=x_{21} \quad \frac{do_{21}}{dk_{12}}=x_{22} \quad \frac{do_{21}}{dk_{21}}=x_{31} \quad \frac{do_{21}}{dk_{22}}=x_{32}$</li>
-  <li>$\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$</li>
-</ul>
+
+<p>$\frac{do_{11}}{dk_{11}}=x_{11} \quad \frac{do_{11}}{dk_{12}}=x_{12} \quad \frac{do_{11}}{dk_{21}}=x_{21} \quad \frac{do_{11}}{dk_{22}}=x_{22}$</p>
+
+<p>$\frac{do_{12}}{dk_{11}}=x_{12} \quad \frac{do_{12}}{dk_{12}}=x_{13} \quad \frac{do_{12}}{dk_{21}}=x_{22} \quad \frac{do_{12}}{dk_{22}}=x_{23}$</p>
+
+<p>$\frac{do_{21}}{dk_{11}}=x_{21} \quad \frac{do_{21}}{dk_{12}}=x_{22} \quad \frac{do_{21}}{dk_{21}}=x_{31} \quad \frac{do_{21}}{dk_{22}}=x_{32}$</p>
+
+<p>$\frac{do_{22}}{dk_{11}}=x_{22} \quad \frac{do_{22}}{dk_{12}}=x_{23} \quad \frac{do_{22}}{dk_{21}}=x_{32} \quad \frac{do_{22}}{dk_{22}}=x_{33}$</p>
 
 <p>이제 weight의 gradient 하나만 계산해보면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$</li>
-  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</li>
-</ul>
+
+<p>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$</p>
+
+<p>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</p>
 
 <p>위에서 계산한 값을 대입하면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</li>
-</ul>
+
+<p>$\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x_{21} + d_{22} \cdot x_{22} $</p>
 
 <p>따라서, <strong>weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.</strong><br />
-bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Image (B,C,H,W)
-</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">cout</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_channel</span><span class="p">):</span>
-      <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
-          <span class="n">ret</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cout</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
-      <span class="n">ret</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cout</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bias</span><span class="p">[</span><span class="n">cout</span><span class="p">]</span>
-</code></pre></div></div>
+bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.
+<script src="https://gist.github.com/emeraldgoose/d816ef2fddecef83236316f9316dcde0.js"></script></p>
 
 <p>이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.</p>
 
 <p>이번에는 출력 O를 계산하는 forward 식에서 입력 x에 대해 편미분을 계산해두겠습니다.</p>
-<ul>
-  <li>$\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$</li>
-  <li>$\frac{do_{12}}{dx_{12}}=k_{11} \quad \frac{do_{12}}{dx_{13}}=k_{12} \quad \frac{do_{12}}{dx_{22}}=k_{21} \quad \frac{do_{12}}{dx_{23}}=k_{22}$</li>
-  <li>$\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$</li>
-  <li>$\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$</li>
-</ul>
+
+<p>$\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$</p>
+
+<p>$\frac{do_{12}}{dx_{12}}=k_{11} \quad \frac{do_{12}}{dx_{13}}=k_{12} \quad \frac{do_{12}}{dx_{22}}=k_{21} \quad \frac{do_{12}}{dx_{23}}=k_{22}$</p>
+
+<p>$\frac{do_{21}}{dx_{21}}=k_{11} \quad \frac{do_{21}}{dx_{22}}=k_{12} \quad \frac{do_{21}}{dx_{31}}=k_{21} \quad \frac{do_{21}}{dx_{32}}=k_{22}$</p>
+
+<p>$\frac{do_{22}}{dx_{22}}=k_{11} \quad \frac{do_{22}}{dx_{23}}=k_{12} \quad \frac{do_{22}}{dx_{32}}=k_{21} \quad \frac{do_{22}}{dx_{33}}=k_{22}$</p>
 
 <p>다음 입력값 각각에 대한 gradient인 $\frac{dL}{dX}$값을 다음과 같이 계산할 수 있습니다.</p>
-<ul>
-  <li>$\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$</li>
-  <li>$\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$</li>
-  <li>$\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$</li>
-  <li>$\frac{dL}{dx_{21}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{21}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{21}}$</li>
-  <li>$\frac{dL}{dx_{22}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{22}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{22}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{22}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{22}}$</li>
-  <li>$\frac{dL}{dx_{23}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{23}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{23}}$</li>
-  <li>$\frac{dL}{dx_{31}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{31}}$</li>
-  <li>$\frac{dL}{dx_{32}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{32}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{32}}$</li>
-  <li>$\frac{dL}{dx_{33}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{33}}$</li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{11}}$</p>
+
+<p>$\frac{dL}{dx_{12}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{12}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{12}}$</p>
+
+<p>$\frac{dL}{dx_{13}} = \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{13}}$</p>
+
+<p>$\frac{dL}{dx_{21}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{21}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{21}}$</p>
+
+<p>$\frac{dL}{dx_{22}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{22}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{22}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{22}} + \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dx_{22}}$</p>
+
+<p>$\frac{dL}{dx_{23}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{23}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dx_{23}}$</p>
+
+<p>$\frac{dL}{dx_{31}} = \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{31}}$</p>
+
+<p>$\frac{dL}{dx_{32}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{32}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dx_{32}}$</p>
+
+<p>$\frac{dL}{dx_{33}} = \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dx_{33}}$</p>
 
 <p>위의 식에 다시 정리해둔 값을 대입하면 다음과 같습니다.</p>
-<ul>
-  <li>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</li>
-  <li>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</li>
-  <li>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</li>
-  <li>$\frac{dL}{dx_{21}} = d_{21} \cdot k_{11} + d_{11} \cdot k_{21}$</li>
-  <li>$\frac{dL}{dx_{22}} = d_{22} \cdot k_{11} + d_{21} \cdot k_{12} + d_{12} \cdot k_{21} + d_{11} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{23}} = d_{22} \cdot k_{12} + d_{12} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{31}} = d_{21} \cdot k_{21}$</li>
-  <li>$\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$</li>
-  <li>$\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$</li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</p>
+
+<p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</p>
+
+<p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</p>
+
+<p>$\frac{dL}{dx_{21}} = d_{21} \cdot k_{11} + d_{11} \cdot k_{21}$</p>
+
+<p>$\frac{dL}{dx_{22}} = d_{22} \cdot k_{11} + d_{21} \cdot k_{12} + d_{12} \cdot k_{21} + d_{11} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{23}} = d_{22} \cdot k_{12} + d_{12} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{31}} = d_{21} \cdot k_{21}$</p>
+
+<p>$\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$</p>
+
+<p>$\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$</p>
 
 <p>식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 이해가 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.</p>
-<ul>
-  <li>
-    <p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
-<img src="https://drive.google.com/uc?export=view&amp;id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW" alt="" width="300" /></p>
-  </li>
-  <li>
-    <p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$
-<img src="https://drive.google.com/uc?export=view&amp;id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V" alt="" width="200" /></p>
-  </li>
-  <li>
-    <p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
-<img src="https://drive.google.com/uc?export=view&amp;id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ" alt="" width="300" /></p>
-  </li>
-</ul>
+
+<p>$\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW" alt="" width="300" /></p>
+
+<p>$\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V" alt="" width="200" /></p>
+
+<p>$\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ" alt="" width="300" /></p>
 
 <p>파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.<br />
-따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong></p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">cout</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_channel</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
-      <span class="n">flip_w</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
-      <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">dout</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">flip_w</span><span class="p">)</span>
-</code></pre></div></div>
+따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong><br />
+<script src="https://gist.github.com/emeraldgoose/3458dac08e743c36beec99446fc3231f.js"></script></p>
 
 <h2 id="crossentropyloss">CrossEntropyLoss</h2>
 <p>이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러가 일어납니다.</p>
@@ -472,8 +515,7 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
   <li><a href="https://velog.io/@changdaeoh/backpropagationincnn">https://velog.io/@changdaeoh/backpropagationincnn</a></li>
   <li><a href="https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509">https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509</a></li>
   <li><a href="https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec">https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec</a></li>
-</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.]]></summary></entry><entry><title type="html">Python으로 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="Python으로 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<h2 id="동기">동기</h2>
-<blockquote>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.]]></summary></entry><entry><title type="html">Python으로 딥러닝 구현하기</title><link href="http://localhost:4000/pytorch/dl-implement/" rel="alternate" type="text/html" title="Python으로 딥러닝 구현하기" /><published>2022-07-04T00:00:00+09:00</published><updated>2022-07-04T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/dl-implement</id><content type="html" xml:base="http://localhost:4000/pytorch/dl-implement/"><![CDATA[<blockquote>
   <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.</p>
 </blockquote>
 
@@ -482,66 +524,56 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 
 <p>레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Softmax) -&gt; output 으로 생각하고 각 모듈 구현을 시작했습니다.</p>
 
-<p>처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.</p>
-
-<p>그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마이저를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.</p>
-
-<h2 id="계산">계산</h2>
+<h2 id="forward--backward-propagation">Forward &amp; Backward Propagation</h2>
 <p>모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.</p>
 
-<p>먼저, input -&gt; (linear, sigmoid) -&gt; (linear, softmax) -&gt; output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.</p>
-<ul>
-  <li>$y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$</li>
-  <li>$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$</li>
-  <li>$Loss_{MSE} = \sum(\hat{y}-{y})^2$</li>
-</ul>
+<p>먼저, 아래처럼 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Model(
+  (layer1): Sequential(
+    (0): Linear(in_features=784, out_features=256, bias=True)
+    (1): Sigmoid()
+  )
+  (layer2): Sequential(
+    (0): Linear(in_features=256, out_features=10, bias=True)
+    (1): Softmax()
+  )
+)
+</code></pre></div></div>
+<p>$y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$</p>
+
+<p>$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$</p>
+
+<p>$L_{\text{MSE}} = \sum(\hat{y}-{y})^2$</p>
 
 <p>이제, 위 식을 거꾸로 돌려가면서 역전파를 진행합니다.</p>
 
 <p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
-<ul>
-  <li>$\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$</li>
-  <li>$\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot y_1$</li>
-</ul>
+
+<p>$\frac{\partial L}{ \partial w_2}=\frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{dz_2} \cdot \frac{\partial z_2}{\partial w_2}$</p>
+
+<p>${\partial \hat{y} \over \partial z_2} = \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)), \ \delta_{ij}=
+    \begin{cases}
+        1, &amp; i=j \\ 0, &amp; i \ne j
+    \end{cases}
+$</p>
+
+<p>$\frac{\partial L}{\partial w_2} = \frac{2}{m}(\hat{y}-y) \cdot \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)) \cdot y_1$</p>
 
 <p>$W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.</p>
-<ul>
-  <li>$\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$</li>
-  <li>$\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot w_2 \cdot d\sigma_{1} \cdot x$</li>
-</ul>
 
-<p>gradient의 계산에서 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어 방향으로 <strong>이전 레이어의 weight</strong>를 dot product해야 합니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Linear</span><span class="p">:</span>
-    <span class="p">...</span>
-    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
-        <span class="n">dw</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">X</span><span class="p">),</span> <span class="n">dz</span><span class="p">)</span>
-        <span class="n">db</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">sum</span><span class="p">([</span><span class="n">dz</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">))])</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]]</span>
-        <span class="k">return</span> <span class="n">dw</span><span class="p">,</span> <span class="n">db</span>
-</code></pre></div></div>
+<p>$\frac{\partial L}{\partial w_1}=\frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial z_2} \cdot \frac{\partial z_2}{\partial y_1} \cdot \frac{\partial y_1}{\partial z_1} \cdot \frac{\partial z_1}{\partial w_1}$</p>
 
-<p>또한, sigmoid와 softmax를 통과한 출력값들은 역전파때 <strong>element-wise product</strong>를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다.</p>
+<p>${\partial y_1 \over \partial z_1} = \sigma_1(z_1)(1 - \sigma_1(z_1)) = y_1(1 - y_1)$</p>
 
-<p>이 과정을 구현하기 위해 레이어마다 backward()함수를 추가하여 편미분을 계산하도록 코드를 작성했습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># optim.py
-</span><span class="k">class</span> <span class="nc">Optimizer</span><span class="p">:</span>
-  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Net</span><span class="p">,</span> <span class="n">lr_rate</span><span class="p">):</span>
-    <span class="bp">self</span><span class="p">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">Net</span><span class="p">.</span><span class="n">sequential</span>
-    <span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span> <span class="o">=</span> <span class="n">lr_rate</span>
-  
-  <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dz</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">modules</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-      <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-      <span class="k">if</span> <span class="n">module</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">"Sigmoid"</span><span class="p">:</span>
-        <span class="n">dsig</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">deriv</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">Z</span><span class="p">)</span>
-        <span class="n">dz</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dsig</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dz</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dz</span><span class="p">))]</span>
-      <span class="k">elif</span> <span class="n">module</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">"Softmax"</span><span class="p">:</span>
-        <span class="n">dz</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">deriv</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
-      <span class="k">elif</span> <span class="n">module</span><span class="p">.</span><span class="n">__class__</span><span class="p">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">"Linear"</span><span class="p">:</span>
-        <span class="n">dw</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">module</span><span class="p">.</span><span class="n">backward</span><span class="p">(</span><span class="n">dz</span><span class="p">)</span>
-        <span class="n">dz</span> <span class="o">=</span> <span class="n">dot_numpy</span><span class="p">(</span><span class="n">dz</span><span class="p">,</span><span class="n">transpose</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">weight</span><span class="p">))</span>
-        <span class="n">module</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">dw</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dw</span><span class="p">))]</span>
-        <span class="n">module</span><span class="p">.</span><span class="n">bias</span> <span class="o">=</span> <span class="p">[[</span><span class="n">a</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">lr_rate</span><span class="p">)</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">module</span><span class="p">.</span><span class="n">bias</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">db</span><span class="p">[</span><span class="n">i</span><span class="p">])]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">db</span><span class="p">))]</span>
-</code></pre></div></div>
+<p>$\frac{\partial L}{\partial w_1}= \frac{2}{m}(\hat{y}-y) \cdot \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)) \cdot w_2 \cdot y_1 \cdot (1 - y_1) \cdot x$</p>
+
+<p>gradient의 계산에서 마지막 곱에는 <strong>입력값</strong>에 대해 dot product하고 입력 레이어 방향으로 <strong>이전 레이어의 weight</strong>를 dot product해야 합니다. 따라서 Linear 레이어는 입력값을 저장해야 backward 계산에서 사용할 수 있습니다.
+<script src="https://gist.github.com/emeraldgoose/5bbdab6c658bc73da63bbc694bcf5f2a.js"></script></p>
+
+<p>또한, sigmoid를 통과한 출력값들은 역전파때 <strong>element-wise product</strong>를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다. softmax는 element-wise independent하지 않아 element-wise product를 수행해서는 안됩니다.</p>
+
+<p>이 역전파를 구현하기 위해 레이어마다 backward()함수를 추가하여 gradient를 계산하고 Optimizer를 이용하여 weight와 bias를 학습할 수 있습니다.<br />
+<script src="https://gist.github.com/emeraldgoose/f256205e7bed257c9b1c5ecbcfc409e5.js"></script></p>
 
 <h2 id="결과">결과</h2>
 <p>MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.</p>
@@ -573,7 +605,8 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
   <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
   <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
   <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
-</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[동기 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
+  <li>[https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html](https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</li>
+</ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
   <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.</p>
 </blockquote>
 

@@ -5,7 +5,6 @@ categories:
 tags: [torch]
 ---
 
-## 동기
 > 모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.
 
 ## 계획
@@ -13,62 +12,58 @@ tags: [torch]
 
 레이어는 총 3개로 input -> (Linear -> Activation) -> (Linear -> Activation) -> (Linear -> Softmax) -> output 으로 생각하고 각 모듈 구현을 시작했습니다.
 
-처음 계획은 notebook 파일로 각 모듈을 만들고 마지막에 코드를 돌려보는 식으로 구상했다가 차라리 패키지로 만들어서 torch처럼 모듈을 import 하는것이 더 깔끔해보였습니다.
-
-그렇게 데이터셋을 불러오는 dataset.py, 레이어를 불러오는 layers.py, 옵티마이저를 불러오는 optim.py, 각종 계산에 필요한 함수를 불러오는 utils.py로 나누게 되었습니다.
-
-## 계산
+## Forward & Backward Propagation
 모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.
 
-먼저, input -> (linear, sigmoid) -> (linear, softmax) -> output으로 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.
-- $y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$
-- $\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$
-- $Loss_{MSE} = \sum(\hat{y}-{y})^2$
+먼저, 아래처럼 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.
+```text
+Model(
+  (layer1): Sequential(
+    (0): Linear(in_features=784, out_features=256, bias=True)
+    (1): Sigmoid()
+  )
+  (layer2): Sequential(
+    (0): Linear(in_features=256, out_features=10, bias=True)
+    (1): Softmax()
+  )
+)
+```
+$y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$
+
+$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$
+
+$L_{\text{MSE}} = \sum(\hat{y}-{y})^2$
 
 이제, 위 식을 거꾸로 돌려가면서 역전파를 진행합니다.
 
 $W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.
-- $\frac{dL}{dw_2}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dw_2}$
-- $\frac{dL}{dw_2} = \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot y_1$
+
+$\frac{\partial L}{ \partial w_2}=\frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{dz_2} \cdot \frac{\partial z_2}{\partial w_2}$
+
+${\partial \hat{y} \over \partial z_2} = \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)), \\ \delta_{ij}=
+    \begin{cases}
+        1, & i=j \\\\ 0, & i \ne j
+    \end{cases}
+$
+
+$\frac{\partial L}{\partial w_2} = \frac{2}{m}(\hat{y}-y) \cdot \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)) \cdot y_1$
 
 $W_1$에 대해 편미분된 값을 구하면 다음과 같이 진행됩니다.
-- $\frac{dL}{dw_1}=\frac{dL}{d\hat{y}} \cdot \frac{d\hat{y}}{dz_2} \cdot \frac{dz_2}{dy_1} \cdot \frac{dy_1}{dz_1} \cdot \frac{dz_1}{dw_1}$
-- $\frac{dL}{dw_1}= \frac{2}{m}(\hat{y}-y) \cdot d\sigma_{2} \cdot w_2 \cdot d\sigma_{1} \cdot x$
 
-gradient의 계산에서 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어 방향으로 **이전 레이어의 weight**를 dot product해야 합니다.
-```python
-class Linear:
-    ...
-    def backward(self, dz):
-        dw = dot(transpose(self.X), dz)
-        db = [[sum([dz[i][j] for i in range(len(dz))])/len(dz) for j in range(len(dz[0]))]]
-        return dw, db
-```
+$\frac{\partial L}{\partial w_1}=\frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial z_2} \cdot \frac{\partial z_2}{\partial y_1} \cdot \frac{\partial y_1}{\partial z_1} \cdot \frac{\partial z_1}{\partial w_1}$
 
-또한, sigmoid와 softmax를 통과한 출력값들은 역전파때 **element-wise product**를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다.
+${\partial y_1 \over \partial z_1} = \sigma_1(z_1)(1 - \sigma_1(z_1)) = y_1(1 - y_1)$
 
-이 과정을 구현하기 위해 레이어마다 backward()함수를 추가하여 편미분을 계산하도록 코드를 작성했습니다.
-```python
-# optim.py
-class Optimizer:
-  def __init__(self, Net, lr_rate):
-    self.modules = Net.sequential
-    self.lr_rate = lr_rate
-  
-  def update(self, dz):
-    for i in range(len(self.modules)-1,-1,-1):
-      module = self.modules[i]
-      if module.__class__.__name__ == "Sigmoid":
-        dsig = module.deriv(self.modules[i-1].Z)
-        dz = [[a*b for a,b in zip(dsig[i],dz[i])] for i in range(len(dz))]
-      elif module.__class__.__name__ == "Softmax":
-        dz = module.deriv(dz)
-      elif module.__class__.__name__ == "Linear":
-        dw, db = module.backward(dz)
-        dz = dot_numpy(dz,transpose(module.weight))
-        module.weight = [[a-(self.lr_rate)*b for a,b in zip(module.weight[i],dw[i])] for i in range(len(dw))]
-        module.bias = [[a-(self.lr_rate)*b for a,b in zip(module.bias[i],db[i])] for i in range(len(db))]
-```
+$\frac{\partial L}{\partial w_1}= \frac{2}{m}(\hat{y}-y) \cdot \sigma_2(z_2)(\delta_{ij} - \sigma_2(z_2)) \cdot w_2 \cdot y_1 \cdot (1 - y_1) \cdot x$
+
+gradient의 계산에서 마지막 곱에는 **입력값**에 대해 dot product하고 입력 레이어 방향으로 **이전 레이어의 weight**를 dot product해야 합니다. 따라서 Linear 레이어는 입력값을 저장해야 backward 계산에서 사용할 수 있습니다.
+<script src="https://gist.github.com/emeraldgoose/5bbdab6c658bc73da63bbc694bcf5f2a.js"></script>
+
+또한, sigmoid를 통과한 출력값들은 역전파때 **element-wise product**를 진행해야 합니다. 활성화함수는 입력값 각각에 대해 함수를 통과시키므로 역전파때도 똑같이 진행되어야 하기 때문입니다. softmax는 element-wise independent하지 않아 element-wise product를 수행해서는 안됩니다. 
+
+이 역전파를 구현하기 위해 레이어마다 backward()함수를 추가하여 gradient를 계산하고 Optimizer를 이용하여 weight와 bias를 학습할 수 있습니다.  
+<script src="https://gist.github.com/emeraldgoose/f256205e7bed257c9b1c5ecbcfc409e5.js"></script>
+
 
 ## 결과
 MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.
@@ -97,3 +92,4 @@ MLP에 사용되는 레이어들만 구현되었지만 CNN이나 RNN을 사용�
 - [https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/](https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/)
 - [https://pytorch.org/docs/stable/generated/torch.nn.Linear.html](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
 - [https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84](https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84)
+- [https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html](https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html

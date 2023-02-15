@@ -1,4 +1,4 @@
-I"�@<h2 id="related">Related</h2>
+I"�5<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.</p>
@@ -62,7 +62,7 @@ Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 �
 
 <p>이제 weight의 gradient 하나만 계산해보면 다음과 같습니다.</p>
 <ul>
-  <li>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}</li>
+  <li>$\frac{dL}{dk_{11}} = \frac{dL}{do_{11}} \cdot \frac{do_{11}}{dk_{11}} + \frac{dL}{do_{12}} \cdot \frac{do_{12}}{dk_{11}} + \frac{dL}{do_{21}} \cdot \frac{do_{21}}{dk_{11}} + \frac{dL}{do_{22}} \cdot \frac{do_{22}}{dk_{11}}$</li>
   <li>$\frac{dL}{dk_{11}} = d_{11} \cdot \frac{do_{11}}{dk_{11}} + d_{12} \cdot \frac{do_{12}}{dk_{11}} + d_{21} \cdot \frac{do_{21}}{dk_{11}} + d_{22} \cdot \frac{do_{22}}{dk_{11}} $</li>
 </ul>
 
@@ -72,15 +72,8 @@ Backward 연산부터는 Foward의 그림과 같이 보면서 이해하시는 �
 </ul>
 
 <p>따라서, <strong>weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.</strong><br />
-bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Image (B,C,H,W)
-</span><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">cout</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_channel</span><span class="p">):</span>
-      <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
-          <span class="n">ret</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cout</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
-      <span class="n">ret</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cout</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bias</span><span class="p">[</span><span class="n">cout</span><span class="p">]</span>
-</code></pre></div></div>
+bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.
+<script src="https://gist.github.com/emeraldgoose/d816ef2fddecef83236316f9316dcde0.js"></script></p>
 
 <p>이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.</p>
 
@@ -135,14 +128,8 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 </ul>
 
 <p>파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.<br />
-따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong></p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
-  <span class="k">for</span> <span class="n">cout</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out_channel</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">cin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">in_channel</span><span class="p">):</span>
-      <span class="n">flip_w</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">cout</span><span class="p">][</span><span class="n">cin</span><span class="p">])</span>
-      <span class="n">dz</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">convolution</span><span class="p">(</span><span class="n">dout</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="n">cin</span><span class="p">],</span> <span class="n">flip_w</span><span class="p">)</span>
-</code></pre></div></div>
+따라서, <strong>dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.</strong><br />
+<script src="https://gist.github.com/emeraldgoose/3458dac08e743c36beec99446fc3231f.js"></script></p>
 
 <h2 id="crossentropyloss">CrossEntropyLoss</h2>
 <p>이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러가 일어납니다.</p>
