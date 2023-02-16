@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-16T14:16:33+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-16T20:43:59+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -370,9 +370,19 @@ bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그
 <script src="https://gist.github.com/emeraldgoose/3458dac08e743c36beec99446fc3231f.js"></script></p>
 
 <h2 id="crossentropyloss">CrossEntropyLoss</h2>
-<p>이전에 구현했던 CrossEntropyLoss는 log를 취하는 과정에서 입력값이 음수가 들어오는 경우 에러가 일어납니다.</p>
-
 <p>Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss(Negative Log Likelihood)로 구성되어 있습니다. Softmax와 NLLLoss로 구현하게 되면 음수 입력에 대해서도 cross entropy 값을 구할 수 있습니다.</p>
+
+<p>모델의 출력값에 softmax를 취한 값을 NLLLoss에 넣으면 CrossEntropyLoss 수식과 같아집니다. CrossEntropyLoss는 모델이 정답에 가까워지게 cross entropy가 낮아지는 방향으로 학습하도록 합니다.<br />
+$\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$</p>
+<ul>
+  <li>$P(x)$는 확률분포, $t$는 정답 라벨</li>
+</ul>
+
+<blockquote>
+  <p>NLLLoss(Negative Log Likelihood Loss)의 함수는 $L(y) = -log(y)$입니다. -log(정답 라벨에 대해 모델이 예측한 확률값) 값의 합이 Loss이고 이를 줄이는 방향이 모델이 정답을 강하게 예측할 수 있도록 합니다. 예를들면, pred = [0.5, 0.4, 0.1], label = [1] 이라면 loss = -log(0.4) = [0.92]이 됩니다.</p>
+</blockquote>
+
+<script src="https://gist.github.com/emeraldgoose/74d9ec6df399b257ae15348bea5299d7.js"></script>
 
 <h2 id="result">Result</h2>
 <p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.<br />
