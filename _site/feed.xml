@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-15T22:56:37+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-02-16T14:16:33+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">gooooooooooose</title><subtitle>goose's dev blog</subtitle><author><name>goooose</name></author><entry><title type="html">python으로 RNN 구현하기</title><link href="http://localhost:4000/pytorch/rnn-impl/" rel="alternate" type="text/html" title="python으로 RNN 구현하기" /><published>2022-12-28T00:00:00+09:00</published><updated>2022-12-28T00:00:00+09:00</updated><id>http://localhost:4000/pytorch/rnn-impl</id><content type="html" xml:base="http://localhost:4000/pytorch/rnn-impl/"><![CDATA[<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
 
 <h2 id="rnn">RNN</h2>
-<p>RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다.</p>
+<p>RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이전 timestep의 hidden state vector가 현재 timestep의 계산에 활용되는 특징을 가지고 있습니다.</p>
 
-<p>이번에 구현한 RNN 레이어를 학습하기 위해 주로 사용되는 시계열 데이터가 아닌 계속 사용하던 MNIST를 사용할 생각입니다.</p>
-
-<p>MNIST는 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인 벡터의 시퀀스 데이터로 생각해볼 수 있습니다. 이를 이용하여 RNN을 학습해봤습니다.</p>
+<p>이번에 구현한 RNN 레이어를 학습하기 위해 계속 사용하던 MNIST를 사용할 생각입니다. MNIST를 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인 벡터의 시퀀스 데이터로 생각해볼 수 있습니다.</p>
 
 <h2 id="forward">Forward</h2>
 <p>RNN 레이어의 수식과 파라미터들의 size들은 pytorch RNN 문서에 있는 수식으로 사용했습니다.</p>
@@ -21,9 +19,9 @@
 
 <p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
 
-<p>따라서 RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 length와 batch_size의 위치가 바뀝니다.</p>
+<p>RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 input_length와 batch_size의 위치가 바뀝니다. 그리고 입력과 출력의 shape만 바뀔 뿐 내부 파라미터의 shape가 변하지는 않습니다.</p>
 
-<p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>입니다. 비선형 함수로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 추가로 사용할 수 있어서 여기에서도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현했습니다.</p>
+<p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>를 선택할 수 있습니다. 비선형 함수의 기본값으로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있어서 저도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현하고 테스트해봤습니다.</p>
 
 <h2 id="backward">Backward</h2>
 <p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
@@ -44,19 +42,19 @@
 
 <p>${\partial J \over \partial W_{hh}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{hh}}$</p>
 
-<p>여기서 비선형 함수가 <code class="language-plaintext highlighter-rouge">tanh</code>인 경우 <code class="language-plaintext highlighter-rouge">tanh</code> 함수의 미분은 다음과 같습니다.</p>
+<p>여기서 <code class="language-plaintext highlighter-rouge">tanh</code> 함수의 미분은 다음과 같습니다.</p>
 
-<p>$\text{tanh}(x)$ -&gt; $1 - \text{tanh}(x)^2$</p>
+<p>$\partial \text{tanh}(x) = 1 - \text{tanh}(x)^2$</p>
 
 <p>따라서, ${\partial h_t \over \partial s_t} = 1 - \text{tanh}(s_t)^2 = 1 - h_t^2$</p>
 
-<p>역전파 과정에서 출력층에서 들어오는 gradient가 ${\partial J \over \partial h_t} = dout$라고 생각하게 되면 다음과 같은 수식으로 구할 수 있습니다.</p>
+<p>역전파 과정에서 출력층에서 들어오는 gradient ${\partial J \over \partial h_t}$를 $dout$라고 생각하게 되면 다음과 같은 수식으로 구할 수 있습니다.</p>
 
-<p>${\partial J \over \partial x_t} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
+<p>${\partial J \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
 
-<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^T \cdot x_t$</p>
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^T \cdot x_t$</p>
 
-<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - \text{tanh}(s_t)^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^T \cdot h_{t-1}$</p>
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^T \cdot h_{t-1}$</p>
 
 <p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
 
@@ -84,7 +82,7 @@
 <p>두 함수 모두 10 epochs에 loss가 떨어지기는 하지만 앞의 MLP나 CNN처럼 잘 떨어지지는 않았습니다. RNN에 MNIST 태스크가 적합하지 않아 생기는 이유일 수도 있고 MLP 모델의 파라미터가 660K개인 반면 RNN 모델의 파라미터가 200K개여서 생기는 문제일 수도 있습니다. 아무튼 학습이 된다는 점에 의미를 두려고 합니다.</p>
 
 <h3 id="next">Next</h3>
-<p>RNN의 마지막으로 LSTM까지 구현해보려고 합니다. LSTM이 RNN의 long-term dependency 문제를 해결한 모델로 여기까지는 구현해야한다고 생각되어 진행할 생각입니다.</p>
+<p>LSTM은 RNN의 시퀀스 길이가 길어질 수록 과거의 정보에 대한 학습이 어려워지는 장기의존성(long-term dependency) 문제를 해결한 모델로 RNN 계열에서 중요하다고 생각되는 모델입니다. 다음 목표는 LSTM 레이어의 구현입니다.</p>
 
 <h3 id="code">Code</h3>
 <ul>
@@ -106,7 +104,7 @@
 <p><img src="https://user-images.githubusercontent.com/50171632/205239615-69152b4b-112b-492e-ae90-ef752b436f6b.png" alt="" width="700" /></p>
 
 <h3 id="data">Data</h3>
-<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
+<p>먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 다양한 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.</p>
 
 <p>생산되는 로그는 다음과 같습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>206.176.215.237 - - [02/Dec/2022:18:57:34 +0900] "GET /api/items HTTP/1.1" 200 3456 477 "https://www.dummmmmy.com" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"
@@ -192,162 +190,27 @@ FileBeat -- Logstash -|
 
 <h3 id="spark">Spark</h3>
 <p>Spark는 하둡이 설치된 도커에 같이 설치했습니다. 처음에는 하둡의 Yarn의 관리를 받게 하려고 설치했지만 단일 노드로 돌리느라 local과 yarn의 차이가 나지는 않았습니다. 아래 pyspark 스크립트를 spark-submit 명령어로 실행하도록 했습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
-<span class="kn">import</span> <span class="nn">json</span><span class="p">,</span> <span class="n">argparse</span><span class="p">,</span> <span class="n">datetime</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
-<span class="kn">import</span> <span class="nn">redis</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
 
-<span class="k">def</span> <span class="nf">get_logs_from_redis</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">rq</span> <span class="o">=</span> <span class="n">redis</span><span class="p">.</span><span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'redis'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">rq</span><span class="p">.</span><span class="n">llen</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">rq</span><span class="p">.</span><span class="n">brpop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">value</span><span class="p">).</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s">'records'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">r</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">r</span>
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-    <span class="n">start_date</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">'--start_date'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
-
-    <span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">start_date</span><span class="p">,</span> <span class="s">'%Y-%m-%d'</span><span class="p">)</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="n">start_date</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y%m%d'</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">get_logs_from_redis</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-    <span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="p">.</span><span class="n">builder</span><span class="p">.</span><span class="n">appName</span><span class="p">(</span><span class="s">'Warehouse'</span><span class="p">).</span><span class="n">getOrCreate</span><span class="p">()</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="p">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span><span class="sa">f</span><span class="s">'hdfs://hadoop-spark:9000/warehouse/</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">.parquet'</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s">'append'</span><span class="p">)</span>
-    <span class="n">spark</span><span class="p">.</span><span class="n">stop</span><span class="p">()</span>
-</code></pre></div></div>
+<script src="https://gist.github.com/emeraldgoose/ff6267af1bd81263a2410d816300d3a9.js"></script>
 
 <h3 id="airflow">Airflow</h3>
 <p>배치 스크립트를 실행하도록 Airflow를 사용했습니다. 하둡 도커에서 spark-submit을 실행하는 커맨드를 사용할 수 있도록 SSHOperator가 포함된 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.</p>
 
 <p>spark-submit을 사용하는 스크립트는 다음과 같습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">pendulum</span>
-<span class="kn">from</span> <span class="nn">airflow.decorators</span> <span class="kn">import</span> <span class="n">dag</span>
-<span class="kn">from</span> <span class="nn">airflow.providers.ssh.operators.ssh</span> <span class="kn">import</span> <span class="n">SSHOperator</span>
-<span class="kn">from</span> <span class="nn">airflow.providers.ssh.hooks.ssh</span> <span class="kn">import</span> <span class="n">SSHHook</span>
 
-<span class="n">kst</span> <span class="o">=</span> <span class="n">pendulum</span><span class="p">.</span><span class="n">timezone</span><span class="p">(</span><span class="s">'Asia/Seoul'</span><span class="p">)</span>
-<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">().</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span>
-<span class="n">one_day_ago</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">kst</span><span class="p">)</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<script src="https://gist.github.com/emeraldgoose/111a916121a532bf58622e69b0a9e799.js"></script>
 
-<span class="o">@</span><span class="n">dag</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s">'logs_redis_to_hdfs'</span><span class="p">,</span> 
-    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'@daily'</span><span class="p">,</span> 
-    <span class="n">start_date</span><span class="o">=</span><span class="n">one_day_ago</span><span class="p">,</span> 
-    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'batch'</span><span class="p">,</span><span class="s">'redis'</span><span class="p">,</span><span class="s">'hdfs'</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">parquet_to_hdfs_from_logstash</span><span class="p">():</span>
-    <span class="n">hook</span> <span class="o">=</span> <span class="n">SSHHook</span><span class="p">(</span>
-        <span class="n">remote_host</span><span class="o">=</span><span class="s">'hadoop-spark'</span><span class="p">,</span>
-        <span class="n">username</span><span class="o">=</span><span class="s">'root'</span><span class="p">,</span>
-        <span class="n">key_file</span><span class="o">=</span><span class="s">'/root/.ssh/id_rsa.pub'</span>
-    <span class="p">)</span>
-
-    <span class="n">run_script</span> <span class="o">=</span> <span class="n">SSHOperator</span><span class="p">(</span>
-        <span class="n">task_id</span><span class="o">=</span><span class="s">'run_script'</span><span class="p">,</span>
-        <span class="n">ssh_hook</span><span class="o">=</span><span class="n">hook</span><span class="p">,</span>
-        <span class="n">command</span><span class="o">=</span><span class="sa">f</span><span class="s">'/spark/bin/spark-submit /spark/logs_redis_to_hdfs.py --start_date </span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
-    <span class="p">)</span>
-    
-    <span class="n">run_script</span>
-    
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">parquet_to_hdfs_from_logstash</span><span class="p">()</span>
-</code></pre></div></div>
 <p>ssh로 하둡이 설치된 도커로 접속하여 SSHOperator로 command를 실행하는 DAG입니다. ssh로 접속하기 위해 airflow 도커와 하둡 도커의 <code class="language-plaintext highlighter-rouge">~/.ssh/</code> 폴더를 공유시켜 하둡에서 생성된 key 파일을 airflow에서 사용할 수 있게 했습니다.</p>
 
 <p>RDB로 적재하는 스크립트는 다음과 같습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">pyspark</span>
-<span class="kn">import</span> <span class="nn">sqlalchemy</span>
-<span class="kn">import</span> <span class="nn">pendulum</span>
-<span class="kn">from</span> <span class="nn">airflow.decorators</span> <span class="kn">import</span> <span class="n">dag</span><span class="p">,</span> <span class="n">task</span>
 
-<span class="n">kst</span> <span class="o">=</span> <span class="n">pendulum</span><span class="p">.</span><span class="n">timezone</span><span class="p">(</span><span class="s">"Asia/Seoul"</span><span class="p">)</span>
-<span class="n">yesterday</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">kst</span><span class="p">)</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<script src="https://gist.github.com/emeraldgoose/a22618f97bc762b1ebd188e5275312e7.js"></script>
 
-<span class="o">@</span><span class="n">dag</span><span class="p">(</span>
-    <span class="n">dag_id</span><span class="o">=</span><span class="s">'store_to_postgres'</span><span class="p">,</span> 
-    <span class="n">schedule_interval</span><span class="o">=</span><span class="s">'@daily'</span><span class="p">,</span> 
-    <span class="n">start_date</span><span class="o">=</span><span class="n">yesterday</span><span class="p">,</span> 
-    <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s">'batch'</span><span class="p">,</span><span class="s">'hdfs'</span><span class="p">,</span><span class="s">'rdb'</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">batch_to_rdb</span><span class="p">():</span>
-    <span class="o">@</span><span class="n">task</span>
-    <span class="k">def</span> <span class="nf">get_logs_from_hdfs</span><span class="p">():</span>
-        <span class="n">sc</span> <span class="o">=</span> <span class="n">pyspark</span><span class="p">.</span><span class="n">SparkContext</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="s">'local'</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">pyspark</span><span class="p">.</span><span class="n">SparkConf</span><span class="p">())</span>
-        <span class="n">sqlContext</span> <span class="o">=</span> <span class="n">pyspark</span><span class="p">.</span><span class="n">sql</span><span class="p">.</span><span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="p">.</span><span class="n">read</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s">'hdfs://hadoop-spark:9000/warehouse/</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">.parquet'</span><span class="p">)</span>
-        <span class="n">df</span><span class="p">.</span><span class="n">write</span><span class="p">.</span><span class="n">parquet</span><span class="p">(</span><span class="s">'data.parquet'</span><span class="p">)</span>
-    
-    <span class="o">@</span><span class="n">task</span>
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">():</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s">'data.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s">"clientgeoip.geo.country_name"</span> <span class="p">:</span> <span class="s">"country_name"</span><span class="p">,</span>
-                <span class="s">"clientgeoip.geo.region_name"</span> <span class="p">:</span> <span class="s">"region_name"</span><span class="p">,</span>
-                <span class="s">"clientgeoip.geo.city_name"</span> <span class="p">:</span> <span class="s">"city_name"</span><span class="p">,</span>
-                <span class="s">"user_agent.name"</span> <span class="p">:</span> <span class="s">"browser"</span><span class="p">,</span>
-                <span class="s">"user_agent.device.name"</span> <span class="p">:</span> <span class="s">"device"</span><span class="p">,</span>
-                <span class="s">"user_agent.os.name"</span> <span class="p">:</span> <span class="s">"os_name"</span><span class="p">,</span>
-                <span class="s">"user_agent.os.version"</span> <span class="p">:</span> <span class="s">"os_version"</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
-        <span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span>
-            <span class="n">df</span><span class="p">[</span><span class="s">'time_local'</span><span class="p">],</span> 
-            <span class="nb">format</span><span class="o">=</span><span class="s">'%d/%b/%Y:%H:%M:%S +0900'</span><span class="p">).</span><span class="n">dt</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%dT%H:%M:%S'</span><span class="p">))</span>
-
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
-            <span class="p">[</span><span class="s">'timestamp'</span><span class="p">,</span><span class="s">'UA'</span><span class="p">,</span><span class="s">'body_bytes_sent'</span><span class="p">,</span><span class="s">'country_name'</span><span class="p">,</span><span class="s">'httpversion'</span><span class="p">,</span><span class="s">'message'</span><span class="p">,</span><span class="s">'method'</span><span class="p">,</span>
-            <span class="s">'referrer'</span><span class="p">,</span><span class="s">'remote_addr'</span><span class="p">,</span><span class="s">'remote_user'</span><span class="p">,</span><span class="s">'request'</span><span class="p">,</span><span class="s">'response_time'</span><span class="p">,</span><span class="s">'status'</span><span class="p">,</span><span class="s">'device'</span><span class="p">,</span>
-            <span class="s">'browser'</span><span class="p">,</span><span class="s">'os_name'</span><span class="p">,</span><span class="s">'os_version'</span><span class="p">,</span><span class="s">'city_name'</span><span class="p">,</span><span class="s">'region_name'</span><span class="p">]</span>
-        <span class="p">]</span>
-
-        <span class="n">df_yesterday</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span>
-            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T0:0:0'</span><span class="p">)</span> <span class="o">&amp;</span> \
-            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T23:59:59'</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="n">df_today</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span>
-            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'timestamp'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%Y-%m-%d'</span><span class="p">)</span><span class="o">+</span><span class="s">'T23:59:59'</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="n">df_yesterday</span><span class="p">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s">'yesterday.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="n">df_today</span><span class="p">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="s">'today.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-    
-    <span class="o">@</span><span class="n">task</span>
-    <span class="k">def</span> <span class="nf">store_to_postgres</span><span class="p">():</span>
-        <span class="n">engine</span> <span class="o">=</span> <span class="n">sqlalchemy</span><span class="p">.</span><span class="n">create_engine</span><span class="p">(</span><span class="s">'postgresql://root:root@postgres/mart'</span><span class="p">)</span>
-        <span class="n">df_yesterday</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s">'yesterday.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">)</span>
-        <span class="n">df_today</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="s">'today.parquet'</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s">'pyarrow'</span><span class="p">)</span>
-
-        <span class="n">df_yesterday</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="n">yesterday</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
-            <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> 
-            <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span> 
-            <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        
-        <span class="n">df_today</span><span class="p">.</span><span class="n">to_sql</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s">'mart_</span><span class="si">{</span><span class="p">(</span><span class="n">yesterday</span> <span class="o">+</span> <span class="n">datetime</span><span class="p">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)).</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%Y%m%d"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
-            <span class="n">con</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
-            <span class="n">if_exists</span><span class="o">=</span><span class="s">'append'</span><span class="p">,</span>
-            <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-        <span class="n">engine</span><span class="p">.</span><span class="n">dispose</span><span class="p">()</span>
-
-    <span class="n">get_logs_from_hdfs</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">transform</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">store_to_postgres</span><span class="p">()</span>
-    
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">batch_to_rdb</span><span class="p">()</span>
-</code></pre></div></div>
-<p>데이터 처리는 Pandas를 이용했습니다. Airflow 스크립트에서 데이터 처리를 하려고 했지만 Spark DataFrame을 사용하기 위해 SparkSession을 사용해야 하는데(제가 잘 몰라서 그런것일 수도 있습니다.) 에러 때문에 사용하지 못했습니다. HDFS에서 parquet 파일을 가져와 pyarrow를 이용하여 pandas DataFrame으로 변환하여 데이터 처리를 수행했습니다.</p>
+<p>데이터 처리는 Pandas를 이용했습니다. Airflow 스크립트에서 데이터 처리를 하려고 했지만 Spark DataFrame을 사용하기 위해 SparkSession을 사용해야 하는데 에러 때문에 사용하지 못했습니다.(제가 잘 몰라서 그런것일 수도 있습니다.) HDFS에서 parquet 파일을 가져와 pyarrow를 이용하여 pandas DataFrame으로 변환하여 데이터 처리를 수행했습니다.</p>
 
 <p><code class="language-plaintext highlighter-rouge">transform()</code> 과정에서 df_yesterday와 df_today 데이터프레임으로 나누는 코드가 존재합니다. 이것은 logstash가 UTC로 동작하기 때문입니다. 기록되는 날이 UTC 기준이라서 한국 시간과 9시간 차이가 나기 때문에 Redis에 같은 키에 다른 날짜의 로그가 들어오게 됩니다.</p>
 
-<p>예를들면, UTC   2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
+<p>예를들면, UTC 2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 <code class="language-plaintext highlighter-rouge">20221130</code>키로 접근했을 때 2022-11-30 데이터와 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.</p>
 
 <p>airflow에 SparkSession으로 세션을 생성하면 30초의 timeout으로 DAG가 등록되지 않았습니다.(정확한 이유가 맞는지는 잘 모르겠습니다.) 그래서 SparkContext를 통해 hdfs에 접근하는 방법으로 배치 파일을 구성했습니다.</p>
 
@@ -626,7 +489,7 @@ $</p>
   <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
   <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</a></li>
 </ul>]]></content><author><name>goooose</name></author><category term="Pytorch" /><category term="torch" /><summary type="html"><![CDATA[모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.]]></summary></entry><entry><title type="html">On the Effect of Pretraining Corpora on In-context Learning by a LLM</title><link href="http://localhost:4000/paper/On-the-effect-of-corpora/" rel="alternate" type="text/html" title="On the Effect of Pretraining Corpora on In-context Learning by a LLM" /><published>2022-06-06T00:00:00+09:00</published><updated>2022-06-06T00:00:00+09:00</updated><id>http://localhost:4000/paper/On-the-effect-of-corpora</id><content type="html" xml:base="http://localhost:4000/paper/On-the-effect-of-corpora/"><![CDATA[<blockquote>
-  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.</p>
+  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.</p>
 </blockquote>
 
 <h2 id="motivation">Motivation</h2>
@@ -647,7 +510,7 @@ $</p>
 
 <h2 id="experimental-results">Experimental Results</h2>
 <h3 id="effect-of-corpus-source">Effect of Corpus Source</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" width="800" /><br />
 테이블에서 말뭉치의 종류에 따라 다르게 in-context learning 성능이 나타는 것을 볼 수 있습니다.</p>
 <ul>
   <li>블로그 데이터(Blog)로 학습한 모델이 카페(Cafe)나 뉴스(News)로 학습한 모델보다 few-shot 성능이 ALL 모델에 근접합니다.
@@ -659,18 +522,18 @@ $</p>
 </ul>
 
 <h3 id="effect-of-corpus-size">Effect of Corpus size</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" width="700" />  <br />
 말뭉치 사이즈를 150B에서 56B로 줄였을 때는 성능이 비슷합니다. 말뭉치 사이즈가 성능을 감소시키는 것은 아닙니다.<br />
 하지만 6B 토큰으로 학습한 모델은 150B 토큰의 카페와 뉴스 말뭉치로 학습한 모델의 성능보다 낮게 나옵니다.<br />
 위의 Table 2에서는 블로그 54B 토큰과 27B 토큰 데이터를 학습한 결과가 있습니다. 블로그 150B 토큰 데이터와 54B 토큰 데이터로 학습한 모델의 성능이 비슷하지만 ALL 6B 토큰과 블로그 27B 토큰 데이터는 블로그 54B 토큰 데이터로 학습한 모델보다 성능이 나오지 않습니다.</p>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" /></p>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" width="700" /></p>
 
 <p>fig 3에서 모델의 사이즈와 토큰 사이즈에 대해 학습한 결과를 보여줍니다. 
 150B 토큰으로 학습한 모델보다 56B 토큰으로 학습한 모델의 성능 감소가 크게 나타나지는 않습니다.</p>
 
 <h3 id="effect-of-combining-corpora">Effect of Combining Corpora</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" width="800" />  <br />
 Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해 발생될 수 있음을 보여줍니다.</p>
 <ul>
   <li>지식인(KiN) + 위키피디아(Ency) 모델은 대부분의 태스크에서 성능이 좋습니다.</li>
@@ -696,7 +559,7 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
   <li>YNAT에서 성능이 좋았던 지식인 + 위키 모델에서 뉴스를 추가한 것뿐인데 성능이 낮아졌습니다.</li>
 </ul>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1EeNiav_njdPKMivohvgnTnGyrvosFUCn" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1EeNiav_njdPKMivohvgnTnGyrvosFUCn" alt="" width="800" />  <br />
 말뭉치와 태스크와의 Vocabulary overlap을 조사한 히트맵입니다.<br />
 높은 Vocabulary overlap이 높은 Downstream task 성능을 가져오지는 못합니다.</p>
 <ul>
@@ -709,8 +572,8 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
   <li>지식인 모델이 한영 번역 태스크는 성능이 나오지만 나머지 태스크에서는 성능이 낮게 나옵니다.</li>
 </ul>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=11aNe9bnSwZhtoYQJuy5hu1hMtqLTQMfs" alt="" /><br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1-z_oVEl3f5ubpMoLls8QXcLn1lsGR5D5" alt="" /></p>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=11aNe9bnSwZhtoYQJuy5hu1hMtqLTQMfs" alt="" width="800" />  <br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1-z_oVEl3f5ubpMoLls8QXcLn1lsGR5D5" alt="" width="800" /></p>
 
 <p>Zero-shot에서 도메인 관련성이 이런 현상을 더 잘 나타냅니다.</p>
 <ul>
@@ -719,7 +582,7 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
 </ul>
 
 <h3 id="perplexity-and-downstream-task">Perplexity and Downstream Task</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU" alt="" width="800" />  <br />
 Figure 2는 각 in-context learning 성능을 ALL 모델의 성능으로 나눠 Normalizing한 결과입니다. Perplexity와 in-context 성능간의 관계를 알아보기 위해 진행했으나 둘의 관계가 있다는 가설을 세울 수 없었습니다.</p>
 <ul>
   <li>Table 2에서 블로그 모델은 낮은 PPL을 가지지만 높은 성능을 가집니다. 반면, 위키피디아 모델은 높은 PPL을 가지지만 낮은 성능을 가집니다.</li>
@@ -739,7 +602,7 @@ Figure 2는 각 in-context learning 성능을 ALL 모델의 성능으로 나눠 
 
 <p>이번 연구에서는 하이퍼클로바를 이용하여 말뭉치 역할이 중요함을 알 수 있었습니다. 아쉬운 점으로는 한국어 데이터와 한국어 모델에 대해서만 실험했기 때문에 영어로 확장할 필요가 있어 보입니다. 그리고 사전학습 방법이 Next Word Prediction만 있는 것도 추가 연구가 필요해보입니다.</p>
 
-<p>하지만 모델이나 학습 방법에서의 관점이 아닌 Corpus 관점에서 연구가 진행된 점에서 생각보다 재밌었던 논문이었습니다.</p>]]></content><author><name>goooose</name></author><category term="paper" /><category term="Corpus" /><summary type="html"><![CDATA[모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.]]></summary></entry><entry><title type="html">Kubernetes</title><link href="http://localhost:4000/ops/kubenetes-overview/" rel="alternate" type="text/html" title="Kubernetes" /><published>2022-05-15T00:00:00+09:00</published><updated>2022-05-15T00:00:00+09:00</updated><id>http://localhost:4000/ops/kubenetes-overview</id><content type="html" xml:base="http://localhost:4000/ops/kubenetes-overview/"><![CDATA[<h2 id="컨테이너-기반-배포">컨테이너 기반 배포</h2>
+<p>하지만 모델이나 학습 방법에서의 관점이 아닌 Corpus 관점에서 연구가 진행된 점에서 생각보다 재밌었던 논문이었습니다.</p>]]></content><author><name>goooose</name></author><category term="paper" /><category term="Corpus" /><summary type="html"><![CDATA[모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.]]></summary></entry><entry><title type="html">Kubernetes</title><link href="http://localhost:4000/ops/kubenetes-overview/" rel="alternate" type="text/html" title="Kubernetes" /><published>2022-05-15T00:00:00+09:00</published><updated>2022-05-15T00:00:00+09:00</updated><id>http://localhost:4000/ops/kubenetes-overview</id><content type="html" xml:base="http://localhost:4000/ops/kubenetes-overview/"><![CDATA[<h2 id="컨테이너-기반-배포">컨테이너 기반 배포</h2>
 <p>애플리케이션 배포 방식은 물리적인 컴퓨터에 OS와 APP을 설치하여 서비스하던 방식에서 가상화 배포 방식으로 변화했습니다. 가상화 방식은 가상머신 성능을 각각 관리하면서 자원 상황에 따라 조절할 수 있습니다. 그러나 가상머신마다 OS를 새로 설치해야 하고 용량 또한 큽니다.</p>
 
 <p>컨테이너 기반 배포가 등장하면서 Host OS 위에 컨테이너 런타임이 올라가고 그 위로 컨테이너가 올라가게 되었습니다. 컨테이너 기반 배포는 가상화 배포 방식과 비슷하지만 컨테이너는 Host OS의 API를 가져다 쓰는 가상머신입니다. 가상머신이라는 격리된 메모리, 디스크, 네트워크, IO 인터페이스 등을 할당받지 않아서 오버헤드를 줄일 수 있습니다.</p>

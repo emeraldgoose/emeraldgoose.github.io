@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>On the Effect of Pretraining Corpora on In-context Learning by a LLM - gooooooooooose</title>
-<meta name="description" content="모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.">
+<meta name="description" content="모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.">
 
 
   <meta name="author" content="goooose">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="http://localhost:4000/paper/On-the-effect-of-corpora/">
 
 
-  <meta property="og:description" content="모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.">
+  <meta property="og:description" content="모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.">
 
 
 
@@ -275,7 +275,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="On the Effect of Pretraining Corpora on In-context Learning by a LLM">
-    <meta itemprop="description" content="  모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.">
+    <meta itemprop="description" content="  모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.">
     <meta itemprop="datePublished" content="2022-06-06T00:00:00+09:00">
     
 
@@ -305,7 +305,7 @@
       <section class="page__content" itemprop="text">
         
         <blockquote>
-  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다.</p>
+  <p>모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다.</p>
 </blockquote>
 
 <h2 id="motivation">Motivation</h2>
@@ -326,7 +326,7 @@
 
 <h2 id="experimental-results">Experimental Results</h2>
 <h3 id="effect-of-corpus-source">Effect of Corpus Source</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lkOE5QdbilT_WV80gvNVn-J6-IJLtIoT" alt="" width="800" /><br />
 테이블에서 말뭉치의 종류에 따라 다르게 in-context learning 성능이 나타는 것을 볼 수 있습니다.</p>
 <ul>
   <li>블로그 데이터(Blog)로 학습한 모델이 카페(Cafe)나 뉴스(News)로 학습한 모델보다 few-shot 성능이 ALL 모델에 근접합니다.
@@ -338,18 +338,18 @@
 </ul>
 
 <h3 id="effect-of-corpus-size">Effect of Corpus size</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv" alt="" width="700" />  <br />
 말뭉치 사이즈를 150B에서 56B로 줄였을 때는 성능이 비슷합니다. 말뭉치 사이즈가 성능을 감소시키는 것은 아닙니다.<br />
 하지만 6B 토큰으로 학습한 모델은 150B 토큰의 카페와 뉴스 말뭉치로 학습한 모델의 성능보다 낮게 나옵니다.<br />
 위의 Table 2에서는 블로그 54B 토큰과 27B 토큰 데이터를 학습한 결과가 있습니다. 블로그 150B 토큰 데이터와 54B 토큰 데이터로 학습한 모델의 성능이 비슷하지만 ALL 6B 토큰과 블로그 27B 토큰 데이터는 블로그 54B 토큰 데이터로 학습한 모델보다 성능이 나오지 않습니다.</p>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" /></p>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1Uh0J72xia1RNygMLZexzuUYdpYirsMmz" alt="" width="700" /></p>
 
 <p>fig 3에서 모델의 사이즈와 토큰 사이즈에 대해 학습한 결과를 보여줍니다. 
 150B 토큰으로 학습한 모델보다 56B 토큰으로 학습한 모델의 성능 감소가 크게 나타나지는 않습니다.</p>
 
 <h3 id="effect-of-combining-corpora">Effect of Combining Corpora</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1lmabxCG-WuuldhZs4NRPmr1oetgdIABI" alt="" width="800" />  <br />
 Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해 발생될 수 있음을 보여줍니다.</p>
 <ul>
   <li>지식인(KiN) + 위키피디아(Ency) 모델은 대부분의 태스크에서 성능이 좋습니다.</li>
@@ -375,7 +375,7 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
   <li>YNAT에서 성능이 좋았던 지식인 + 위키 모델에서 뉴스를 추가한 것뿐인데 성능이 낮아졌습니다.</li>
 </ul>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1EeNiav_njdPKMivohvgnTnGyrvosFUCn" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1EeNiav_njdPKMivohvgnTnGyrvosFUCn" alt="" width="800" />  <br />
 말뭉치와 태스크와의 Vocabulary overlap을 조사한 히트맵입니다.<br />
 높은 Vocabulary overlap이 높은 Downstream task 성능을 가져오지는 못합니다.</p>
 <ul>
@@ -388,8 +388,8 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
   <li>지식인 모델이 한영 번역 태스크는 성능이 나오지만 나머지 태스크에서는 성능이 낮게 나옵니다.</li>
 </ul>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=11aNe9bnSwZhtoYQJuy5hu1hMtqLTQMfs" alt="" /><br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1-z_oVEl3f5ubpMoLls8QXcLn1lsGR5D5" alt="" /></p>
+<p><img src="https://drive.google.com/uc?export=view&amp;id=11aNe9bnSwZhtoYQJuy5hu1hMtqLTQMfs" alt="" width="800" />  <br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1-z_oVEl3f5ubpMoLls8QXcLn1lsGR5D5" alt="" width="800" /></p>
 
 <p>Zero-shot에서 도메인 관련성이 이런 현상을 더 잘 나타냅니다.</p>
 <ul>
@@ -398,7 +398,7 @@ Table 4에서 in-context learning에서 능력이 두 말뭉치 조합에 의해
 </ul>
 
 <h3 id="perplexity-and-downstream-task">Perplexity and Downstream Task</h3>
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU" alt="" /><br />
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU" alt="" width="800" />  <br />
 Figure 2는 각 in-context learning 성능을 ALL 모델의 성능으로 나눠 Normalizing한 결과입니다. Perplexity와 in-context 성능간의 관계를 알아보기 위해 진행했으나 둘의 관계가 있다는 가설을 세울 수 없었습니다.</p>
 <ul>
   <li>Table 2에서 블로그 모델은 낮은 PPL을 가지지만 높은 성능을 가집니다. 반면, 위키피디아 모델은 높은 PPL을 가지지만 낮은 성능을 가집니다.</li>

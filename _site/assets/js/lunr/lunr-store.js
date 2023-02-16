@@ -618,7 +618,7 @@ var store = [{
         "teaser": null
       },{
         "title": "On the Effect of Pretraining Corpora on In-context Learning by a LLM",
-        "excerpt":"모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어 리뷰해보려고 합니다. Motivation GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다. In-context Learning In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는 방식을 말합니다....","categories": ["paper"],
+        "excerpt":"모두의연구소에서 논문저자가 직접 논문을 리뷰해주는 세미나가 열렸습니다. 주제가 재밌어 보여 발표를 듣고 논문을 다시 읽어보았습니다. Motivation GPT라는 Large Scale Langauge Model이 등장하면서 언어 모델의 새로운 시대를 열게 되었습니다. GPT에서 In-context Learning이라는 방식을 사용하는 점이 특징입니다. In-context Learning In-context Learning은 사전학습 모델에 풀고자 하는 태스크를 input으로 넣는 방식을 말합니다. 예제에 따라...","categories": ["paper"],
         "tags": ["Corpus"],
         "url": "/paper/On-the-effect-of-corpora/",
         "teaser": null
@@ -636,13 +636,13 @@ var store = [{
         "teaser": null
       },{
         "title": "데이터 파이프라인 구축해보기",
-        "excerpt":"Motivation 빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서 이 사이드 프로젝트를 진행하게 되었습니다. Data 먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다. 생산되는 로그는...","categories": ["data-engineer"],
+        "excerpt":"Motivation 빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서 이 사이드 프로젝트를 진행하게 되었습니다. Data 먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 다양한 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다. 생산되는...","categories": ["data-engineer"],
         "tags": ["data-engineering"],
         "url": "/data-engineer/data-pipeline/",
         "teaser": null
       },{
         "title": "python으로 RNN 구현하기",
-        "excerpt":"Related 이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다. RNN RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이번에 구현한 RNN 레이어를 학습하기 위해 주로 사용되는 시계열 데이터가 아닌 계속 사용하던 MNIST를 사용할 생각입니다. MNIST는 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인...","categories": ["Pytorch"],
+        "excerpt":"Related 이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다. RNN RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이전 timestep의 hidden state vector가 현재 timestep의 계산에 활용되는 특징을 가지고 있습니다. 이번에 구현한 RNN 레이어를 학습하기 위해 계속 사용하던 MNIST를 사용할 생각입니다. MNIST를 (28, 28)의 크기를...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/rnn-impl/",
         "teaser": null

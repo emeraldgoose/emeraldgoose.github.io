@@ -11,7 +11,7 @@ tags: [data-engineering]
 ![](https://user-images.githubusercontent.com/50171632/205239615-69152b4b-112b-492e-ae90-ef752b436f6b.png){:width="700"}
 
 ### Data
-먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.
+먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 다양한 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다.
 
 생산되는 로그는 다음과 같습니다.  
 ```
@@ -102,165 +102,27 @@ output {
 
 ### Spark
 Spark는 하둡이 설치된 도커에 같이 설치했습니다. 처음에는 하둡의 Yarn의 관리를 받게 하려고 설치했지만 단일 노드로 돌리느라 local과 yarn의 차이가 나지는 않았습니다. 아래 pyspark 스크립트를 spark-submit 명령어로 실행하도록 했습니다.
-```python
-from typing import Any
-import json, argparse, datetime
-import pandas as pd
-import redis
-from pyspark.sql import SparkSession
 
-def get_logs_from_redis(key: Any):
-    r = []
-    rq = redis.Redis(host='redis', port=6379, db=0)
-    while rq.llen(key):
-        _, value = rq.brpop(key)
-        value = json.loads(value)
-        value = pd.json_normalize(value).to_dict(orient='records')[0]
-        r.append(value)
-    return r
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    start_date = parser.add_argument('--start_date', type=str, required=True)
-    args = parser.parse_args()
-
-    start_date = datetime.datetime.strptime(args.start_date, '%Y-%m-%d')
-    key = start_date.strftime('%Y%m%d')
-    data = get_logs_from_redis(key)
-
-    spark = SparkSession.builder.appName('Warehouse').getOrCreate()
-    df = spark.createDataFrame(data)
-    df.write.parquet(f'hdfs://hadoop-spark:9000/warehouse/{key}.parquet',mode='append')
-    spark.stop()
-```
+<script src="https://gist.github.com/emeraldgoose/ff6267af1bd81263a2410d816300d3a9.js"></script>
 
 ### Airflow
 배치 스크립트를 실행하도록 Airflow를 사용했습니다. 하둡 도커에서 spark-submit을 실행하는 커맨드를 사용할 수 있도록 SSHOperator가 포함된 태스크와 hdfs에서 DB로 적재하는 배치처리하는 태스크를 구성했습니다. 데이터 양도 적고 빠르게 확인하기 위해 모두 @daily로 사용하여 하루 간격으로 실행하도록 했습니다.
 
 spark-submit을 사용하는 스크립트는 다음과 같습니다.
-```python
-import datetime
-import pendulum
-from airflow.decorators import dag
-from airflow.providers.ssh.operators.ssh import SSHOperator
-from airflow.providers.ssh.hooks.ssh import SSHHook
 
-kst = pendulum.timezone('Asia/Seoul')
-now = datetime.datetime.now().strftime('%Y-%m-%d')
-one_day_ago = datetime.datetime.now(tz=kst) - datetime.timedelta(days=1)
+<script src="https://gist.github.com/emeraldgoose/111a916121a532bf58622e69b0a9e799.js"></script>
 
-@dag(
-    dag_id='logs_redis_to_hdfs', 
-    schedule_interval='@daily', 
-    start_date=one_day_ago, 
-    tags=['batch','redis','hdfs'])
-def parquet_to_hdfs_from_logstash():
-    hook = SSHHook(
-        remote_host='hadoop-spark',
-        username='root',
-        key_file='/root/.ssh/id_rsa.pub'
-    )
-
-    run_script = SSHOperator(
-        task_id='run_script',
-        ssh_hook=hook,
-        command=f'/spark/bin/spark-submit /spark/logs_redis_to_hdfs.py --start_date {now}',
-    )
-    
-    run_script
-    
-pipeline = parquet_to_hdfs_from_logstash()
-```
 ssh로 하둡이 설치된 도커로 접속하여 SSHOperator로 command를 실행하는 DAG입니다. ssh로 접속하기 위해 airflow 도커와 하둡 도커의 `~/.ssh/` 폴더를 공유시켜 하둡에서 생성된 key 파일을 airflow에서 사용할 수 있게 했습니다. 
 
 RDB로 적재하는 스크립트는 다음과 같습니다.
-```python
-import pandas as pd
-import datetime
-import pyspark
-import sqlalchemy
-import pendulum
-from airflow.decorators import dag, task
 
-kst = pendulum.timezone("Asia/Seoul")
-yesterday = datetime.datetime.now(tz=kst) - datetime.timedelta(days=1)
+<script src="https://gist.github.com/emeraldgoose/a22618f97bc762b1ebd188e5275312e7.js"></script>
 
-@dag(
-    dag_id='store_to_postgres', 
-    schedule_interval='@daily', 
-    start_date=yesterday, 
-    tags=['batch','hdfs','rdb'])
-def batch_to_rdb():
-    @task
-    def get_logs_from_hdfs():
-        sc = pyspark.SparkContext(master='local', conf=pyspark.SparkConf())
-        sqlContext = pyspark.sql.SQLContext(sc)
-        df = sqlContext.read.parquet(
-            f'hdfs://hadoop-spark:9000/warehouse/{yesterday.strftime("%Y%m%d")}.parquet')
-        df.write.parquet('data.parquet')
-    
-    @task
-    def transform():
-        df = pd.read_parquet('data.parquet', engine='pyarrow')
-        df = df.rename(
-            columns = {
-                "clientgeoip.geo.country_name" : "country_name",
-                "clientgeoip.geo.region_name" : "region_name",
-                "clientgeoip.geo.city_name" : "city_name",
-                "user_agent.name" : "browser",
-                "user_agent.device.name" : "device",
-                "user_agent.os.name" : "os_name",
-                "user_agent.os.version" : "os_version"
-            }
-        )
-        df['timestamp'] = pd.to_datetime(
-            df['time_local'], 
-            format='%d/%b/%Y:%H:%M:%S +0900').dt.strftime('%Y-%m-%dT%H:%M:%S'))
-
-        df = df[
-            ['timestamp','UA','body_bytes_sent','country_name','httpversion','message','method',
-            'referrer','remote_addr','remote_user','request','response_time','status','device',
-            'browser','os_name','os_version','city_name','region_name']
-        ]
-
-        df_yesterday = df.loc[
-            (df['timestamp'] >= yesterday.strftime('%Y-%m-%d')+'T0:0:0') & \
-            (df['timestamp'] <= yesterday.strftime('%Y-%m-%d')+'T23:59:59')
-        ]
-        df_today = df.loc[
-            (df['timestamp'] > yesterday.strftime('%Y-%m-%d')+'T23:59:59')
-        ]
-        df_yesterday.to_parquet('yesterday.parquet', engine='pyarrow', compression=None, index=False)
-        df_today.to_parquet('today.parquet', engine='pyarrow', compression=None, index=False)
-    
-    @task
-    def store_to_postgres():
-        engine = sqlalchemy.create_engine('postgresql://root:root@postgres/mart')
-        df_yesterday = pd.read_parquet('yesterday.parquet', engine='pyarrow')
-        df_today = pd.read_parquet('today.parquet', engine='pyarrow')
-
-        df_yesterday.to_sql(
-            name=f'mart_{yesterday.strftime("%Y%m%d")}',
-            con=engine, 
-            if_exists='append', 
-            index=False)
-        
-        df_today.to_sql(
-            name=f'mart_{(yesterday + datetime.timedelta(days=1)).strftime("%Y%m%d")}',
-            con=engine,
-            if_exists='append',
-            index=False)
-        engine.dispose()
-
-    get_logs_from_hdfs() >> transform() >> store_to_postgres()
-    
-pipeline = batch_to_rdb()
-```
-데이터 처리는 Pandas를 이용했습니다. Airflow 스크립트에서 데이터 처리를 하려고 했지만 Spark DataFrame을 사용하기 위해 SparkSession을 사용해야 하는데(제가 잘 몰라서 그런것일 수도 있습니다.) 에러 때문에 사용하지 못했습니다. HDFS에서 parquet 파일을 가져와 pyarrow를 이용하여 pandas DataFrame으로 변환하여 데이터 처리를 수행했습니다.
+데이터 처리는 Pandas를 이용했습니다. Airflow 스크립트에서 데이터 처리를 하려고 했지만 Spark DataFrame을 사용하기 위해 SparkSession을 사용해야 하는데 에러 때문에 사용하지 못했습니다.(제가 잘 몰라서 그런것일 수도 있습니다.) HDFS에서 parquet 파일을 가져와 pyarrow를 이용하여 pandas DataFrame으로 변환하여 데이터 처리를 수행했습니다.
 
 `transform()` 과정에서 df_yesterday와 df_today 데이터프레임으로 나누는 코드가 존재합니다. 이것은 logstash가 UTC로 동작하기 때문입니다. 기록되는 날이 UTC 기준이라서 한국 시간과 9시간 차이가 나기 때문에 Redis에 같은 키에 다른 날짜의 로그가 들어오게 됩니다.  
 
-예를들면, UTC   2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 `20221130`키로 접근했을 때 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.
+예를들면, UTC 2022-11-30의 데이터는 KST기준 2022-11-30 09:00:00부터 2022-12-01 08:59:59까지이므로 Redis에는 `20221130`키로 접근했을 때 2022-11-30 데이터와 2022-12-01 데이터가 들어와 있게 됩니다. 따라서 이를 나눠 DB에 적재하는 코드가 필요했습니다. DB에 나눠 적재하지 않으면 배치 처리할때 그 이전 날짜들의 테이블까지 모두 조회해야할 가능성이 있기 때문에 이를 방지하는 이유또한 있습니다.
 
 airflow에 SparkSession으로 세션을 생성하면 30초의 timeout으로 DAG가 등록되지 않았습니다.(정확한 이유가 맞는지는 잘 모르겠습니다.) 그래서 SparkContext를 통해 hdfs에 접근하는 방법으로 배치 파일을 구성했습니다.
 
