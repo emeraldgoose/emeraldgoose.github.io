@@ -30,11 +30,11 @@ tags: [nlp]
 <script src="https://gist.github.com/emeraldgoose/98cf430f0d69833753dc969b5b1560fd.js"></script>
 
 ### tokenizing
-토크나이징을 하려면 `vocabulary`가 필요합니다. `vocabulary`가 list 자료구조를 이용하는 이유는 등장 횟수가 많은 단어를 순서대로 추가하기 때문입니다. 
+토크나이징을 하려면 `vocabulary`가 필요합니다. 
 
 <script src="https://gist.github.com/emeraldgoose/200425885cfbf199eb560967cda36768.js"></script>
 
-`<unk>` 토큰은 토크나이저가 `vocabulary`에 없는 단어를 대체할 때 사용합니다. 이런 문제를 OOV(Out of Vocabulary)라 하는데 여기서는 사전의 크기가 크지 않아 발생합니다. 보통 `vocabulary`를 구축할 때는 많은 corpus로부터 생성하므로 발생빈도가 `vocabulary` 크기에 따라 달라집니다.
+`<unk>` 토큰은 토크나이저가 `vocabulary`에 없는 단어를 대체할 때 사용합니다. 이런 문제를 OOV(Out of Vocabulary)라 하는데 여기서는 corpus의 크기가 크지 않아 발생합니다.
 
 다시 돌아와서 위의 코드는 hugs를 h,u,g,s로 나누고 h,ug,s로 병합하는 과정이었습니다. 이 과정을 더 이상 병합하지 않을 때까지 반복하여 토크나이징을 수행합니다.
 
