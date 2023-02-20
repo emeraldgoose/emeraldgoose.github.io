@@ -4,12 +4,10 @@ categories:
   - nlp
 tags: [nlp]
 ---
-
 ## Reference
-[https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/](https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/)
+> BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.
 
-## Byte Pair Encoding
-> BPE 알고리즘에 대한 설명은 위에 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.
+> [https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/](https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/)
 
 ### get vocabulary
 토크나이징을 위해 문서내에 등장한 단어의 등장횟수가 기록된 `dictionary`를 사용하여 단어 집합인 `vocabulary`를 만들어야 합니다.
