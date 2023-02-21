@@ -5,11 +5,11 @@ categories:
 tags: [nlp]
 ---
 ## Reference
-> BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.
+> BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.
 
 > [https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/](https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/)
 
-### get vocabulary
+### Get Vocabulary
 토크나이징을 위해 문서내에 등장한 단어의 등장횟수가 기록된 `dictionary`를 사용하여 단어 집합인 `vocabulary`를 만들어야 합니다.
 
 <script src="https://gist.github.com/emeraldgoose/26465d827bd585a22796ba0461b10014.js"></script>
@@ -27,8 +27,12 @@ tags: [nlp]
 
 <script src="https://gist.github.com/emeraldgoose/98cf430f0d69833753dc969b5b1560fd.js"></script>
 
-### tokenizing
-토크나이징을 하려면 `vocabulary`가 필요합니다. 
+이렇게 `vocabulary`인 `['p', 'b', 'n', 'g', 'h', 'u', 's', 'ug', 'un', 'hug']`를 얻을 수 있습니다. corpus에서 가장 많이 등장한 bigram 쌍이 순서대로 추가되었습니다.
+
+Huggingface의 토크나이저의 경우 이 `vocabulary`가 `vocab.json`으로 출력되어 단어와 단어 인덱스 값이 key-value 형태로 저장되어 있습니다.
+
+### Tokenizing
+토크나이징을 하려면 위에서 구한 `vocabulary`가 필요합니다. `vocabulary`에 따라 단어들을 병합합니다.
 
 <script src="https://gist.github.com/emeraldgoose/200425885cfbf199eb560967cda36768.js"></script>
 
