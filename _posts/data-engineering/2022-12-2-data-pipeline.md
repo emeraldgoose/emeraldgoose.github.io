@@ -22,9 +22,7 @@ tags: [data-engineering]
 ### Producer(FileBeat)
 서버 접속 기록을 로깅하는 서버에서 로그를 외부로 보내주는 무언가 필요했습니다. 로그 파일을 ELK 스택의 logstash로 읽는 방법이 있지만 Elasticsearch와 HDFS에 적재하려면 losgtash를 밖으로 빼내 수집 서버를 따로 두고 서버에는 logstash와 잘 맞는 FileBeat를 사용하는 것이 맞다고 생각했습니다. 
 
-FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. 로그파일의 경로를 설정하면 offset을 기억해 추가되는 로그를 외부로 전달하는 역할을 합니다. 
-
-FileBeat는 /var/log/httpd/access_log/*.log 파일을 읽어 Logstash 서버로 추가된 로그를 전달하는 역할을 합니다. FileBeat를 사용하면 Logstash에서 별다른 설정 없이 바로 사용할 수 있다는 점도 선택에 영향이 있었습니다.
+FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. /var/log/httpd/access_log/*.log 파일을 읽어 offset을 기억해 Logstash 서버로  추가되는 로그를 외부로 전달하는 역할을 합니다. FileBeat를 사용하면 Logstash에서 별다른 설정 없이 바로 사용할 수 있다는 점도 선택에 영향이 있었습니다. 
 
 
 ### Logstash
