@@ -15,7 +15,7 @@ tags: [nlp]
 <script src="https://gist.github.com/emeraldgoose/26465d827bd585a22796ba0461b10014.js"></script>
 위 코드는 `dictionary`의 단어들을 구성하는 글자들만을 추출하여 `vocabulary`에 저장한 코드입니다. 알고리즘 내에서 `vocabulary`를 사용하고 다시 업데이트를 반복할 것입니다.
 
-모든 단어에 대한 bigram 쌍을 `pairs`라는 딕셔너리에 저장하면서 횟수를 저장합니다.
+모든 단어에 대한 bigram 쌍을 `pairs`라는 딕셔너리에 저장하면서 횟수를 더해줍니다.
 
 <script src="https://gist.github.com/emeraldgoose/c2726eaffd762b1498a689bf751745a7.js"></script>
 

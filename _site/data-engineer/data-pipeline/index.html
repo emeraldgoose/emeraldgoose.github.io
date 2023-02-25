@@ -75,8 +75,6 @@
 
 
 
-  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
-
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +119,7 @@
       <nav id="site-nav" class="greedy-nav">
         
         <a class="site-title" href="/">
-          gooooooooooose
+           
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
@@ -152,6 +150,43 @@
       
 
 
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#data-engineer" itemprop="item"><span itemprop="name">Data engineer</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">데이터 파이프라인 구축해보기</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
 
 <div id="main" role="main">
   
@@ -175,7 +210,7 @@
     </h3>
     
       <div class="author__bio p-note" itemprop="description">
-        <p>Dev blog.</p>
+        <p>Interested in ML/DL, Data Engineering.</p>
 
       </div>
     
@@ -206,6 +241,10 @@
             <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
           
         
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
           
         
       
@@ -322,9 +361,7 @@
 <h3 id="producerfilebeat">Producer(FileBeat)</h3>
 <p>서버 접속 기록을 로깅하는 서버에서 로그를 외부로 보내주는 무언가 필요했습니다. 로그 파일을 ELK 스택의 logstash로 읽는 방법이 있지만 Elasticsearch와 HDFS에 적재하려면 losgtash를 밖으로 빼내 수집 서버를 따로 두고 서버에는 logstash와 잘 맞는 FileBeat를 사용하는 것이 맞다고 생각했습니다.</p>
 
-<p>FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. 로그파일의 경로를 설정하면 offset을 기억해 추가되는 로그를 외부로 전달하는 역할을 합니다.</p>
-
-<p>FileBeat는 /var/log/httpd/access_log/*.log 파일을 읽어 Logstash 서버로 추가된 로그를 전달하는 역할을 합니다. FileBeat를 사용하면 Logstash에서 별다른 설정 없이 바로 사용할 수 있다는 점도 선택에 영향이 있었습니다.</p>
+<p>FileBeat는 Logstash의 무겁다는 단점을 보완하여 개발된 로그 수집기입니다. /var/log/httpd/access_log/*.log 파일을 읽어 offset을 기억해 Logstash 서버로  추가되는 로그를 외부로 전달하는 역할을 합니다. FileBeat를 사용하면 Logstash에서 별다른 설정 없이 바로 사용할 수 있다는 점도 선택에 영향이 있었습니다.</p>
 
 <h3 id="logstash">Logstash</h3>
 <p>Logstash는 전달받은 로그를 Elasticsearch나 다른 곳으로 전달하는 역할을 합니다. Logstash를 사용한 이유는 람다 아키텍처같은 파이프라인을 생각하고 있기 때문입니다.</p>
@@ -517,7 +554,7 @@ FileBeat -- Logstash -|
     
     <p class="archive__item-excerpt" itemprop="description">Reference
 
-  BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.
+  BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.
 
 </p>
   </article>
@@ -655,8 +692,6 @@ FileBeat -- Logstash -|
       
     
 
-    
-      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
     
   </ul>
 </div>

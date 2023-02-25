@@ -26,8 +26,8 @@ baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : "emeraldgoose/emeraldgoose.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
-masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
-# breadcrumbs            : false # true, false (default)
+masthead_title           : " " # overrides the website title displayed in the masthead, use " " for no title
+breadcrumbs              : true # true, false (default)
 words_per_minute         : 200
 comments:
   provider               : "utterances" # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "giscus", "custom"
@@ -58,7 +58,7 @@ reCaptcha:
   secret                 :
 atom_feed:
   path                   : # blank (default) uses feed.xml
-  hide                   : # true, false (default)
+  hide                   : true # true, false (default)
 search                   : true # true, false (default)
 search_full_content      : # true, false (default)
 search_provider          : # lunr (default), algolia, google
@@ -94,9 +94,9 @@ social:
 
 # Analytics
 analytics:
-  provider               : "google" # false (default), "google", "google-universal", "google-gtag", "custom"
+  provider               : "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
-    tracking_id          : UA-209815810-1
+    tracking_id          : "G-1K99YFRYRGs"
     anonymize_ip         : false # true, false (default)
 
 
@@ -104,7 +104,7 @@ analytics:
 author:
   name             : "goooose"
   avatar           : "/assets/images/bio-photo.png"
-  bio              : "Dev blog."
+  bio              : "Interested in ML/DL, Data Engineering."
   location         : "South Korea"
   email            :
   links:
@@ -126,6 +126,9 @@ author:
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
       # url: "https://instagram.com/"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/minseong-kim-84428b231/"
 
 # Site Footer
 footer:
@@ -136,7 +139,7 @@ footer:
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url:
-    - label: "GitHub"
+    - label: "  GitHub"
       icon: "fab fa-fw fa-github"
       # url:
     - label: "GitLab"
@@ -226,7 +229,6 @@ plugins:
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
-  - jekyll-feed
   - jekyll-include-cache
 
 # mimic GitHub Pages with --safe
@@ -234,7 +236,6 @@ whitelist:
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
-  - jekyll-feed
   - jekyll-include-cache
 
 

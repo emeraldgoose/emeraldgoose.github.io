@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>Byte Pair Encoding - gooooooooooose</title>
-<meta name="description" content="Reference    BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.">
+<meta name="description" content="Reference    BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.">
 
 
   <meta name="author" content="goooose">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="http://localhost:4000/nlp/byte-pair-encoding/">
 
 
-  <meta property="og:description" content="Reference    BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.">
+  <meta property="og:description" content="Reference    BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.">
 
 
 
@@ -75,8 +75,6 @@
 
 
 
-  <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="gooooooooooose Feed">
-
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +119,7 @@
       <nav id="site-nav" class="greedy-nav">
         
         <a class="site-title" href="/">
-          gooooooooooose
+           
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
@@ -152,6 +150,43 @@
       
 
 
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#nlp" itemprop="item"><span itemprop="name">Nlp</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Byte Pair Encoding</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
 
 <div id="main" role="main">
   
@@ -175,7 +210,7 @@
     </h3>
     
       <div class="author__bio p-note" itemprop="description">
-        <p>Dev blog.</p>
+        <p>Interested in ML/DL, Data Engineering.</p>
 
       </div>
     
@@ -206,6 +241,10 @@
             <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
           
         
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
           
         
       
@@ -275,7 +314,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Byte Pair Encoding">
-    <meta itemprop="description" content="Reference  BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.">
+    <meta itemprop="description" content="Reference  BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.">
     <meta itemprop="datePublished" content="2023-02-19T00:00:00+09:00">
     
 
@@ -306,14 +345,14 @@
         
         <h2 id="reference">Reference</h2>
 <blockquote>
-  <p>BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 구현방법에 대해 설명하겠습니다.</p>
+  <p>BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.</p>
 </blockquote>
 
 <blockquote>
   <p><a href="https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/">https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/</a></p>
 </blockquote>
 
-<h3 id="get-vocabulary">get vocabulary</h3>
+<h3 id="get-vocabulary">Get Vocabulary</h3>
 <p>토크나이징을 위해 문서내에 등장한 단어의 등장횟수가 기록된 <code class="language-plaintext highlighter-rouge">dictionary</code>를 사용하여 단어 집합인 <code class="language-plaintext highlighter-rouge">vocabulary</code>를 만들어야 합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/26465d827bd585a22796ba0461b10014.js"></script>
@@ -332,8 +371,12 @@
 
 <script src="https://gist.github.com/emeraldgoose/98cf430f0d69833753dc969b5b1560fd.js"></script>
 
-<h3 id="tokenizing">tokenizing</h3>
-<p>토크나이징을 하려면 <code class="language-plaintext highlighter-rouge">vocabulary</code>가 필요합니다.</p>
+<p>이렇게 <code class="language-plaintext highlighter-rouge">vocabulary</code>인 <code class="language-plaintext highlighter-rouge">['p', 'b', 'n', 'g', 'h', 'u', 's', 'ug', 'un', 'hug']</code>를 얻을 수 있습니다. corpus에서 가장 많이 등장한 bigram 쌍이 순서대로 추가되었습니다.</p>
+
+<p>Huggingface의 토크나이저의 경우 이 <code class="language-plaintext highlighter-rouge">vocabulary</code>가 <code class="language-plaintext highlighter-rouge">vocab.json</code>으로 출력되어 단어와 단어 인덱스 값이 key-value 형태로 저장되어 있습니다.</p>
+
+<h3 id="tokenizing">Tokenizing</h3>
+<p>토크나이징을 하려면 위에서 구한 <code class="language-plaintext highlighter-rouge">vocabulary</code>가 필요합니다. <code class="language-plaintext highlighter-rouge">vocabulary</code>에 따라 단어들을 병합합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/200425885cfbf199eb560967cda36768.js"></script>
 
@@ -578,8 +621,6 @@
       
     
 
-    
-      <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
     
   </ul>
 </div>

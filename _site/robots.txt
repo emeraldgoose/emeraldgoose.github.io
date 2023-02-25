@@ -1,3 +1,7 @@
-User-agent: *
+User-agent:*
 Allow:/
-Sitemap: https://emeraldgoose.github.io/sitemap.xml
+Sitemap:https://emeraldgoose.github.io/sitemap.xml
+Disallow:/naver93cdc79a5629ab3736d7cf8ff7b51d80.html
+Disallow:/googleb34ce5276ba6573e.html
+Disallow:/feed.xml
+Disallow:/page*
