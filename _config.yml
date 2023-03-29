@@ -129,6 +129,9 @@ author:
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin"
       url: "https://www.linkedin.com/in/minseong-kim-84428b231/"
+    - label: "Tistory"
+      icon: "fas fa-fw fa-link"
+      url: "https://gooooooooooose.tistory.com/"
 
 # Site Footer
 footer:
