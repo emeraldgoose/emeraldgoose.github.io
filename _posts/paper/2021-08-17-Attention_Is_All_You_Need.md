@@ -8,8 +8,6 @@ tags:
 
 ## Astract
 
----
-
 대표적인 문장번역모델들은 인코더와 디코더를 포함한 rnn 혹은 cnn에 기반하고 있습니다.
 
 또한, 가장 성능이 좋은 모델들은 인코더와 디코더가 attention 매커니즘에 의해 연결되어있습니다.
@@ -21,8 +19,6 @@ tags:
 WMT 2014에서 영어 → 독어에서 28.4 BLEU를 얻으면서 최고기록을 경신하고 영어→불어에서 41.0 BLEU를 얻고 SOTA(State-Of-The-Art)에 올라섰습니다. (8 GPU와 3.5일간의 학습 - 최고 성능의 모델이 필요한 자원보다 매우 적다)
 
 ## Introduction
-
----
 
 LSTM이나 GRU와 같이 RNN이 sequence 모델링과 언어 모델링과 기계 번역 문제에서 강자였습니다. RNN 모델은 일반적으로 input과 output sequence의 위치에 따라 계산합니다.
 
@@ -45,8 +41,6 @@ input과 output 사이의 dependencies를 설계하기 위한 Recurrence는 Tran
 Transformer는 더 많은 병렬화가 가능하고 8대의 P100 GPU와 12시간의 학습으로 번역분야에서의 SOTA에 도달했습니다.
 
 ## Model Architecture
-
----
 
 Transformer는 인코더와 디코더 모두 self-attention이 쌓여있고 fully connected layer를 사용하여 아키텍쳐를 구성하고 있습니다.
 
@@ -129,8 +123,6 @@ $pos$는 sequence에서 단어의 위치이고 해당 단어는 $i$에 $0$부터
 
 ## Why Self-Attention
 
----
-
 Self-Attention을 사용하는 첫 번째 이유는 layer마다 total computational complexity가 작기 때문입니다.
 
 두 번째 이유는 computation의 양이 parallelized하기때문에 sequential operation의 minimum으로 측정되기 때문입니다.
@@ -146,9 +138,6 @@ input sequence와 output sequence의 길이가 길어지면 두 position간의 �
 또한 Self-Attention은 interpretable(설명가능한) model인 것이 이점입니다. 
 
 ## Traning
-
----
-
 ### Optimizer
 
 Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했습니다.
@@ -170,9 +159,6 @@ Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했
 학습하는 동안 label smoothing value $\epsilon_{ls}=0.1$를 적용했습니다.
 
 ## Result
-
----
-
 ### Machine Translation
 
 ![](https://drive.google.com/uc?export=view&id=1GlZ6NFZ3XS1s63Xz7zP8f2aJY7NV21_d)
@@ -191,8 +177,6 @@ Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했
 - row (E)를 보면 sinusoidal position대신 learned positional embeddings를 넣었을 때의 결과가 base model과 동일한 결과인 것을 볼 수 있습니다.
 
 ## Conclusion
-
----
 
 우리는 완전히 attention에 기반한 첫번째 문장번역 모델인 Transformer를 소개했다. encoder-decorder 아키텍쳐에서 자주 사용되는 recurrent 레이어들을 multi-headed self-attention으로 대체합니다.
 

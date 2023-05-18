@@ -9,7 +9,6 @@ tags: [boostcamp]
 이번 대회는 인물 이미지를 통해 나이, 성별, 마스크 착용에 대해 총 18개의 클래스로 나누고 이를 예측하는 대회입니다. 저는 앙상블을 만들기 위해 적합한 모델을 찾고 다양한 방식을 적용하여 F1 score를 높이는 목표를 가지고 있었습니다.
 
 ## 프로젝트를 수행하기 위한 실험
----
 ### loss function에 대한 실험
 
 - 실험목적 : 단일 loss function을 사용했을 때와 multiple loss function을 사용했을 때 성능 변화 관찰
@@ -31,7 +30,6 @@ tags: [boostcamp]
     - 이 실험에서는 loss 값들에 가중치를 주고 실험을 진행했는데 각각 optimizer를 적용한 후 까지 진행했어야 하는 것을 몰랐습니다. stackoverflow나 다른 논문들을 찾고 실험계획을 했어야 했는데 미흡한 부분이 있던 것 같습니다. 다음에는 관련 내용을 좀 더 찾고 실험을 정교화하도록 하겠습니다.
 
 ## 모델 개선 방법
----
 1. CNN 모델에서 Transformer 모델로 전환하여 학습시키는 방법
     - resnet, VGG, GoogLeNet을 사용해봤고 VGG와 GoogLeNet은 resnet보다 느리다고 판단하여 대회 초반에는 resnet에 집중했습니다.
     - 그러나 resent에서의 성장에 한계가 보이는 듯하여 transformer로 눈을 돌렸고 ViT 모델을 가지고 여러가지를 적용하여 테스트를 진행했습니다.
@@ -44,7 +42,6 @@ tags: [boostcamp]
     - stratifiedKFold를 사용하여 n_split=5를 주고 학습을 진행했습니다. 이를 통해 validation set의 중요성을 알게 되었습니다.
 
 ## 대회 회고
----
 대회를 진행하면서 baseline 코드를 손으로 직접 작성하는 경험을 할 수 있어서 좋았습니다. 덕분에 baseline 코드로 여러가지 작업을 하면서 빈 화면을 pytorch 코드로 채울 수 있었습니다.  
 대회를 진행하면서 아쉬웠던 점은 초반에 CNN 모델에 집중한 것입니다. 빨리 눈을 돌려 여러가지 Transformer모델을 사용해보고 분석했다면 좋지 않았을까 하는 생각이 듭니다.   
 또한, Validation set에 대한 중요성을 늦게 알게 되었습니다. 제공된 baseline 코드에 stratifiedKFold가 소개되어 있는데 꼼꼼히 확인하고 작성하는 코드에 적용했어야 했습니다.  

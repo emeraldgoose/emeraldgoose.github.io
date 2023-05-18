@@ -9,7 +9,6 @@ tags: [boostcamp]
 이번 대회는 KLUE의 Relation Extraction Task를 수행을 평가합니다. 문장 내 단어의 관계를 알아내면 knowledge graph를 생성하는데 key역할을 하며 생성된 knowlege graph를 통해 QA나 Summarization과 같은 Task를 수행하는데 도움을 줄 수 있습니다. 저는 이번 대회에서 적절한 성능을 내는 모델과 special token을 넣어 성능에 어떤 변화를 일으키는지 확인하는 실험을 진행했습니다.
 
 ## 성능향상을 위한 실험
----
 - 먼저 baseline 코드의 성능을 알아보았습니다.
     - Public LB 62.963 (eval step 2000)
 
@@ -63,6 +62,5 @@ tags: [boostcamp]
     - Type6를 적용했을 때와 비슷한 성능을 내주지만 넘어서는 성능을 내지 못했습니다.
 
 ## 회고
----
 대회 첫 주에 baseline 코드를 이해하느라 시간을 너무 많이 사용했습니다. 두 번째 주가 되어서야 전처리나 다른 모델을 사용할 수 있어서 너무 아쉬웠습니다. 이번 대회를 통해 huggingface를 어느정도 이해할 수 있었고 대회가 끝나면 최적화 방법들을 공부하고 팀에 공유할 생각입니다.  
 대회 이후 상위권 팀의 리뷰에서 Type7과 같은 Punctuation 방식을 사용했는데 subject와 object를 앞에 추가하지 않고 성능이 오르는 효과가 있었다고 합니다. 그래서 더욱 아쉽습니다.
