@@ -1,13 +1,7 @@
-I"�<h2 id="대회-목적">대회 목적</h2>
-
-<hr />
-
+I"�<h2 id="대회-목적">대회 목적</h2>
 <p>Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.</p>
 
 <h2 id="성능향상을-위한-실험">성능향상을 위한 실험</h2>
-
-<hr />
-
 <h3 id="베이스라인">베이스라인</h3>
 
 <p>기존 베이스라인 코드에서 Huggingface의 AutoModelForQuestionAnswering을 불러 학습 시킨 후 Sparse Embedding을 이용한 Retriever를 통해 얻은 문서에서 답을 찾는 구성이었습니다. 직접 klue/roberta-large모델을 불러 tuning 했을 때 Public LB 32를 기록했습니다.</p>
@@ -63,9 +57,6 @@
 <p>voting할 때 가중치를 주었을 때도 같은 스코어를 기록했습니다.</p>
 
 <h2 id="회고">회고</h2>
-
-<hr />
-
 <p>이번 대회는 베이스라인부터 너무 어려웠습니다. 2위를 한 조는 첫 주부터 베이스라인을 뜯기 시작했는데 저는 2번째 주부터 뜯기 시작해서 베이스라인을 이해하는데 늦었습니다. 코드가 굉장히 복잡하게 얽혀있기 때문에 완전히 분리하는 데 오래걸렸습니다.</p>
 
 <p>모델을 구성하는데 정말 다양한 오류를 발생했고 huggingface 코드로 들어가서 하나하나 print를 찍어볼 수 밖에 없었습니다. 많은 시간을 투자한 덕분에 huggingface의 모델 소스의 이해나 다양한 방법을 좀 더 쉽게 적용할 수 있었습니다.</p>

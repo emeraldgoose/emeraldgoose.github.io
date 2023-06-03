@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>P2 MRC 대회 회고 - gooooooooooose</title>
-<meta name="description" content="대회 목적">
+<meta name="description" content="대회 목적 Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.">
 
 
   <meta name="author" content="goooose">
@@ -26,7 +26,7 @@
 <meta property="og:url" content="http://localhost:4000/contest/mrc/">
 
 
-  <meta property="og:description" content="대회 목적">
+  <meta property="og:description" content="대회 목적 Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.">
 
 
 
@@ -318,7 +318,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="P2 MRC 대회 회고">
-    <meta itemprop="description" content="대회 목적">
+    <meta itemprop="description" content="대회 목적Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.">
     <meta itemprop="datePublished" content="2021-11-15T00:00:00+09:00">
     
 
@@ -348,15 +348,9 @@
       <section class="page__content" itemprop="text">
         
         <h2 id="대회-목적">대회 목적</h2>
-
-<hr />
-
 <p>Open Domain에 해당하는 Wikipedia 문서를 불러와 Query에 답을 하는 Open Domain Question Answering(ODQA) 대회입니다. 저는 주어진 Query를 받고 Context내에서 답을 찾는 Reader 모델의 모델링을 맡았습니다.</p>
 
 <h2 id="성능향상을-위한-실험">성능향상을 위한 실험</h2>
-
-<hr />
-
 <h3 id="베이스라인">베이스라인</h3>
 
 <p>기존 베이스라인 코드에서 Huggingface의 AutoModelForQuestionAnswering을 불러 학습 시킨 후 Sparse Embedding을 이용한 Retriever를 통해 얻은 문서에서 답을 찾는 구성이었습니다. 직접 klue/roberta-large모델을 불러 tuning 했을 때 Public LB 32를 기록했습니다.</p>
@@ -412,9 +406,6 @@
 <p>voting할 때 가중치를 주었을 때도 같은 스코어를 기록했습니다.</p>
 
 <h2 id="회고">회고</h2>
-
-<hr />
-
 <p>이번 대회는 베이스라인부터 너무 어려웠습니다. 2위를 한 조는 첫 주부터 베이스라인을 뜯기 시작했는데 저는 2번째 주부터 뜯기 시작해서 베이스라인을 이해하는데 늦었습니다. 코드가 굉장히 복잡하게 얽혀있기 때문에 완전히 분리하는 데 오래걸렸습니다.</p>
 
 <p>모델을 구성하는데 정말 다양한 오류를 발생했고 huggingface 코드로 들어가서 하나하나 print를 찍어볼 수 밖에 없었습니다. 많은 시간을 투자한 덕분에 huggingface의 모델 소스의 이해나 다양한 방법을 좀 더 쉽게 적용할 수 있었습니다.</p>
@@ -500,6 +491,34 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/pytorch/lstm-implementation/" rel="permalink">python으로 LSTM 구현하기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> June 02 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Related
+
+  RNN에 이어서 LSTM을 구현했습니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/nlp/byte-pair-encoding/" rel="permalink">Byte Pair Encoding
 </a>
       
@@ -570,35 +589,6 @@
 
   빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
 이 사이드 프로젝트를 진행하게 되었습니다.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/cnn-implementation/" rel="permalink">python으로 CNN 구현하기
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> September 21 2022</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Related
-
-  이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.
-여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.
 
 </p>
   </article>

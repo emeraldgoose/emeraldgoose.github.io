@@ -652,4 +652,10 @@ var store = [{
         "tags": ["nlp"],
         "url": "/nlp/byte-pair-encoding/",
         "teaser": null
+      },{
+        "title": "python으로 LSTM 구현하기",
+        "excerpt":"Related RNN에 이어서 LSTM을 구현했습니다. LSTM LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, recurrent하게 계산되는 rnn의 특성상 매우 먼 과거의 정보를 미래까지 끌고 오기 어렵습니다. hidden state에 담을 수 있는 정보도 한계가 있기 때문에 현재로 오면서 과거의 정보가 점점 사라지는 문제가 있습니다. 이러한 long-term dependencies는...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/lstm-implementation/",
+        "teaser": null
       }]

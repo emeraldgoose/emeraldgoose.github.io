@@ -349,8 +349,6 @@
         
         <h2 id="astract">Astract</h2>
 
-<hr />
-
 <p>대표적인 문장번역모델들은 인코더와 디코더를 포함한 rnn 혹은 cnn에 기반하고 있습니다.</p>
 
 <p>또한, 가장 성능이 좋은 모델들은 인코더와 디코더가 attention 매커니즘에 의해 연결되어있습니다.</p>
@@ -362,8 +360,6 @@
 <p>WMT 2014에서 영어 → 독어에서 28.4 BLEU를 얻으면서 최고기록을 경신하고 영어→불어에서 41.0 BLEU를 얻고 SOTA(State-Of-The-Art)에 올라섰습니다. (8 GPU와 3.5일간의 학습 - 최고 성능의 모델이 필요한 자원보다 매우 적다)</p>
 
 <h2 id="introduction">Introduction</h2>
-
-<hr />
 
 <p>LSTM이나 GRU와 같이 RNN이 sequence 모델링과 언어 모델링과 기계 번역 문제에서 강자였습니다. RNN 모델은 일반적으로 input과 output sequence의 위치에 따라 계산합니다.</p>
 
@@ -386,8 +382,6 @@
 <p>Transformer는 더 많은 병렬화가 가능하고 8대의 P100 GPU와 12시간의 학습으로 번역분야에서의 SOTA에 도달했습니다.</p>
 
 <h2 id="model-architecture">Model Architecture</h2>
-
-<hr />
 
 <p>Transformer는 인코더와 디코더 모두 self-attention이 쌓여있고 fully connected layer를 사용하여 아키텍쳐를 구성하고 있습니다.</p>
 
@@ -484,8 +478,6 @@
 
 <h2 id="why-self-attention">Why Self-Attention</h2>
 
-<hr />
-
 <p>Self-Attention을 사용하는 첫 번째 이유는 layer마다 total computational complexity가 작기 때문입니다.</p>
 
 <p>두 번째 이유는 computation의 양이 parallelized하기때문에 sequential operation의 minimum으로 측정되기 때문입니다.</p>
@@ -501,9 +493,6 @@
 <p>또한 Self-Attention은 interpretable(설명가능한) model인 것이 이점입니다.</p>
 
 <h2 id="traning">Traning</h2>
-
-<hr />
-
 <h3 id="optimizer">Optimizer</h3>
 
 <p>Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했습니다.</p>
@@ -525,9 +514,6 @@
 <p>학습하는 동안 label smoothing value $\epsilon_{ls}=0.1$를 적용했습니다.</p>
 
 <h2 id="result">Result</h2>
-
-<hr />
-
 <h3 id="machine-translation">Machine Translation</h3>
 
 <p><img src="https://drive.google.com/uc?export=view&amp;id=1GlZ6NFZ3XS1s63Xz7zP8f2aJY7NV21_d" alt="" /></p>
@@ -548,8 +534,6 @@
 </ul>
 
 <h2 id="conclusion">Conclusion</h2>
-
-<hr />
 
 <p>우리는 완전히 attention에 기반한 첫번째 문장번역 모델인 Transformer를 소개했다. encoder-decorder 아키텍쳐에서 자주 사용되는 recurrent 레이어들을 multi-headed self-attention으로 대체합니다.</p>
 
@@ -640,6 +624,34 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/pytorch/lstm-implementation/" rel="permalink">python으로 LSTM 구현하기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> June 02 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Related
+
+  RNN에 이어서 LSTM을 구현했습니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/nlp/byte-pair-encoding/" rel="permalink">Byte Pair Encoding
 </a>
       
@@ -710,35 +722,6 @@
 
   빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
 이 사이드 프로젝트를 진행하게 되었습니다.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/cnn-implementation/" rel="permalink">python으로 CNN 구현하기
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> September 21 2022</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Related
-
-  이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.
-여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.
 
 </p>
   </article>
