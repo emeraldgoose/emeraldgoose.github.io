@@ -1,4 +1,4 @@
-I"�0<h2 id="related">Related</h2>
+I"-1<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.</p>
@@ -170,11 +170,15 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 <script src="https://gist.github.com/emeraldgoose/74d9ec6df399b257ae15348bea5299d7.js"></script>
 
 <h2 id="result">Result</h2>
-<p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD" alt="" width="400" />
-<img src="https://drive.google.com/uc?export=view&amp;id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj" alt="" width="400" /></p>
+<p>저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.</p>
 
-<p>이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.</p>
+<p>MaxPool2d를 사용한 결과입니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1nXnM-90pf8W721W2WjDUNtrYo24pOSpp" alt="" width="400" />
+<img src="https://drive.google.com/uc?export=view&amp;id=1C3TPLEmNtxiti0hInewTqjddiX-Bt4Pu" alt="" width="400" /></p>
+
+<p>AvgPool2d를 사용한 결과입니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=" alt="" width="400" />
+<img src="https://drive.google.com/uc?export=view&amp;id=" alt="" width="400" /></p>
 
 <p>이번 구현에서 가장 어려웠던 점은 Conv2d의 backward 구현이었습니다. 정리된 내용은 2차원 배열을 가지고 계산한 내용인데 직접 구현한 Conv2d Layer는 channel까지 포함시킨 3차원(Channel, Height, Width) 입출력을 계산해야 합니다.</p>
 

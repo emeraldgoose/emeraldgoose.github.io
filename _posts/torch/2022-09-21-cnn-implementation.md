@@ -168,16 +168,23 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 <script src="https://gist.github.com/emeraldgoose/74d9ec6df399b257ae15348bea5299d7.js"></script>
 
 ## Result
-저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다.  
-![](https://drive.google.com/uc?export=view&id=1vBR0h4xl5xUitvcgjCtPi8VpBcrbUwVD){:width="400"}
-![](https://drive.google.com/uc?export=view&id=1DNukdv1AXX7Xfv7ODVPQU9xiKRQemhrj){:width="400"}  
+저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다. 다음과 같이 (conv2d, relu, pooling) 구조를 2번 거치고 fc 레이어로 logits을 출력할 수 있도록 하는 모델을 사용했습니다.
 
-이전 MLP보다 사이즈가 작아서 그런지 같은 10 epoch에도 Accuracy 90%를 넘지 못했습니다. 그래도 loss도 잘 떨어지고 ACC도 잘 증가하는 형태를 보였습니다.
+<script src="https://gist.github.com/emeraldgoose/d5198773511fc9da28517861b7df4160.js"></script>
+
+MaxPool2d를 사용한 결과입니다.  
+![](https://drive.google.com/uc?export=view&id=1nXnM-90pf8W721W2WjDUNtrYo24pOSpp){:width="400"}
+![](https://drive.google.com/uc?export=view&id=1C3TPLEmNtxiti0hInewTqjddiX-Bt4Pu){:width="400"}
+
+AvgPool2d를 사용한 결과입니다.  
+![](https://drive.google.com/uc?export=view&id=1fLkp0h7WL2NqvQMRsuMSYA6i8_YBbuzx){:width="400"}
+![](https://drive.google.com/uc?export=view&id=11V_Udsb-HF8t60Sv94zQ8f7XcDYWHNSI){:width="400"}
+
+결과만 봐서는 loss의 경우 MaxPool2d와 AvgPool2d의 결과가 비슷했고 accuracy의 경우 MaxPool2d가 조금 더 좋았습니다.
 
 이번 구현에서 가장 어려웠던 점은 Conv2d의 backward 구현이었습니다. 정리된 내용은 2차원 배열을 가지고 계산한 내용인데 직접 구현한 Conv2d Layer는 channel까지 포함시킨 3차원(Channel, Height, Width) 입출력을 계산해야 합니다.
 
-수식을 다시 계산하고 구현된 코드를 보면서 어디에 값이 저장되어야 하는지 새롭게 정리해서 다시 구현을 진행할 수 있었습니다. 그리고 numpy 없이 구현하기 위해 numpy의 함수들도 새롭게 작성했습니다. 만약 구현을 한다면 Numpy 사용을 적극 권장합니다...
-
+수식을 다시 계산하고 구현된 코드를 보면서 어디에 값이 저장되어야 하는지 새롭게 정리해서 다시 구현을 진행할 수 있었습니다. 그리고 numpy 없이 구현하기 위해 numpy의 함수들도 새롭게 작성했습니다. 만약 구현을 한다면 Numpy 사용을 적극 권장합니다.
 
 ### Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
