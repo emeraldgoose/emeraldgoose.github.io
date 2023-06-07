@@ -182,10 +182,6 @@ AvgPool2d를 사용한 결과입니다.
 
 결과만 봐서는 loss의 경우 MaxPool2d와 AvgPool2d의 결과가 비슷했고 accuracy의 경우 MaxPool2d가 조금 더 좋았습니다.
 
-이번 구현에서 가장 어려웠던 점은 Conv2d의 backward 구현이었습니다. 정리된 내용은 2차원 배열을 가지고 계산한 내용인데 직접 구현한 Conv2d Layer는 channel까지 포함시킨 3차원(Channel, Height, Width) 입출력을 계산해야 합니다.
-
-수식을 다시 계산하고 구현된 코드를 보면서 어디에 값이 저장되어야 하는지 새롭게 정리해서 다시 구현을 진행할 수 있었습니다. 그리고 numpy 없이 구현하기 위해 numpy의 함수들도 새롭게 작성했습니다. 만약 구현을 한다면 Numpy 사용을 적극 권장합니다.
-
 ### Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
 
