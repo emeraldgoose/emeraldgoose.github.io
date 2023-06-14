@@ -8,7 +8,7 @@ tags: [torch]
 > RNN에 이어서 LSTM을 구현했습니다.
 
 ## LSTM
-LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, recurrent하게 계산되는 rnn의 특성상 매우 먼 과거의 정보를 미래까지 끌고 오기 어렵습니다. hidden state에 담을 수 있는 정보도 한계가 있기 때문에 현재로 오면서 과거의 정보가 점점 사라지는 문제가 있습니다.
+LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, 과거의 정보가 먼 미래까지 전달되기 어려운 문제를 말합니다. 
 
 이러한 long-term dependencies는 gradient vanishinig problem과도 관련이 있습니다. gradient vanishing problem이란, 미분 기울기가 0과 1사이의 값을 가지고 여러번 반복적으로 곱하게 되면 기울기가 0으로 수렴되는 문제를 말합니다. 반대로 1보다 큰 기울기를 반복적으로 곱하면 gradient explodinig problem이라 합니다. 먼 과거 정보에 대해 gradient가 소실되어 weight를 업데이트 할 수 없기 때문에 장기의존성 문제가 발생합니다.
 
