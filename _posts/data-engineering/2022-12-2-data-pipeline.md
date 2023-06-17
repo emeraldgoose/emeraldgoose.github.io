@@ -66,8 +66,7 @@ FileBeat -- Logstash -- Elasticsearch -┬- Kibana
 
 Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도커로 올리면 맥북이 감당하지 못할 것 같아서 서버를 빌려주는 플랫폼을 알아보게 되었습니다.
 
-처음에는 GCP 프리티어를 생각했다가 [구름](https://ide.goorm.io)이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다. 아래 주소로 Kibana에 접속할 수 있지만 동작이 느리므로 조금 기다려주세요.
-- [dashboard-kibana.run.goorm.io](https://dashboard-kibana.run.goorm.io)
+처음에는 GCP 프리티어를 생각했다가 [구름](https://ide.goorm.io)이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다.
 - 만약, logstash로 구름에 있는 elasticsearch로 연결하려면 포트포워딩 세팅을 하고 port는 443으로 접근해야 합니다.
 
 Kibana를 사용하여 대시보드를 조회할 수 있습니다.
