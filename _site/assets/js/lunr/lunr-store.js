@@ -654,8 +654,14 @@ var store = [{
         "teaser": null
       },{
         "title": "python으로 LSTM 구현하기",
-        "excerpt":"Related RNN에 이어서 LSTM을 구현했습니다. LSTM LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, recurrent하게 계산되는 rnn의 특성상 매우 먼 과거의 정보를 미래까지 끌고 오기 어렵습니다. hidden state에 담을 수 있는 정보도 한계가 있기 때문에 현재로 오면서 과거의 정보가 점점 사라지는 문제가 있습니다. 이러한 long-term dependencies는...","categories": ["Pytorch"],
+        "excerpt":"Related RNN에 이어서 LSTM을 구현했습니다. LSTM LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, 과거의 정보가 먼 미래까지 전달되기 어려운 문제를 말합니다. 이러한 long-term dependencies는 gradient vanishinig problem과도 관련이 있습니다. gradient vanishing problem이란, 미분 기울기가 0과 1사이의 값을 가지고 여러번 반복적으로 곱하게 되면 기울기가 0으로 수렴되는...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/lstm-implementation/",
+        "teaser": null
+      },{
+        "title": "Wordpiece Tokenizer",
+        "excerpt":"Reference Wordpiece 토크나이저는 BERT를 사전학습할때 사용했던 토크나이저입니다. BPE(Byte-Pair Encoding) 토크나이저와 방식은 거의 똑같은데 단어를 합치는 부분이 다른점이 특징입니다. https://huggingface.co/learn/nlp-course/chapter6/6?fw=pt WordPiece tokenization BPE와 동일하게 모든 단어들은 알파벳으로 나눈 후 머지하는 과정을 진행합니다. Wordpiece는 머지할 두 단어를 선택하는 방법이 BPE와 다릅니다. Wordpiece는 다음과 같은 공식을 통해 머지할 pair를 선택합니다. score = (freq_of_pair)...","categories": ["nlp"],
+        "tags": ["nlp"],
+        "url": "/nlp/wordpiece-tokenizer/",
         "teaser": null
       }]

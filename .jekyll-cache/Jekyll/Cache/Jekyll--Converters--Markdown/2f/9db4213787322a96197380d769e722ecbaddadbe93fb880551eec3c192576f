@@ -1,4 +1,4 @@
-I"b-<h3 id="motivation">Motivation</h3>
+I"�,<h3 id="motivation">Motivation</h3>
 <blockquote>
   <p><strong>빅데이터를 지탱하는 기술</strong>을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
 이 사이드 프로젝트를 진행하게 되었습니다.</p>
@@ -56,9 +56,8 @@ FileBeat -- Logstash -|
 
 <p>Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도커로 올리면 맥북이 감당하지 못할 것 같아서 서버를 빌려주는 플랫폼을 알아보게 되었습니다.</p>
 
-<p>처음에는 GCP 프리티어를 생각했다가 <a href="https://ide.goorm.io">구름</a>이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다. 아래 주소로 Kibana에 접속할 수 있지만 동작이 느리므로 조금 기다려주세요.</p>
+<p>처음에는 GCP 프리티어를 생각했다가 <a href="https://ide.goorm.io">구름</a>이 생각나서 이곳에 설치했습니다. 구름ide가 빌려주는 서버 자원이 좋지는 않지만 항상 켜둘 수 있고 *.run.goorm.io라는 도메인도 제공되어 사용하게 되었습니다.</p>
 <ul>
-  <li><a href="https://dashboard-kibana.run.goorm.io">dashboard-kibana.run.goorm.io</a></li>
   <li>만약, logstash로 구름에 있는 elasticsearch로 연결하려면 포트포워딩 세팅을 하고 port는 443으로 접근해야 합니다.</li>
 </ul>
 
