@@ -14,7 +14,7 @@ BPE와 동일하게 모든 단어들은 알파벳으로 나눈 후 머지하는 
 
 - score = (freq_of_pair) / (freq_of_first_element X freq_of_second_element)
 
-위의 공식을 따르면 자주 등장하는 pair는 머지하지 않습니다. 반대로 덜 등장하는 쌍은 머지합니다.
+위의 공식을 따르면 pair를 구성하는 각각이 덜 등장하지만 pair 등장 빈도가 높은 경우 머지할 우선순위가 높습니다.
 
 ## Get Vocabulary
 vocabulary를 얻기 위해 corpus를 모두 단어 단위로 분리합니다. 각 단어의 첫 번째 알파벳을 제외한 나머지 알파벳에 대해 "##"인 prefix를 붙입니다.
@@ -30,6 +30,6 @@ vocabulary를 얻기 위해 corpus를 모두 단어 단위로 분리합니다. �
 <script src="https://gist.github.com/emeraldgoose/b16d32e9f311f286d6d8efcfcb2b22d1.js"></script>
 
 ## Tokenization
-문장내 각 단어들을 vocab에 있는 단어에 따라 토크나이징합니다.
+문장내 각 단어들을 vocab에 있는 단어에 따라 토크나이징합니다. 인코딩에서는 첫번째 글자부터 가장 큰 subword를 찾아 분리한 후 반복합니다.
 
 <script src="https://gist.github.com/emeraldgoose/f7007594074af53650898799ecf2179d.js"></script>
