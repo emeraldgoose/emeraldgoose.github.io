@@ -53,11 +53,13 @@ corpus만 확보하면 BertWordPieceTokenizer로 빠르게 학습할 수 있고 
 
 ### Punctuation
 
-인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다. 오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해야 하므로 문장의 단어 중간에 Punctuation을 삽입하여 모델이 Robust하도록 유도했습니다.
+인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다.
 
-단어 사이에 Punctuation을 넣는 것도 생각해보았지만 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하면서 성능이 떨어졌습니다.
+오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해야 단어나 문장 중간에 특수문자를 삽입하여 훈련시킬 필요가 있었습니다.
 
-이후, Meta Pseudo labeling을 구현하면서 위의 전처리 방법을 augmentation하는데 사용했습니다.
+그러나 단어 사이에 특수문자를 추가하여 전처리한 문장에서 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하는 경우가 있었고 이를 해결하기 위해 vocab 사이즈를 더 크게 늘리는 것이 좋지 않다고 판단되었습니다.
+
+이후, Meta Pseudo label을 구현하면서 UDA(Unlabeled Data Augmentation) 방법의 Weak Augmentation 방법은 문장 사이 특수문자 삽입, Strong Augmentation 방법은 단어 사이 특수문자 삽입하는 방법으로 적용했습니다.
 
 ### CNN
 
