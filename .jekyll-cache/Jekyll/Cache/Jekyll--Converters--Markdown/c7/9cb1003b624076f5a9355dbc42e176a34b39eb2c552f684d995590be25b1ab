@@ -1,0 +1,182 @@
+I"�*<h2 id="목적">목적</h2>
+
+<blockquote>
+  <p>유저가 많은 방의 채팅 속도가 빨라 모든 악성채팅을 거르지 못하기 때문에 실시간으로 탐지하여 관리자에게 악성유저들을 리포트할 수 있는 애플리케이션을 개발하고자 했습니다.</p>
+
+</blockquote>
+
+<h2 id="계획">계획</h2>
+
+<h3 id="모델">모델</h3>
+
+<p>실시간으로 문장의 성향을 파악하기 위해서는 매우 무겁고 느리기 때문에 기존 언어모델을 사용할 수 없었습니다.</p>
+
+<p>그리고 Toxicity text detection은 비교적 쉬운 task에 속합니다.</p>
+
+<p>또한, 서버의 환경을 생각해보면 보통 GPU가 있기보단 좋은 CPU와 많은 메모리를 사용하여 서버를 구동하고 있습니다.</p>
+
+<p>따라서 빠른 속도를 가진 CNN 기반의 모델을 구현하여 성능을 어느정도 손해보더라도 속도를 가져가려고 했습니다.</p>
+
+<h3 id="데이터">데이터</h3>
+
+<p>악성채팅은 보통 욕설, 혐오표현, 공격적인 표현 등으로 구성되어 있습니다.</p>
+
+<p>하지만 이런 분류 모두 사람의 주관적 시선으로 만들어져 기준이 모두 다를 수 있습니다. 따라서 저희는 욕설과 혐오표현을 위주로 학습을 진행했고 해당 채팅을 친 유저의 판단은 관리자에게 맡기는 방향으로 계획했습니다.</p>
+
+<h2 id="악성채팅의-유형">악성채팅의 유형</h2>
+
+<h3 id="욕설-혐오표현의-유형">욕설, 혐오표현의 유형</h3>
+
+<p>욕설의 경우, 한 단어로 이루어진 경우가 많습니다.  하지만 필터링 기술이 발전함에 따라 필터링을 피하기 위해 욕설 사이에 의미없는 문자를 넣는 방식을 많이 사용합니다.</p>
+
+<p>혐오표현의 경우 혐오적인 단어를 보통 포함합니다. 특히 특정 집단을 일컫는 단어를 사용합니다.</p>
+
+<h3 id="트위치-채팅의-유형">트위치 채팅의 유형</h3>
+
+<p>트위치는 스트리머마다 특정 밈(Meme)을 사용하는 경우가 많습니다. 젊은 사람들이 많이 보기 때문에 인터넷 커뮤니티 단어들이 사용되고 짧은 문장 혹은 ㅋㅋㅋㅋ와 같은 반복적인 채팅이 자주 올라옵니다. ㅋㅋㅋㅋ와 같은 반복적인 문장의 경우 vocab 길이가 길어질 가능성이 많아 길이를 줄여 OOV를 막고자 했습니다.</p>
+
+<p>다른 유형으로는 트위치는 구독을 했을 시 스트리머마다 다른 이모지를 제공하며 그 이름도 다릅니다. 그리고 그림을 그리는 경우도 존재합니다. 이런 부분은 전처리로 제거했습니다.</p>
+
+<h2 id="challenge">Challenge</h2>
+
+<h3 id="word-embedding">Word embedding</h3>
+
+<p>문장을 그대로 사용할 수는 없으므로 Huggingface의 Tokenizer를 사용하여 Word embedding을 진행했습니다.</p>
+
+<p>corpus만 확보하면 BertWordPieceTokenizer로 빠르게 학습할 수 있고 다루기 쉬운 장점이 있습니다.</p>
+
+<p>그리고 Rust로 구현되어있기 때문에 굉장히 빠릅니다.</p>
+
+<h3 id="punctuation">Punctuation</h3>
+
+<p>인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다.</p>
+
+<p>오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해서 단어나 문장 중간에 특수문자를 삽입하여 훈련시킬 필요가 있었습니다.</p>
+
+<p>그러나 단어 사이에 특수문자를 추가하여 전처리한 문장에서 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하는 경우가 있었고 이를 해결하기 위해 vocab 사이즈를 더 크게 늘리는 것이 좋지 않다고 판단되었습니다.</p>
+
+<p>이후, Meta Pseudo label을 구현하면서 UDA(Unsupervised Data Augmentation) 방법의 Weak Augmentation 방법은 문장 사이 특수문자 삽입, Strong Augmentation 방법은 단어 사이 특수문자 삽입하는 방법으로 적용했습니다.</p>
+
+<h3 id="cnn">CNN</h3>
+
+<p>NLP task를 위한 CNN 모델을 구현하는 것이 처음이라서 여러가지 블로그들을 찾아봤는데 공통적인 구조는 Embedding layer에서 Conv layer로 쓸고 pooling을 하는식으로 설계되어 있습니다. 저 또한 이러한 구조를 크게 벗어나지 않게 설계했습니다.</p>
+
+<h3 id="bilstm">BiLSTM</h3>
+
+<p>CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내주지만 성능에 대한 욕심이 조금 더 있었고 NLP에 적합한 BiLSTM을 사용하여 성능을 더 올릴 수 있었습니다.</p>
+
+<h3 id="model-structure">Model Structure</h3>
+<p>모델 구조는 다음과 같습니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1rm6e7z6khpS7gSyZYs8Xr_XNRviQWJtH" alt="" /></p>
+
+<p>CNN과 LSTM을 수직으로 쌓지 않고 병렬로 구성했습니다. CNN 같은 경우 욕설과 같이 단어 위주로 잡는 역할이고 LSTM은 문장내 단어의 흐름으로 만들어 질 수 있는 혐오표현들을 잡을 수 있을 것이라 생각했습니다.</p>
+
+<h3 id="benchmark">Benchmark</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Best Acc</th>
+      <th>Best F1</th>
+      <th>Inference time(128 batch, CPU)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Rule based</td>
+      <td>0.81</td>
+      <td>0.690</td>
+      <td><strong>0.01s</strong>(1300 words)</td>
+    </tr>
+    <tr>
+      <td>CNN</td>
+      <td>0.90</td>
+      <td>0.878</td>
+      <td>0.03s</td>
+    </tr>
+    <tr>
+      <td>BiLSTM</td>
+      <td><strong>0.93</strong></td>
+      <td>0.90</td>
+      <td>0.28s</td>
+    </tr>
+    <tr>
+      <td>CNN + BiLSTM</td>
+      <td>0.92</td>
+      <td><strong>0.911</strong></td>
+      <td>0.3s</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>CNN과 BiLSTM을 같이 사용할 때 CNN 대비 10배 느려지지만 좀 더 다양한 표현을 잡으려면 꼭 사용해야 한다고 판단했습니다.</p>
+
+<h3 id="semi-supervised-learning">Semi-Supervised Learning</h3>
+
+<p>저희의 목적은 트위치 채팅 데이터의 성향을 판단하는 것이므로 트위치 문장들을 데이터로 모델에 먹일 필요가 있습니다. 그러나 레이블링되지 않은 데이터를 사람 손으로 레이블링하기에는 데이터의 양이 너무 많습니다.</p>
+
+<p>Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에 의존해야 하며 사용하려는 모델이 Pseudo label을 생성하고 다시 학습하게되면 Bias가 증폭되는 단점을 갖고 있습니다.</p>
+
+<p>이를 해결하기 위해 Meta Pseudo Labels라는 방법을 사용하여 좀 더 정확한 레이블링을 할 수 있도록 구현하고자 했습니다.</p>
+
+<h3 id="meta-pseudo-labels">Meta Pseudo Labels</h3>
+
+<ul>
+  <li>Reference : <a href="https://arxiv.org/abs/2003.10580">https://arxiv.org/abs/2003.10580</a></li>
+</ul>
+
+<p>겉핥기로 공부해서 논문 내용을 정확하게 보지는 않았지만 대략적인 설명은 다음 그림과 같습니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=14HfiaSGFEWCmyNdNaD-_aTCrXWZg0o3B" alt="" /></p>
+
+<p>기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정이지만 MPL 방법은 Student가 Pseudo label을 학습하지만 Student의 loss를 Teacher가 학습합니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1VB9geH6mpHxgfR827u8iUHsPiFs2uG3m" alt="" /></p>
+
+<p>Supervised learning보다 MPL이 더 좋은 퍼포먼스를 보여준다는 일러스트입니다.</p>
+
+<p>그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 현재 SOTA급의 성능을 내고 있는 중입니다.</p>
+
+<p><img src="https://drive.google.com/uc?export=view&amp;id=1vFXRUOcIu5g-eKLLqo2TvPz2Gc4WPg-0" alt="" /></p>
+
+<p>가장 중요한 점은 Teacher-Student 형태를 가지고 있지만 Teacher의 Student에 최적화된 Pseudo Label을 생성하기 위해 최적화하는 과정입니다.</p>
+
+<h3 id="mlflow">MLflow</h3>
+
+<p>모델 버전관리와 배포가 쉬운 도구인 MLflow를 사용했습니다.</p>
+
+<p>MLflow의 tracking server를 GCP(Google Cloud Platform)으로 지정했는데 이때 Docker를 사용하면 굉장히 쉽게 배포가 가능합니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM python:3.10.1-slim-buster
+
+COPY . /mlflow
+WORKDIR /mlflow
+
+RUN apt-get update &amp;&amp; \
+    pip install pip --upgrade &amp;&amp; \
+    pip install -r requirements.txt
+
+ENV BACKEND_STORE_URI=mysql+pymysql://{Google-cloud-storage}
+ENV DEFAULT_ARTIFACT_ROOT=gs://{tracking-server}
+ENV MLFLOW_TRACKING_URI=http://localhost:5000
+EXPOSE 80
+</code></pre></div></div>
+<p>python 이미지 위에 mlflow를 설치하고 환경변수를 넣어주는 방법을 사용했습니다. 원래는 환경변수를 넣어주는 것이 좋지는 않지만 CLI에서 넣을때 에러가 발생하는 경우가 있어서 dockerfile에 넣어주는 걸로 결정했습니다.</p>
+
+<p>또한, 새로운 기능을 넣거나 버전을 다운그레이드 시킬때도 아티팩트들이 그대로 google-cloud-storage에 저장되어 있기 때문에 새롭게 학습시킬 필요가 없습니다.</p>
+
+<p>그러나 <a href="https://github.com/mlflow/mlflow/issues/4749">[BUG] ‘mlflow.pyfunc.load_model()’ need to be added keyword argument #4749</a>와 같이 gpu상에서 학습시킨 모델을 cpu상의 시스템에서 사용할 수 없습니다.</p>
+
+<p>torch에서는 gpu에서 학습한 모델을 cpu만 사용하는 시스템에서 불러올 수 있게 <code class="language-plaintext highlighter-rouge">torch.load()</code>시 <code class="language-plaintext highlighter-rouge">map_location</code>의 인자를 ‘cpu’로 주어 cpu상의 시스템으로 옮길 수 있도록 하지만 mlflow는 이런것을 지원하지 않았습니다.</p>
+
+<p>그래서 gpu가 없는 서버에 모델을 배포하려면 cpu로 학습시켜야 한다는 단점이 있었습니다. 다행히 애플리케이션을 제공받은 gpu가 있는 서버에서 시연하기로 해서 cuda로 학습할 수 있었습니다.</p>
+
+<h2 id="회고">회고</h2>
+
+<p>airflow까지 해보고 싶었는데 SQLAlchemy하고 충돌때문인지 <code class="language-plaintext highlighter-rouge">airflow db init</code> 를 실행하면 자꾸 에러나서 다운그레이드도 해봤는데 결국 해결하지 못했습니다.</p>
+
+<p>그리고 MLflow의 파이프라인 작성을 해보지 못해서 이와 관련된 airflow와 mlflow의 파이프라인 작성을 연습해보려고 합니다.</p>
+
+<p>마지막으로 Docker를 제대로 써본건 이번이 처음인데 정말 편한 도구였습니다. k8s도 해보고 싶습니다.</p>
+:ET

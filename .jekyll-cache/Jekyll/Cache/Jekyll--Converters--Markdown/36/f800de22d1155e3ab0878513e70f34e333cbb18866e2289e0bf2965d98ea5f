@@ -1,4 +1,4 @@
-I"�'<h2 id="목적">목적</h2>
+I"k)<h2 id="목적">목적</h2>
 
 <blockquote>
   <p>유저가 많은 방의 채팅 속도가 빨라 모든 악성채팅을 거르지 못하기 때문에 실시간으로 탐지하여 관리자에게 악성유저들을 리포트할 수 있는 애플리케이션을 개발하고자 했습니다.</p>
@@ -49,11 +49,13 @@
 
 <h3 id="punctuation">Punctuation</h3>
 
-<p>인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다. 오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해야 하므로 문장의 단어 중간에 Punctuation을 삽입하여 모델이 Robust하도록 유도했습니다.</p>
+<p>인터넷 댓글들은 중간에 특수문자가 들어가는 경우가 많습니다.</p>
 
-<p>단어 사이에 Punctuation을 넣는 것도 생각해보았지만 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하면서 성능이 떨어졌습니다.</p>
+<p>오타이거나 필터링을 피하기 위해서 등의 이유를 들 수 있는데 이런 문장 또한 포함되는 것을 가정해서 단어나 문장 중간에 특수문자를 삽입하여 훈련시킬 필요가 있었습니다.</p>
 
-<p>이후, Meta Pseudo labeling을 구현하면서 위의 전처리 방법을 augmentation하는데 사용했습니다.</p>
+<p>그러나 단어 사이에 특수문자를 추가하여 전처리한 문장에서 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하는 경우가 있었고 이를 해결하기 위해 vocab 사이즈를 더 크게 늘리는 것이 좋지 않다고 판단되었습니다.</p>
+
+<p>이후, Meta Pseudo label을 구현하면서 UDA(Unsupervised Data Augmentation) 방법의 Weak Augmentation 방법은 문장 사이 특수문자 삽입, Strong Augmentation 방법은 단어 사이 특수문자 삽입하는 방법으로 적용했습니다.</p>
 
 <h3 id="cnn">CNN</h3>
 
@@ -62,6 +64,10 @@
 <h3 id="bilstm">BiLSTM</h3>
 
 <p>CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내주지만 성능에 대한 욕심이 조금 더 있었고 NLP에 적합한 BiLSTM을 사용하여 성능을 더 올릴 수 있었습니다.</p>
+
+<h3 id="model-structure">Model Structure</h3>
+<p>모델 구조는 다음과 같습니다.<br />
+<img src="https://drive.google.com/uc?export=view&amp;id=1rm6e7z6khpS7gSyZYs8Xr_XNRviQWJtH" alt="" /></p>
 
 <h3 id="benchmark">Benchmark</h3>
 

@@ -69,6 +69,12 @@ NLP task를 위한 CNN 모델을 구현하는 것이 처음이라서 여러가�
 
 CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내주지만 성능에 대한 욕심이 조금 더 있었고 NLP에 적합한 BiLSTM을 사용하여 성능을 더 올릴 수 있었습니다.
 
+### Model Structure
+모델 구조는 다음과 같습니다.  
+![](https://drive.google.com/uc?export=view&id=1rm6e7z6khpS7gSyZYs8Xr_XNRviQWJtH){:width=400}  
+
+CNN과 LSTM을 수직으로 쌓지 않고 병렬로 구성했습니다. CNN 같은 경우 욕설과 같이 단어 위주로 잡는 역할이고 LSTM은 문장내 단어의 흐름으로 만들어 질 수 있는 혐오표현들을 잡을 수 있을 것이라 생각했습니다.
+
 ### Benchmark
 
 |Model|Best Acc|Best F1|Inference time(128 batch, CPU)|
