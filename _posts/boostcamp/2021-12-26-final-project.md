@@ -59,7 +59,7 @@ corpus만 확보하면 BertWordPieceTokenizer로 빠르게 학습할 수 있고 
 
 그러나 단어 사이에 특수문자를 추가하여 전처리한 문장에서 Tokenizer가 특수문자가 들어간 단어를 [UNK]로 대체하는 경우가 있었고 이를 해결하기 위해 vocab 사이즈를 더 크게 늘리는 것이 좋지 않다고 판단되었습니다.
 
-이후, Meta Pseudo label을 구현하면서 UDA(Unlabeled Data Augmentation) 방법의 Weak Augmentation 방법은 문장 사이 특수문자 삽입, Strong Augmentation 방법은 단어 사이 특수문자 삽입하는 방법으로 적용했습니다.
+이후, Meta Pseudo label을 구현하면서 UDA(Unsupervised Data Augmentation) 방법의 Weak Augmentation 방법은 문장 사이 특수문자 삽입, Strong Augmentation 방법은 단어 사이 특수문자 삽입하는 방법으로 적용했습니다.
 
 ### CNN
 
