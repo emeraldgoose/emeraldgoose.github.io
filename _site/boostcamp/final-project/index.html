@@ -465,7 +465,7 @@
 
 <p>저희의 목적은 트위치 채팅 데이터의 성향을 판단하는 것이므로 트위치 문장들을 데이터로 모델에 먹일 필요가 있습니다. 그러나 레이블링되지 않은 데이터를 사람 손으로 레이블링하기에는 데이터의 양이 너무 많습니다.</p>
 
-<p>Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에 의존해야 하며 사용하려는 모델이 Pseudo label을 생성하고 다시 학습하게되면 Bias가 증폭되는 단점을 갖고 있습니다.</p>
+<p>Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에 의존해야 합니다. 모델이 Pseudo label을 생성하고 다시 학습하게되면 Bias가 증폭되는 단점을 갖고 있습니다.</p>
 
 <p>이를 해결하기 위해 Meta Pseudo Labels라는 방법을 사용하여 좀 더 정확한 레이블링을 할 수 있도록 구현하고자 했습니다.</p>
 
@@ -479,17 +479,17 @@
 
 <p><img src="https://drive.google.com/uc?export=view&amp;id=14HfiaSGFEWCmyNdNaD-_aTCrXWZg0o3B" alt="" /></p>
 
-<p>기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정이지만 MPL 방법은 Student가 Pseudo label을 학습하지만 Student의 loss를 Teacher가 학습합니다.</p>
+<p>기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정입니다. 반면 MPL 방법은 Student가 Pseudo label로 학습하고 그 피드백을 teacher 모델이 받습니다.</p>
 
 <p><img src="https://drive.google.com/uc?export=view&amp;id=1VB9geH6mpHxgfR827u8iUHsPiFs2uG3m" alt="" /></p>
 
 <p>Supervised learning보다 MPL이 더 좋은 퍼포먼스를 보여준다는 일러스트입니다.</p>
 
-<p>그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 현재 SOTA급의 성능을 내고 있는 중입니다.</p>
+<p>그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 SOTA 성능을 내고 있는 중입니다.</p>
 
 <p><img src="https://drive.google.com/uc?export=view&amp;id=1vFXRUOcIu5g-eKLLqo2TvPz2Gc4WPg-0" alt="" /></p>
 
-<p>가장 중요한 점은 Teacher-Student 형태를 가지고 있지만 Teacher의 Student에 최적화된 Pseudo Label을 생성하기 위해 최적화하는 과정입니다.</p>
+<p>따라서 MPL은 Teacher-Student 구조로 학습하며 Teacher가 Student에 최적화된 Pseudo Label을 생성하기 위해 최적화하는 과정입니다.</p>
 
 <h3 id="mlflow">MLflow</h3>
 
@@ -523,11 +523,13 @@ EXPOSE 80
 
 <h2 id="회고">회고</h2>
 
-<p>airflow까지 해보고 싶었는데 SQLAlchemy하고 충돌때문인지 <code class="language-plaintext highlighter-rouge">airflow db init</code> 를 실행하면 자꾸 에러나서 다운그레이드도 해봤는데 결국 해결하지 못했습니다.</p>
+<p>모델링부터 모델 배포까지 해볼 수 있었던 프로젝트입니다. MLflow나 데이터 라벨링 문제가 있었지만 다른 방법으로 해결할 수 있었습니다.</p>
+
+<p>파이프라인 설계를 위해 airflow까지 해보고 싶었는데 SQLAlchemy하고 충돌때문인지 <code class="language-plaintext highlighter-rouge">airflow db init</code> 를 실행하면 자꾸 에러가 발생했고 다운그레이드로도 해결하지 못했습니다.</p>
 
 <p>그리고 MLflow의 파이프라인 작성을 해보지 못해서 이와 관련된 airflow와 mlflow의 파이프라인 작성을 연습해보려고 합니다.</p>
 
-<p>마지막으로 Docker를 제대로 써본건 이번이 처음인데 정말 편한 도구였습니다. k8s도 해보고 싶습니다.</p>
+<p>마지막으로 Docker를 제대로 써본건 이번이 처음인데 정말 편한 도구였습니다.</p>
 
         
       </section>
@@ -608,6 +610,32 @@ EXPOSE 80
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/atcoder/abc317/" rel="permalink">AtCoder Beginner Contest 317 (GAMEFREAK Programming Contest 2023)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> August 29 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Potions
+현재 체력 H에서 $P_i$만큼 회복시킬 수 있는 포션을 먹을 때 체력이 X만큼 차면서 X에 가장 가까운 i를 찾는 문제이다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/nlp/wordpiece-tokenizer/" rel="permalink">Wordpiece Tokenizer
 </a>
       
@@ -677,34 +705,6 @@ EXPOSE 80
     <p class="archive__item-excerpt" itemprop="description">Reference
 
   BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/rnn-impl/" rel="permalink">python으로 RNN 구현하기
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> December 28 2022</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Related
-
-  이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.
 
 </p>
   </article>
