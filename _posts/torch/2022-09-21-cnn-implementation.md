@@ -55,7 +55,7 @@ $o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$
 $o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$
 
 $o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$
-
+<script src="https://gist.github.com/emeraldgoose/d816ef2fddecef83236316f9316dcde0.js"></script>
 
 ## Backward
 이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.  
@@ -84,11 +84,10 @@ $\frac{dL}{dk_{11}} = d_{11} \cdot x_{11} + d_{12} \cdot x_{12} + d_{21} \cdot x
 
 따라서, **weight의 gradient는 dout과 입력 X와의 convolution 연산과 같습니다.**  
 bias는 forward때 덧셈으로 계산되므로 편미분 값이 1입니다. 그래서 bias의 gradient는 dout의 합으로 계산할 수 있습니다.
-<script src="https://gist.github.com/emeraldgoose/d816ef2fddecef83236316f9316dcde0.js"></script>
 
 이제 conv layer에서 나오는 gradient를 입력 레이어 방향으로 전달하기 위한 계산을 진행하겠습니다.  
 
-이번에는 출력 O를 계산하는 forward 식에서 입력 x에 대해 편미분을 계산해두겠습니다.
+먼저, 출력 O를 계산하는 forward 식에서 입력 x에 대해 편미분을 계산해두겠습니다.
 
 $\frac{do_{11}}{dx_{11}}=k_{11} \quad \frac{do_{11}}{dx_{12}}=k_{12} \quad \frac{do_{11}}{dx_{21}}=k_{21} \quad \frac{do_{11}}{dx_{22}}=k_{22}$
 
@@ -138,7 +137,7 @@ $\frac{dL}{dx_{32}} = d_{22} \cdot k_{21} + d_{21} \cdot k_{22}$
 
 $\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$
 
-식만 보고서는 어떤식으로 계산되어야 하는지 감이 잘 안옵니다. 이것을 그림으로 표현했을 때 정말 쉽게 이해가 가능합니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.  
+위의 수식들을 그림으로 표현했을 때 쉽게 이해할 수 있습니다. 파란색 테두리가 weight, 빨간색 테두리가 dout, 노란색 테두리는 계산에 참여하는 cell입니다.  
 
 $\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
 

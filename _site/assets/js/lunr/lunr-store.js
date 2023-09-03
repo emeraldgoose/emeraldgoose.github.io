@@ -665,7 +665,7 @@ var store = [{
         "url": "/nlp/wordpiece-tokenizer/",
         "teaser": null
       },{
-        "title": "AtCoder Beginner Contest 317 (GAMEFREAK Programming Contest 2023)",
+        "title": "GAMEFREAK Programming Contest 2023 (AtCoder Beginner Contest 317)",
         "excerpt":"A. Potions 현재 체력 H에서 $P_i$만큼 회복시킬 수 있는 포션을 먹을 때 체력이 X만큼 차면서 X에 가장 가까운 i를 찾는 문제이다. 포션이 오름차순으로 입력되므로 포션과 체력을 더해준 뒤 lower_bound로 문제에서 원하는 포션 인덱스를 구한다. #include &lt;bits/stdc++.h&gt; #define endl '\\n' #define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0); using namespace std; typedef long long...","categories": ["AtCoder"],
         "tags": ["ABC"],
         "url": "/atcoder/abc317/",
