@@ -1,0 +1,14 @@
+I"�<p>AI 관련 CTF가 있는 줄은 몰랐는데 Kaggle에서 해당 대회가 열려 한번 참가하여 한 달간 풀어봤습니다. 대회에서 사용되는 Capture the Flag(CTF) 방식은 취약점을 통해 주최자가 숨겨둔 플래그를 찾아 문제를 해결할 수 있습니다. 이 대회는 27개의 문제로 이루어졌고 테스트 문제 한 개를 제외한 26문제에 각각 혼자서 도전하게 됩니다. 풀어본 문제 중에 일부분의 문제를 리뷰해보려고 합니다.</p>
+
+<h2 id="cluster---level-1">Cluster - Level 1</h2>
+<blockquote>
+  <p>Senario : In a realm of digits and data, we sway, A model that gauges who earns in grand array, But lo! A cunning soul, a trick did deploy, To lift one group’s predictions, oh what ploy! The wily character slyly danced through the code, Uplifting fortunes for a cohort they strode. Yet fear not, for we’ll uncover this disguise, And reveal which group was subject to the rise.
+(Find which subpopulation is being systematically misclassified.)</p>
+</blockquote>
+
+<h2 id="cluster---level-2">Cluster - Level 2</h2>
+
+<h2 id="cluster---level-3">Cluster - Level 3</h2>
+
+<p>##</p>
+:ET
