@@ -676,4 +676,10 @@ var store = [{
         "tags": ["kaggle"],
         "url": "/contest/ai-ctf/",
         "teaser": null
+      },{
+        "title": "Finetuning Large Language Models 정리",
+        "excerpt":"Finetuning Large Language Models - Deeplearning.ai Why Finetune? Finetuning은 GPT-3와 같은 범용 모델을 사용하여 채팅을 잘 할 수 있는 ChatGPT 혹은 자동으로 코드를 완성하는 co-pilot과 같은 모델로 전문화하는 것을 말합니다. finetuning은 모델을 보다 일관된 동작으로 조정하는 것 외에도, 환각(hallucination)을 줄이는 데 도움이 될 수 있습니다. finetuning은 prompt engineering과 차이점이 존재합니다....","categories": ["coursera"],
+        "tags": ["LLM","nlp"],
+        "url": "/coursera/finetuning-LLMs/",
+        "teaser": null
       }]
