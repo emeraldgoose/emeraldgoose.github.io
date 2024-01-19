@@ -30,7 +30,7 @@ tags: [dataset]
 
 AIDA CoNLL-YAGO Dataset 또는 TAC KBP English Entity Linking Comprehensive and Evaluation Data 2010등이 있음
 
-![](https://drive.google.com/uc?export=view&id=1kX_2NhKoYfFyNizJ36WVbYDgR-RIcLTs)
+![](https://lh3.google.com/u/0/d/1kX_2NhKoYfFyNizJ36WVbYDgR-RIcLTs)
 
 - 출처: Robust Disambihuation of Named Entities in Text(2011)
 

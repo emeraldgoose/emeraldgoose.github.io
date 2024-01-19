@@ -9,8 +9,8 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Python으로 딥러닝 구현하기 - gooooooooooose</title>
-<meta name="description" content="모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.">
+<!-- begin _includes/seo.html --><title>Python으로 MLP 구현하기 - gooooooooooose</title>
+<meta name="description" content="코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다.">
 
 
   <meta name="author" content="goooose">
@@ -22,11 +22,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="gooooooooooose">
-<meta property="og:title" content="Python으로 딥러닝 구현하기">
+<meta property="og:title" content="Python으로 MLP 구현하기">
 <meta property="og:url" content="http://localhost:4000/pytorch/dl-implement/">
 
 
-  <meta property="og:description" content="모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.">
+  <meta property="og:description" content="코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다.">
 
 
 
@@ -179,7 +179,7 @@
     
       
       
-        <li class="current">Python으로 딥러닝 구현하기</li>
+        <li class="current">Python으로 MLP 구현하기</li>
       
     
   </ol>
@@ -317,15 +317,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Python으로 딥러닝 구현하기">
-    <meta itemprop="description" content="  모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.">
+    <meta itemprop="headline" content="Python으로 MLP 구현하기">
+    <meta itemprop="description" content="  코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다.">
     <meta itemprop="datePublished" content="2022-07-04T00:00:00+09:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">Python으로 딥러닝 구현하기
+          <h1 id="page-title" class="page__title" itemprop="headline">Python으로 MLP 구현하기
 </h1>
           
 <!--
@@ -348,35 +348,39 @@
       <section class="page__content" itemprop="text">
         
         <blockquote>
-  <p>모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다.</p>
+  <p>코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다.</p>
 </blockquote>
 
-<h2 id="계획">계획</h2>
-<p>데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다.</p>
+<h2 id="multi-layer-perceptron">Multi-Layer Perceptron</h2>
+<p>Multi-Layer Perceptron(MLP)은 퍼셉트론으로 이루어진 층(layer)들이 쌓여 신경망을 이루는 모델입니다. 구현이 간단하기 때문에 딥러닝을 바닥부터 구현하는 프로젝트를 시작하는데 좋은 모델입니다.
+저는 MNIST를 데이터셋으로 하여 모델을 훈련시키고 classification task를 수행해볼 것입니다.</p>
 
-<p>레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Softmax) -&gt; output 으로 생각하고 각 모듈 구현을 시작했습니다.</p>
-
-<h2 id="forward--backward-propagation">Forward &amp; Backward Propagation</h2>
-<p>모델이 학습을 하기 위해서는 역전파(backpropagation)가 진행되어야 합니다. 각 모듈들의 미분값을 출력하고 chain rule에 의해 값들을 곱해가면서 Linear 레이어의 가중치와 바이어스를 업데이트해야 합니다.</p>
-
-<p>먼저, 아래처럼 구성된 모델이 있다고 가정하고 순전파(Feedforward)때 계산되는 과정을 살펴보겠습니다.</p>
+<p>구현하려고 하는 모델의 구조는 다음과 같습니다.</p>
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Model(
-  (layer1): Sequential(
-    (0): Linear(in_features=784, out_features=256, bias=True)
+  (net1): Sequential(
+    (0): Linear(in_features=784, out_features=28, bias=True)
     (1): Sigmoid()
   )
-  (layer2): Sequential(
-    (0): Linear(in_features=256, out_features=10, bias=True)
-    (1): Softmax()
+  (net2): Sequential(
+    (0): Linear(in_features=28, out_features=28, bias=True)
+    (1): Sigmoid()
   )
+  (fc): Linear(in_features=28, out_features=10, bias=True)
 )
 </code></pre></div></div>
-<p>$y_1 = \sigma_{1}(z_1) = \sigma_1(w_1x + b_1), \sigma_{1} = \text{sigmoid}$</p>
 
-<p>$\hat{y} = \sigma_{2}(z_2) = \sigma_{2}(w_2y_1+b_2), \sigma_{2} = \text{softmax}$</p>
+<h2 id="forward-propagation">Forward Propagation</h2>
+<p>먼저 위의 모델의 순전파를 구현하기 위해 수식으로 표현합니다.</p>
+
+<p>$y_1 = \sigma(z_1) = \sigma(w_1x + b_1), \sigma = \text{sigmoid}$</p>
+
+<p>$y_2 = \sigma(z_2) = \sigma(w_2y_1 + b_2)$</p>
+
+<p>$\hat{y} = w_3y_2 + b_3$</p>
 
 <p>$L_{\text{MSE}} = \sum(\hat{y}-{y})^2$</p>
 
+<h2 id="backward-propagation">Backward Propagation</h2>
 <p>이제, 위 식을 거꾸로 돌려가면서 역전파를 진행합니다.</p>
 
 <p>$W_2$에 대해 편미분된 값을 먼저 구하면 다음과 같이 진행됩니다.</p>
@@ -410,8 +414,8 @@ $</p>
 <h2 id="결과">결과</h2>
 <p>MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.</p>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1k18xXPI4qMx31qgSTajBwQ6NwjycTpkr" alt="" width="400" />
-<img src="https://drive.google.com/uc?export=view&amp;id=1Pzta5dtXVxduFsIgHGaSqsHOtKsh6jSh" alt="" width="400" /></p>
+<p><img src="https://lh3.google.com/u/0/d/1k18xXPI4qMx31qgSTajBwQ6NwjycTpkr" alt="" width="400" />
+<img src="https://lh3.google.com/u/0/d/1Pzta5dtXVxduFsIgHGaSqsHOtKsh6jSh" alt="" width="400" /></p>
 
 <p>10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다.</p>
 
@@ -664,7 +668,7 @@ $</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2023 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2024 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

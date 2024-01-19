@@ -6,7 +6,7 @@ tags: [nlp]
 ---
 ## Types fo RNNs
 
-![](https://drive.google.com/uc?export=view&id=1PHvGL0FmnE46mlDgGAq32KYUYSoPwbBY)
+![](https://lh3.google.com/u/0/d/1PHvGL0FmnE46mlDgGAq32KYUYSoPwbBY)
 
 - 각 타임스텝에서 들어오는 입력벡터 $X_t$와 이전 state에서 계산된 $h_{t-1}$을 입력으로 받아서 현재 타임스텝에서의 $h_t$를 출력으로 내어주는 구조를 가지고 있다.
 - 모듈 A가 재귀적으로 호출되는 구조를 가지고 있다. 왼쪽의 그림을 rolled 버전, 오른쪽 그림을 unrolled 버전이라 한다.
@@ -31,7 +31,7 @@ tags: [nlp]
 
 - Types of RNNs
 
-    ![](https://drive.google.com/uc?export=view&id=1JkSHuoC_Dmb9crudvnzmOjd7k2jURw3W)
+    ![](https://lh3.google.com/u/0/d/1JkSHuoC_Dmb9crudvnzmOjd7k2jURw3W)
 
     - 그림 출처 : [http://karpathy.github.io/2015/05/21/rnn-effectiveness/](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 
@@ -49,7 +49,7 @@ tags: [nlp]
     - Vocabulary : [h, e, l, o] → one-hot vector : [1, 0, 0, 0], [0, 1, 0, 0], ...
     - $h_t = tanh(W_{hh}h_{t-1} + W_{xh}x_t + b)$
 
-        ![](https://drive.google.com/uc?export=view&id=1OS50jPbdRUpdOe8o3EX1-scKPXfOSpwS)
+        ![](https://lh3.google.com/u/0/d/1OS50jPbdRUpdOe8o3EX1-scKPXfOSpwS)
 
         - 그림 출처 : [http://karpathy.github.io/2015/05/21/rnn-effectiveness/](http://karpathy.github.io/2015/05/21/rnn-effectiveness/)
 
@@ -70,11 +70,11 @@ tags: [nlp]
 
 ### Character-level Language Model
 
-![](https://drive.google.com/uc?export=view&id=1YKklWkt5yobM4EpX2O6_tZOONjfqqs0m)
+![](https://lh3.google.com/u/0/d/1YKklWkt5yobM4EpX2O6_tZOONjfqqs0m)
 
 - 특정한 dimension의 노드 state가 어떻게 변하는지 시각화한 모습이다.
 
-![](https://drive.google.com/uc?export=view&id=1HqtcxG5O-7dkWsLRfkHfVQgRGamkEkCx)
+![](https://lh3.google.com/u/0/d/1HqtcxG5O-7dkWsLRfkHfVQgRGamkEkCx)
 
 - "가 열릴때 음수였다가 "가 닫히면서 양수, 다시 열리면 음수가 되는 것을 보면 이 모델은 "의 정보를 계속 기억하고 있음을 볼 수 있다.
 

@@ -133,8 +133,8 @@ LSTM과 Linear레이어만으로 이루어진 모델을 사용했고 hidden size
 
 10 Epochs의 Loss와 Accuracy의 그래프는 다음과 같습니다.
 
-![](https://drive.google.com/uc?export=view&id=105KPQVn4mj08HGSiEFlsiY2GYd0gG3v4){:width="400"}
-![](https://drive.google.com/uc?export=view&id=1sHHi-DcjZrmMkyxcyu8f40FwwmekIcFk){:width="400"}  
+![](https://lh3.google.com/u/0/d/105KPQVn4mj08HGSiEFlsiY2GYd0gG3v4){:width="400"}
+![](https://lh3.google.com/u/0/d/1sHHi-DcjZrmMkyxcyu8f40FwwmekIcFk){:width="400"}  
 
 놀라운 점은 RNN에 비해 4 epoch만에 90%의 Accuracy를 기록했고 9 epoch에서 95% 이상의 Accuracy를 기록했습니다. 뿐만 아니라 loss도 잘떨어졌습니다. 
 

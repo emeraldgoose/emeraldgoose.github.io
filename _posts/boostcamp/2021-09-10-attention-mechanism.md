@@ -8,7 +8,7 @@ tags: [attention]
 
 - seq2seq는 RNN의 구조 중 Many-to-many 형태에 해당한다.
 
-    ![](https://drive.google.com/uc?export=view&id=1HVLlyrlYemel2aojBhxw6Oe8ypoCTdq2)
+    ![](https://lh3.google.com/u/0/d/1HVLlyrlYemel2aojBhxw6Oe8ypoCTdq2)
 
     - 인코더와 디코더는 서로 공유하지 않는 모듈을 사용한다.
     - 인코더는 마지막까지 읽고 마지막 타임스텝의 hidden state vector는 디코더의 $h_0$ 즉, 이전 타임스텝의 hidden state vector로써 사용된다.
@@ -19,7 +19,7 @@ tags: [attention]
     - 기존 lstm의 경우 문장의 길이와 상관없이 모든 단어의 정보를 맨 마지막 vector에 욱여넣어야 한다. 이때, 멀리 있는 단어의 경우 정보가 소실되거나 줄어버리는 문제(bottleneck problem)가 있기 때문에 Attention을 사용하려고 한다.
     - 단어를 넣을 때마다 생성된 모든 hidden state vector를 디코더에 제공하고 각 타임스텝에서 단어를 생성할 때 그때그때 필요한 인코더 hidden state vector를 선별적으로 가져가서 예측에 도움을 주는 형태로 제공된다.
 
-        ![](https://drive.google.com/uc?export=view&id=1Uxv60oMwaj6_L3wHl9FDlpwez_rj1pZf)
+        ![](https://lh3.google.com/u/0/d/1Uxv60oMwaj6_L3wHl9FDlpwez_rj1pZf)
 
         - 각 단어가 입력되고 계산된 hidden state vector가 있고 마지막 타임스텝에서 생성되어 $h_0$가 디코더로 들어가게 된다.
         - 디코더는 start 토큰이 word embedding으로 주어지고 $h_0$를 디코더의 hidden state vector $h_1^{(d)}$를 계산하게 된다.
@@ -30,15 +30,15 @@ tags: [attention]
             - Attention distribution은 softmax layer를 통과한 output인데 합이 1인 형태의 가중치를 Attention vector라고 부른다.
         - 이제 Attention output(혹은 context vector)과 디코더의 hidden state vector가 concat이 되어서 output layer의 입력으로 들어가게 되고 다음에 나올 단어를 예측하게 된다.
 
-            ![](https://drive.google.com/uc?export=view&id=1t6m4xai2cnUGW7TjCVXqmH1e6X8UaCnz)
+            ![](https://lh3.google.com/u/0/d/1t6m4xai2cnUGW7TjCVXqmH1e6X8UaCnz)
 
         - 두 번째도 동일하게 $h_2^{(d)}$와 각 encoder hidden state vector의 내적을 통해 Attention output(context vector)를 구하게 된다.
 
-            ![](https://drive.google.com/uc?export=view&id=1EKG7hU16-ELwPhBgTZ7ZIjgjI5RzqJqw)
+            ![](https://lh3.google.com/u/0/d/1EKG7hU16-ELwPhBgTZ7ZIjgjI5RzqJqw)
 
         - EoS토큰이 나오기 전까지 반복한다.
 
-            ![](https://drive.google.com/uc?export=view&id=1KW1z7ICYoq1ABBqr1mvk354s2lE4RR17)
+            ![](https://lh3.google.com/u/0/d/1KW1z7ICYoq1ABBqr1mvk354s2lE4RR17)
 
         - Backpropagation
             - 디코더의 hidden state vector는 output layer의 입력으로 들어감과 동시에 인코더의 각 word별로 어떤 hidden state vector를 가져와야 할지 결정하는 attention 가중치를 결정해주는 역할을 수행하게 된다.
@@ -88,7 +88,7 @@ tags: [attention]
     - Beam search는 모든 경우의 수를 보는 것은 아니지만 완전탐색하는 것보다 효율적으로 계산할 수 있게 한다.
         - 아래 그림은 $k=2$인 beam search의 예제이다.
 
-            ![](https://drive.google.com/uc?export=view&id=1ii3SARsgu5Hp83eTqC5UzlJtBDEa1kf3)
+            ![](https://lh3.google.com/u/0/d/1ii3SARsgu5Hp83eTqC5UzlJtBDEa1kf3)
 
             - 그림 출처 : [https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture08-nmt.pdf](https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture08-nmt.pdf)
 

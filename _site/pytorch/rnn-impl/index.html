@@ -364,7 +364,7 @@
 
 <p>그리고 pytorch의 RNN 레이어에는 <code class="language-plaintext highlighter-rouge">num_layers</code>라는 인자를 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">num_layers</code>는 하나의 순회를 담당하는 레이어를 얼마나 쌓을지 결정하는 인자이고 기본값은 1입니다. 만약, <code class="language-plaintext highlighter-rouge">num_layers = 2</code>으로 준다면 다음과 같은 그림의 RNN을 얻을 수 있습니다.</p>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1FXnyZZ3IY4KdRQcsupzlUi78AgEXBTsO" alt="" width="500" /></p>
+<p><img src="https://lh3.google.com/u/0/d/1FXnyZZ3IY4KdRQcsupzlUi78AgEXBTsO" alt="" width="500" /></p>
 
 <p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
 
@@ -407,7 +407,7 @@
 
 <p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
 
-<p><img src="https://drive.google.com/uc?export=view&amp;id=1eb2CmnJKMQSUpuJ2Bdym1I5ARF-vn_dZ" alt="" width="500" /></p>
+<p><img src="https://lh3.google.com/u/0/d/1eb2CmnJKMQSUpuJ2Bdym1I5ARF-vn_dZ" alt="" width="500" /></p>
 
 <p>따라서 현제 셀에 대해 다음과 같은 코드로 구현할 수 있습니다. 가장 마지막 셀에 들어가는 <code class="language-plaintext highlighter-rouge">dhnext</code>는 0으로 초기화하여 넣어주면 됩니다. <code class="language-plaintext highlighter-rouge">h_next</code>는 t시점의 셀에서 계산된 hidden state 벡터이고 <code class="language-plaintext highlighter-rouge">h_prev</code>는 t시점의 셀로 들어온 hidden state 벡터를 말합니다.</p>
 
@@ -421,12 +421,12 @@
 <p>사용된 모델은 RNN과 Linear 레이어를 사용하고 RNN의 마지막 출력 벡터를 Linear에 통과시키는 방법으로 사용했습니다.</p>
 
 <p>먼저, <code class="language-plaintext highlighter-rouge">tanh</code>을 사용한 경우 loss와 Acc의 결과입니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1eIM02Ku_VkL9IJSvO8DQuoJe77uFqCz4" alt="" width="400" />
-<img src="https://drive.google.com/uc?export=view&amp;id=1pthsFxqP8K0CUEBljJIu9Sz9_tkXfyfd" alt="" width="400" /></p>
+<img src="https://lh3.google.com/u/0/d/1eIM02Ku_VkL9IJSvO8DQuoJe77uFqCz4" alt="" width="400" />
+<img src="https://lh3.google.com/u/0/d/1pthsFxqP8K0CUEBljJIu9Sz9_tkXfyfd" alt="" width="400" /></p>
 
 <p>다음, <code class="language-plaintext highlighter-rouge">relu</code>를 사용한 경우 loss와 Acc의 결과입니다.<br />
-<img src="https://drive.google.com/uc?export=view&amp;id=1BqTJdgQ6jZAUW9Ll0nWOa7WVmLhrEg65" alt="" width="400" />
-<img src="https://drive.google.com/uc?export=view&amp;id=1-hmljxBB-mOwL4CjENlv3hXwgpsjai-u" alt="" width="400" /></p>
+<img src="https://lh3.google.com/u/0/d/1BqTJdgQ6jZAUW9Ll0nWOa7WVmLhrEg65" alt="" width="400" />
+<img src="https://lh3.google.com/u/0/d/1-hmljxBB-mOwL4CjENlv3hXwgpsjai-u" alt="" width="400" /></p>
 
 <p>두 함수 모두 10 epochs에 loss가 떨어지기는 하지만 앞의 MLP나 CNN처럼 잘 떨어지지는 않았습니다. RNN에 MNIST 태스크가 적합하지 않아 생기는 이유일 수도 있고 MLP 모델의 파라미터가 660K개인 반면 RNN 모델의 파라미터가 200K개여서 생기는 문제일 수도 있습니다. 아무튼 학습이 된다는 점에 의미를 두려고 합니다.</p>
 
@@ -670,7 +670,7 @@
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2023 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2024 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

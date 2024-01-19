@@ -71,9 +71,9 @@ Dockerfile을 따로 작성하지 않았는데 Elasticsearch와 Kibana까지 도
 
 Kibana를 사용하여 대시보드를 조회할 수 있습니다.
 
-![](https://drive.google.com/uc?export=view&id=1fzCVL6zVHpJLPep1bzde5kxO-KfAgEjj){:width="800"}
+![](https://lh3.google.com/u/0/d/1fzCVL6zVHpJLPep1bzde5kxO-KfAgEjj){:width="800"}
 
-![](https://drive.google.com/uc?export=view&id=126_Mpra87ei2ONdB7K_LcnXMsr8XY3of){:width="800"}
+![](https://lh3.google.com/u/0/d/126_Mpra87ei2ONdB7K_LcnXMsr8XY3of){:width="800"}
 
 ### HDFS
 로그를 수집하여 배치처리하려면 먼저 저장될 공간이 필요했습니다. logstash로부터 온 데이터들은 먼저 hdfs에 저장되고 배치처리를 통해 RDB로 저장되는 과정을 생각했습니다.

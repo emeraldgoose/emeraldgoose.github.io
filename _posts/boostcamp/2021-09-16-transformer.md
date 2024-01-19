@@ -11,7 +11,7 @@ tags: [transformer]
 
 ## Bi-Directional RNNs
 
-![](https://drive.google.com/uc?export=view&id=17FoHi1TYtgulYYIF_8wxQ0dlBJdJvhXM)
+![](https://lh3.google.com/u/0/d/17FoHi1TYtgulYYIF_8wxQ0dlBJdJvhXM)
 
 - 왼쪽에서 오른쪽으로 흐르는 방식을 Forward라 하면 오른쪽에서 왼쪽으로 흐르는 것을 Backward라 할 수 있다.
 - Forward는 "go"와 왼쪽에 있던 정보까지를 $h_2^f$, Backward는 "go"와 오른쪽에 있던 정보까지를 $h_2^b$라 하자.
@@ -20,7 +20,7 @@ tags: [transformer]
 
 ## Transformer: Long-Term Dependency
 
-![](https://drive.google.com/uc?export=view&id=1KwLLispNtOYBguahypHzheqHWxxB2s5q)
+![](https://lh3.google.com/u/0/d/1KwLLispNtOYBguahypHzheqHWxxB2s5q)
 
 - 그림 출처 : [http://jalammar.github.io/illustrated-transformer/](http://jalammar.github.io/illustrated-transformer/)
 
@@ -46,7 +46,7 @@ tags: [transformer]
     - $(\|Q\| \times d_k) \times (d_k \times \|K\|) \times (\|V\| \times d_v)= (\|Q\| \times d_v)$
  - Example from illustrated transformer
 
-![](https://drive.google.com/uc?export=view&id=1MukQ2h5yHD_MmSqUaRwRAjY6Kx7LvdNM)
+![](https://lh3.google.com/u/0/d/1MukQ2h5yHD_MmSqUaRwRAjY6Kx7LvdNM)
 
 - 그림 출처 : [http://jalammar.github.io/illustrated-transformer/](http://jalammar.github.io/illustrated-transformer/)
 
@@ -63,7 +63,7 @@ tags: [transformer]
 
 ## Transformer: Multi-Head Attention
 
-![](https://drive.google.com/uc?export=view&id=1VKZaWHgo1IeXjxBnTS6AwbSQ2C0qWqwH)
+![](https://lh3.google.com/u/0/d/1VKZaWHgo1IeXjxBnTS6AwbSQ2C0qWqwH)
 
 - Head $h$ : number of low-dimensional spaces via $W$ matrices
 - h개의 Attention들은 모두 병렬로 작동하며 각각 attention을 적용하고 나온 output들을 concat하고 linear layer로 보낸다.
@@ -71,19 +71,19 @@ tags: [transformer]
   - where $head_i$ = Attention($QW_i^Q, KW_i^K, VW_i^V$)
 - 각각의 input은 head에 들어가 Query, Key, Value를 생성하고 거기서 계산된 output들을 Concat한다.
 
-![](https://drive.google.com/uc?export=view&id=1x3H-HQdjVRs9MYRm-9W9Ue-7T4vzXjIq)
+![](https://lh3.google.com/u/0/d/1x3H-HQdjVRs9MYRm-9W9Ue-7T4vzXjIq)
 
 
-![](https://drive.google.com/uc?export=view&id=1FdKVa1slEva7VLkk7KEZ9J8YttCob2pV)
+![](https://lh3.google.com/u/0/d/1FdKVa1slEva7VLkk7KEZ9J8YttCob2pV)
 
 
-![](https://drive.google.com/uc?export=view&id=1ElxAzhjX_qcQuYSh1kyjKdGRQLjuTItV)
+![](https://lh3.google.com/u/0/d/1ElxAzhjX_qcQuYSh1kyjKdGRQLjuTItV)
 
 
 - 마지막으로 linear trasform을 수행하여 최종 output을 얻어낸다.
 - 한눈에 보기 쉽게 설명된 이미지이다.
 
-![](https://drive.google.com/uc?export=view&id=18ylIob97ZBF6LHv_2QWWS-5J8PWBWCMe)
+![](https://lh3.google.com/u/0/d/18ylIob97ZBF6LHv_2QWWS-5J8PWBWCMe)
 
 
 - 그림 출처 : [http://jalammar.github.io/illustrated-transformer/](http://jalammar.github.io/illustrated-transformer/)
@@ -94,7 +94,7 @@ tags: [transformer]
   - $k$ : kernel size of convolutions
   - $r$ : size of the neighborhood in restriced self-attention
 
-  ![](https://drive.google.com/uc?export=view&id=1fX7st_3Ff9Zfsg7izHfRtmlNxLQK_5UN)
+  ![](https://lh3.google.com/u/0/d/1fX7st_3Ff9Zfsg7izHfRtmlNxLQK_5UN)
 
 
 - Self-Attention
@@ -110,7 +110,7 @@ tags: [transformer]
             
 ## Transformer: Block-Based Model
 
-![](https://drive.google.com/uc?export=view&id=13Nr0Z-PfLZTQIBwxhCc1Cele3YZYau3a)
+![](https://lh3.google.com/u/0/d/13Nr0Z-PfLZTQIBwxhCc1Cele3YZYau3a)
 
 
 - 각 블록은 두 개의 sub-layer로 이루어져 있다.
@@ -122,7 +122,7 @@ tags: [transformer]
     
 - Transformer: Layer Normalization
     - Layer normalization은 들어온 입력들의 정보를 버리고 평균 0, 분산 1인 정보로 정규화해주는 것을 말한다. 다음 각 레이어 마다 Affine transformation을 수행한다.
-	![](https://drive.google.com/uc?export=view&id=1D7E5K8rKonPpJhaXs3_Ps8-1Xoxszgbn)
+	![](https://lh3.google.com/u/0/d/1D7E5K8rKonPpJhaXs3_Ps8-1Xoxszgbn)
 
 
 
@@ -132,7 +132,7 @@ tags: [transformer]
   - $PE_{(pos,2i)} = sin(pos/10000^{2i/d_{model}})$
   - $PE_{(pos,2i+1)} = cos(pos/10000^{2i/d_{model}})$
   
- ![](https://drive.google.com/uc?export=view&id=1XjqcwpPTRMCzVkHzckMfjcYY81BXTstM)
+ ![](https://lh3.google.com/u/0/d/1XjqcwpPTRMCzVkHzckMfjcYY81BXTstM)
 
 
 - 그림 출처 : [http://nlp.seas.harvard.edu/2018/04/03/attention](http://nlp.seas.harvard.edu/2018/04/03/attention)
@@ -147,7 +147,7 @@ tags: [transformer]
 
 ## Transformer: Decoder
 
-![](https://drive.google.com/uc?export=view&id=1GvTrlAHNvlouDiFI79DoJiFMGI3Y8U7g)
+![](https://lh3.google.com/u/0/d/1GvTrlAHNvlouDiFI79DoJiFMGI3Y8U7g)
 
 - 디코더에 [SOS] 토큰을 넣어주면 Masked Multi-Head Attention을 거쳐 Query를 생성하고 인코더에서 생성된 output을 key와 value로 해서 다시 Multi-Head Attention에 넣어준다.
 - 이후 나온 값을 Feedforward layer에 넣어 softmax를 취한 값이 출력이 되며 이 출력을 다시 디코더에 삽입하여 다음 단어를 예측하게 한다.
@@ -161,4 +161,4 @@ tags: [transformer]
 
 ## Transformer: Experimental Results
 
-![](https://drive.google.com/uc?export=view&id=19ZXnUe9j9Kux2N49T1nck57Hkqgu-Upz)
+![](https://lh3.google.com/u/0/d/19ZXnUe9j9Kux2N49T1nck57Hkqgu-Upz)

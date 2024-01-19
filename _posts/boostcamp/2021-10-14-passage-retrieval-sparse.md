@@ -17,14 +17,14 @@ Open-domain Question Answering: 대규모의 문서 중에서 질문에 대한 �
 
 - Passage Retrieval과 MRC를 이어서 2-Stage로 만들 수 있음
     
-    ![](https://drive.google.com/uc?export=view&id=14iurFvUnXIiLZj_XEwNbh5M2ze3ZeDxV)
+    ![](https://lh3.google.com/u/0/d/14iurFvUnXIiLZj_XEwNbh5M2ze3ZeDxV)
     
 
 ### Overview of Passage Retrieval
 
 Query와 Passage를 임베딩한 뒤 유사도로 랭킹을 매기고, 유사도가 가장 높은 Passage를 선택함
 
-![](https://drive.google.com/uc?export=view&id=1BE1hDFSaRXPx3aTVvuP5BRSe_NU1S210)
+![](https://lh3.google.com/u/0/d/1BE1hDFSaRXPx3aTVvuP5BRSe_NU1S210)
 
 질문이 들어왔을 때, 질문을 어떤 vector space로 임베딩하고 마찬가지로 Passage 또한 같은 vector space에 임베딩한다. Passage의 임베딩은 미리 해놓아 효율성을 높인다.  
 다음, 쿼리와 문서의 Similarity를 측정하여 Ranking을 매기게 된다. 이때 Score는 nearest neighbor(고차원 space에서 서로의 거리를 측정)와 inner product 방법을 사용한다.

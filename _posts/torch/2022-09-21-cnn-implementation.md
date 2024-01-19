@@ -47,7 +47,7 @@ FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 
 ## Forward
 Conv2d 레이어의 forward를 먼저 보겠습니다.  
 (3,3)인 입력 X, (2,2)인 가중치 W를 convolution해서 (2,2)인 출력 O를 계산한다고 가정합니다.  
-![](https://drive.google.com/uc?export=view&id=12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH)
+![](https://lh3.google.com/u/0/d/12LftVBInOBxYeZkTQ0gI7hVsN-ibOWTH)
 $o_{11} = k_{11}x_{11} + k_{12}x_{12} + k_{21}x_{21} + k_{22}x_{22}$
 
 $o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$
@@ -141,15 +141,15 @@ $\frac{dL}{dx_{33}} = d_{22} \cdot k_{22}$
 
 $\frac{dL}{dx_{11}} = d_{11} \cdot k_{11}$
 
-![](https://drive.google.com/uc?export=view&id=18KIBdo2AbiexxzKaL15siJAFc5KtVpbW){:width="300"}
+![](https://lh3.google.com/u/0/d/18KIBdo2AbiexxzKaL15siJAFc5KtVpbW){:width="300"}
 
 $\frac{dL}{dx_{12}} = d_{12} \cdot k_{11} + d_{11} \cdot k_{12}$
 
-![](https://drive.google.com/uc?export=view&id=1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V){:width="200"}
+![](https://lh3.google.com/u/0/d/1_5_BHHzLyqCyAJaaincxoM0fSg0jVJ2V){:width="200"}
 
 $\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
 
-![](https://drive.google.com/uc?export=view&id=1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ){:width="300"}
+![](https://lh3.google.com/u/0/d/1pW8dBolmXzuenj6Gj6BQWuGec-McJqtQ){:width="300"}
 
 파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
 따라서, **dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.**  
@@ -172,12 +172,12 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 <script src="https://gist.github.com/emeraldgoose/d5198773511fc9da28517861b7df4160.js"></script>
 
 MaxPool2d를 사용한 결과입니다.  
-![](https://drive.google.com/uc?export=view&id=1nXnM-90pf8W721W2WjDUNtrYo24pOSpp){:width="400"}
-![](https://drive.google.com/uc?export=view&id=1C3TPLEmNtxiti0hInewTqjddiX-Bt4Pu){:width="400"}
+![](https://lh3.google.com/u/0/d/1nXnM-90pf8W721W2WjDUNtrYo24pOSpp){:width="400"}
+![](https://lh3.google.com/u/0/d/1C3TPLEmNtxiti0hInewTqjddiX-Bt4Pu){:width="400"}
 
 AvgPool2d를 사용한 결과입니다.  
-![](https://drive.google.com/uc?export=view&id=1fLkp0h7WL2NqvQMRsuMSYA6i8_YBbuzx){:width="400"}
-![](https://drive.google.com/uc?export=view&id=11V_Udsb-HF8t60Sv94zQ8f7XcDYWHNSI){:width="400"}
+![](https://lh3.google.com/u/0/d/1fLkp0h7WL2NqvQMRsuMSYA6i8_YBbuzx){:width="400"}
+![](https://lh3.google.com/u/0/d/11V_Udsb-HF8t60Sv94zQ8f7XcDYWHNSI){:width="400"}
 
 결과만 봐서는 loss의 경우 MaxPool2d와 AvgPool2d의 결과가 비슷했고 accuracy의 경우 MaxPool2d가 조금 더 좋았습니다.
 

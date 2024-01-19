@@ -119,11 +119,11 @@ t2 = PythonOperator(
 
 ## 결과
 최종 그래프는 다음과 같습니다. 
-![](https://drive.google.com/uc?export=view&id=1Qtqbduiw72XpNNSeQeH7pGWufVc-VT1-){:width=400}  
+![](https://lh3.google.com/u/0/d/1Qtqbduiw72XpNNSeQeH7pGWufVc-VT1-){:width=400}  
 collector들이 연두색 테두리를 가지고 있는데 RUNNING되고 있는 것을 나타내고 있으며 병렬처리되고 있음을 알 수 있습니다.  
 추가적으로 collector들이 db에 접근하기 때문에 table lock이 필요한가?에 대해서 찾아봤는데 sqlite는 트랜잭션을 실행할 때 테이블을 잠가버리기 때문에 따로 구현할 필요는 없다고 합니다.  
 
-![](https://drive.google.com/uc?export=view&id=1dtOKXsliL3tkOZaqZ9WOmgbz05_8hXIP){:width=400}  
+![](https://lh3.google.com/u/0/d/1dtOKXsliL3tkOZaqZ9WOmgbz05_8hXIP){:width=400}  
 collector 하나의 log를 살펴본 이미지인데 에러가 아닌(check=0) 로그들이 문제없이 db로 들어가고 있습니다. 지금 출력이 2개씩 되고 있는것은 코드 작성에서 print가 두 번 실행되고 있기 때문입니다.  
 
 ## 회고

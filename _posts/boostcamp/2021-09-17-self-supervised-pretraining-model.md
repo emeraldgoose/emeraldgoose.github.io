@@ -17,7 +17,7 @@ tags: [nlp]
 
 - GPT-1
 
-    ![](https://drive.google.com/uc?export=view&id=1Dt6MzObB1bLToXuUl4s113c_2y2kvuiH)
+    ![](https://lh3.google.com/u/0/d/1Dt6MzObB1bLToXuUl4s113c_2y2kvuiH)
 
     - 출처 : [openai.com/blog/language-unsupervised](https://openai.com/blog/language-unsupervised)
 
@@ -42,7 +42,7 @@ tags: [nlp]
 
 ### Pre-training Tasks in BERT
 
-![](https://drive.google.com/uc?export=view&id=1DCM7-K5IQcaIR1x1GUK-zj1iig_S11Mm)
+![](https://lh3.google.com/u/0/d/1DCM7-K5IQcaIR1x1GUK-zj1iig_S11Mm)
 
 - 출처 : [nlp.stanford.edu/seminar/details/jdevlin.pdf](nlp.stanford.edu/seminar/details/jdevlin.pdf)
 
@@ -58,7 +58,7 @@ tags: [nlp]
 
 ### Pre-training Tasks in BERT: Next Sentence Prediction
 
-![](https://drive.google.com/uc?export=view&id=1wj90_COt5PwbCmbAeUstBvYW29Cj4Jj9)
+![](https://lh3.google.com/u/0/d/1wj90_COt5PwbCmbAeUstBvYW29Cj4Jj9)
 
 - 문장 레벨에서 Pre-training하기 위한 기법이다.
 - [MASK]위치의 단어를 예측하고 [CLS]토큰을 위해 Binary Classification layer를 하나 추가하여 입려된 두 문장이 연결되었는지 혹은 연결되지 않았는지 판단하도록 한다.
@@ -147,11 +147,11 @@ tags: [nlp]
 
 - GPT-3는 GPT-2를 개선한 모델인데 개선방향은 GPT-2의 파라미터보다 훨씬 많은 파라미터와 훨씬 더 많은 레이어를 쌓고 더 많은 데이터, 더 큰 배치 사이즈로 학습한 모델이다.
 
-    ![](https://drive.google.com/uc?export=view&id=1IfMt9cN6S_Shf4wzA4bvgp56jYMtEGjq)
+    ![](https://lh3.google.com/u/0/d/1IfMt9cN6S_Shf4wzA4bvgp56jYMtEGjq)
 
 - Few-shot Learners
 
-    ![](https://drive.google.com/uc?export=view&id=12dXEgelAp4Gdc2ha7WPS1i43Ogq4r6iB)
+    ![](https://lh3.google.com/u/0/d/12dXEgelAp4Gdc2ha7WPS1i43Ogq4r6iB)
 
     - Zero-shot: task-description을 가지고 바로 answer를 답하도록 하는 task
     - One-shot: 한 가지 예를 주고 answer를 답하도록 하는 task
@@ -159,7 +159,7 @@ tags: [nlp]
     - 이전에는 downstream을 위해 output layer를 추가하여 학습시키는 과정을 거쳤지만 지금은 변경하지 않고 inference과정 중에 예시를 input text에 example를 포함시키는 방법을 사용한다. → zero-shot보다 성능이 좋아졌음
 - 모델 사이즈를 키울수록 zero-shot, few-shot 성능이 빠르게 올라간다.
 
-    ![](https://drive.google.com/uc?export=view&id=1JHHgOz0D46RmVx5SHegfJsfgIHcMjrBZ)
+    ![](https://lh3.google.com/u/0/d/1JHHgOz0D46RmVx5SHegfJsfgIHcMjrBZ)
 
 ## ALBERT: A Lite BERT for Self-supervised Learning of Language Representations
 
@@ -181,7 +181,7 @@ tags: [nlp]
     - Shared-attention: attention parameter를 공유
     - All-shared: Shared-FFN + Shared-attention
 
-    ![](https://drive.google.com/uc?export=view&id=1D-sF2dFk_xHfZ76naH542k0eAIkWOYNA)
+    ![](https://lh3.google.com/u/0/d/1D-sF2dFk_xHfZ76naH542k0eAIkWOYNA)
 
     - 모두 공유했을 때 가장 적은 파라미터 수를 가지고 성능에 있어서는 하락폭이 크지 않다.
 - Sentence Order Prediction
@@ -193,7 +193,7 @@ tags: [nlp]
 
 ## ELECTRA: Efficiently Learning an Encoder that Classifies Token Replacements Accurately
 
-![](https://drive.google.com/uc?export=view&id=17k8Gjv6xybgtgjvJW3aYXN-Ymi65hSjJ)
+![](https://lh3.google.com/u/0/d/17k8Gjv6xybgtgjvJW3aYXN-Ymi65hSjJ)
 
 - Generator는 MLM을 통해 [MASK]단어를 복원한다.
 - Discriminator는 self-attention을 쌓은 모델인데 각 단어별로 original단어인지 어색하여 replaced된 모델인지 판단하는 모델이다.

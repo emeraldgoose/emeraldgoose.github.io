@@ -19,7 +19,7 @@ tags: [tree]
 
 길이 10의 순열을 세그먼트 트리로 구성하면 다음 그림과 같다.
 
-![](https://drive.google.com/uc?export=view&id=1448WjDEJoG1xKhIPtC2CGecYCNVBxjmK)
+![](https://lh3.google.com/u/0/d/1448WjDEJoG1xKhIPtC2CGecYCNVBxjmK)
 
 트리를 만드는 방법은 다음과 같다.
 
@@ -30,7 +30,7 @@ tags: [tree]
 이때, 루트의 번호는 0이 아니라 1을 의미한다.   
 왜냐하면 다음 왼쪽 자식이 2, 오른쪽 자식이 3을 가리키게 되면서 부모노드 번호에서 2를 곱하면 왼쪽 자식노드를 의미하기 때문에 효과적이다. 아래 그림을 보면 이해하기 쉽다.  
 
-![](https://drive.google.com/uc?export=view&id=1gnrDRzUzmHGf42c8oJr1WAqtVcyMb8xY)
+![](https://lh3.google.com/u/0/d/1gnrDRzUzmHGf42c8oJr1WAqtVcyMb8xY)
 
 또한, 구현 방식은 재귀적으로 구하는 것이 더 간단하다.  
 
@@ -48,7 +48,7 @@ int init(int start, int end, int node) {
 
 ## 구간 합 구하기
 
-![](https://drive.google.com/uc?export=view&id=1fBFFRdiPr8o_Q7hu8S8RmjslNCxuVL16)
+![](https://lh3.google.com/u/0/d/1fBFFRdiPr8o_Q7hu8S8RmjslNCxuVL16)
 
 위의 그림에서 a[4] ~ a[8]의 구간합을 구하고 싶다면 녹색으로 칠해진 노드의 값만 더해주면 된다.
 

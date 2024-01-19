@@ -42,12 +42,12 @@ tags: [bert, lightweight]
 - Iterative Pruning of Attention Heads
     - Attn 헤드를 중요도를 간접적으로 계산한다.
         
-        ![](https://drive.google.com/uc?export=view&id=1FXNx3_Z0eG4_71XXIGdoKzy4fCphHvci)
+        ![](https://lh3.google.com/u/0/d/1FXNx3_Z0eG4_71XXIGdoKzy4fCphHvci)
         
         - $\xi_h$ : mask variables, 0: masked(removed), 1: unmaksed, $X$: data distribution
     - 데이터샘플에 대해서 특정 헤드를 살린 것에 대한 Loss와 해당 헤드를 지운 것에 대한 Loss의 차이를 뒤의 식으로 approximate하여 사용
         
-        ![](https://drive.google.com/uc?export=view&id=1F2NzJc5-OPCYj16GcsYVlsQ6Rfu3XVJC)
+        ![](https://lh3.google.com/u/0/d/1F2NzJc5-OPCYj16GcsYVlsQ6Rfu3XVJC)
         
 - Effect of Pruning on Efficiency
     - 배치사이즈가 작은 경우 효과가 좋지 않지만 큰 경우 효과가 좋았음
@@ -63,7 +63,7 @@ tags: [bert, lightweight]
     - → Movement Pruning : Transfer Learning 과정에서, Weight의 움직임을 누적해가며 Pruning할 Weight를 결정하자!
 - Background: Score-Based Pruning(Unstructured pruning formulation)
     
-    ![](https://drive.google.com/uc?export=view&id=10-bcZLGMSOl1y9dQWwZyvf9tg7DQUWm_)
+    ![](https://lh3.google.com/u/0/d/10-bcZLGMSOl1y9dQWwZyvf9tg7DQUWm_)
     
     - $S = (\|W\_{i,j}\|)\_{1<i,j<n}$
 - Method Interpretation

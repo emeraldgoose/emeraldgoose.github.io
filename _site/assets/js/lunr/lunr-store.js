@@ -623,8 +623,8 @@ var store = [{
         "url": "/paper/On-the-effect-of-corpora/",
         "teaser": null
       },{
-        "title": "Python으로 딥러닝 구현하기",
-        "excerpt":"모기업 코딩테스트에 파이썬 기본 라이브러리로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 학습이 되지 않아 코딩테스트에서 떨어졌었고 구현하지 못했던 것이 계속 생각나서 구현해봤습니다. 계획 데이터셋을 MNIST로 잡고 MLP를 구현하고자 했습니다. 코딩테스트때도 입력으로 MNIST와 비슷한 값이 들어왔었기 때문입니다. 레이어는 총 3개로 input -&gt; (Linear -&gt; Activation) -&gt; (Linear -&gt; Activation) -&gt;...","categories": ["Pytorch"],
+        "title": "Python으로 MLP 구현하기",
+        "excerpt":"코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다. Multi-Layer Perceptron Multi-Layer Perceptron(MLP)은 퍼셉트론으로 이루어진 층(layer)들이 쌓여 신경망을 이루는 모델입니다. 구현이 간단하기 때문에 딥러닝을 바닥부터 구현하는 프로젝트를 시작하는데 좋은 모델입니다. 저는 MNIST를 데이터셋으로 하여 모델을 훈련시키고 classification task를 수행해볼...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/dl-implement/",
         "teaser": null

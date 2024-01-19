@@ -16,7 +16,7 @@ dfs를 실행하게 되면 dfs spanning tree가 만들어지는데, 사이클이
 
 Back edge란, 다음의 그림에서 빨간색 선이다.
 
-![](https://drive.google.com/uc?export=view&id=1CVQ7T6HLMMPYy9e6dMvojEF_aiB5QGca)
+![](https://lh3.google.com/u/0/d/1CVQ7T6HLMMPYy9e6dMvojEF_aiB5QGca)
 
 정점 1, 2, 5가 사이클을 형성하는 것을 볼 수 있다. 사이클을 찾기 위해서는 Back edge를 찾아야 한다.
 
@@ -55,24 +55,24 @@ bool isCycle(int u, int parent) {
 
 예를들면, 아래 그래프에서 dfs로 1 → 2 → 3 → 4까지 내려간 후 길이 없어 2번 정점까지 리턴 될 것이다.
 
-![](https://drive.google.com/uc?export=view&id=1f_T-Jk36ZmbibyOv9ugiW6IKnqpmHXgu)
+![](https://lh3.google.com/u/0/d/1f_T-Jk36ZmbibyOv9ugiW6IKnqpmHXgu)
 
 이제, 2번에서 5번으로 이동 후 4번으로 가려고 했을 때 4번이 이미 방문한 지점이라 위의 코드에서 true를 반환하게 될 것이다. 하지만 실제로는 사이클이 아니다.
 
 그래서 이번에는 stack처럼 사용할 다른 배열의 공간이 필요하다. 이것을 `recStack[]`이라 하자.
 
-![](https://drive.google.com/uc?export=view&id=1Fx6rRNCjZMXGubDT-LZhS2T27y3yW3wi)
+![](https://lh3.google.com/u/0/d/1Fx6rRNCjZMXGubDT-LZhS2T27y3yW3wi)
 
 처음 1번에서 시작하여 dfs를 진행한다.
 
-![](https://drive.google.com/uc?export=view&id=1r_alnZpEfMHMWlMK8yQsISnDJr4Z2EXn)
+![](https://lh3.google.com/u/0/d/1r_alnZpEfMHMWlMK8yQsISnDJr4Z2EXn)
 
 차례대로 4번 정점까지 들어가면 두 배열의 상태는 다음과 같다.
 
 - visited[] : [1,1,1,1,0]
 - recStack[] : [1,1,1,1,0]
 
-![](https://drive.google.com/uc?export=view&id=1-4pqEpBFCIeuCCp_XVvvyCzQdeOnO-QK)
+![](https://lh3.google.com/u/0/d/1-4pqEpBFCIeuCCp_XVvvyCzQdeOnO-QK)
 
 다시 반환되어 2번 정점까지 되돌아온다. 이때 배열의 상태는 다음과 같다.
 
@@ -81,7 +81,7 @@ bool isCycle(int u, int parent) {
 
 다음 2번에서 5번으로 진행한다.
 
-![](https://drive.google.com/uc?export=view&id=1lvNfnHRWhqanV1vo4IybgEP_nWnozieb)
+![](https://lh3.google.com/u/0/d/1lvNfnHRWhqanV1vo4IybgEP_nWnozieb)
 
 이때 배열의 상태는 다음과 같다.
 
