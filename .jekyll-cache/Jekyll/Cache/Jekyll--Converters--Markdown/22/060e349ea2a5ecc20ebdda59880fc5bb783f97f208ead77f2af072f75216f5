@@ -1,0 +1,51 @@
+I"	<blockquote>
+  <p><strong>Apache Airflow 기반의 데이터 파이프라인</strong> 책의 내용 중 일부를 정리한 내용입니다.</p>
+</blockquote>
+
+<h1 id="태스크-디자인">태스크 디자인</h1>
+<p>Airflow의 백필링과 재실행 태스크는 원자성과 멱등성을 고려하여 태스크를 디자인해야 합니다.</p>
+
+<h2 id="원자성">원자성</h2>
+<p>Airflow에서 원자성 트랜잭션은 데이터베이스와 같이 모두 발생하거나 전혀 발생하지 않는, 더 이상 나눌 수 없는 작업으로 간주됩니다. Airflow의 태스크는 성공적으로 수행하여 적절한 결과를 생성하거나 시스템 상태에 영향을 미치지 않고 실패하도록 정의합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_calculate_stats</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">):</span>
+    <span class="s">"""이벤트 데이터 통계 계산하기"""</span>
+    <span class="n">input_path</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s">'templates_dict'</span><span class="p">][</span><span class="s">'input_path'</span><span class="p">]</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">contesxt</span><span class="p">[</span><span class="s">'templates_dict'</span><span class="p">][</span><span class="s">'output_path'</span><span class="p">]</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">events</span><span class="p">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'date'</span><span class="p">,</span> <span class="s">'user'</span><span class="p">]).</span><span class="n">size</span><span class="p">().</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">stats</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="n">email_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">'user@example.com'</span><span class="p">)</span>
+
+    <span class="n">calculate_stats</span> <span class="o">&gt;&gt;</span> <span class="n">email_stats</span>
+</code></pre></div></div>
+
+<p>위의 코드의 문제점은 CSV 작성 후 이메일을 보내면 단일 기능에서 두 가지 작업을 수행하게 되어 원자성이 깨지게 됩니다. 만약 <code class="language-plaintext highlighter-rouge">_send_stats</code> 함수가 실패하면 이미 output_path 경로에 통계에 대한 출력 파일이 저장되어 있기 때문에 통계 발송이 실패했음에도 작업이 성공한 것처럼 보이게 됩니다. 이 기능을 원자성을 유지하는 방식으로 구현하기 위해 이메일 발송 기능을 별도의 태스크로 분리하여 구현합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_send_stats</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="o">**</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s">'templates_dict'</span><span class="p">][</span><span class="s">'stats_path'</span><span class="p">])</span>
+    <span class="n">email_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span>
+
+<span class="n">send_stats</span> <span class="o">=</span> <span class="n">PythonOperator</span><span class="p">(</span>
+    <span class="n">python_callable</span><span class="o">=</span><span class="n">_send_stats</span><span class="p">,</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'send_stats'</span><span class="p">,</span>
+    <span class="n">op_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s">"email"</span><span class="p">:</span><span class="s">"user@example.com"</span><span class="p">},</span>
+    <span class="n">templates_dict</span><span class="o">=</span><span class="p">{</span><span class="s">"stats_path"</span><span class="p">:</span><span class="s">"/data/stats/.csv"</span><span class="p">}</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">calculated_stats</span> <span class="o">&gt;&gt;</span> <span class="n">send_stats</span>
+</code></pre></div></div>
+
+<p>이렇게 하면 이메일 전송이 실패해도 더 이상 calculate_stats 작업의 결과에 영향을 주지 않고 send_stats만 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.</p>
+
+<p>하지만 모든 작업을 개별 태스크로 분리하여 모든 태스크를 원자성을 유지할 수 있다고 생각해서는 안됩니다. 만약 이벤트 API를 호출하기 전에 로그인해야 하는 경우, 일반적으로 API를 인증하기 위한 인증 토큰을 가져오기 위해 추가적인 API 호출이 필요하며 그 이후에 이벤트 API를 호출할 수 있습니다.</p>
+
+<p>“하나의 작업 = 하나의 태스크”라는 접근성에 따라 개별 작업으로 분리합니다. 하지만 이로 인해 두 번째 태스크(이벤트 가져오기) 바로 전에 첫 번째 태스크를 실행하지 않고 실패하게 되므로 두 태스크 사이에 강한 의존성이 발생합니다. 이러한 의존성은 단일 태스크 내에서 두 작업을 모두 유지하여 하나의 일관된 태스크 단위를 형성하는 것이 더 나을 수 있습니다.</p>
+
+<p>대부분의 airflow 오퍼레이터는 이미 원자성을 유지하도록 설계되어, 오퍼레이터가 내부적으로 인증과 같이 밀접하게 연결된 작업을 수행할 수 있는 옵션들이 있습니다. 좀 더 유연한 파이썬 및 배시 오퍼레이터 사용시 태스크가 원자성을 유지할 수 있도록 주의를 기울여야 할 필요가 있습니다.</p>
+
+<h2 id="멱등성">멱등성</h2>
+:ET
