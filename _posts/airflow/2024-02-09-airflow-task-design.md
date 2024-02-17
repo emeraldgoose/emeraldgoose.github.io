@@ -57,7 +57,7 @@ send_stats = PythonOperator(
 calculated_stats >> send_stats
 ```
 
-이렇게 하면 이메일 전송이 실패해도 더 이상 `calculate_stats` 작업의 결과에 영향을 주지 않고 `_send_stats만` 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.
+이렇게 하면 이메일 전송이 실패해도 더 이상 `calculate_stats` 작업의 결과에 영향을 주지 않고 `_send_stats`만 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.
 
 하지만 모든 작업을 개별 태스크로 분리하여 모든 태스크를 원자성을 유지할 수 있다고 생각해서는 안됩니다. 
 
