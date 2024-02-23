@@ -1,4 +1,4 @@
-I"�"<h2 id="related">Related</h2>
+I"#<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -20,6 +20,8 @@
 <p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
 
 <p>RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 input_length와 batch_size의 위치가 바뀝니다. 그리고 입력과 출력의 shape만 바뀔 뿐 내부 파라미터의 shape가 변하지는 않습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/76f18d1eae4dba2b35ec8a5eade3c650.js"></script>
 
 <p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>를 선택할 수 있습니다. 비선형 함수의 기본값으로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있어서 저도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현하고 테스트해봤습니다.</p>
 
@@ -52,9 +54,9 @@
 
 <p>${\partial J \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
 
-<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^T \cdot x_t$</p>
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = [dout \cdot (1 - h_t^2)]^T \cdot x_t$</p>
 
-<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^T \cdot h_{t-1}$</p>
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = [dout \cdot (1 - h_t^2)]^T \cdot h_{t-1}$</p>
 
 <p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
 
