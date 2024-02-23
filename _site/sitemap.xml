@@ -397,14 +397,6 @@
 <lastmod>2022-01-05T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/airflow/airflow/</loc>
-<lastmod>2022-01-09T00:00:00+09:00</lastmod>
-</url>
-<url>
-<loc>http://localhost:4000/airflow/airflow-final/</loc>
-<lastmod>2022-01-11T00:00:00+09:00</lastmod>
-</url>
-<url>
 <loc>http://localhost:4000/atcoder/abc250/</loc>
 <lastmod>2022-05-10T00:00:00+09:00</lastmod>
 </url>
@@ -457,7 +449,7 @@
 <lastmod>2023-12-07T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/airflow/airflow/</loc>
+<loc>http://localhost:4000/airflow/airflow-task-design/</loc>
 <lastmod>2024-02-09T00:00:00+09:00</lastmod>
 </url>
 <url>

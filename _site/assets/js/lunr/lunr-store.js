@@ -593,18 +593,6 @@ var store = [{
         "url": "/atcoder/abc233/",
         "teaser": null
       },{
-        "title": "airflow 체험기",
-        "excerpt":"부캠 때 에러로 사용못한 airflow를 이제서야 체험해본 것을 정리한 글입니다. (무지성 주의) airflow 시작 데이터 엔지니어링 도구인 airflow를 로컬에 설치한 후 몇가지를 살펴보았는데 airflow는 데이터를 관리하는 것이 아닌 함수 단위나 스크립트 단위로 실행시켜주는 도구라는 것을 깨닫게 되었습니다. 그렇다면 데이터를 생성해서 스케줄링을 돌리자!라는 생각이 들어 재밌어보여서 바로 실행에 옮겼습니다. 다시 어떤...","categories": ["airflow"],
-        "tags": ["airflow","Ops"],
-        "url": "/airflow/airflow/",
-        "teaser": null
-      },{
-        "title": "airflow 체험기_최종",
-        "excerpt":"이전 글에서 SequentialExecutor에서 CeleryExecutor로 변경하기 위해 삽질한 경험글입니다. CeleryExecutor Celery는 Postgresql과 Mysql만 db로 사용하고 있어서 기존 sqlite를 postgresql로 바꾸는 작업을 진행했습니다. Mysql은 에러가 자주나서 Postgresql을 선택했습니다. 먼저, airflow db init을 하게 되면 AIRFLOW_HOME에 airflow.cfg라는 설정 파일이 생성됩니다. 바꿔야 하는 설정은 다음과 같습니다. # port는 모두 기본포트를 사용하고 있어서 명시해줄 필요가...","categories": ["airflow"],
-        "tags": ["airflow","Ops"],
-        "url": "/airflow/airflow-final/",
-        "teaser": null
-      },{
         "title": "AtCoder Beginner Contest 250",
         "excerpt":"A. Adjacent Squares (H, W) 크기의 행렬이 주어졌을 때 위치 (R, C)에서 인접한 원소의 수를 출력하는 문제이다. H와 W가 1인 경우를 예외처리해주면 쉽게 풀 수 있다. #include &lt;bits/stdc++.h&gt; #define endl '\\n' #define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0); using namespace std; typedef long long ll; typedef pair&lt;int,int&gt; pii; typedef pair&lt;ll,ll&gt; pll; const...","categories": ["AtCoder"],
         "tags": ["ABC"],
@@ -686,6 +674,6 @@ var store = [{
         "title": "Airflow task 디자인",
         "excerpt":"Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다. 태스크 디자인 Airflow의 백필링과 재실행 태스크는 원자성과 멱등성을 고려하여 태스크를 디자인해야 합니다. 원자성 Airflow에서 원자성 트랜잭션은 데이터베이스와 같이 모두 발생하거나 전혀 발생하지 않는, 더 이상 나눌 수 없는 작업으로 간주됩니다. Airflow의 태스크는 성공적으로 수행하여 적절한 결과를 생성하거나 시스템 상태에...","categories": ["airflow"],
         "tags": ["airflow","Ops"],
-        "url": "/airflow/airflow/",
+        "url": "/airflow/airflow-task-design/",
         "teaser": null
       }]

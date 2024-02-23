@@ -23,7 +23,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="gooooooooooose">
 <meta property="og:title" content="Airflow task 디자인">
-<meta property="og:url" content="http://localhost:4000/airflow/airflow/">
+<meta property="og:url" content="http://localhost:4000/airflow/airflow-task-design/">
 
 
   <meta property="og:description" content="Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다.">
@@ -45,7 +45,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/airflow/airflow/">
+<link rel="canonical" href="http://localhost:4000/airflow/airflow-task-design/">
 
 
 
@@ -400,7 +400,7 @@
 <span class="n">calculated_stats</span> <span class="o">&gt;&gt;</span> <span class="n">send_stats</span>
 </code></pre></div></div>
 
-<p>이렇게 하면 이메일 전송이 실패해도 더 이상 <code class="language-plaintext highlighter-rouge">calculate_stats</code> 작업의 결과에 영향을 주지 않고 <code class="language-plaintext highlighter-rouge">_send_stats만</code> 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.</p>
+<p>이렇게 하면 이메일 전송이 실패해도 더 이상 <code class="language-plaintext highlighter-rouge">calculate_stats</code> 작업의 결과에 영향을 주지 않고 <code class="language-plaintext highlighter-rouge">_send_stats</code>만 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.</p>
 
 <p>하지만 모든 작업을 개별 태스크로 분리하여 모든 태스크를 원자성을 유지할 수 있다고 생각해서는 안됩니다.</p>
 

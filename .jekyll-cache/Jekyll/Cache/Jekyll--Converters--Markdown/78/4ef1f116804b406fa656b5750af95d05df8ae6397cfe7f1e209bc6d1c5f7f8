@@ -1,4 +1,4 @@
-I"� <blockquote>
+I"P(<blockquote>
   <p><strong>Apache Airflow 기반의 데이터 파이프라인</strong> 책의 내용 중 일부를 정리한 내용입니다.</p>
 </blockquote>
 
@@ -51,7 +51,7 @@
 <span class="n">calculated_stats</span> <span class="o">&gt;&gt;</span> <span class="n">send_stats</span>
 </code></pre></div></div>
 
-<p>이렇게 하면 이메일 전송이 실패해도 더 이상 <code class="language-plaintext highlighter-rouge">calculate_stats</code> 작업의 결과에 영향을 주지 않고 <code class="language-plaintext highlighter-rouge">_send_stats만</code> 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.</p>
+<p>이렇게 하면 이메일 전송이 실패해도 더 이상 <code class="language-plaintext highlighter-rouge">calculate_stats</code> 작업의 결과에 영향을 주지 않고 <code class="language-plaintext highlighter-rouge">_send_stats</code>만 실패하도록 하여 두 작업 모두 원자성을 유지할 수 있습니다.</p>
 
 <p>하지만 모든 작업을 개별 태스크로 분리하여 모든 태스크를 원자성을 유지할 수 있다고 생각해서는 안됩니다.</p>
 
@@ -60,4 +60,22 @@
 <p>대부분의 airflow 오퍼레이터는 이미 원자성을 유지하도록 설계되어, 오퍼레이터가 내부적으로 인증과 같이 밀접하게 연결된 작업을 수행할 수 있는 옵션들이 있습니다. 좀 더 유연한 파이썬 및 배시 오퍼레이터 사용시 태스크가 원자성을 유지할 수 있도록 주의를 기울여야 할 필요가 있습니다.</p>
 
 <h2 id="멱등성">멱등성</h2>
+<p>Airflow의 멱등성은 동일한 입력으로 동일한 태스크를 여러 번 호출해도 결과는 항상 같아야 하는 속성입니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fetch_events</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s">'fetch_events'</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="p">(</span>
+      <span class="s">'mkdir -p /data/events &amp;&amp; '</span><span class="p">,</span>
+      <span class="s">'curl -o /data/events/.json'</span><span class="p">,</span>
+      <span class="s">'http://localhost:5000/events?'</span><span class="p">,</span>
+      <span class="s">'start_date=&amp;'</span><span class="p">,</span>
+      <span class="s">'end_date='</span>
+    <span class="p">),</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>특정 날짜에 이 태스크를 다시 실행하면 이전 실행과 동일한 이벤트 데이터 세트를 가져오고 /data/events 폴더에 있는 기존 JSON 파일에 동일한 결과를 덮어쓰게 됩니다. 따라서 이 이벤트 가져오기 태스크는 효럭이 없게 됩니다.</p>
+
+<p>보통 데이터를 쓰는 태스크는 기존 결과를 확인하거나 이전 태스크 결과를 덮어쓸지 여부를 확인하여 멱등성을 유지합니다. 시간별로 파티션 데이터 세트가 저장되는 경우 파티션 범위로 결과를 덮어쓸 수 있기 때문에 Upsert를 이용하면 비교적 간단하게 작업할 수 있습니다. 보다 일반적인 애플리케이션에서는 작업의 모든 과정에서 오류 발생 상황을 고려해 멱등성이 보장되는지 확인해야 합니다.</p>
 :ET
