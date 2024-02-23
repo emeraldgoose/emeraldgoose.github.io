@@ -60,7 +60,7 @@ var store = [{
         "teaser": null
       },{
         "title": "LCS(Longest Common Subsequence)",
-        "excerpt":"LCS LCS는 Longest Common Subsequence의 약자로 최장 공통 부분 문자열이다. [LCS(Longest Common Substring)]과 혼동해서는 안된다. LCS의 이해 DP(Dynamic Programming)를 사용하여 특정 범위의 LCS를 구하고 다른 범위의 LCS를 구할 때 이전 범위의 값을 이용하여 효율적으로 해결할 수 있다. 먼저, 서로 다른 문자열 ‘ACAYKP’와 ‘CAPCAK’가 있다고 가정하자. 문자열 ‘ACAYKP’를 기준으로 ‘CAPCAK’의 LCS를...","categories": ["Algorithm"],
+        "excerpt":"LCS LCS는 Longest Common Subsequence의 약자로 최장 공통 부분 문자열이다. [LCS(Longest Common Substring)]과 혼동해서는 안된다. LCS의 이해 DP(Dynamic Programming)를 사용하여 특정 범위의 LCS를 구하고 다른 범위의 LCS를 구할 때 이전 범위의 값을 이용하여 효율적으로 해결할 수 있다. 비교한 문자가 다르다면 이전 문자까지의 LCS들을 비교하여 가장 큰 값을 현재 값에 저장한다....","categories": ["Algorithm"],
         "tags": ["string","dp"],
         "url": "/algorithm/longest-common-subsequence/",
         "teaser": null
