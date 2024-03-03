@@ -31,12 +31,12 @@ Downstream Task로는 NSMC(영화리뷰), KorQuAD, KLUE-YNAT(뉴스제목분류)
 - 모두의말뭉치(Modu)로 학습한 모델은 카페나 뉴스로 학습한 모델보다 좋은 성능을 냅니다. 하지만 Modu 사이즈는 카페나 뉴스 말뭉치의 1/10배보다 작습니다.  
 
 ### Effect of Corpus size
-![](https://lh3.google.com/u/0/d/1SgN5NThYfhdt8z0k4_0veZx7mzvi8uQv){:width="700"}    
+![](https://lh3.google.com/u/0/d/1igaRjlK06EdM7kY6YAlRN5oePI8sQPeW){:width="700"}    
 말뭉치 사이즈를 150B에서 56B로 줄였을 때는 성능이 비슷합니다. 말뭉치 사이즈가 성능을 감소시키는 것은 아닙니다.  
 하지만 6B 토큰으로 학습한 모델은 150B 토큰의 카페와 뉴스 말뭉치로 학습한 모델의 성능보다 낮게 나옵니다.  
 위의 Table 2에서는 블로그 54B 토큰과 27B 토큰 데이터를 학습한 결과가 있습니다. 블로그 150B 토큰 데이터와 54B 토큰 데이터로 학습한 모델의 성능이 비슷하지만 ALL 6B 토큰과 블로그 27B 토큰 데이터는 블로그 54B 토큰 데이터로 학습한 모델보다 성능이 나오지 않습니다.
 
-![](https://lh3.google.com/u/0/d/1Uh0J72xia1RNygMLZexzuUYdpYirsMmz){:width="700"}    
+![](https://lh3.google.com/u/0/d/1xx1eT9X21wpvZypYbhc1n6Orl7rUPuLM){:width="600"}    
 
 fig 3에서 모델의 사이즈와 토큰 사이즈에 대해 학습한 결과를 보여줍니다. 
 150B 토큰으로 학습한 모델보다 56B 토큰으로 학습한 모델의 성능 감소가 크게 나타나지는 않습니다.  
@@ -60,7 +60,7 @@ Table 2에서 말뭉치와 Downstream task와의 관계가 few-shot 성능을 �
 Table 4에서 뉴스 + 지식인 + 위키 모델이 지식인 + 위키 모델보다 KLUE-YNAT F1 스코어가 낮습니다.  
 - YNAT에서 성능이 좋았던 지식인 + 위키 모델에서 뉴스를 추가한 것뿐인데 성능이 낮아졌습니다.  
 
-![](https://lh3.google.com/u/0/d/1EeNiav_njdPKMivohvgnTnGyrvosFUCn){:width="800"}    
+![](https://lh3.google.com/u/0/d/1tshVYl37oO4AIgsXz5MfB3s_hq0uJ9Sf){:width="600"}    
 말뭉치와 태스크와의 Vocabulary overlap을 조사한 히트맵입니다.  
 높은 Vocabulary overlap이 높은 Downstream task 성능을 가져오지는 못합니다.
 - 모두의말뭉치(Modu)는 번역(AI Hub)태스크와 높은 오버래핑을 보이지만 블로그(Blog)나 지식인(KiN) 모델보다 성능이 낮습니다.
@@ -77,8 +77,8 @@ Zero-shot에서 도메인 관련성이 이런 현상을 더 잘 나타냅니다.
 - 지식인 말뭉치 자체로는 Zero-shot에서 few-shot보다 낮은 성능을 보입니다. 그러나 지식인 데이터를 다른 말뭉치와 조합하는 경우 성능이 오르는 것을 볼 수 있습니다.  
 
 ### Perplexity and Downstream Task
-![](https://lh3.google.com/u/0/d/1GTFoIPfgqt3nxs86qTdAqUrk8qU8g5iU){:width="800"}    
 Figure 2는 각 in-context learning 성능을 ALL 모델의 성능으로 나눠 Normalizing한 결과입니다. Perplexity와 in-context 성능간의 관계를 알아보기 위해 진행했으나 둘의 관계가 있다는 가설을 세울 수 없었습니다.  
+![](https://lh3.google.com/u/0/d/1HGg4mxcZRfR6qmE6eYkDR1CfduGKyLoZ){:width="600"}    
 - Table 2에서 블로그 모델은 낮은 PPL을 가지지만 높은 성능을 가집니다. 반면, 위키피디아 모델은 높은 PPL을 가지지만 낮은 성능을 가집니다.
 
 ## Conclusion

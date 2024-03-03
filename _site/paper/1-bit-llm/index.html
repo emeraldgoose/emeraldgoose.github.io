@@ -1,0 +1,697 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits - gooooooooooose</title>
+<meta name="description" content="Abstract">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits">
+<meta property="og:url" content="http://localhost:4000/paper/1-bit-llm/">
+
+
+  <meta property="og:description" content="Abstract">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-03-03T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/paper/1-bit-llm/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+           
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#paper" itemprop="item"><span itemprop="name">Paper</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Interested in ML/DL, Data Engineering.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+            <li><a href="https://gooooooooooose.tistory.com/" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Problem Solving OJ (KOR)</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits">
+    <meta itemprop="description" content="Abstract">
+    <meta itemprop="datePublished" content="2024-03-03T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2024-03-03T00:00:00+09:00">March 03, 2024</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h1 id="abstract">Abstract</h1>
+
+<p>최근에 1-bit LLM과 관련하여 BitNet이라는 연구가 진행되었습니다. BitNet b1.58이라 부르는 이번 1-bit LLM 연구에서는 -1, 0, 1로 이루어진 파라미터로 구성된 LLM을 소개하고자 합니다. 이 논문에서는 FP16 트랜스포머에 비해 메모리, 성능, 처리량, 에너지소모 측면에서 효율적임을 보입니다. 1.58bit인 이유는 -1, 0, 1인 3개읙 값을 사용하기 때문에 $\text{log}_2(3)$을 계산하면 반올림하여 1.58값이 나오기 때문입니다.</p>
+
+<h2 id="previous-work">Previous work</h2>
+
+<blockquote>
+  <p><strong>BitNet: Scaling 1-bit Transformers for Large Language Models</strong></p>
+
+</blockquote>
+
+<p>BitNet은 Quantization의 한계를 해결하기 위해 nn.Linear를 대체하는 BitLinear를 제안합니다. Weight의 평균은 0이면서 -1또는 1의 값을 가지도록 합니다. BitNet이 FP16 LLM에 대해 메모리 공간과 계산 비용에서 효율적이고 성능에서도 경쟁력있음을 보여줍니다.</p>
+
+<h1 id="bitnet-b158">BitNet b1.58</h1>
+
+<p>BitNet b1.58은 BitNet 아키텍처를 기반으로 nn.Linear를 BitLinear로 대체하여 구성되고 LLaMA 아키텍처를 사용했습니다. 각각의 Weight를 -1, 0, 1로 사용하기 위해 다음의 수식을 사용하여 스케일링합니다.</p>
+
+<p>$\tilde{W}=\text{RoundClip}(\frac{W}{\gamma + \epsilon}, -1, 1)$</p>
+
+<p>$\text{RoundClip}(x,a,b)=\text{max}(a,\text{min}(b,\text{round}(x)))$</p>
+
+<p>$\gamma = \frac{1}{nm} \sum_{ij} |W_{ij}| $</p>
+
+<p>먼저, 가중치 $W$를 절댓값의 평균값인 $\gamma$와 0으로 나눠지는 것을 방지하기 위해 $\epsilon$을 더해 스케일링합니다. 다음, 이 스케일링된 값을 [-1, 0, 1] 중 가까운 값에 근사하여 가중치 $\tilde{W}$를 구성합니다.</p>
+
+<h1 id="results">Results</h1>
+
+<p>다양한 사이즈의 FP16 LLaMA와 BitNet b1.58를 비교했습니다.</p>
+
+<p><img src="https://lh3.google.com/u/0/d/1xTIvsHMX7CRQMGZKmifvOO9GK_TbLVJr" alt="" width="700" /></p>
+
+<p>table2에서 zero-shot accuracy를 비교했을 때 모델 사이즈가 증가하면서 BitNet b1.58과 LLaMA의 성능차가 좁혀지는 것을 볼 수 있습니다.</p>
+
+<p><img src="https://lh3.google.com/u/0/d/154-I-VBHdK545N6wz1gk3FfIOetHiOi9" alt="" width="700" /></p>
+
+<p>모델 사이즈를 7B, 13B, 70B로 늘려갔을 때도 LLaMA에 비해 메모리와 지연시간에서 효율적입니다. 이는 모델 사이즈가 커질 수록 nn.Linear의 비용이 커지기 때문입니다. 메모리 소비 또한 -1, 0, 1을 표현하기 위해 2-bit만 사용하기 때문입니다.</p>
+
+<p><img src="https://lh3.google.com/u/0/d/1Lc2cVNo5wzHsJV7OSdK56w8bTGX5537B" alt="" width="700" /></p>
+
+<p>에너지 측면에서는 BitNet b1.58의 효율이 매우 좋습니다. LLM에서 대부분의 cost가 발생하는 부분은 행렬곱입니다. BitNet b1.58은 -1, 0, 1만을 사용하기 때문에 대부분의 연산에서 곱셈 연산이 없고 덧셈 연산만이 존재합니다.</p>
+
+<p><img src="https://lh3.google.com/u/0/d/1-t6fBA9irY1UX_wYjB0t1Uthdyf07WrN" alt="" width="700" /></p>
+
+<p>GPU 메모리를 한계까지 사용하여 배치 사이즈를 늘려봤을 때 LLaMA 대비 11배, 처리량은 8.9배 높일 수 있었습니다.</p>
+
+<p>BitNet b1.58은 FP16 LLM과 비교했을 때 다음처럼 요약해볼 수 있습니다.</p>
+
+<ul>
+  <li>13B BitNet b1.58은 3B FP16 LLM에 비해 효율적이다.</li>
+  <li>30B BitNet b1.58은 7B FP16 LLM에 비해 효율적이다.</li>
+  <li>70B BitNet b1.58은 13B FP16 LLM에 비해 효율적이다.</li>
+</ul>
+
+<h1 id="future-work">Future Work</h1>
+
+<ul>
+  <li>비용 효율성을 높이기 위해 1.58 bit LLM을 Mixture-of-Experts(MoE) 모델에 적용해볼 수 있다고 합니다.</li>
+  <li>long sequence를 다루고자 할 때, KV(Attn-Key,Value) 캐시로부터 발생하는 메모리 소비를 줄일 수도 있다고 합니다.</li>
+  <li>모바일 디바이스에서 온디바이스로 LLM의 성능을 개선하는데 도움될 수 있다고 합니다. 1.58-bit LLM을 사용하여 메모리와 에너지 소모가 줄어듦에 따라 자원이 제한적인 디바이스에서 사용될 수 있습니다. 또한, 곱셈 연산이 없기 줄어들기 때문에 CPU에 친화적인 점도 작용합니다.</li>
+  <li>LLM 추론에 특화된 칩을 설계하는 팹리스 스타트업인 Groq처럼 1-bit LLM에 최적화된 새로운 하드웨어가 개발되기를 기대하고 있습니다.</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#llm" class="page__taxonomy-item p-category" rel="tag">LLM</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#paper" class="page__taxonomy-item p-category" rel="tag">paper</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-03-03T00:00:00+09:00">March 3, 2024</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/airflow/airflow-task-design/" class="pagination--pager" title="Airflow task 디자인
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-task-design/" rel="permalink">Airflow task 디자인
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 09 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/coursera/finetuning-LLMs/" rel="permalink">Finetuning Large Language Models 정리
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> December 07 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  Finetuning Large Language Models - Deeplearning.ai
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/contest/ai-ctf/" rel="permalink">AI Village Capture the Flag @ DEFCON31 후기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> November 10 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">AI 관련 CTF가 있는 줄은 몰랐는데 Kaggle에서 해당 대회가 열려 한번 참가하여 한 달간 풀어봤습니다. 대회에서 사용되는 Capture the Flag(CTF) 방식은 취약점을 통해 주최자가 숨겨둔 플래그를 찾아 문제를 해결할 수 있습니다. 이 대회는 27개의 문제로 이루어...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/atcoder/abc317/" rel="permalink">GAMEFREAK Programming Contest 2023 (AtCoder Beginner Contest 317)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> August 29 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A. Potions
+현재 체력 H에서 $P_i$만큼 회복시킬 수 있는 포션을 먹을 때 체력이 X만큼 차면서 X에 가장 가까운 i를 찾는 문제이다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>
