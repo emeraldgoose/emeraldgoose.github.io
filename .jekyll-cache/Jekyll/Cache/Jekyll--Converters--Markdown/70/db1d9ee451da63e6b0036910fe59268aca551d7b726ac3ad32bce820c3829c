@@ -1,0 +1,62 @@
+I"O<h1 id="abstract">Abstract</h1>
+
+<p>최근에 1-bit LLM과 관련하여 BitNet이라는 연구가 진행되었습니다. BitNet b1.58이라 부르는 이번 1-bit LLM 연구에서는 -1, 0, 1로 이루어진 파라미터로 구성된 LLM을 소개하고자 합니다. 이 논문에서는 FP16 트랜스포머에 비해 메모리, 성능, 처리량, 에너지소모 측면에서 효율적임을 보입니다. 1.58bit인 이유는 -1, 0, 1인 3개의 값을 사용하기 때문에 $\text{log}_2(3)$을 계산하면 반올림하여 1.58값이 나오기 때문입니다.</p>
+
+<h2 id="previous-work">Previous work</h2>
+
+<blockquote>
+  <p><strong>BitNet: Scaling 1-bit Transformers for Large Language Models</strong></p>
+
+</blockquote>
+
+<p>BitNet은 Quantization의 한계를 해결하기 위해 nn.Linear를 대체하는 BitLinear를 제안합니다. Weight의 평균은 0이면서 -1또는 1의 값을 가지도록 합니다. BitNet이 FP16 LLM에 대해 메모리 공간과 계산 비용에서 효율적이고 성능에서도 경쟁력있음을 보여줍니다.</p>
+
+<h1 id="bitnet-b158">BitNet b1.58</h1>
+
+<p>BitNet b1.58은 BitNet 아키텍처를 기반으로 nn.Linear를 BitLinear로 대체하여 구성되고 LLaMA 아키텍처를 사용했습니다. 각각의 Weight를 -1, 0, 1로 사용하기 위해 다음의 수식을 사용하여 스케일링합니다.</p>
+
+<p>$\tilde{W}=\text{RoundClip}(\frac{W}{\gamma + \epsilon}, -1, 1)$</p>
+
+<p>$\text{RoundClip}(x,a,b)=\text{max}(a,\text{min}(b,\text{round}(x)))$</p>
+
+<p>$\gamma = \frac{1}{nm} \sum_{ij} |W_{ij}| $</p>
+
+<p>먼저, 가중치 $W$를 절댓값의 평균값인 $\gamma$와 0으로 나눠지는 것을 방지하기 위해 $\epsilon$을 더해 스케일링합니다. 다음, 이 스케일링된 값을 [-1, 0, 1] 중 가까운 값에 근사하여 가중치 $\tilde{W}$를 구성합니다.</p>
+
+<h1 id="results">Results</h1>
+
+<p>다양한 사이즈의 FP16 LLaMA와 BitNet b1.58를 비교했습니다.</p>
+
+<p><img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213288&amp;authkey=%21ACu_kSHjXTtkViQ&amp;width=1914&amp;height=680" alt="" width="700" /></p>
+
+<p>table2에서 zero-shot accuracy를 비교했을 때 모델 사이즈가 증가하면서 BitNet b1.58과 LLaMA의 성능차가 좁혀지는 것을 볼 수 있습니다.</p>
+
+<p><img src="https://lh3.google.com/u/0/d/154-I-VBHdK545N6wz1gk3FfIOetHiOi9" alt="" width="700" /></p>
+
+<p>모델 사이즈를 7B, 13B, 70B로 늘려갔을 때도 LLaMA에 비해 메모리와 지연시간에서 효율적입니다. 이는 모델 사이즈가 커질 수록 nn.Linear의 비용이 커지기 때문입니다. 메모리 소비 또한 -1, 0, 1을 표현하기 위해 2-bit만 사용하기 때문입니다.</p>
+
+<p><img src="502FD124B305BA80%213284&amp;authkey=%21ALEQbjZxe2-Pl4k&amp;width=2078&amp;height=900" alt="" width="700" /></p>
+
+<p>에너지 측면에서는 BitNet b1.58의 효율이 매우 좋습니다. LLM에서 대부분의 cost가 발생하는 부분은 행렬곱입니다. BitNet b1.58은 -1, 0, 1만을 사용하기 때문에 대부분의 연산에서 곱셈 연산이 없고 덧셈 연산만이 존재합니다.</p>
+
+<p><img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213284&amp;authkey=%21ALEQbjZxe2-Pl4k&amp;width=2078&amp;height=900" alt="" width="700" /></p>
+
+<p>GPU 메모리를 한계까지 사용하여 배치 사이즈를 늘려봤을 때 LLaMA 대비 11배, 처리량은 8.9배 높일 수 있었습니다.</p>
+
+<p>BitNet b1.58은 FP16 LLM과 비교했을 때 다음처럼 요약해볼 수 있습니다.</p>
+
+<ul>
+  <li>13B BitNet b1.58은 3B FP16 LLM에 비해 효율적이다.</li>
+  <li>30B BitNet b1.58은 7B FP16 LLM에 비해 효율적이다.</li>
+  <li>70B BitNet b1.58은 13B FP16 LLM에 비해 효율적이다.</li>
+</ul>
+
+<h1 id="future-work">Future Work</h1>
+
+<ul>
+  <li>비용 효율성을 높이기 위해 1.58 bit LLM을 Mixture-of-Experts(MoE) 모델에 적용해볼 수 있다고 합니다.</li>
+  <li>long sequence를 다루고자 할 때, KV(Attn-Key,Value) 캐시로부터 발생하는 메모리 소비를 줄일 수도 있다고 합니다.</li>
+  <li>모바일 디바이스에서 온디바이스로 LLM의 성능을 개선하는데 도움될 수 있다고 합니다. 1.58-bit LLM을 사용하여 메모리와 에너지 소모가 줄어듦에 따라 자원이 제한적인 디바이스에서 사용될 수 있습니다. 또한, 곱셈 연산이 줄어들기 때문에 CPU에 친화적인 점도 작용합니다.</li>
+  <li>LLM 추론에 특화된 칩을 설계하는 팹리스 스타트업인 Groq처럼 1-bit LLM에 최적화된 새로운 하드웨어가 개발되기를 기대하고 있습니다.</li>
+</ul>
+:ET

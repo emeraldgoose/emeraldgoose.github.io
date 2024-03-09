@@ -1,0 +1,115 @@
+I"}<h2 id="phrase-retrieval-in-open-domain-qeustion-answering">Phrase Retrieval in Open-Domain Qeustion Answering</h2>
+
+<h3 id="current-limitation-of-retriever-reader-approach">Current limitation of Retriever-Reader approach</h3>
+
+<ol>
+  <li>Error Propagation: 5-10개의 문서만 reader에게 전달</li>
+  <li>Query-dependent encoding: query에 따라 정답이 되는 answer span에 대한 encoding이 달라짐</li>
+</ol>
+
+<h3 id="how-does-document-search-work">How does Document Search work?</h3>
+
+<p>사전에 Dense 또는 Sparse vector를 만들고 indexing. MIPS와 같은 방법으로 검색</p>
+
+<p>Retrieve-Read 두 단계 말고 정답을 바로 search 할 수는 없을까?</p>
+
+<h3 id="one-solution-phrase-indexing">One solution: Phrase Indexing</h3>
+
+<p>“Barack Obama (1961-present) was the 44th President of the United States.”</p>
+
+<p>“<strong>Barack Obama …</strong>”, “… (<strong>1961</strong>-presnet) …”, 등의 모든 phrase들을 enumeration하고 phrase에 대한 임베딩을 맵핑해준다. 이때, 임베딩은 key vector가 되며 query가 들어왔을 때  query vector와 key vector에 대해 Nearest Neighbor Search를 통해 가장 가까운 phrase를 찾게 된다.</p>
+
+<p>또한, 새로운 질문이 들어오더라도 key vector의 업데이트 없이 가장 가까운 벡터로 연결시킬 수 있다.</p>
+
+<h3 id="query-agnostic-decomposition">Query-Agnostic Decomposition</h3>
+
+<p>기존 MRC 방법 : $\hat{a} = \text{argmax}<em>a F</em>{\theta}(a,q,d)$</p>
+
+<ul>
+  <li>$F_{\theta}$ : Model</li>
+  <li>$a$ : phrase, $q$ : question, $d$ : document</li>
+</ul>
+
+<p>Query-Agnostic Decomposition : $\hat{a} = \text{argmax}<em>a G</em>{\theta}(q) \cdot H_{\theta}(a,d)$</p>
+
+<ul>
+  <li>$G_{\theta}$ : Question encoder</li>
+  <li>$H_{\theta}$ : Phrase encoder</li>
+</ul>
+
+<p>기존 방식에서 $F$는 $G$와 $H$의 곱으로 나타내어 질 수 있는데 이 가정이 애초에 틀린 것 일수도 있다. $F$는 복잡한 함수이고 이 함수가 $G$와 $H$로 decomposed된다고 보장할 수 없다.</p>
+
+<p>따라서 Key Challenge는 다음과 같다.</p>
+
+<ul>
+  <li>Key Challenge : 어떻게 각 phrase를 vector space 상에 잘 mapping 할 수 있을까?</li>
+  <li>solution: Dense와 Sparse 임베딩을 둘 다 사용해보자</li>
+</ul>
+
+<h2 id="dense-sparse-representation-for-phrase">Dense-sparse Representation for Phrase</h2>
+
+<h3 id="dense-vectors-vs-sparse-vectors">Dense vectors vs. Sparse vectors</h3>
+
+<ul>
+  <li>Dense vectors : 통사적, 의미적 정보를 담는 데 효과적</li>
+  <li>Sparse vectors : 어휘적 정보를 담는 데 효과적</li>
+</ul>
+
+<h3 id="phrase-and-question-embedding">Phrase and Question Embedding</h3>
+
+<p>Dense vector와 sparse vector를 모두 사용하여 phrase (and question) embedding</p>
+
+<p>각각의 phrase embedding을 구할 때 Dense와 Sparse vector를 구하여 하나로 합쳐 inner product나 nearest search를 진행한다.</p>
+
+<h3 id="dense-representation">Dense representation</h3>
+
+<p>Dense vector를 만드는 방법</p>
+<ul>
+  <li>Pre-trained LM (e.g. BERT)를 이용</li>
+  <li>Start vector와 end vector를 재사용해서 메모리 사용량을 줄임</li>
+</ul>
+
+<p>Question embedding</p>
+<ul>
+  <li>Question을 임베딩할 때는 [CLS] 토큰 (BERT)을 활용</li>
+</ul>
+
+<h3 id="sparse-representation">Sparse representation</h3>
+
+<p>Sparse vector를 만드는 방법</p>
+
+<ul>
+  <li>문맥화된 임베딩(contextualized embedding)을 활용하여 가장 관련성이 높은 n-gram으로 sparse vector를 구성한다-</li>
+  <li>각 Phrase에 주변에 있는 단어들과 유사성을 측정해 유사성을 각 단어에 해당하는 sparse vector상의 dimension에 넣어준다</li>
+  <li>TF-IDF와 비슷하지만 phrase마다 weight가 다르게 다이나믹하게 변하는 형태의 벡터로 만들어진다</li>
+</ul>
+
+<h3 id="scalability-challenge">Scalability Challenge</h3>
+
+<p>Wikipedia는 60 billion개의 phrase가 존재한다. 따라서 Storage, indexing, search의 scalability가 고려되어야 한다.</p>
+
+<ul>
+  <li>Storage : Pointer, filter, scalar quantization 활용</li>
+  <li>Search : FAISS를 활용해 dense vector에 대한 search를 먼저 수행 후 sparse vector로 ranking</li>
+</ul>
+
+<h2 id="experiment-results--analysis">Experiment Results &amp; Analysis</h2>
+
+<h3 id="experiment-results---squad-open">Experiment Results - SQuAD-open</h3>
+
+<p>DrQA(Retriever-reader)보다 +3.6% 성능, 68배 빠른 inference speeds</p>
+
+<h3 id="limitataion-in-phrase-retrieval-approach">Limitataion in Phrase Retrieval Approach</h3>
+
+<ol>
+  <li>Large storage required</li>
+  <li>최신 Retriever-reader 모델 대비 낮은 성능 → Decomposability gap이 하나의 원인</li>
+</ol>
+
+<p>Decomposability gap :</p>
+
+<ul>
+  <li>(기존) Question, passage, answer가 모두 함께 encoding</li>
+  <li>(Phrase retrieval) Question과 passage/answer가 각각 encoding → Question과 passage사이 attention 정보 X</li>
+</ul>
+:ET

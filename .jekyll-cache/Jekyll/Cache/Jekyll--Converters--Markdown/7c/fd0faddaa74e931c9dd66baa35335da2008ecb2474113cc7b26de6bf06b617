@@ -1,0 +1,101 @@
+I"�)<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
+</blockquote>
+
+<h2 id="rnn">RNN</h2>
+<p>RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이전 timestep의 hidden state vector가 현재 timestep의 계산에 활용되는 특징을 가지고 있습니다.</p>
+
+<p>이번에 구현한 RNN 레이어를 학습하기 위해 계속 사용하던 MNIST를 사용할 생각입니다. MNIST를 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인 벡터의 시퀀스 데이터로 생각해볼 수 있습니다.</p>
+
+<h2 id="forward">Forward</h2>
+<p>RNN 레이어의 수식과 파라미터들의 size들은 pytorch RNN 문서에 있는 수식으로 사용했습니다.</p>
+
+<p>$h_t = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+
+<p>그리고 pytorch의 RNN 레이어에는 <code class="language-plaintext highlighter-rouge">num_layers</code>라는 인자를 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">num_layers</code>는 하나의 순회를 담당하는 레이어를 얼마나 쌓을지 결정하는 인자이고 기본값은 1입니다. 만약, <code class="language-plaintext highlighter-rouge">num_layers = 2</code>으로 준다면 다음과 같은 그림의 RNN을 얻을 수 있습니다.</p>
+
+<p><img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213274&amp;authkey=%21AB8yPnYJBf1XKsM&amp;width=1446&amp;height=802" alt="" width="500" /></p>
+
+<p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
+
+<p>RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 input_length와 batch_size의 위치가 바뀝니다. 그리고 입력과 출력의 shape만 바뀔 뿐 내부 파라미터의 shape가 변하지는 않습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/76f18d1eae4dba2b35ec8a5eade3c650.js"></script>
+
+<p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>를 선택할 수 있습니다. 비선형 함수의 기본값으로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있어서 저도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현하고 테스트해봤습니다.</p>
+
+<h2 id="backward">Backward</h2>
+<p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
+
+<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+
+<p>foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
+
+<p>$s_t = x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh}$</p>
+
+<p>$h_t = \text{tanh}(s_t)$</p>
+
+<p>cost function $J$를 $W_{ih}$, $W_{hh}$, ${x_t}$에 대해 편미분하여 gradient를 구해야 합니다. bias의 경우 편미분할 경우 1이 되므로 따로 유도하지 않겠습니다.</p>
+
+<p>${\partial J \over \partial x_t} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial x_t}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{ih}}$</p>
+
+<p>${\partial J \over \partial W_{hh}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{hh}}$</p>
+
+<p>여기서 <code class="language-plaintext highlighter-rouge">tanh</code> 함수의 미분은 다음과 같습니다.</p>
+
+<p>$\partial \text{tanh}(x) = 1 - \text{tanh}(x)^2$</p>
+
+<p>따라서, ${\partial h_t \over \partial s_t} = 1 - \text{tanh}(s_t)^2 = 1 - h_t^2$</p>
+
+<p>역전파 과정에서 출력층에서 들어오는 gradient ${\partial J \over \partial h_t}$를 $dout$라고 생각하게 되면 다음과 같은 수식으로 구할 수 있습니다.</p>
+
+<p>${\partial J \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = [dout \cdot (1 - h_t^2)]^T \cdot x_t$</p>
+
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = [dout \cdot (1 - h_t^2)]^T \cdot h_{t-1}$</p>
+
+<p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_GlG-hlEvRVrpuTxh9vgQGZYKGAVLhe6rHgLeympu4Z8aFdRfWTGL67uUztMWLhsacXfsELBTqqCI0ttYKDKVmVrBl_8lcFdE_hIQQy27prDMERgDDeg5tZ0zO6A5fLWvfE9TUPhNHoZqAtRYh32TgU7SSvr0-DPCbXjtW2z6j7ynr6lelRaxkMNI8Box3IxItN_dK2XCrngUQJhZ-ZYD6TwtYbb-1TgxpNcH_mqbHUeDzCSkNdZO0KlzgG5YQQJvFXlHWVkBUjjOD4TLeXe99EGEvsdXwpuGspNY-Cbk9u38jl8enLICWVHDpeARfesfLKyDAZAoc1m-bKSZeELYimSkU7EFHtfp7L1NEyAsQHwRCzldXnt6QV2fJ-p8bYQpKH7ehn-xfLc-LXtNOjngppJJK_5r4MfDZfkrFCnFSkrBaQ9_xH6hvHs7xlQa7KI_ZniE9KfkAM1MhGfjHG85EmVYpIe-iRlwA1PYrwVKw0p8Pnrehxq7NMICiGEeqtaB4rQiQmESeDEkFq-h5SzrqGPg-LCiSENSSW0cjLXe-tIMteS3E5c8NPPVbTorxnZoJKYGV8NWaDpfCsf8K--Q5Y9Qr3CY0sEWD6Di7NyGQDA6YGzHM0C95Pq_rYPzuWdrCrW9gWgcCha3Vi7Rw4SO3YtdaKrom2TcbmZfOkMzsX21Y0_2vnRpNMH9JecR4X9-x9peCu0Z94L6nDiQWNiQX_2nFpCZX2YbgUNwv8n_YnecmMKkob8ULd0KJBtiwg4OekL-8QqD_xyqkPxHcT5U0QBh6jqNjqX5NKGuTgTC6lDlvj5xL0YW9OM8wOC_1DJtgY97UUhWh6SPnJSsniDS_BAiBAKAUjiR6y7MOVJCmtfgZHE6mgKbmDPu2Zw4Hj9byKMRjEVEplDeMNTOV68bQUYTIyeX8EYo1QurPc1Qz5kv5Uo-1axP2aUDYdEGjr_d0GijFXlBbHo_GxMMXkNHRTNL293vMgVyX6Kr9NJPuIO4P44iRmQ6S5lwzAy8MKSc8xfmlhjR8A4fimo5jMk2M0yNh8ewGuJxP5RtIwJsMfcR4O1upkRLPpIyrFGq6m6U3p33r9tTPPQgH0IKd2vdOm3qsCTbx0zOTm5wuRvvzEtQgTyS5l-RAeBPyUgarPgejwisMYdQgrR-DbQAMlljxQnd5jdIt2sGyKMXatTsjbOmXWl4N6FB3PpbQ8C1cFSs7bwINNpnwS8clnE7PlhLYgwvcVI2JMZF2-VVgAUBwsHmcjHdDPGtXWLgk0v-VeOP2Z3VUrm9ja09b9yYx94mKu98KLthZOTWoJLiuXH_mhSM4fhVBSVX41Y4YsJ0wP72Dz0pcCpijAL-P_uxbvmA1zDJ1aYyjyB7tebn6CQXdpXsPdFd3Aqfp5tS3iPUGBC23pjNGpMzp1O8SMaiGusuyq5lkXdpr3oeoDwXugYn9AaC9EvW83qOCmsFijiZU5KdX0GjNjuPBFBNlQBBQ_HRp-c7_ZTFeZFpVa-CFPVyeuVh0IM7k2PbFMiUMCce1AE5Rv-lVmzt5cstmlpRx3e-4z_sAPBOj82E2BckUOdQBZrp6WNGtox-qL6NJnRBfRaZoPc_gP68w2vmbKTfDAM4loRF0PGxCTgY0Q0koyeEzywMorzQ" alt="" width="500" /></p>
+
+<p>따라서 현제 셀에 대해 다음과 같은 코드로 구현할 수 있습니다. 가장 마지막 셀에 들어가는 <code class="language-plaintext highlighter-rouge">dhnext</code>는 0으로 초기화하여 넣어주면 됩니다. <code class="language-plaintext highlighter-rouge">h_next</code>는 t시점의 셀에서 계산된 hidden state 벡터이고 <code class="language-plaintext highlighter-rouge">h_prev</code>는 t시점의 셀로 들어온 hidden state 벡터를 말합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/7d17b6e294d5f746a91b542b093a6b68.js"></script>
+
+<h2 id="result">Result</h2>
+<p>이전과 마찬가지로 MNIST 5000장을 훈련데이터, 1000장을 테스트데이터로 사용하여 <code class="language-plaintext highlighter-rouge">tanh</code>, <code class="language-plaintext highlighter-rouge">relu</code>를 사용하여 결과를 확인해봤습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/1a03bf1d8296cf80e74e55d46a324d68.js"></script>
+
+<p>사용된 모델은 RNN과 Linear 레이어를 사용하고 RNN의 마지막 출력 벡터를 Linear에 통과시키는 방법으로 사용했습니다.</p>
+
+<p>먼저, <code class="language-plaintext highlighter-rouge">tanh</code>을 사용한 경우 loss와 Acc의 결과입니다.<br />
+<img src="https://lh3.google.com/u/0/d/1eIM02Ku_VkL9IJSvO8DQuoJe77uFqCz4" alt="" width="400" />
+<img src="https://lh3.google.com/u/0/d/1pthsFxqP8K0CUEBljJIu9Sz9_tkXfyfd" alt="" width="400" /></p>
+
+<p>다음, <code class="language-plaintext highlighter-rouge">relu</code>를 사용한 경우 loss와 Acc의 결과입니다.<br />
+<img src="https://lh3.google.com/u/0/d/1BqTJdgQ6jZAUW9Ll0nWOa7WVmLhrEg65" alt="" width="400" />
+<img src="https://lh3.google.com/u/0/d/1-hmljxBB-mOwL4CjENlv3hXwgpsjai-u" alt="" width="400" /></p>
+
+<p>두 함수 모두 10 epochs에 loss가 떨어지기는 하지만 앞의 MLP나 CNN처럼 잘 떨어지지는 않았습니다. RNN에 MNIST 태스크가 적합하지 않아 생기는 이유일 수도 있고 MLP 모델의 파라미터가 660K개인 반면 RNN 모델의 파라미터가 200K개여서 생기는 문제일 수도 있습니다. 아무튼 학습이 된다는 점에 의미를 두려고 합니다.</p>
+
+<h3 id="next">Next</h3>
+<p>LSTM은 RNN의 시퀀스 길이가 길어질 수록 과거의 정보에 대한 학습이 어려워지는 장기의존성(long-term dependency) 문제를 해결한 모델로 RNN 계열에서 중요하다고 생각되는 모델입니다. 다음 목표는 LSTM 레이어의 구현입니다.</p>
+
+<h3 id="code">Code</h3>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/</a></li>
+  <li><a href="https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2">https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2</a></li>
+  <li><a href="https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html">https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html</a></li>
+  <li><a href="https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py">https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py</a></li>
+</ul>
+:ET

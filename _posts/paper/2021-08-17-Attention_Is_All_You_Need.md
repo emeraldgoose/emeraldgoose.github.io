@@ -46,7 +46,7 @@ Transformer는 인코더와 디코더 모두 self-attention이 쌓여있고 full
 
 ### Encoder and Decoder Stacks
 
-![](https://lh3.google.com/u/0/d/1APkQc2wNRZidhWZ6-wpHkJb2rayryWrB)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213300&authkey=%21ABkYMVUyN8vebHA&width=490&height=718)
 
 - **Encoder**
     - 인코더는 $N=6$의 identical 레이어의 스택으로 구성되어있습니다. 각 레이어는 두 개의 sub-layer들을 가지고 있습니다.
@@ -65,11 +65,11 @@ attention은 query와 key-value pair들을 output에 맵핑해주는 함수입�
 
 ### Scaled Dot-Product Attention
 
-![](https://lh3.google.com/u/0/d/1-tli8qOupke7v5-XB97E-COUc6XH42eI)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213298&authkey=%21ALuFBC1xhFvW7YM&width=325&height=356)
 
 여기서 사용하는 attention을 Scaled Dot-Product Attention(SDPA)라 부르는데, input은 dimension이 $d_k$인 query와 key, dimension이 $d_v$인 value들로 이루어집니다. 
 
-![](https://lh3.google.com/u/0/d/1xrZKQfNWlXCNM5738iO8B0TdLW_u7hB6)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213299&authkey=%21AIXknAvA7uIH8V4&width=715&height=85)
 
 모든 query와 모든 key들에 대해 dot product로 계산되는데 각각의 결과에 $\sqrt{d_k}$로 나누어진다. 다음 value의 가중치를 얻기 위해 softmax 함수를 적용합니다.
 
@@ -84,14 +84,14 @@ $d_k$가 작은 경우 additive attention이 dot product attention보다 성능�
 
 ### Multi-Head Attention
 
-![](https://lh3.google.com/u/0/d/18yEv3-etuUHyzdplbfG-yV_ruLBPOtzy)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213294&authkey=%21AMyYxgI4A5Yk8To&width=371&height=370)
 
 $d_{model}$ dimension의 query, key, value 들로 하나의 attention을 수행하는 대신, query, key, value들에 각각 학습된 linear projection을 $h$번 수행하는 것이 더 좋습니다.
 
 - 즉, $Q, K, V$에 각각 다른 weight를 곱해주는 것입니다.
 - parameter matrix : $W_i^Q \in R^{d_{model}\times d_k}, \space w_i^K \in R^{d_{model}\times d_k}, \space W_i^V \in R^{d_{model}\times d_v}, \space W^O \in R^{hd_v \times d_{model}}$
 
-![](https://lh3.google.com/u/0/d/1GyI80NxaXxZDUruxYBGCYgLtjV6LF2UZ)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213295&authkey=%21ABIbsMgJlMeYQJQ&width=674&height=77)
 
 이때, projection이라 하는 이유는 각각의 값들이 parameter matrix와 곱해졌을 때, $d_k, d_v, d_{model}$차원으로 project되기 때문입니다. query, key, value들을 병렬적으로 attention function을 거쳐 dimension이 $d_v$인 output 값으로 나오게 됩니다.
 
@@ -103,7 +103,7 @@ $d_{model}$ dimension의 query, key, value 들로 하나의 attention을 수행�
 
 또한, 두 번의 linear transformations과 activation function ReLU로 구성되어집니다.
 
-![](https://lh3.google.com/u/0/d/1aZhqVcl5FEpX-CZqG96r__WemGt_9JcH)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213297&authkey=%21AKB8GIiimZAu0JI&width=502&height=56)
 
 각각의 position마다 같은 $W, b$를 사용하지만 layer가 달라지면 다른 parameter를 사용합니다.
 
@@ -115,7 +115,7 @@ $d_{model}$ dimension의 query, key, value 들로 하나의 attention을 수행�
 
 positional encoding은 $d_{model}$인 dimension을 가지고 있기 때문에 둘을 더할 수 있습니다.
 
-![](https://drive.google.com/uc?export=view&id=11EUTF3UWb4pqpiEjTl4vjOODVWjRPVRN)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213296&authkey=%21AFzPZhGHkGR3sxg&width=573&height=97)
 
 - $pos$는 position, $i$는 dimension
 
@@ -127,7 +127,7 @@ Self-Attention을 사용하는 첫 번째 이유는 layer마다 total computatio
 
 두 번째 이유는 computation의 양이 parallelized하기때문에 sequential operation의 minimum으로 측정되기 때문입니다.
 
-![](https://lh3.google.com/u/0/d/1zSom0Z9VTnveWpCw-_LQeFEafPhk5r9t)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213290&authkey=%21AOiqbdcpluVfhpE&width=788&height=173)
 
 세 번째 이유로는 네트워크에서의 long-range dependencies사이의 path length때문입니다. long-range dependencies를 학습하는 것은 많은 문장 번역 분야에서의 key challenge가 됩니다.
 
@@ -144,7 +144,7 @@ Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했
 
 학습동안 아래의 공식을 통해 learning rate를 변화시켰습니다.
 
-![](https://lh3.google.com/u/0/d/1aQqVdboUkvGkAqrxOeuirWmtQerdXRCo)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213291&authkey=%21ANrhrdl74po0nqI&width=668&height=50)
 
 이는 warmup_step에 따라 linear하게 증가시키고 step number에 따라 square root한 값을 통해 점진적으로 줄여갔습니다. 그리고 warmup_step = 4000을 사용했습니다.
 
@@ -161,7 +161,7 @@ Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했
 ## Result
 ### Machine Translation
 
-![](https://lh3.google.com/u/0/d/1GlZ6NFZ3XS1s63Xz7zP8f2aJY7NV21_d)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213293&authkey=%21ACti_nO4W9TTLgw&width=783&height=310)
 
 영어→독일어 번역에서는 기존 모델들보다 높은 점수가 나왔고 영어→프랑스어 번역에서는 single 모델보다 좋고 ensemble 모델들과 비슷한 성능을 내주는 것을 볼 수 있습니다.
 
@@ -169,7 +169,7 @@ Adam optimizer와 $\beta_1=0.9$, $\beta_2=0.98$, $\epsilon=10^{-9}$를 사용했
 
 ### Model Variations
 
-![](https://lh3.google.com/u/0/d/1W4prVn3P9rgL_SBWPH3M9dXhH8g7Q25v)
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213292&authkey=%21AD6PMcqoOeR-EWM&width=966&height=615)
 
 - 테이블에 row (A)를 보면 single-head attention은 head=16일때보다 0.9 BLEU 낮고 head=32로 늘렸을 때도 head=16일때보다 BLEU가 낮습니다.
 - row (B)를 보면 $d_k$를 낮추는 것이 model quality를 낮추게 합니다.

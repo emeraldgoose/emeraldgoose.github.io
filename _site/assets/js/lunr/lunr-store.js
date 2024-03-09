@@ -678,7 +678,7 @@ var store = [{
         "teaser": null
       },{
         "title": "The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits",
-        "excerpt":"Abstract 최근에 1-bit LLM과 관련하여 BitNet이라는 연구가 진행되었습니다. BitNet b1.58이라 부르는 이번 1-bit LLM 연구에서는 -1, 0, 1로 이루어진 파라미터로 구성된 LLM을 소개하고자 합니다. 이 논문에서는 FP16 트랜스포머에 비해 메모리, 성능, 처리량, 에너지소모 측면에서 효율적임을 보입니다. 1.58bit인 이유는 -1, 0, 1인 3개읙 값을 사용하기 때문에 $\\text{log}_2(3)$을 계산하면 반올림하여 1.58값이 나오기...","categories": ["paper"],
+        "excerpt":"Abstract 최근에 1-bit LLM과 관련하여 BitNet이라는 연구가 진행되었습니다. BitNet b1.58이라 부르는 이번 1-bit LLM 연구에서는 -1, 0, 1로 이루어진 파라미터로 구성된 LLM을 소개하고자 합니다. 이 논문에서는 FP16 트랜스포머에 비해 메모리, 성능, 처리량, 에너지소모 측면에서 효율적임을 보입니다. 1.58bit인 이유는 -1, 0, 1인 3개의 값을 사용하기 때문에 $\\text{log}_2(3)$을 계산하면 반올림하여 1.58값이 나오기...","categories": ["paper"],
         "tags": ["LLM"],
         "url": "/paper/1-bit-llm/",
         "teaser": null

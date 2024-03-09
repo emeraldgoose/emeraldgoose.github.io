@@ -60,28 +60,17 @@ Dense vector와 sparse vector를 모두 사용하여 phrase (and question) embed
 ### Dense representation
 
 Dense vector를 만드는 방법
-
 - Pre-trained LM (e.g. BERT)를 이용
 - Start vector와 end vector를 재사용해서 메모리 사용량을 줄임
     
-    ![](https://drive.google.com/uc?export=view&id=1TpNKovvDBZbRFCPR6xzFOVumnBGGkRf6)
-    
-
 Question embedding
-
 - Question을 임베딩할 때는 [CLS] 토큰 (BERT)을 활용
-    
-    ![](https://drive.google.com/uc?export=view&id=1SRmmNEyT39a58yVQKZAavbWGmb42lUB3)
-    
 
 ### Sparse representation
 
 Sparse vector를 만드는 방법
 
 - 문맥화된 임베딩(contextualized embedding)을 활용하여 가장 관련성이 높은 n-gram으로 sparse vector를 구성한다-
-    
-    ![](https://drive.google.com/uc?export=view&id=1DXYxlr792-eAZxyAbPVnDLXEhMfYeAlf)
-    
 - 각 Phrase에 주변에 있는 단어들과 유사성을 측정해 유사성을 각 단어에 해당하는 sparse vector상의 dimension에 넣어준다
 - TF-IDF와 비슷하지만 phrase마다 weight가 다르게 다이나믹하게 변하는 형태의 벡터로 만들어진다
 

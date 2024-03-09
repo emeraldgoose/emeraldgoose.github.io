@@ -1,0 +1,97 @@
+I"�<h2 id="introduction-to-dense-embedding">Introduction to Dense Embedding</h2>
+
+<h3 id="limitations-of-sparse-embedding">Limitations of sparse embedding</h3>
+
+<ol>
+  <li>자주 등장하는 단어의 경우 사실상 0이 되면서 90%이상의 벡터 디멘션들이 0이 되는 경우가 발생한다.</li>
+  <li>차원의 수가 매우 크다 → compressed format으로 극복가능</li>
+  <li>가장 큰 단점은 유사성을 고려하지 못한다.</li>
+</ol>
+
+<h3 id="dense-embedding">Dense Embedding</h3>
+
+<blockquote>
+  <p>Complementary to sparse representations by design</p>
+</blockquote>
+
+<ul>
+  <li>더 작은 차원의 고밀도 벡터(length = 50 ~ 1000)</li>
+  <li>각 차원 특정 term에 대응되지 않음</li>
+  <li>대부분의 요소가 nonzero값</li>
+</ul>
+
+<h3 id="retrieval-sparse-vs-dense">Retrieval: Sparse vs. Dense</h3>
+
+<ul>
+  <li>Sparse Embedding
+    <ul>
+      <li>중요한 Term들이 정확히 일치해야 하는 경우 성능이 뛰어남</li>
+      <li>임베딩이 구축되고 나서는 추가적인 학습이 불가능함</li>
+    </ul>
+  </li>
+  <li>Dense Embedding
+    <ul>
+      <li>단어의 유사성 또는 맥락을 파악해야 하는 경우 성능이 뛰어남</li>
+      <li>학습을 통해 임베딩을 만들며 추가적인 학습이 가능함</li>
+    </ul>
+  </li>
+  <li>최근 사전학습 모델, 검색 기술 등의 발전 등으로 인해 Dense Embedding을 활발히 이용</li>
+</ul>
+
+<h2 id="training-dense-encoder">Training Dense Encoder</h2>
+
+<h3 id="what-can-be-dense-encoder">What can be Dense Encoder?</h3>
+
+<p>BERT와 같은 Pre-trained language model (PLM)이 자주 사용되고 그 외 다양한 neural network 구조도 가능하다.<br />
+Question과 Passage를 Encoder에 넣어 인코딩한 후 둘을 dot product하여 유사도 Score를 매긴다. 이 중 가장 큰 점수를 가진 Passage를 선택하여 쿼리에 답을 할 수 있도록 한다.</p>
+
+<h3 id="dense-encoder-학습-목표와-학습-데이터">Dense Encoder 학습 목표와 학습 데이터</h3>
+
+<ul>
+  <li>학습목표 : 연관된 question과 passage dense embedding 간의 거리를 좁히는 것(또는 inner product를 높이는 것) = higher similarity</li>
+  <li>Challenge : 연관된 question과 passage를 어떻게 찾을 것인가?
+    <ul>
+      <li>기존 MRC 데이터셋을 활용</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="negative-sampling">Negative Sampling</h3>
+
+<ul>
+  <li>연관된 question과 passage간의 dense embedding 거리를 좁히는 것 (higher similarity) = Positive</li>
+  <li>연간되지 않는 embedding간의 거리는 멀어야 함 = Negative</li>
+  <li>Chosing negative examples:
+    <ul>
+      <li>Corpus 내에서 랜덤하게 뽑기</li>
+      <li>좀 더 헷갈리는 negative 샘플들 뽑기 (ex. 높은 TF-IDF 스코어를 가지지만 답을 포함하지 않는 샘플)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="objective-function">Objective function</h3>
+
+<p>Positive passage에 대한 negative log likelihood (NLL) loss 사용</p>
+
+<h3 id="evalution-metric-for-dense-encoder">Evalution Metric for Dense Encoder</h3>
+
+<p>Top-k retrieval accuracy: retrieve된 passage 중에서 답을 포함하는 passage의 비율</p>
+
+<h2 id="passage-retrieval-with-dense-encoder">Passage Retrieval with Dense Encoder</h2>
+
+<h3 id="from-dense-encoding-to-retrieval">From dense encoding to retrieval</h3>
+
+<p>Inference: Passage와 query를 각각 embedding한 후, query로부터 가까운 순서대로 passage의 순위를 매김</p>
+
+<h3 id="from-retrieval-to-open-domain-question-answering">From retrieval to open-domain question answering</h3>
+
+<p>Retriever를 통해 찾아낸 Passage을 활용, MRC(Machine Reading Comprehension) 모델로 답을 찾음</p>
+
+<h3 id="how-to-make-better-dense-encoding">How to make better dense encoding</h3>
+
+<ul>
+  <li>학습 방법 개선 (e.g. DPR)</li>
+  <li>인코더 모델 개선 (BERT보다 큰, 정확학 pretrained 모델)</li>
+  <li>데이터 개선 (더 많은 데이터, 전처리, 등)</li>
+</ul>
+:ET

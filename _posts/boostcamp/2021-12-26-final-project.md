@@ -71,7 +71,7 @@ CNN만으로 확보한 데이터셋 기준으로 어느 정도의 성능을 내�
 
 ### Model Structure
 모델 구조는 다음과 같습니다.  
-![](https://lh3.google.com/u/0/d/175Bzx4QbOUqNfuKKqwafO7AAU80WJ34J){:width=400}  
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213249&authkey=%21AABMAgcYYalF7d4&width=1754&height=790){:width=400}  
 
 CNN과 LSTM을 수직으로 쌓지 않고 병렬로 구성했습니다. CNN 같은 경우 욕설과 같이 단어 위주로 잡는 역할이고 LSTM은 문장내 단어의 흐름으로 만들어 질 수 있는 혐오표현들을 잡을 수 있을 것이라 생각했습니다.
 
@@ -100,17 +100,17 @@ Pseudo Labeling이란 방법이 있지만 Pseudo label을 생성하는 모델에
 
 겉핥기로 공부해서 논문 내용을 정확하게 보지는 않았지만 대략적인 설명은 다음 그림과 같습니다.
 
-![](https://lh3.google.com/u/0/d/14HfiaSGFEWCmyNdNaD-_aTCrXWZg0o3B){:width=400}  
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213312&authkey=%21AEaS8KXWVyM9Lpk&width=2264&height=758){:width=400}  
 
 기존 Pseudo label 방법은 Pre-trained Teacher로부터 생성된 Pseudo label을 Student에게 학습하는 과정입니다. 반면 MPL 방법은 Student가 Pseudo label로 학습하고 그 피드백을 teacher 모델이 받습니다.
 
-![](https://lh3.google.com/u/0/d/1VB9geH6mpHxgfR827u8iUHsPiFs2uG3m){:width=400}  
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213313&authkey=%21AARLIVNkib8DgME&width=2464&height=618){:width=400}  
 
 Supervised learning보다 MPL이 더 좋은 퍼포먼스를 보여준다는 일러스트입니다. 
 
 그리고 이 논문에서는 ImageNet 벤치마크에서 EfficientNet-L2와 EfficientNet-B0을 가지고 MPL를 적용했는데 SOTA 성능을 내고 있는 중입니다.
 
-![](https://lh3.google.com/u/0/d/1vFXRUOcIu5g-eKLLqo2TvPz2Gc4WPg-0){:width=400}  
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213311&authkey=%21AFIoscNbi-dQ0Gc&width=1166&height=553){:width=400}  
 
 따라서 MPL은 Teacher-Student 구조로 학습하며 Teacher가 Student에 최적화된 Pseudo Label을 생성하기 위해 최적화하는 과정입니다.
 

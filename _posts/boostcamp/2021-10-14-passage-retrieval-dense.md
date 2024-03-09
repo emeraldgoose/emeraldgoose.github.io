@@ -42,9 +42,6 @@ Question과 Passage를 Encoder에 넣어 인코딩한 후 둘을 dot product하�
 - 학습목표 : 연관된 question과 passage dense embedding 간의 거리를 좁히는 것(또는 inner product를 높이는 것) = higher similarity
 - Challenge : 연관된 question과 passage를 어떻게 찾을 것인가?
     - 기존 MRC 데이터셋을 활용
-        
-        ![](https://drive.google.com/uc?export=view&id=1K-8g0jT3XYO_ZQrt2J-Lte9tzqmTKq5K)
-        
 
 ### Negative Sampling
 

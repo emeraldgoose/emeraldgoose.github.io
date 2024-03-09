@@ -70,8 +70,8 @@ gradient를 업데이트하는 간단한 Optimizer를 이용하여 weight와 bia
 ## 결과
 MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.
 
-![](https://lh3.google.com/u/0/d/1k18xXPI4qMx31qgSTajBwQ6NwjycTpkr){:width="400"}
-![](https://lh3.google.com/u/0/d/1Pzta5dtXVxduFsIgHGaSqsHOtKsh6jSh){:width="400"}  
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213207&authkey=%21AHbDw6fwQLOIC2Y&width=608&height=604){:width="400"}
+![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213206&authkey=%21ANIblIieb6OZcuE&width=601&height=604){:width="400"}  
 
 10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다. 
 

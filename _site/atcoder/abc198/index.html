@@ -450,14 +450,15 @@
 
 <p>이 문제에서 다음 두 가지 경우를 생각해볼 수 있다.</p>
 
-<ol>
+<ul>
   <li>$(X,Y)$가 $R$의 범위 밖에 있는 경우</li>
-</ol>
+</ul>
 
 <p>이 경우에는 R을 반지름으로 하는 원 밖에 목적지가 있는 경우이다.</p>
 
-<p>$R$이 1이고 $(2,2)$로 움직여야 하는 상황에서 다음과 같은 그림을 그릴 수 있다.
-<img src="https://drive.google.com/uc?export=view&amp;id=1T8lI7iRwIU1MpDqtinBnBNPHqHQqXJBX" alt="" /></p>
+<p>$R$이 1이고 $(2,2)$로 움직여야 하는 상황에서 다음과 같은 그림을 그릴 수 있다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_GawJOrrlDGXmMwbH8FUGRtMb5jmvx1J8Xyz5ycmvsGot7JKbe4Mmzb50l49_Upah8VK3MRbIpSXjkuHm-ob_iw5UowaPnxRcUv2jkjSPfKsH28pp_wULOJ2VhH5D9JIAnYCC1T7oar5gysu6dGykOQFp_jJImcjJgG41blVOvtWNAE0fOj8aFJo0RHJbqyEz_0vWvPjn41WXThgNDwkpgtn8VQBq-mzFrMaMVzSyb4yV2c_5uO7HJuQo4filmW_pfVqFgiu5vSf1y5IC5yqo2XcEy2RmmiFPh_1_-Wq2E3O2n7tWegkxfbB1Hv0CNVvqNxYKY0trMenWg3_89ewA2aT_VTw0QZi3HBv-WBqO_02HYCeOvA4yR-weuYWjM98NLxUG7s4vLy5PAx7SNMA__tSwbB1krPmwRDFBiZU5K2x9Tvw-B40gfcmuAlUEezmIY7MvPaoDDmU0ko9rWB21dh44k4lWAuH2Vvh_iUyN0vRsLKQt9nJpDgXg_gj6oQJxq2HTyRjaIj0gmI4CNBpwnDlr0B3QrudFwysiQu0Xy_snZMuJa0B1qWGrqVy_XusI8RTmD36t7PSSoYyvLoCsCbpriJGt8lNvie0AoHBIuMQZmnpjz75rDb2FowdmZBz09XdGuYPhWO_sdsLQ19llipPX-n8w0_oudV2H3CfhbIK0YXmwLzLwC2CYvqMFcoFdW6gIEg2wmy4FFAzAtERGmJo8qWyBCjcBOLgJ6Ji2V1pH0W6MMj7d8omA4Sc8a0P6GVDouKASXk10OyEz0QxRlYebrJojk9z6q9XP__Fxu-W8EDglCAKDKAg525k7ObdqDcpVN9zaimifIBNbSgy5LNco98bWNmQKYZHreMHEwyb8eMqcLPluZzjQ_Gjc5zJ1g2D5GC8FHMz9qjmMzHhnqvp_p8l1ZxqiDbjbJOGIfEZzdQtVkHQcAVYPVmuHDpRtXqJt32mC2FVlZgonsbOXwFAcK4T7zpi20k4sd9qjVkzQx3yaQY_3K72pwtcCYw9dTpDWX1mrT0uNi39RhKboh7tVGjggJGHYV-zlmgcc0x0gGHZSP9FHHF-rnSJ69ug_ByYdcg9ZXjRUrQawCXcymtlN51T6TRoCHo2n28NRoGCqwaDruth6926LGQyEPXGHd-7TMnLhoW_a44QytLDmZ7Fq-ZzqBUIxUjgwRp0GTRhdTQm7JGEtA0GIL2VEQ4vCQjaXunIvWmKT_M3bumBBRkG1zJL91tQxL8gSu9SInW4An7D4AT7DTgGynvDM91rhsUMk1FZUVs5pOgaeRD7CcjwwhbM41MCVGVF3gEQH7kSlo_il4Ru-gm8Om0_MbcGJxoJ5pf6tbMWnyq2VqbJaJkSqIfbR0yTaiDqbqyyaailfV_CDiCMPTq8RxLEK98Z9YHv6in5XGMuCetIPXlXJLxrt-5FNRzFobqGHcc7F2Ra95KHQmwKeB-x0vFghN-LBCcil5fqRNPaySFZHqOfOLBHMNfsMiJwAub7iVXqal1yfqlxrVbSzAKNdStBcQVC8r_nq1ckx48imSS-xuVxzy_R0xuYZ0ZTxYqBS8nvEt1fKWOVJMW7DcDRyPk8olALN4R_9FHjqDQWSn64Otav3mFhPtCa2oIpiK6A_Zfg52UkPTkhQ" alt="" /></p>
 
 <p>이때, 원의 테두리로 움직여야 하므로 빨간색 원 -&gt; 주황색 원 -&gt; 보라색 원의 교점들을 이용해 3번만에 $(2,2)$로 도착할 수 있다.</p>
 
@@ -465,14 +466,14 @@
 
 <p>즉, $(0,0)$과 $(2,2)$의 유클리드 거리를 $d$라 하면, $\lceil \frac{d}{R} \rceil$이 답이된다.</p>
 
-<ol>
-  <li>$(X,Y)$가 $R$의 범위 안에 있는 경우
-<img src="https://drive.google.com/uc?export=view&amp;id=1wcXDmDend9UbgowSrYVoWkjFrKpOq0Sp" alt="" />
+<ul>
+  <li>$(X,Y)$가 $R$의 범위 안에 있는 경우<br />
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_EVWGYBCvrzlOoHLgpsS0l_WvtH4o4-jOZ4kEqnjUdiSXpvPDteynlAp8eNxmGNHeV9ASqqUuhDT-ZcuKq45YUqj2z-ixZtT23SJS0zT-kqJ70cMIAAGEgkLUNKhOXGyxECoazZZSTYHVo0oGV5Kl6Rhq5u_4dRv-mV0Zh54YaOui5n7N6m5UV5ol1vGEr7aCtB-yiHCQMEmXUYMQAr1lC4_Pewpk0hNnfHJxAobi-JQDeA7JOrO0TqoTla5jcq1EC3AUsV-D21Lu48YPHJkhVgpdJF54DCg0hucCLk5fM86Q-v2laom0kynN3Qpi6QquoTP_T7RiI8F5O5w7y2iqP6zKI5EytnIIRjW0kZTZUSaifQzbA6Bc91iGuJPTcopx9DQvTTNZrx5FvBqe6vn8C4Rjh4oHFcbzCYrmpwKGv_jP7PcP5WEWNkbn_qO6jwZIJnImeTw__HPB5N4OHVprC3sjLU5M5gX19xw5hsZI1JwuDsEsnWxIcVoehVaU5ioNJHosm_XKvATIE3gnXMkGMPiqtwWMDBn7KqJ7IEDwwCb_4ZpFcQQRIng7iMgJ639TAcnDkvJ2gw9PhPoDDnNjZXhA-VqjcXq9izkiade7OhYuF2__jT6oaK5O4F2bxrYe-NArlisiqBwNP2hGfrZ-roxW3pQ1dBDucJ8QEJdvA8jzkiDA372V6W_-RKxPnFc8wMKg18e9qnJLNYuaNze1vjAtlr18G0huYeV7cqXjAkR58oo2kIRnkvAauAMR2SqfiVgSrIAI5anFO7esOQlF6jENvs5rb2t4JK37_RFFCzrS6nU0zzw0en2YKIWbB5cAOQMfM8nKgRPtsf8lkJiTL_RciWZCGtdxCaRW7WvhmvHAp9CN-TGp8tJv-cpKBa3YUF26nb4i_S-YM95fL_7EVXG8-2RwQx4-X4kA1W13S57QIJxR2H7l4Qg7r6LOBHs4fN8lZe8VYXpOIDe1S_5wgujz5TIT5x5FFkwNhXEHuR6Jc_-YcwmNCpOqWeXQF6nI6T_1DLpw9Qlq51C8SqNMcd0E3y-VzhJnw4dlqDF9OePgHNsofhW5osJd8qHPykmdHKWBA7CWmJPCStIIwBv5K6omefsuE64H6-21tgGNELuT-MxiKFZOAGhIw_4t33FG53-9QHflrnY8QmkrbgSW7RCdpfWRIzWshiS4sx0CkAykFkGwKMLiw4E6FHSyXS3DYcNvoMtZcoo_z6SplPT4v6C3N_U-R8lrXmuiWFXxqVf4cLxMQygEMXKLjLyHjc2IwWLk94g-k2uKM0eo82_fdTB-nNGZ2k6PK3sKbXhUHmhU4ZgEFhPKnjE3Ys1HW5uvxSohAzbmFqF41jXw05knRA2tutzolXS_I4YPta-b7sEOeG2ykRD58WmtfvvFlEdePf57VDHHbjQ4kBJ84tWsV1ddUi3MEo51XNShQtdKRKo7mFBCijlHtvqHHB35ts8MZ523LWqloRhwoFQiSre73rOJg5B_ff_5N1_mBV_5BP7gq_ynO_CWB1H7SrddwksDrSGnZtqBr3nGR8z2NNa_mLGRrEU21o0_IHShDem4ImJeMyyiUNlYR4UhVDGVNJR7HCpzLrPwTmHLSegD8H-LIzkg5Yp5oBs5zKqq1e7GyqgdVQ3A" alt="" />
     <ul>
-      <li><a href="https://atcoder.jp/contests/abc198/editorial/1084">출처 editorial</a></li>
+      <li><a href="https://atcoder.jp/contests/abc198/editorial/1084">출처: editorial</a></li>
     </ul>
   </li>
-</ol>
+</ul>
 
 <p>그림과 같이 첫 번째 원의 테두리를 기준으로 반지름 $R$의 원을 하나 더 그리면 반지름 $R$인 원 내부에 목적지가 있는 모든 경우를 2번만에 도달할 수 있다.</p>
 

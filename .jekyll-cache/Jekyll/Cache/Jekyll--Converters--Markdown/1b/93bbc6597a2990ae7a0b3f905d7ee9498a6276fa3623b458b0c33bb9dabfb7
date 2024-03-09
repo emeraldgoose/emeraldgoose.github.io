@@ -1,0 +1,344 @@
+I"-h<h2 id="recent-trends">Recent Trends</h2>
+
+<ul>
+  <li>Transformer 모델과 self-attention block의 범용적인 sequence encoder와 decoder가 다양한 자연어 처리 분야에 좋은 성능을 내고 있다.</li>
+  <li>Transformer의 구조적인 변경없이 인코더와 디코더의 스택을 12개 혹은 24개로 사용하고 이 상태에서 Fine-Tuning을 하는 방향으로 사용된다.</li>
+  <li>추천 시스템, 신약 개발, 영상처리 등으로 확장된다.</li>
+  <li>NLG에서 self-attention 모델이 아직도 greedy decoding에서 벗어나지 못하는 단점도 존재한다.</li>
+</ul>
+
+<h2 id="gpt-1">GPT-1</h2>
+
+<h3 id="improving-language-understanding-by-generative-pre-training">Improving Language Understanding by Generative Pre-training</h3>
+
+<ul>
+  <li>
+    <p>GPT-1</p>
+
+    <p><img src="https://lh3.google.com/u/0/d/1Dt6MzObB1bLToXuUl4s113c_2y2kvuiH" alt="" /></p>
+
+    <ul>
+      <li>
+        <p>출처 : <a href="https://openai.com/blog/language-unsupervised">openai.com/blog/language-unsupervised</a></p>
+      </li>
+      <li>다양한 special token들을 제안해서 간단한 task 뿐만 아니라 다양한 자연어 처리 task에서 모두 사용할 수 있는 통합된 모델을 제안했다.</li>
+      <li>만약, Classification을 위해 학습된 모델이 있고 다른 Task를 수행하고 싶을 때, 마지막 layer를 떼어내고 random initialized된 layer를 붙여 해당 Task를 위해 다시 학습을 한다.</li>
+      <li>학습을 할 때는 마지막 layer는 학습을 해야 하지만 이미 학습된 나머지는 상대적으로 learning_rate을 작게 줌으로써 큰 변화가 일어나지 않도록 한다.</li>
+      <li>이전 학습 내용이 잘 담겨있도록 하여 그 정보를 원하는 Task에 활용할 수 있는 형태로 Pre-training 및 메인 Task를 위한 Fine-Tuning과정이 일어나게 된다.</li>
+      <li>Self-supervised learning이라는 것은 대규모 데이터로부터 얻은 지식을 소량의 데이터를 학습하는데 지식을 전이하여 성능을 향상하는 방법이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="bert">BERT</h2>
+
+<h3 id="bert-pre-training-of-deep-bidirectional-transformers-for-language-understanding">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</h3>
+
+<ul>
+  <li>BERT도 GPT와 마찬가지로 Language Modeling이란 Task로써 문장에 있는 일부 단어를 맞추도록 Pre-trained된 모델이다.</li>
+  <li>Transformer 이전에 LSTM을 이용하여 접근한 ELMO 방법도 존재한다. ELMO는 인코더와 디코더를 모두 LSTM으로 대체한 모델이다.</li>
+</ul>
+
+<h3 id="masked-language-model">Masked Language Model</h3>
+
+<ul>
+  <li>Motivation
+    <ul>
+      <li>기존 한계점 : 이전 예측된 단어를 보고 다음 단어를 예측해야 하는 단점. 즉, 한쪽 방향에서의 정보만으로 예측한다.</li>
+      <li>앞뒤의 문맥을 보고 예측하는 것이 좀 더 좋은 성능을 낼 것이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pre-training-tasks-in-bert">Pre-training Tasks in BERT</h3>
+
+<p><img src="https://lh3.google.com/u/0/d/1DCM7-K5IQcaIR1x1GUK-zj1iig_S11Mm" alt="" /></p>
+
+<ul>
+  <li>
+    <p>출처 : <a href="nlp.stanford.edu/seminar/details/jdevlin.pdf">nlp.stanford.edu/seminar/details/jdevlin.pdf</a></p>
+  </li>
+  <li>중간에 단어를 [MASK]로 치환해서 단어가 무엇인지 맞추는 형태로 학습을 진행한다.</li>
+  <li>예측할 단어의 비율을 하이퍼 파라미터로 둔다.
+    <ul>
+      <li>너무 적게 masking 한 경우 : 학습시 cost가 비싸다.(ex. 100단어를 읽어서 1단어를 예측함)</li>
+      <li>너무 많이 masking 한 경우 : context를 잡아내는 것이 충분하지 않다.</li>
+    </ul>
+  </li>
+  <li>여기서는 k=15%로 두고 학습을 진행했지만 [MASK]를 100% 모두 예측할 수는 없다.
+    <ul>
+      <li>[MASK]라는 것에 익숙해진 모델이 나올 수 있다. 그래서 [MASK]를 치환할 때도 아래와 같이 다르게 치환한다.</li>
+      <li>[MASK]로 치환할 단어들 중 80%는 실제로 [MASK]로 치환한다.</li>
+      <li>남은 20% 중 10%는 random word로 치환한다.</li>
+      <li>남은 10%는 그대로 둔다. 다른 단어로 바뀌어야 한다고 할 때 원래 있는 단어와 동일해야 한다고 알려주기 위함이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pre-training-tasks-in-bert-next-sentence-prediction">Pre-training Tasks in BERT: Next Sentence Prediction</h3>
+
+<p><img src="https://lh3.google.com/u/0/d/1wj90_COt5PwbCmbAeUstBvYW29Cj4Jj9" alt="" /></p>
+
+<ul>
+  <li>문장 레벨에서 Pre-training하기 위한 기법이다.</li>
+  <li>[MASK]위치의 단어를 예측하고 [CLS]토큰을 위해 Binary Classification layer를 하나 추가하여 입려된 두 문장이 연결되었는지 혹은 연결되지 않았는지 판단하도록 한다.</li>
+</ul>
+
+<h3 id="bert-summary">BERT Summary</h3>
+
+<ul>
+  <li>모델의 구조는 Trasformer 구조를 그대로 사용한다.</li>
+  <li>Input Representation
+    <ul>
+      <li>WordPiece embeddings : 각각의 sequence의 단위를 subword라고 부르는 단위로 임베딩하여 입력벡터로 넣어준다.</li>
+      <li>Learned positional embeddings : positional embedding 벡터 또한 학습시킨다.</li>
+      <li>[CLS] - Classification embeddings</li>
+      <li>[SEP] - Packed sentence embedding</li>
+      <li>Segment Embedding : 또다른 Positional Embedding 벡터인데 문장레벨에서의 position을 반영한 벡터이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bert-vs-gpt">BERT vs. GPT</h3>
+
+<ul>
+  <li>GPT는 특정 타임스텝 이후의 단어의 접근을 허용하지 않는다. BERT는 특정 타임스텝에서도 모든 단어의 접근을 허용한다.([MASK]와 같은 토큰도 포함)</li>
+  <li>Traning-data size
+    <ul>
+      <li>GPT는 BookCorpus(800M)인 반면, BERT는 BookCorpus(2500M)을 학습했다.</li>
+    </ul>
+  </li>
+  <li>Training special toekns during training
+    <ul>
+      <li>BERT는 [SEP], [CLS], sentence A/B를 구분할 수 있는 Segment embedding을 넣어 학습한다.</li>
+    </ul>
+  </li>
+  <li>Batch size
+    <ul>
+      <li>BERT - 128,000 words; GPT - 32,000 words</li>
+      <li>BERT는 큰 batch size를 사용했을 때 안정된 결과를 얻을 수 있는데 이는 gradient descent 알고리즘을 수행할 때 다수의 데이터로 도출된 gradient로 학습하기 때문이다. 하지만 batch size를 키우기 위해 한번에 load해야 하는 메모리 + backpropagation을 위한 메모리가 너무 크다.</li>
+    </ul>
+  </li>
+  <li>Task-specific fine-tuning
+    <ul>
+      <li>GPT는 모든 fine-tuning에서 동일한 learning rate을 사용했지만 BERT는 task마다 learning rate를 fine-tuning했다.</li>
+      <li>BERT도 GPT와 동일하게 마지막 layer를 제거하고 새로운 task를 수행하기 위한 layer를 붙이고 남은 구조의 learning rate을 작게 해서 학습을 진행했다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="machine-reading-comprehension-mrc-question-answering">Machine Reading Comprehension (MRC), Question Answering</h3>
+
+<ul>
+  <li>기계독해 기반</li>
+  <li>문서와 질문을 이해하고 질문에 답을 찾는 Task</li>
+  <li>SQuAD Dataset
+    <ul>
+      <li>v1.1 : 질문과 문서에 답이 존재</li>
+      <li>v2.0 : 질문이 있지만 문서에 답이 없는 경우도 존재</li>
+    </ul>
+  </li>
+  <li>SWAG Dataset</li>
+</ul>
+
+<h3 id="bert-ablation-study">BERT: Ablation Study</h3>
+
+<ul>
+  <li>layer와 paramter를 점진적으로 늘리면서 학습하면 성능이 지속적으로 증가한다.</li>
+</ul>
+
+<h2 id="gpt-2">GPT-2</h2>
+
+<h3 id="gpt-2-language-models-are-unsupervised-multi-task-learners">GPT-2: Language Models are Unsupervised Multi-task Learners</h3>
+
+<ul>
+  <li>transformer의 레벨을 더 쌓아서 크기를 키운 모델이다. 또한, pre-trained 모델은 Language Model Task를 수행한다.</li>
+  <li>40GB의 text로 학습을 진행했고 데이터의 퀄리티를 증가시켰다.</li>
+  <li>여러 downstream task가 zero-shot setting으로써 다루어질 수 있다.
+    <ul>
+      <li>zero-shot setting : 어떠한 파라미터나 아키텍쳐의 변경이 없는 세팅</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="gpt-2-motivation-decanlp">GPT-2: Motivation (decaNLP)</h3>
+
+<ul>
+  <li>“The Natual Language Decathlon: Multitask Learning as Question Answering” 논문에 영향을 받았다.</li>
+  <li>모든 종류의 자연어 처리 task가 모두 Quesition Answering task로 바꿀 수 있다는 논문으로 자연어 처리 task들의 통합에 대해 다루고 있다.</li>
+</ul>
+
+<h3 id="gpt-2-datasets">GPT-2: Datasets</h3>
+
+<ul>
+  <li>Reddit의 글에 있는 문서와 외부링크가 첨부되어 있는 경우 외부링크를 타서 내부 문서까지 모두 크롤링한다.</li>
+  <li>Byte pair encoding (BPE)를 사용한다.</li>
+</ul>
+
+<h3 id="gpt-2-model">GPT-2: Model</h3>
+
+<ul>
+  <li>Layer normalization이 각 sub-block의 입력으로 이동했다.</li>
+  <li>각 레이어를 random initialization할 때, 레이어의 인덱스에 비례해서 더 작은 값으로 초기화한다.
+    <ul>
+      <li>레이어가 위로 올라갈 수록 거기에 쓰이는 선형변환의 해당하는 값들이 점점 더 0에 가까워지도록 하여 위쪽 레이어가 하는 역할이 점점 더 줄어들게 의도했다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="gpt-2-question-answering">GPT-2: Question Answering</h3>
+
+<ul>
+  <li>대화형의 질의응답 데이터(Conversion question answering dataset(CoQA))가 있을 때, 학습데이터를 쓰지않고 질문을 읽고 답을 하게 했을 경우 55의 F1 score를 얻었다고 한다.
+    <ul>
+      <li>Fine-Tuned BERT는 89의 F1 score을 얻었다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="gpt-2-summarization">GPT-2: Summarization</h3>
+
+<ul>
+  <li>CNN and Daily Mail Dataset</li>
+  <li>Article 뒤에 TL;DR(Too long, didn’t read)이라는 것을 삽입하여 TL;DR이 나올경우 앞쪽 모든 문단에 대해 요약하는 Task를 수행한다.</li>
+</ul>
+
+<h3 id="gpt-2-translation">GPT-2: Translation</h3>
+
+<ul>
+  <li>WMT14 en-fr dataset</li>
+</ul>
+
+<h2 id="gpt-3">GPT-3</h2>
+
+<h3 id="gpt-3-language-models-are-few-shot-learners">GPT-3: Language Models are Few-Shot Learners</h3>
+
+<ul>
+  <li>
+    <p>GPT-3는 GPT-2를 개선한 모델인데 개선방향은 GPT-2의 파라미터보다 훨씬 많은 파라미터와 훨씬 더 많은 레이어를 쌓고 더 많은 데이터, 더 큰 배치 사이즈로 학습한 모델이다.</p>
+
+    <p><img src="https://lh3.googleusercontent.com/fife/ALs6j_ELhzKjWr6qRHJrLCeXYXxCUF7gzkbxOhJGiQ5E2j3LIiVb_eSHyE8qI2cJyN9fsFnBbfEHW6UWRynrCCVN59sMUCXd2NH6O6vjgk--Th8UaYeApLuGQAIfhwj5E-LrnCgn77Yad3HYDx4Qnzfq8QfRc1jXYShxudgwLj0n-y0EqTYysNNMcaAf6n1XhCP34kuX0tGTm-kYPY8gQ9aVmreWcJhKL2YospWXRKHHcnDSioQ4l1ErA50K-8CTZUenCJhsLHrYqZj32ca7p5M0sSPCi_rgQK95zHtGbN9iysckk60AU4xXjS956vONcwaEFqMAcaBq1HeQ9or4BBnOklVxrECz-GSFTj1K_-iooGHLjeA_HypjaCE7PtlcPD-EztcMkGxjDrxbrmAtYG5bIIvzXnnrRU1Smcmm3sguRW3anCxWQj3XJpbJhlulx1H6vh11uEMRe6-mIW0ZY1d9nbO0i1egZAtPcapLqvU15sdXy4YuGaTxkAkRgSYzA2U-Fq2AKBuC0hv4L_LSxICX7XbN8jy0zTQHaE5H7tI9GP2qMZp08-cCYaYiDlp3nQ-ugfM2p5J3zvfj9-2GQwWroV-w42TQX0KHH_6wRWccJ5HVViXilHgcXkBkrmeCjNEKY4k9bDW0wfJNgTaGfrGTK23yfUQqjisC6wfq-x1shicOVg7K_xL1oKpK6gQBh4hNyED0mFEyh_RXmDxH2Hr1fHglj4bi94m8h-FvJmIkpq6COsUH3HfuNmtj-K96Yviqj68j_q07eglUcafTydxCymP9AvZVn665hl1FogjfCLOAQi2yanl0FUAO0hqSHXz3uaEfIAvKBhq_KUEpYyOux2NQNfjZ3uZWEvoghl8Jk60pM7VMzo6_tZRW33skz25RcvmJNRkJJ2vVEiXpZ7q_PtB4Xiq5Z0B6L2zaeQRLRCGuaCWEnBTUFYtmgK-RL44vD06kz05BEyy6vUsca5Ttd6QRiMSQWwGoK0Lk0Pal3qGGYfn7Suo8QFwnUqUZdu1qJ7NsgeXqS6uagM5FhVHOHt67i-O5puzD__UicmEt-blUTYTJ_Xfl1lc1hIVJXU5nfT2FmhCuzwFeQipf_H7sZgqHK9S_inQyCKCPduOKzejFz1wJWfttxbCcHg5dQfKweLlq0UBFNeCCjAJ0UXLyUDudS1DglQ4mxiX69Yd_BjuUlB3qRxzvqrhVuWo0DKL2x_YaOtNy3p016U2liYBCtCcTgI4r9cFCT7GlzMdxgCHOdqiGpaDwjJ-ldpYpFUQrP2uxVz109Hs8cIICFVFadcSVS2IYudW0Sa9I2BdVJPZoPGA9nqKQpNNmgbTs4C_AkKAcNfEbR4fqHPe7Nfnz7CRzqdmEJI8qAyCbwREUq-AXkzCaava565PPkXm0Nj5hsKiUGLink4Y20LLWuaUWpf7vhlYopBtWfhbaRRYvibigmCCdiMz6KAABjTdccuLlAVTTt3tDFght6oJSctcHKWrSL4J_YmqcX3fOMHToYD_jqOzRpU9tAZJHrJizGFGk9QctlRcr-aBb91vuAknvnp7W2MwgB4-YPupql8PVr3PfTllfHlgvT0sOykQwREELNDHFxkWNjrSYZqxwy-0ZTX_COoHDw755qgFwS8KDuBNVn7AKOg" alt="" /></p>
+  </li>
+  <li>
+    <p>Few-shot Learners</p>
+
+    <p><img src="https://lh3.googleusercontent.com/fife/ALs6j_Ftx6qPqivotnbse8W5QT4sIZIX7CEQImeAJtKHN-jcGaBeJzxcUhJI7-wdC2QCzl98_wGwT65hGww_oYNtWXeJ0bL79vbSwLjHKJZlSyZ7hCwKVd63T5Uj54Tp4SGGqOX04VDdBZTJhLD4cYWmwhdf7FadSZlHpMusy8D-IR2--GcL5d6Q1KuVp4oOCJlp466vbRlX5vES0ohHmUXC5F3V7exZTnnPJagsVBn08jQFZoG_2LbX4EA49PYxJkQ2NoO5Z5zST7Zc4yhV9PeK1VrByXzxFirDukJj5vOa0b3maYh4cdzvvDtlesCtqYv55tbdmD145IWEHS-5bWNqYJVxBFTRyEwSdmiXqyRCZcScGYQEwW2o22SIjcAwoZxgswuq3dmkNy_DYi7-19Mt5Cq1lMmz0hAubpwOLdMOih25elhnSffDEvI41P2mDH2QW1MiH9dbF6lEBuY8zIkTIlfgMg-DEH9lgVL_4VW4e4V9Cmo_O4Lwu73MFCXNnO32S2yOdqSwEl36cUfHP8D2CBENcus51eqA5LkI-l4zUYk_o1rcqu4eOiOks585CdwelZJLwIGSrd3y4UFl_2prsKM-4mM2mLJn2FGMyo5nyQHeTvljnyVuuaP9_M0qafvQh5h_KBMOn4qtpfT4Qc3nx7b8esw5m9XdCVSDGY15lTCew-CCcth3CeZVWJJGG4vjpJLU6UPbZPOfVpjKntfYteZ4TBafEb3T-F7MZXhWNcjnx_1-5Qxc07UXnhTK54vZeo0tMUSZHiS-afAQG5kyYz-0Xm0raQU-HkHrd83lfFy8WJZuX6cOkb2qbGG-jci1eGKqoOLsojN5T68qmlJfH6ctbwksSOQQUgcrAspnUjvyzxtzsOLcqN0GoBbRkzrkyZinxPF2swZ0NVvUk4AYvM2jSSPOZsHcxONqQ799yTHUdFEvx-L8N_OtJrJO2_c9mfmLx6b0zUBxdzrThLojbzHOQz_Y2ns6LuLekvW1H-gswrkwUhQL4eFtkwqo4S6xrKLmU-JqrAYFPAhMlmXno0r2dmK042dNkmm7EQQRJU385MOwyZSuD87YVT3vwUxKEsz2lDze5QAIT8A5QUWLzxj4n18NlchYqn6-ZUyysx5HcSVnL8aTcDTJMsC0z6jroXUHihAPtpq1iijHq0Qfm8eD2tnIcfUccbB22zId9vL1G4nxhv2D7iEJjMGN_f69gKlq-zSwzumxVQufczXBkOVwhIt_MMcUuLgKT01lZemuRBUzWc9GqZtEOUURTkF9D1VXCJ4ydJB_1Hvd9MIUrcA_reXnCd6Xwwc9uHZjcNBwRVzO6DlbqFSwd7gx2o2IRgTndupT3sJSh46k6eAAVnkmeQbB0DFYDiXK1C0BU0LEXR7ybcMDaC37dNMBpEIbOwvkSQEZJG7ubaxDJoXe8dS4qT2P9Ya8clJGvwVRLC-LfZRdvEzdzkJPzz0oIfRpBEhlRtyWkwhlByVYpt72O8swQjX0ALteKFC4mOIPfey9FnB2PysmLRnNVuLVf9VEkEdHc6sbFYEyJd3CJG6Y6Df2xFQJtOUC4Dca_yBw08Qri-yB8M0RS0kTEMuF3g8rI-3IDBsHTn9_Kq7-vgeLJY-wuoV_leZ2oaE60bMp0bTDDjvlBw" alt="" /></p>
+
+    <ul>
+      <li>Zero-shot: task-description을 가지고 바로 answer를 답하도록 하는 task</li>
+      <li>One-shot: 한 가지 예를 주고 answer를 답하도록 하는 task</li>
+      <li>Few-shot: 여러가지 예를 주고 answer를 답하도록 하는 task</li>
+      <li>이전에는 downstream을 위해 output layer를 추가하여 학습시키는 과정을 거쳤지만 지금은 변경하지 않고 inference과정 중에 예시를 input text에 example를 포함시키는 방법을 사용한다. → zero-shot보다 성능이 좋아졌음</li>
+    </ul>
+  </li>
+  <li>
+    <p>모델 사이즈를 키울수록 zero-shot, few-shot 성능이 빠르게 올라간다.</p>
+
+    <p><img src="https://lh3.googleusercontent.com/fife/ALs6j_GmawF4_jROAh77px5_s5S-XLFO2ZTI0p8LTVKx9Irg0YB8Y9uDFmCD7S-uezCiStoGMQzGgz0kvzixM4qCf1Pz1ga9a_7sqeEKhobNc-yITs-uqTS8EN7iNE5zEdi7zdFkKzXA43GpJXMC8ifmg6hU83xLPZAwGwAniW8C3cIUnbE9qA_eeEUSP6kqmIS9BoH12YV4UQyP0MCWuFgRTU606BApGc5av-qIdfdh7Hj3D26WnKe-kZ_KqkpBOiC7NTimPNnJ_yzdwtWRCgcyuqdEWDKaKFVaoEiyuvPG4RrT2_nVxDF9h7FVufI9jLz6IZ8leA08HpTqa2VUhdm7S1dz2NcC0NieXLfDl1ve-w1pkvaNS2oc-y4I64KfGA-M2Gw5E05-VGZpqJBJDgyLxfiz7X2UzAy6_wiqseSFeQVi7Z1lFuQjAmDwlx3TKJbSfBv5UbwB7BO6K0EnG9TaKA66ZHD9To9kR6lX3YIb6yCne6LVTmZH6rfbimJ9yRWd_QlOEzwJhsphCyVsxfx3BfekuSjmmmyYBK9yO9J_OGyTM1KVf2F8k68avtUzPhpZaAWAbqq8jGDMzVuyYNOxUaX4uTiiibvOqoZfY20IY-V9iTU5NmPfBY9WzeK9mG8gi5xOrTbCQYPQyBO--0pqIctU9VRUOQFkeMI2TyPJaA3Ys7rieGkFtxR_T6l1qf8532w_hiafaqhSSD4pdEi2WA2acaE1YQ6r7iLCjLD9F55vz5F2W4SWPAWFl3TWoRvMDersOa0I_ITdyKP0RYg1s_m0QZgOapJX1Ul3wde1AYepZOGcuR7NaqX6Gi8glr70LYsvezS51MPujPC9OnyoUYgqWWcr4ulNx-pG90jebig_J1TgWBJg4BUdhnZpcQEiSmFb8bq5wVOIfL3BDmTO7BzXG0x4J2MRT9GhYZPfaKYz8LDhloKZE9GAlR8zmiWh57h5QJjGjhTBj3NM3ZK5-RReejkpl1BcyehvESjArVKEt8-zC3Pqqj5ielq9diYmqvcCSPB13PdpXN7QuiLxhZXQ-EyWShAg9RXp8mrczy-otmE5KSao6rRefbmixtDO5haRzTLPzW_dDHW6VhNIdol6o3aZWLOQJg_MtBQGqKemyDcNaFONDRETuzehD94hjDFY1g7_Lia0T8Ro2YAHgEVYVxLdffT4hQeuRwy1n512ECIt12Xegu7nfErzlkfBEHjtDKn4UMQHaVsjeNrjHg4_9OFL82n5tHLY757Mb-TCbMmeSBW4dG__cxFFuR_fVVSVIDfsZbPpEfRZ5wpdkNEyaSVAVCYPt6466A1c2hsviRn8swI1ZCY3b77H_XMeGaJ_gS-mXxOYwipEHRA0g2DdTMKaRx4cjqgDsy_pv-u9f8l14CxLNK2cpzarSM_WnjyIJ31IuIktwV9FN3koM-kpGNqBk_oV2s--tn9XhgubazvVpil1b2kZFYDiXtMV1muPdbeZTV18znqRojZ1i2O58oT8FUusK_byFIHHEIbG2L_g1eYs65rJicA2IxcKiQguzk4j7SdZSg_wQH1mTEDLhR-dKeW_Mwi9ay8ZiCRHDj7Zo_4iVePVUkkjEwj5IjXrdfSI0476md34EyJd7k0K7ZFtR_zINZxVa2ypzTBgpAk-dQ" alt="" /></p>
+  </li>
+</ul>
+
+<h2 id="albert-a-lite-bert-for-self-supervised-learning-of-language-representations">ALBERT: A Lite BERT for Self-supervised Learning of Language Representations</h2>
+
+<ul>
+  <li>많은 pre-trained모델은 많은 파라미터와 많은 레이어를 가지고 있는데 이로 인해 많은 메모리와 학습 시간이 필요로 했다.</li>
+  <li>ALBERT는 기존 BERT모델보다 가볍게 하면서 성능 하락이 없는 모델이다.
+    <ul>
+      <li>Factorized Embedding Parameterization</li>
+      <li>Cross-layer Parameter Sharing</li>
+      <li>(For Performance) Sentence Order Prediction ← 새롭게 제안</li>
+    </ul>
+  </li>
+  <li>Factorized Embedding Parameterization
+    <ul>
+      <li>Transformer에는 입력의 dimension이 첫 self-attention 입력에도 유지가 되고 다음 레이어의 입력에도 유지가 된다.</li>
+      <li>ALBERT는 Embedding Layer의 dimension을 줄이는 기법을 제시했다.
+        <ul>
+          <li>기존 BERT는 word embedding의 dimension이 입력의 dimension과 같아야 했다.</li>
+          <li>ALBERT는 word embedding의 dimension을 입력의 dimension보다 작게 하고 다시 입력의 dimension과 같게 할 수 있는 layer를 추가한다.</li>
+          <li>만약, 기존 BERT의 embedding vector의 크기가 (500 $\times$ 100)라고 하고 ALBERT의 embedding vector의 크기는 (500 $\times$ 15), weight matrix의 크기 (15 $\times$ 100)를 가지게 된다고 가정하자.</li>
+          <li>이때, BERT는 50000의 크기를 가지는데 반해 ALBERT는 7500 + 1500 = 9000의 크기만을 가지게 되어 메모리를 절약할 수 있다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Cross-layer Parameter Sharing
+    <ul>
+      <li>선형변환 matrix를 공유하는 아이디어이다.</li>
+      <li>Shared-FFN: feed-forward network parameter를 공유</li>
+      <li>Shared-attention: attention parameter를 공유</li>
+      <li>All-shared: Shared-FFN + Shared-attention</li>
+    </ul>
+
+    <p><img src="https://lh3.googleusercontent.com/fife/ALs6j_EfySECCT18XMoFc36lzBq_F3Z8E8xl4dHCl9a3g-BovKcugM_iBDKoCRMUxC8-747hwO1F1uGVlU5zR48gswhkjhP7cYdDo_NXOPJMCYR9wZUYwVqJQzysPg71fpx8Rd3sY8VJYGoPSh7W9ZF_XtWyLng_OLb_HMwm2iwBeEeDjFDN4k0opE_UOn1WzcEdJQqpZwxH6UecBy5Ep7XPfyTw8s2fq9SYtjDsWqUd-ubhtqFSeloDmlJn_O5EYeLr3gUU9Npn2E7gfZRcy0hk1JeL-LpuELJQX_hjOqzyDINHECHrDBXvy4RWPiFDiFpk_VIHF-Wu4nlsLlBWDnvN3rerZIaN8brXbuGnpHYef01ukeMc84Kn_eRV-Y1yFburKzemsZTiql4R8UfSBLq-UQ3FpNXIq371TElxG9YXXzrmSTIfcz-rvCxCaAdC0NhnweYSSDSDYvfWzxLoLYkd_2AVdfjK0SUbxlVrqtl72ujtTAqFo-_t1yYT3UQOarrKrahhvreENX70K5xwA9MncsZOygOZqEekQLE6U5znhLFAw2n-Atj4uNkgtmkNuv4v89e2Gajy1tAUccDWFy9ISn9GakMTNxusRmug_MFWJ4FBgOUS9IsCU4VtTTBGXNXKgmNZxJ9qN5UmePts3FT5QBFBBrA4cwqdJcnJgtJiz6b2AFqdTLhkPgKhzc_IROSVxH3G1xybpDsZ10V3D5CDm7DaqIgdUXTPTQ1h_yqaarj9tXgLpMYda9eOyac6tXmi58wVhxllJJct_35Ge8jR2WtB4xqTTuf1kL1CBU8xd79nm6KXP-97GB5ISI_zjBt-MQ8l1FmDq1-7gAFTcGUgTJ3GI0Gbc1enesEHcODhqKd80BDSyGUk15YnlALmJNHSnv3jT79B7XxIpPScfbIzz_DPy50dDLyn0uC5xAz7ijm30s71O0O7wdkwqwdUEW8o8PJL-_ePuYDWkfYs3OnCn8nCpGDioQZQdMZlchKPUKyAYf60vilmT4jRfHYbv-zJU-ibp5ccL3DV-5lnD3ZUZi60fsEuTm6YWQXjvQawbpuky7EFLvV8XT5lLXTBlCI0SuScydDx_ONppTYjqNYyrpNlFte4IR5ETvRC5AWyxvoXXOeSe_9lhcT8j6ol3eUwj2pJANfH1Nke6q7PlfnAZ8pRZIPHHa0jHeYykoAaoGS1I5Tz-DqxDP_ZURvVKiaml_j7tVwdUijvgn-rWie7nGAged0CkveMO-Vgsu8TuXoZWy-Qr0GyKK2fvYY5tAoiom482A3-TtR0xRYz1peQBSiFeurMjbXM-Dn5T983VeaDVy1s5BumvrPiSPmNVXN6ZDhmUuQ-xfexmtUF52IRgkIZZsfljk4NIFc-BD2xOGqqbprLMwqI02jdYNulbG5JQWBmyopP64-AP5fuDE2ZFpk7yzuKFueBqjM440R3GixYXDnHSPgcBcYVl35oyjlK2G7kqNJhGcmqUN68I8eqTTQxTpx8EoHFcl_y7nG4ONOXZlACpvzcFG1z6cPy05XVWsG_gltALDgwmjoPtsU4hRJGAqH62siiHHOfRmOCDxZ8VD0Ud95QEzRxxKRXAcfFx_z_eBoBBoN1_8jKsupaXuIfxAWjTZVFguN6WXtHv8Y5mqQg7Q" alt="" /></p>
+
+    <ul>
+      <li>모두 공유했을 때 가장 적은 파라미터 수를 가지고 성능에 있어서는 하락폭이 크지 않다.</li>
+    </ul>
+  </li>
+  <li>Sentence Order Prediction
+    <ul>
+      <li>기존 BERT모델에서는 Next Sentence Prediction task는 실효성이 없었다. → NSP를 좀 더 유의미한 pre-training을하고 싶었다.</li>
+      <li>연속적인 두 문장을 가져와서 순서대로 SEP을 추가한 데이터와 순서를 반대로 한 데이터를 만들어  binary classification task를 수행하도록 했다.
+        <ul>
+          <li>Negative sample 또한 두 문서(docs)에서 랜덤하게 추출된 두 문장을 연결해서 next sentence가 아니도록 학습을 진행했다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="electra-efficiently-learning-an-encoder-that-classifies-token-replacements-accurately">ELECTRA: Efficiently Learning an Encoder that Classifies Token Replacements Accurately</h2>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_HpWmLPTdU2gtZpmCOGzJ-N2cXhwmyeP_FRZ5XssmqELA-I2mcpMmW90w4ZpfBy1w0qlCnqnce0xXLFMqNPlZAZsjtFPkj8JpWYeNZpZzNrnI-73NwMmc2CsdP3O1ymivniMMDQ6D7OUxw9F-tfiqp3cOcytRsnuptukHAMaL16pUE9Pzi42cOaPFT_cSYFCTmVSi1rgWNj5KPHm5zMIwV9__ubp-mOEswr0HhSrw-U3_4v17KDOJqO_wQnmoUN8DNPlq5uLQVz5OzWfZDwnSRBzn78uYNWiGgmQ6IuJiArWgx_Q0PuEG9rS0sFZPQ1t_U7INTVLSzwYa4yAqQyYIsEyZO5uW1aOQrm8wJ9KKqDN8xHju3V74yk3u8O1CXjewiuFe4mqKuY3POhZ6BGrp8yus7aMFh_PiL1CDBiAogavDr7pSITp_m931hSVtGpjzVCJTHBPATeB_PLMuJ2bQMxxlB7O-cETrl2i0iF91HmxEyewIfd3LYfdqtR47CN2vcgdjHL5qtw9rwOtYsdtOs1PrD5ReHlLmQm5-wJg8pVHham_YEn4NoFafAJExx7kE2JjoYG5bG6IM-j6HhKqdTNXyRBJqFuuVELMVyg8aj3oYweX7-1Gb1vgkOq5w0ztD67wIjFq-dEaXK7pi4Hka3CQW1zI6LB8uc0WQDvc8EqTrw3Kl0L-pgceA_FwAWkE0xN-7Lb7MM7YNq1yHvdG-XUcVNhdyaRTaYTYB6oO1I28KME2vh54i-W54UMGEDrdzEjFjTJDTCAIhwM1mx9LM62hFPbwOeue_FqGONi3xKlWvSX14OIwbZWvV3DFtIw-T1WEUBcEcmdvDjcj0Rj1ZZoGflIgDZEm40gPPqbG1CTKf9gidKdrl4Z6C7yRk0MCcT8k5wKb7QM_4xn8aQH1sE1xycnU3PcNYvZN7NZ7wtJUOm0R6klMVXsUTFh-_4j-HE5AT0VXuwLE-SQD_Z3HMm1J9M8ThwFPoh6D-wRUB7pAw6wxgkctVLFMFiCvRCrJcWdHUAbtECcZWiU9FhPXP3V6pNJIeSlYOvHJz4Cy9AjvUAtX19G0GZvmP_Eg9TRKJ4YIUDa5BHPJOObNpBLhhMNaD5AUNhAqSWzPlaZnBKAXiO-xHcby3GeCuJs_NePxypLWUIF-JxGPxLe263BO8jIcAtvzqiOykNuYmYLj0Caefo4rwAoBlBRG19oFu4JRAdDMp9mX2HjkTb8vQhXcKWB5cXARX7h9xZOsKIEMgR6mHF8Hcy_6MCdiT0CNyWAsLVtKNw0_bMJTIKYXYXFcyHTjTcI1YF1CtoyZd7G4gJD_cS1TpeIaToinIziYlxnK6IMl-buhCSQUaXkqJumGgqOfUiOO3u6v8YDHYJxqpg9MF0HVWkzB4W-g4B2OBQMCy0QwIV5X3RSmA-6kIy2obHirTyMHDY9ftdLL0na97T1-EMnHbQWPvD_a55e-oWnlqCGzLe-EInZeV8tI1z3UfjN3uU1scN4lE708PwMzJnL7jRjcEAK_8Jo81fhVeqC_jjMLhDjVG6AeoNT_lr3bZpmjrwZ8xfuSndC07xcApq0VwoCsHx4ZFwUSBri9wRcjvvNeJTieNmOEPUFyh3DKox_FujhQyc-34uo04o2QJk-GSkh6Q" alt="" /></p>
+
+<ul>
+  <li>Generator는 MLM을 통해 [MASK]단어를 복원한다.</li>
+  <li>Discriminator는 self-attention을 쌓은 모델인데 각 단어별로 original단어인지 어색하여 replaced된 모델인지 판단하는 모델이다.</li>
+  <li>두 가지 모델이 Adversarial(적대적)관계로 학습이 진행된다. (Generative adversarial network의 아이디어와 같다.)</li>
+  <li>이 모델의 경우 Discriminator를 pre-trained 모델로 사용하게 된다.</li>
+</ul>
+
+<h2 id="light-weight-models">Light-weight Models</h2>
+
+<h3 id="distillbert">DistillBERT</h3>
+
+<ul>
+  <li>Teacher모델과 Student모델이 있는데 Teacher모델은 Student모델을 가르치는 역할을 한다. Student모델은 Layer나 파라미터 수가 Teacher모델보다 작지만 Teacher모델의 output을 잘 모사할 수 있도록 학습된다.</li>
+  <li>Student모델의 ground truth probability는 Teacher 모델의 probability가 된다.</li>
+</ul>
+
+<h3 id="tinybert">TinyBERT</h3>
+
+<ul>
+  <li>knowledge distillation을 이용하여 DistilBERT와 비슷하게 Teacher모델과 Student모델이 존재한다.</li>
+  <li>Student 모델이 Teacher모델의 probability를 따라할 뿐만 아니라 각 self-attention block이 가지는 $W_Q$, $W_K$, $W_V$와 같은 Attention matrix와 그 결과로 나오는 히든 스테이트 벡터들 까지도 유사해지도록 학습을 진행한다.</li>
+  <li>Mean Squared Error(MSE)를 통해 가까워지도록 한다. 그러나 일반적으로 Student 모델의 차원은 Teacher 모델의 차원보다 작을 수 있기 때문에 일반적인 loss를 적용할 수는 없다.</li>
+  <li>그래서 Teacher 모델의 학습가능한 Fully connected layer를 하나 두어서 차원이 다른 벡터의 mismatch를 줄이는 방식으로 학습을 진행한다.</li>
+</ul>
+
+<h2 id="fusing-knowledge-graph-into-language-model">Fusing Knowledge Graph into Language Model</h2>
+
+<ul>
+  <li>BERT 모델들은 주어진 문장이 있을 때 문맥을 파악하고 단어들 간의 유사도나 관계를 파악하는 것은 잘 하지만 주어져 있는 문장에 포함되어 있지 않은 정보가 필요한 경우에는 잘 활용하지 못한다.
+    <ul>
+      <li>예를들어, “꽃을 심기 위해 땅을 팠다”와 “건물을 짓기 위해 땅을 팠다”를 학습했을 때 “땅을 판 도구는 무엇인가?”라는 질문에 대해 제대로 답을 하지 못한다.</li>
+      <li>인간의 경우 꽃을 심기 위해 부삽을 사용하고 건물을 짓기 위해 중장비를 이용한다는 외부지식(상식)을 가지고 있어 위의 답을 할 수 있다. 따라서, 모델들도 이런 상식이 답을 하기 위한 외부지식이 필요하다고 판단할 수 있다.</li>
+      <li>Knowledge Graph는 이런 외부지식들을 담고 있는 그래프이다. “(땅을)파다”라는 객체와 “땅”이라는 객체가 연결되어 있고 다시 땅을 파기 위한 어떤 도구들이 연결되어 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ernie-enhanced-language-representation-with-information-entities">ERNIE: Enhanced Language Representation with Information Entities</h3>
+
+<ul>
+  <li>Information fusion layer는 token embedding과 entity embedding을 concatenation해준다.</li>
+</ul>
+
+<h3 id="kagnet-knowledge-aware-graph-networks-for-commonsense-reasoning">KagNET: Knowledge-Aware Graph Networks for Commonsense Reasoning</h3>
+
+<ul>
+  <li>A knowledge-aware reasoning framework for learning to answer commonsense questions</li>
+  <li>질문과 답 pair에 대해 외부 knowledge graph에서 sub-graph검색하여 관련 지식을 capture한다.</li>
+</ul>
+:ET

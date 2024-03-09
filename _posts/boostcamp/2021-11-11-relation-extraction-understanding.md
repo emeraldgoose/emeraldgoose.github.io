@@ -30,10 +30,6 @@ tags: [dataset]
 
 AIDA CoNLL-YAGO Dataset 또는 TAC KBP English Entity Linking Comprehensive and Evaluation Data 2010등이 있음
 
-![](https://lh3.google.com/u/0/d/1kX_2NhKoYfFyNizJ36WVbYDgR-RIcLTs)
-
-- 출처: Robust Disambihuation of Named Entities in Text(2011)
-
 ### 이러한 데이터를 만드는 이유?
 
 NER, RE, EL은 기본적으로 비구조화된 텍스트에서 정보를 추출하여 구조화하려는 것이 목적입니다.

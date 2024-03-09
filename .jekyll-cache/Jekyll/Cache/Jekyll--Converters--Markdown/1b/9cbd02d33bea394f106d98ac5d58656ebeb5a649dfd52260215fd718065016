@@ -1,0 +1,223 @@
+I"vJ<h2 id="attention-is-all-you-need">Attention is all you need</h2>
+<ul>
+  <li>No more RNN or CNN modules</li>
+  <li>Attention만으로 sequence 입력, 출력이 가능하다.</li>
+</ul>
+
+<h2 id="bi-directional-rnns">Bi-Directional RNNs</h2>
+
+<p><img src="https://lh3.google.com/u/0/d/17FoHi1TYtgulYYIF_8wxQ0dlBJdJvhXM" alt="" /></p>
+
+<ul>
+  <li>왼쪽에서 오른쪽으로 흐르는 방식을 Forward라 하면 오른쪽에서 왼쪽으로 흐르는 것을 Backward라 할 수 있다.</li>
+  <li>Forward는 “go”와 왼쪽에 있던 정보까지를 $h_2^f$, Backward는 “go”와 오른쪽에 있던 정보까지를 $h_2^b$라 하자.</li>
+  <li>인코딩 벡터는 왼쪽에 있던 정보 뿐만 아니라 오른쪽에 있는 정보도 같이 포함할 수 있도록 Forward RNN과 Backward RNN을 병렬적으로 만든다.</li>
+  <li>예를들어 “go”라는 동일단어에 대해서 Forward RNN, Backward RNN의 히든 스테이스트 벡터를 concat하여 히든 스테이트 벡터의 2배에 해당하는 dimension을 구성하도록 한다.</li>
+</ul>
+
+<h2 id="transformer-long-term-dependency">Transformer: Long-Term Dependency</h2>
+
+<p><img src="https://lh3.google.com/u/0/d/1KwLLispNtOYBguahypHzheqHWxxB2s5q" alt="" /></p>
+
+<ul>
+  <li>
+    <p>그림 출처 : <a href="http://jalammar.github.io/illustrated-transformer/">http://jalammar.github.io/illustrated-transformer/</a></p>
+  </li>
+  <li>각각의 입력 벡터들은 자기자신을 포함하여 나머지 벡터들과의 내적을 통해 유사도를 구하게 된다. 이 유사도를 softmax에 통과시켜 가중치를 얻게 되고 가중 평균을 구하여 해당 입력벡터의 인코딩 벡터로 사용한다.</li>
+  <li>유사도를 구하게 되는 히든 스테이트 벡터들 간에 구별이 없이 동일한 세트의 벡터들 내에서 적용이 될 수 있다는 측면에서 이를 self-attention module이라 부른다.</li>
+  <li>입력 벡터들은 각각의 벡터들과의 유사도를 구해서 디코더 히든 스테이트처럼 벡터들 중에 어떤 벡터를 선별적으로 가져올지에 대한 기준이 되는 벡터로 사용이 되는데 이것을 Query라고 표현한다.</li>
+  <li>쿼리벡터와 내적을 위한 각각의 재료가 되는 벡터들은 Key 벡터라고 표현한다.</li>
+  <li>각각의 벡터들과의 유사도를 구한 후 softmax를 취하게 되어 나온 가중치를 다시 입력벡터에 적용한 벡터를 Value 벡터라고 표현한다.
+    <ul>
+      <li>또한, query, key, value로 사용될 때에 적용되는 선형변환 매트릭스가 각각 따로 정의되어 있다. 주어진 같은 벡터를 사용할 때 query, key, value로 쓰일 때 다른 벡터로 쓰일 수 있다.</li>
+    </ul>
+  </li>
+  <li>쿼리와 키에 대해 서로 다른 변환이 존재하는 유연한 유사도를 얻어낼 수 있게 된다.</li>
+  <li>시퀀스 길이가 길다 하더라도 self-attention 모듈을 적용해서 시퀀스 내 각각의 word들을 인코딩벡터로 만들게 되어 멀리있는 정보도 손쉽게 가져올 수 있다. → RNN에서의 한계점(long-term dependency)을 극복</li>
+  <li>자기 자신과 내적을 했을 때 유사도는 큰 값이 나오면서 큰 가중치를 얻게 된다. 이러한 문제를 개선한 모델이 등장한다.</li>
+</ul>
+
+<h2 id="transformer-scaled-dot-product-attention">Transformer: Scaled Dot-Product Attention</h2>
+<ul>
+  <li>inputs : 하나의 쿼리벡터 $q$, key-value의 쌍 $(k, v)$</li>
+  <li>output : value 벡터들의 가중 평균</li>
+  <li>각각의 가중치는 value벡터와 대응하는 key와의 내적값을 통해서 구한다.</li>
+  <li>query와 key는 내적연산이 가능해야 하기 때문에 같은 dimension $d_k$을 가져야 하고 value 벡터의 경우 꼭 같은 dimension을 가지지 않아도 된다.
+    <ul>
+      <li>왜냐하면 value 벡터는 상수배를 적용하여 가중평균을 내기 때문에 꼭  같지 않아도 실행되는데 문제 없다. 그래서 value의 dimension은 $d_v$를 가지게 된다.</li>
+      <li>$A(q,K,V) = \sum_i{\frac{exp(q\cdot k_i)}{\sum_j exp(q \cdot k_j)}}v_i$</li>
+      <li>Becomes:
+        <ul>
+          <li>$A(Q,K,V) = softmax(QK^T)V$</li>
+          <li>$(|Q| \times d_k) \times (d_k \times |K|) \times (|V| \times d_v)= (|Q| \times d_v)$</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Example from illustrated transformer</li>
+</ul>
+
+<p><img src="https://lh3.google.com/u/0/d/1MukQ2h5yHD_MmSqUaRwRAjY6Kx7LvdNM" alt="" /></p>
+
+<ul>
+  <li>
+    <p>그림 출처 : <a href="http://jalammar.github.io/illustrated-transformer/">http://jalammar.github.io/illustrated-transformer/</a></p>
+  </li>
+  <li>입력 벡터가 2개 → Q, K, V 모두 2개의 벡터로 이루어짐</li>
+  <li>Problem
+    <ul>
+      <li>$d_k$가 매우 커서 $q^Tk$의 분산이 매우 커진다.</li>
+      <li>벡터의 특정 원소의 값이 매우 커서 softmax를 취하면 그 값 또한 매우 커진다. 이런 문제는 gradient를 작게 한다. → gradient vanishing problem</li>
+      <li>예를들어 2차원 벡터의 query와 key가 있다고 가정하자. 그리고 query와 key의 element는 평균 0과 분산 1 을 가지고 있다고 가정하자.</li>
+      <li>이때 query와 key의 내적값의 평균이 0이고 내적에 참여하는 곱의 분산은 1로 같게 된다. 따라서 내적의 평균은 0, 분산은 $d_k$가 된다.</li>
+      <li>이처럼 내적한 값이 분산에 휘둘리는 형태가 되므로 내적 값의 분산을 일정하게 유지시키기 위해 표준편차 $\sqrt{d_k}$로 나누어준다.</li>
+      <li>softmax의 output을 적절한 정도의 범위로 조절하는 것이 학습에 도움이 된다.
+        <ul>
+          <li>쿼리, 키, 밸류 행렬 가중치 초기화 : Gaussian, Xavier, Kaimin도 가능</li>
+          <li><a href="https://towardsdatascience.com/illustrated-self-attention-2d627e33b20a">https://towardsdatascience.com/illustrated-self-attention-2d627e33b20a</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="transformer-multi-head-attention">Transformer: Multi-Head Attention</h2>
+
+<p><img src="https://lh3.google.com/u/0/d/1VKZaWHgo1IeXjxBnTS6AwbSQ2C0qWqwH" alt="" /></p>
+
+<ul>
+  <li>Head $h$ : number of low-dimensional spaces via $W$ matrices</li>
+  <li>h개의 Attention들은 모두 병렬로 작동하며 각각 attention을 적용하고 나온 output들을 concat하고 linear layer로 보낸다.
+    <ul>
+      <li>MultiHead($Q,K,V$) = Concat($head_1, …., head_h$)$W^O$</li>
+      <li>where $head_i$ = Attention($QW_i^Q, KW_i^K, VW_i^V$)</li>
+    </ul>
+  </li>
+  <li>각각의 input은 head에 들어가 Query, Key, Value를 생성하고 거기서 계산된 output들을 Concat한다.</li>
+</ul>
+
+<p><img src="https://lh3.google.com/u/0/d/1x3H-HQdjVRs9MYRm-9W9Ue-7T4vzXjIq" alt="" /></p>
+
+<p><img src="https://lh3.google.com/u/0/d/1FdKVa1slEva7VLkk7KEZ9J8YttCob2pV" alt="" /></p>
+
+<p><img src="https://lh3.google.com/u/0/d/1ElxAzhjX_qcQuYSh1kyjKdGRQLjuTItV" alt="" /></p>
+
+<ul>
+  <li>마지막으로 linear trasform을 수행하여 최종 output을 얻어낸다.</li>
+  <li>한눈에 보기 쉽게 설명된 이미지이다.</li>
+</ul>
+
+<p><img src="https://lh3.google.com/u/0/d/18ylIob97ZBF6LHv_2QWWS-5J8PWBWCMe" alt="" /></p>
+
+<ul>
+  <li>
+    <p>그림 출처 : <a href="http://jalammar.github.io/illustrated-transformer/">http://jalammar.github.io/illustrated-transformer/</a></p>
+  </li>
+  <li>다른 모델과의 complexity를 계산하여 비교한 표이다.
+    <ul>
+      <li>$n$ : sequence lengh</li>
+      <li>$d$ : dimension of representation → hyper parameter</li>
+      <li>$k$ : kernel size of convolutions</li>
+      <li>$r$ : size of the neighborhood in restriced self-attention</li>
+    </ul>
+
+    <p><img src="https://lh3.google.com/u/0/d/1fX7st_3Ff9Zfsg7izHfRtmlNxLQK_5UN" alt="" /></p>
+  </li>
+  <li>Self-Attention
+    <ul>
+      <li>$softmax(\frac{QK^T}{\sqrt{d}})$이므로 $(n \times d) \times (d \times n)$이다. $n \times n$을 $d$만큼 수행해야 하므로 $O(n^2\cdot d)$의 복잡도를 가지게 된다.</li>
+      <li>또한, 자원이 무한하다는 가정하에 모든 값을 메모리에 올리면 한번에 연산이 가능하므로 Sequencial Operations(병렬연산)가 $O(1)$이 된다.</li>
+    </ul>
+  </li>
+  <li>Recurrent
+    <ul>
+      <li>이전 히든 스테이트 벡터가 다음 타임스텝의 히든 스테이트 벡터 계산에 참여한다. 이전 히든 스테이트 벡터의 dimension이 $d$라 할때,  $h_{t-1}$과 곱해지는 $W_{hh}$는 $(d, d)$의 크기를 가지고 있다. 이 과정을 $n$번만큼 계산하므로 $O(n\cdot d^2)$의 복잡도를 가지게 된다.</li>
+      <li>RNN이 Self-Attention보다 적은 메모리를 요구한다. 왜냐하면 $n$이 입력의 길이이므로 Self-Attention은 $n$의 제곱에 해당하는 메모리를 모두 저장하고 있어야 하기 때문이다.</li>
+      <li>하지만 RNN은 이전 히든 스테이트를 기다려야 하므로 병렬연산이 불가능하다. 따라서 $O(n)$이다.</li>
+    </ul>
+  </li>
+  <li>Maximum Path Length는 Long-term dependency와 직접적으로 관련이 된다.
+    <ul>
+      <li>RNN은 첫 번째 단어가 마지막까지 영향을 주려면 $n$ 길이만큼 정보가 전달되어야 한다.</li>
+      <li>Self-Attention은 모든 단어를 $Q$, $K$, $V$로 이용해서 정보를 전달하므로 $O(1)$이 된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="transformer-block-based-model">Transformer: Block-Based Model</h2>
+
+<p><img src="https://lh3.google.com/u/0/d/13Nr0Z-PfLZTQIBwxhCc1Cele3YZYau3a" alt="" /></p>
+
+<ul>
+  <li>각 블록은 두 개의 sub-layer로 이루어져 있다.
+    <ul>
+      <li>Multi-head attention</li>
+      <li>TWo-layer feed-forward NN (with ReLU)</li>
+    </ul>
+  </li>
+  <li>sub-layer들은 residual connection을 가지고 있다.
+    <ul>
+      <li>residual connection은 입력 벡터와 인코딩 벡터의 차이값만을 이용하는 방법인데 gradient vanishing 문제를 해결할 수 있고 학습도 좀 더 안정화 시킬 수 있다.</li>
+      <li>residual connection을 사용하려면 입력 벡터의 차원과 아웃풋 벡터의 차원이 일치해야 한다.</li>
+    </ul>
+  </li>
+  <li>Transformer: Layer Normalization
+    <ul>
+      <li>Layer normalization은 들어온 입력들의 정보를 버리고 평균 0, 분산 1인 정보로 정규화해주는 것을 말한다. 다음 각 레이어 마다 Affine transformation을 수행한다.
+  <img src="https://lh3.google.com/u/0/d/1D7E5K8rKonPpJhaXs3_Ps8-1Xoxszgbn" alt="" /></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="transformer-positional-encoding">Transformer: Positional Encoding</h2>
+<ul>
+  <li>RNN은 순서대로 입력이 되기 때문에 순서 정보를 넣을 필요가 없다. 그러나 Transformer는 순서 정보를 넣을 수 없기 때문에 Positional Encoding을 넣어준다.</li>
+  <li>Positional Encoding은 입력들의 순서정보를 기록해주는 것이다. 이때 주기함수를 사용하여 위치를 표현한다.
+    <ul>
+      <li>$PE_{(pos,2i)} = sin(pos/10000^{2i/d_{model}})$</li>
+      <li>$PE_{(pos,2i+1)} = cos(pos/10000^{2i/d_{model}})$</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_FHfanRRxHcsZD4NxmxdkWQRCqT_7xHoD6rhSS0Fd8x4JZPAq5Te9Ef6tWveT3dKuPMZgFWLTM4a5LesoDePycDU2FBY19PTpnGklFA0b7ckgE5e-qgazysw03RdjJQ6QGFixPNzylt4C91D_VZEReHxfdt19Nlr77gJxD4fZ-1tFaVV09Xb6ALTSbjlinDIXlwEx4MBnknfHFHLlLCCXf29UQjFtGp4m-5CxU1a3WtmsRPgHoYgIUgz-LXn53jtMY155Mao6FMnM0pznOvRoIiM8ec5xHJNPKXWrX9zK0O_Ya5Z_buYz5IjOZH6ROLZCDiLqDMlOTjOc2rPHR-KgoPkXyZ28LJF3qtq29zHz_cCDgExx-ZYto50aOiGoeg4hOAGXQ4DJNu9WZs1cN0xZvJOV0Ra6pGnHHl8Gjc8NA5sU6ctM5xnuE68_MAhqtsH2Dzeq7ymYSFqbkVRlbYVIDqGUkqYZAi5d0e33JcZEmEoKW8q_4cO7eOrC5qEjPPKRGN1FQQDJcPWznaw9SGv8KK_aOs7ZUp3YtbjPNeC592ezxvZJEImX1Cvxz9j26jcV2QG9XlPqCIkKmSPSH9qAHOoWXHeGCLrFHNwP3YGjue30aZ1SsLXApa_zhAyQFkYpLJPGIfLDUhQZe5yhXx7d3XDYR2h4lbKPdo_MRrYSmI0Bd8ucWDB--iyLrL05_EB89szZYPegOHYXt0BGFvYr0CSw3A9J_JZb2JWRCNbS4hwxa2hBbE2l2Bch8-77TaEMNhIvCmeNlKIEiwjlitiSaciAYp5oUZOCX5Z4Ya_U_sqG7hCwLRhpIee8Am1j1gjLIrTl2MI-D8hQteynqZnneetTeopOgN2yXFuqW-_W8c2EdOUDncr2HrPlTX8sby8JgNUdFSy-rSLESxIl4hbaUmgXHOAOpg-HIO9731yU5jNwoKqAQUnSwZWQ2TqG2OQUlEhRy8L3YX50LIurHdrB4Zcsekeh7OnlQekM3e9nIWkcYPccBYH_9dhPk9k0QDKl4M1HlZqd6DzaKcrzMfGXdseNImEWPhiMNF9ZDMpbDPKV6SK3ttvRImTTrTOU8SJsO_DIdxJaqbER-2c7PR7Pj2Uhv5avl3SDnpR2V2kM7x9kmHW3lJaLxYHFvVB3tgEAHXhyGkf7jgbcJ7ILw4mojsh256WbDcolQITpcZPlNMWCcLhOzCv4duMGQiF-Z48FRMsM2R1FDMrllAKbFGo6Zo34saSA8Jgh0IwHxT9sOUAY-RFyfJFrD5e_viEiVsAF4d9sQHa6Wf3OIRupSNrx-v4u0bQREX3UfRdzc6Kuas09JlKjwUdrDxB_MEJFd4j0DETGuQgV1EUomIpISb2KYcobBQm2WZF9EDr0N1yzFGDWQQ-9sm_Tts8h7746oGsKS8weamZDfq8NbaJ3bm1y0Uv6TvGNxVbmvJJ86wea_tubFyqTaD_WxUo1FJjubtgESDKfMW3YTYAaeSyKeCrdRbTduuNdyRUrjeHDK-AuA2Gd4T-jbeGyFe7B7XTD5XgWoLomuOXsJwwBf1hA1jQDfNhN_Sfpt5PCtQNjp184B2bDZWMWn93TruyZtnsMpHDnhAxNpp0W6bpG_pKx0hm3cbCpb3gubG3O4p863w4iaEgjWG" alt="" /></p>
+
+<ul>
+  <li>
+    <p>그림 출처 : <a href="http://nlp.seas.harvard.edu/2018/04/03/attention">http://nlp.seas.harvard.edu/2018/04/03/attention</a></p>
+  </li>
+  <li>각 dimension별로 sin 혹은 cos 함수를 사용하여 dimension 개수만큼 그래프가 생성된다. 위 그림에서는 4번째 dimension에서는 sin, 5번째 dimension에서는 cos함수를 사용한다.</li>
+  <li>첫 번째 위치(0번)를 zero base의 인덱스로 삼아서 0번에서의 position encoding vector 즉, 입력 벡터에 더해주는 첫 번째 위치를 나타내는 4번째 dimension에서는 파란색 그래프, 5번째 그래프에서는 주황색 그래프로 표현한다.</li>
+</ul>
+
+<h2 id="transformer-warm-up-learning-rate-scheduler">Transformer: Warm-up Learning Rate Scheduler</h2>
+<ul>
+  <li>하이퍼 파라미터인 learning rate를 학습중에 스케줄러를 통해 적절히 변경하여 학습이 잘되도록 한다.
+    <ul>
+      <li>학습이 되지 않으면 learning rate를 줄이는 방법</li>
+    </ul>
+  </li>
+  <li>learning rate = $ d_{model}^{-0.5} \cdot min(step^{-0.5}, step \cdot \text{wramup_steps}^{-1.5}) $</li>
+</ul>
+
+<h2 id="transformer-decoder">Transformer: Decoder</h2>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_EzXWODEZM4wuGXhBlwWRmcT9oxaldZxp2xjPYDSk05Mizo30QjJxI4Ki1fWgo1XkYoW2LfNWThV2EYqwVD2jV_iDDI4D__wBUi1hPM08RLDoVXzc7vkr8ewwbIMQr3cLmapiv9QHRpQQw5j_o49Fc7kYrcY2fjII7kw10EZp1_M7sYmJpasSxfddxK4eScAUv07MEf-OioHBPNeaJp-SYu-d_blK8lHUkX4uSTknlCv7y6VOR-GtA7jKj3B0ySjbTJMEYBq80OCkKPEF-gfU2YixLO94pzigi7_ccMQ97RH83vnNMGGQDBUAIabuFwieHYozWhhLN4mWXmNu1mBmuA5BNdTDEqntF1oMGMNHxf0e66dTGwBdePsbTtcbAISbuPR9WWsELv9hYD-YUHFFZYw-TWWFS90sqM2v21HdsR7ZctvImMK8QioZ4AYjG9_G956eC15NDkj7Q77LM1Ks56oquxKqw9sHQRf2R0PlWFNI7ayqUCZQl1TNSHQPwwTmAD6Gt6UmmIFNvNT6GSmV15ADLqiZfUpGSMDD1Ez2nHMV-FjdAZsFeMYhmLF0J1n_nST0kfsawFgn0MO55lyEtVPU10nBWygj9XMR5CHZSAKqBFaizvXImkd9yvjE30h4p4wz_tTiBilCnYL_N-vqKzwFwAdF67smqhx23MnGTys-jFTIga0_-tp8-1Z0u20Aoy9B9zHLD1sVwu1Piyg-ZoR8NdABuHQBRJy_QVs-gYZAbA_aVqm7EGSdarzUhpax48QL3sF-F4e48c9A5rHiLTrN74HhTnNgFeBrGzzXNxrU_CFXXzixFZnat1pGZDb_w4HKFXITQzcj-zDHMzo8pACGeSkLfutVG0nn16iEphHlHHwYUb5Bzh0IeUB0_40v5-v5wKCsr7aJGbSqhpamB_3dlRjdZgZu7be1rrVBUfPMVRj8cHhI9PVXh8YpN95k6k-HtS-YiFvh2xQ5xwtc39DDJ3EQJP938XaX92N5YfbOlBeWgeDoHTs3TchyAplv0ubQjzuuAKFU1UGK6ArMIlSxqx1EZrhQ2OSUl9Q6iVNKyzzwO8kI0CA6chEQhe4rUvVAcg_r33NcgI09HA37IT7EDdQlR0K8Ij-FYHdGHiRwrkuoX302pRjoBDO6dunynNB4H-_W8lgw3yaz7XJ9vjV3x_kwYT7Y3RCtf_6D9xjZfXzyHDvPYgCE4bPZ9P-c2dd0tgJCnMt38ylRgRuMWEnwXuw9hytj8MHoTKBdpx8mRTdqWyNGG-Ha85ammtrLKfZ5XblWGNVOeSVF187ZtzzcNYX_sg4WfCZ9vzecRV0T8XCHFi08r8ILUZ-LNC5V95Q0F7WRnlki0LZBjImyMSyu5NKnTn61XBBdnOTvW_R6aZHWAdK6YjOtUK1jW-QGjgc71qmiDHhp3Uk6Gz8KGsnduc25plZGK9yrpPHVBbn1QGQIiO-GDZ3gZ81SKiQtI2w_mRYHiUp3KKTf7AH7kteUM2Zae1sl1fOEsVskHZRFKRFILI9db0NgeL3lCRL-jZwuCla24fk-B_9DtstWkIamfvl1TEltB0KGABT461uxUoZDnM7BKke0l49Vj0SsvupmhU40k2uURmo7GQvDdYIzublmAYAbco_Yrw_Lm1ISYvkAg" alt="" /></p>
+
+<ul>
+  <li>디코더에 [SOS] 토큰을 넣어주면 Masked Multi-Head Attention을 거쳐 Query를 생성하고 인코더에서 생성된 output을 key와 value로 해서 다시 Multi-Head Attention에 넣어준다.</li>
+  <li>이후 나온 값을 Feedforward layer에 넣어 softmax를 취한 값이 출력이 되며 이 출력을 다시 디코더에 삽입하여 다음 단어를 예측하게 한다.</li>
+  <li>디코더 안 sub-layer들도 모두 residual connection을 가지고 있다.</li>
+</ul>
+
+<h2 id="transformer-masked-self-attention">Transformer: Masked Self-Attention</h2>
+<ul>
+  <li>Query, Key를 내적하고 softmax를 취한 가중치값은 한 단어와 다른 단어에 대해 어느정도의 유사도를 지니는지를 나타내게 된다.</li>
+  <li>하지만 한 단어 뒤의 단어를 예측하는 것은 미래 단어 정보가 필요하지 않다. 그래서 현재 단어에 대해 미래 단어들에 대한 유사도 값을 0으로 만들어주는 후처리과정이 필요하다. 이후 row별로 합이 1이 되도록 normalizing을 진행한다.</li>
+  <li>masking이라는 것은 attention을 모두가 볼 수 있도록 허용한 후 보지 말아야 되는 단어들에 대한 가중치를 0으로 만들어 다시 normalization 하는 후처리 방식을 말한다.</li>
+</ul>
+
+<h2 id="transformer-experimental-results">Transformer: Experimental Results</h2>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_EnCFQ62lmbnUgwWmo11vMpcTMUuyeDAuKkmVBVpJgKwahqji0z3VZqH2m_BNmVAx_RLw3WS76Jean7SksIKWlbflZRsXcyTbhzMMsxxEyMPv7pEx9pON70iHWMYAdLXGz4M9m5bt_yzqE5Cv4H8VS0cG_aOy5XsgLeXcxmpjYV15SCGE4_1J3draIG_8pY4-O1d_0_QDekWT_-ogOFv6DBTZSVszCTPlyxHfMdO68RkCn9u1lMXhkmJTdZSeuvoBVPgCuW0oz1y5Aqrt6IFAJtqvrrBIQdAvErXVZAxr0P68j9U_29urXFxz8VxdhgY5pJ5GA224bNqmWUNrSMDRiR2FIU4_miUXHTFQwdjbgc8nEq76OQFSxmGCqwJKqgFbJ0aoOe_p4ZVLmmm7zDYnqO9rEUYBizVpV1k7zqZ_GdK85MWbRGiYIrQzB-6GLfGzu4_0Dr1jcVZZKrgMW1CUY3-svfz3XJrkWKJ1Hv74Q-MdjGrOMpHbB36Oe4ZoazBoPptT-mJzuzYZnvVJDBG4dxpMTTuBJlLXOCyHF9NjkaZ2rSrVMBbNMQOQZ-CzlDKu-W8ndAFiqu4IMey39qO9eSZZcQ_UZh-h0YSOnh4hygjWiaawk6BcTMMqr4iKqEpnJ484cTOUH8z1AOVA0RTCg_7hBjvPgfk66Pyr65xYks08DdELZARbnAEyitLfZBZHz99K0OwRJX0Xk9qLrw_h7hSSHP4Lvp2RUIXBF2zq1fSTShnaxiKax_x1ZcJmSsQ2e2uHV6xWz7vAGMhDyht--iAsh-Ymsvwr-CBbWzw1Wnx7F_9Go4ycI5Zkt6-9pL_HZkY8_fEgmwi_aCSvNnyAJQyZNiKkiR4HPpmfjt6Qo7QnZ3Y2hlYenaBTjz89aMLFoKJ-wUpELuRdp9VrcalIupkRd9Gv5H9lmy-VSx9oCDNwa4DBMkIMmzEp2CwKGc3VHTaBq9T9E_rv69kY9COs8mReOt4sJYdNqgB66LVQuk3P1D4QA071upboywaDAyDQhAlwKVrzoVBa5tZMhwbqwHfg5OpKXr636_bZQDQ9YXwpiKXZtaxIN6FcJCD_Su5xcw9josaCsRPJtNIV3s2PZTAaPEYPaOhRmW1D40MMp-xiUb2HmsT3VFJhLWNdTeDwDwd-XMGOz1jay9GxamIzPOHCDnOgBBuPHgBxB75nLkGnve9Moy5w0r66yaKigwo7pzaGlb1fbHWGZLX0AGGzJJf0Z9odRDgCACoQJq0Hvau4lzfzXo-OD_x849wX_ryrqebtg6ou8zijR5KWg6uCLGHonKexZOV3eccVIOiQBB5SJZ-rDOpgULgbT3WH-CAy5RETIYW__0hTIKcNY4j0TWtRMknkEJjNcZjnxc21azU-FXG19ZtN4ZCCrXR0XW62Vz_TYjI12M1HlzXGHNRCaCnyrF6iF5OTp1I_-9UgMkpGP_Z72GQr-Qv3jMDqlwyZcA9m_RQoVJfv9-fZzSjGGWOOXNaVMHEdeym_1ZPhsR94ZVUoQS1-AXA3YUQDxh-bnrEaEFkjNnTj7BhkWOVNjcPzTLMtxO4z68_qeHWK9CHLPJ9fHayLKeQ3ab659f1bv2ebVdc1Hiz4togoJRPHEBPJcUxuPUBOxFXZgROXs7MXRUGg" alt="" /></p>
+:ET

@@ -372,18 +372,10 @@
       <li>“I study math.” → (input, output) = (I, study), (study, I), (study, math), (math, study)</li>
       <li>Input : “study” → [0, 1, 0]</li>
       <li>output : “math” → [0, 0, 1]</li>
-      <li>
-        <p><a href="http://ronxin.github.io/wevi/">webi</a>라는 사이트에서 word embedding을 시각화하여 보여준다.</p>
-
-        <p><img src="https://drive.google.com/uc?export=view&amp;id=1GmV3Dws2H5edjE53UwWn2uAEc6vh4MLN" alt="" /></p>
-
+      <li><a href="http://ronxin.github.io/wevi/">webi</a>라는 사이트에서 word embedding을 시각화하여 보여준다.
         <ul>
           <li>“I study math”를 학습시키기 위해 hidden layer는 2, 위의 입력,출력 쌍을 데이터로 넣고 학습을 진행한다.</li>
-          <li>
-            <p>각 데이터의 입력 단어와 출력 단어 벡터의 내적값이 멀어지도록 학습을 진행하게 되고 500번 진행 결과 다음과 같이 시각화되어 출력된다.</p>
-
-            <p><img src="https://drive.google.com/uc?export=view&amp;id=1BtD_dj_cI-Ey6jFg636n5rdoh-rbc8SC" alt="" /></p>
-
+          <li>각 데이터의 입력 단어와 출력 단어 벡터의 내적값이 멀어지도록 학습을 진행하게 되고 500번 진행 결과 다음과 같이 시각화되어 출력된다.
             <ul>
               <li>Weight Matrices를 보면 “I”에 해당하는 가중치 벡터와  “math”에 해당하는 가중치 벡터가 유사한 모습을 보여준다.</li>
               <li>빨간색은 양수, 파란색은 음수를 표현한다.</li>
@@ -391,11 +383,7 @@
             </ul>
           </li>
           <li>통상적으로 Input Vector의 가중치 행렬을 최종 결과로 사용하게 된다.</li>
-          <li>
-            <p>이 가중치 벡터를 통해 단어들 간의 관계를 표현하게 된다.</p>
-
-            <p><img src="https://drive.google.com/uc?export=view&amp;id=1g4de93TVrpVI2eHMi1Sr1EYSzH6JigPx" alt="" /></p>
-
+          <li>이 가중치 벡터를 통해 단어들 간의 관계를 표현하게 된다.
             <ul>
               <li>vec[queen] - vec[king] = vec[woman] - vec[man]</li>
             </ul>
