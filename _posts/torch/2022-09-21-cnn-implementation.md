@@ -1,5 +1,5 @@
 ---
-title: python으로 CNN 구현하기
+title: python으로 CNN 바닥부터 구현하기
 categories:
   - Pytorch
 tags: [torch]
