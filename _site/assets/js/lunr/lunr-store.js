@@ -611,13 +611,13 @@ var store = [{
         "url": "/paper/On-the-effect-of-corpora/",
         "teaser": null
       },{
-        "title": "Python으로 MLP 구현하기",
+        "title": "Python으로 MLP 바닥부터 구현하기",
         "excerpt":"코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다. Multi-Layer Perceptron Multi-Layer Perceptron(MLP)은 퍼셉트론으로 이루어진 층(layer)들이 쌓여 신경망을 이루는 모델입니다. 구현이 간단하기 때문에 딥러닝을 바닥부터 구현하는 프로젝트를 시작하는데 좋은 모델입니다. 저는 MNIST를 데이터셋으로 하여 모델을 훈련시키고 classification task를 수행해볼...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/dl-implement/",
         "teaser": null
       },{
-        "title": "python으로 CNN 구현하기",
+        "title": "python으로 CNN 바닥부터 구현하기",
         "excerpt":"Related 이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다. 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다. CNN CNN은 [Conv2d + Pooling + (Activation)] 레이어가 수직으로 쌓여있는 뉴럴넷을 말합니다. 구현해보려는 CNN의 구조는 다음과 같습니다. CNN( (layer1): Sequential( (0): Conv2d(1, 5, kernel_size=(5, 5), stride=(1, 1), padding=(0, 0))...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/cnn-implementation/",
@@ -629,7 +629,7 @@ var store = [{
         "url": "/data-engineer/data-pipeline/",
         "teaser": null
       },{
-        "title": "python으로 RNN 구현하기",
+        "title": "python으로 RNN 바닥부터 구현하기",
         "excerpt":"Related 이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다. RNN RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이전 timestep의 hidden state vector가 현재 timestep의 계산에 활용되는 특징을 가지고 있습니다. 이번에 구현한 RNN 레이어를 학습하기 위해 계속 사용하던 MNIST를 사용할 생각입니다. MNIST를 (28, 28)의 크기를...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/rnn-impl/",
@@ -641,7 +641,7 @@ var store = [{
         "url": "/nlp/byte-pair-encoding/",
         "teaser": null
       },{
-        "title": "python으로 LSTM 구현하기",
+        "title": "python으로 LSTM 바닥부터 구현하기",
         "excerpt":"Related RNN에 이어서 LSTM을 구현했습니다. LSTM LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결한 모델입니다. 장기의존성(long-term dependencies) 문제란, 과거의 정보가 먼 미래까지 전달되기 어려운 문제를 말합니다. 이러한 long-term dependencies는 gradient vanishinig problem과도 관련이 있습니다. gradient vanishing problem이란, 미분 기울기가 0과 1사이의 값을 가지고 여러번 반복적으로 곱하게 되면 기울기가 0으로 수렴되는...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/lstm-implementation/",
@@ -681,5 +681,17 @@ var store = [{
         "excerpt":"Abstract 최근에 1-bit LLM과 관련하여 BitNet이라는 연구가 진행되었습니다. BitNet b1.58이라 부르는 이번 1-bit LLM 연구에서는 -1, 0, 1로 이루어진 파라미터로 구성된 LLM을 소개하고자 합니다. 이 논문에서는 FP16 트랜스포머에 비해 메모리, 성능, 처리량, 에너지소모 측면에서 효율적임을 보입니다. 1.58bit인 이유는 -1, 0, 1인 3개의 값을 사용하기 때문에 $\\text{log}_2(3)$을 계산하면 반올림하여 1.58값이 나오기...","categories": ["paper"],
         "tags": ["LLM"],
         "url": "/paper/1-bit-llm/",
+        "teaser": null
+      },{
+        "title": "python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)",
+        "excerpt":"Transformer 트랜스포머(Transformer)는 2017년에 등장한 모델입니다. Attention is all you need 논문은 트랜스포머 모델에 대해 설명하고 있으며 이후 BERT, GPT라는 새로운 모델을 탄생시키는 배경이 됩니다. Scaled Dot-Product Attention 트랜스포머 모델은 셀프 어텐션(Self-Attention) 매커니즘을 사용하고 있습니다. 셀프 어텐션 매커니즘은 자기 자신에 대해 어텐션 밸류를 구하는 방법으로 문장 내 단어간의 관계를 학습할 수...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/transformer-scratch-implementation-1/",
+        "teaser": null
+      },{
+        "title": "python으로 Transformer 바닥부터 구현하기[2] (Transformer)",
+        "excerpt":"Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다. TransformerEncoder Transformer의 Encoder는 EncoderLayer들이 스택되어 있는 구조로 구현됩니다. 하나의 EncoderLayer는 MHA(MultiHead-Attention), Add &amp; Norm, Feedforward 과정을 수행하여 인코딩된 정보가 출력됩니다. Forward Encoder의 구조는 다음 그림과 같습니다. 회색박스가 인코더 레이어입니다. 레이어로 들어온 입력은...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/transformer-scratch-implementation-2/",
         "teaser": null
       }]

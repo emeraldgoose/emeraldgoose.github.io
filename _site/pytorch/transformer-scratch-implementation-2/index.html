@@ -1,0 +1,727 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>python으로 Transformer 바닥부터 구현하기[2] (Transformer) - gooooooooooose</title>
+<meta name="description" content="Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="python으로 Transformer 바닥부터 구현하기[2] (Transformer)">
+<meta property="og:url" content="http://localhost:4000/pytorch/transformer-scratch-implementation-2/">
+
+
+  <meta property="og:description" content="Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2024-08-01T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/pytorch/transformer-scratch-implementation-2/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+           
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#pytorch" itemprop="item"><span itemprop="name">Pytorch</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">python으로 Transformer 바닥부터 구현하기[2] (Transformer)</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Interested in ML/DL, Data Engineering.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+            <li><a href="https://gooooooooooose.tistory.com/" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Problem Solving OJ (KOR)</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="python으로 Transformer 바닥부터 구현하기[2] (Transformer)">
+    <meta itemprop="description" content="Objective앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.">
+    <meta itemprop="datePublished" content="2024-08-01T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">python으로 Transformer 바닥부터 구현하기[2] (Transformer)
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2024-08-01T00:00:00+09:00">August 01, 2024</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="objective">Objective</h2>
+<p>앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.</p>
+
+<h2 id="transformerencoder">TransformerEncoder</h2>
+<p>Transformer의 Encoder는 EncoderLayer들이 스택되어 있는 구조로 구현됩니다. 하나의 EncoderLayer는 MHA(MultiHead-Attention), Add &amp; Norm, Feedforward 과정을 수행하여 인코딩된 정보가 출력됩니다.</p>
+
+<h3 id="forward">Forward</h3>
+<p>Encoder의 구조는 다음 그림과 같습니다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/d/1IpLJerkwQqNfm0MWNJMk-5vURTHb26Ve" alt="" /></p>
+
+<p>회색박스가 인코더 레이어입니다. 레이어로 들어온 입력은 MHA의 출력과 더한(residual connection) 후에 LayerNorm 과정을 거치게 됩니다. 이 값을 FF(FeedForward)의 출력과 더한 후에 LayerNorm을 거쳐 최종 출력을 만들게 됩니다.<br />
+인코더 레이어가 여러개인 경우 이 과정을 여러번 반복합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/511db6e7427152cf747b55f2982e3570.js"></script>
+
+<p>TransformerEncoder는 pytorch 기준 인코더 레이어를 <code class="language-plaintext highlighter-rouge">num_layers</code>만큼 복사하여 ModuleList로 구성합니다. 따라서, Transformer 클래스에서 선언된 EncoderLayer를 <code class="language-plaintext highlighter-rouge">copy.deepcopy</code>로 복사하기 때문에 스택되어 있는 인코더 레이어들은 같은 초기 파라미터를 가지고 다른 기울기를 가지게 됩니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/c3997f35f4a3e76a6da5d697109de5ae.js"></script>
+
+<h3 id="backward">Backward</h3>
+<p>먼저, EncoderLayer의 Backward 구현입니다.</p>
+
+<p>잔차 연결(residual connection)은 upstream gradient와 더하면서 전파됩니다.<br />
+또한, Self-attention의 입력에 대한 기울기를 계산할 때는 dQ, dK, dV를 더한 값이 됩니다. 왜냐하면, Self-attention의 Query, Key, Value에 모두 x가 들어가기 때문입니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/5ce3f68358a1d4c2b1a0b9151981f1e7.js"></script>
+
+<p>다음, Encoder의 Backward 구현입니다.</p>
+
+<p>Forward에서 반복문을 통해 순서대로 계산하고 있으므로 그 역순으로 Backward 함수를 불러 계산하고 각 레이어의 기울기를 저장합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/734b8145dc245a8199e3f3a271081ffe.js"></script>
+
+<h2 id="transformerdecoder">TransformerDecoder</h2>
+<p>Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코더 정보를 입력으로 받아 다음 정보를 예측하게 됩니다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS" alt="" width="500" /></p>
+
+<h3 id="forward-1">Forward</h3>
+
+<p>Transformer 그림처럼 DecoderLayer는 MHA 과정을 2번, FF를 1번 거치고 각 단계마다 잔차 연결과 Layer Normalization을 수행해야 합니다.</p>
+
+<p>forward 함수의 argument로 tgt와 memory가 있습니다. tgt는 output 임베딩을 말하고 memory는 인코더 출력을 말합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/d55c7cf1dda2b952a0e3ac3610f2f84d.js"></script>
+
+<p>Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderLayer를 복사하여 ModuleList로 구성하고 반복문을 통해 호출하여 계산합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/23d416bbbe0732af2d080e7c1aa4f1eb.js"></script>
+
+<h3 id="backward-1">Backward</h3>
+<p>먼저, DecoderLayer의 Backward 구현입니다. Foward의 역순으로 구현하면서 <code class="language-plaintext highlighter-rouge">self.multihead_attn</code>에는 Query에만 x가 들어가므로 입력에 대한 기울기를 구할 때는 dQ만 더해줍니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/be7a478bcd7b067516a81ca37e4d2239.js"></script>
+
+<p>다음, Decoder의 Backward 구현입니다.</p>
+
+<p>Foward에서 반복문을 통해 순서대로 계산하고 있으므로 그 역순으로 Backward 함수를 불러 계산하고 각 레이어의 기울기를 저장합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/52a3b5ed4af3d7a7bbb7606455d9e39c.js"></script>
+
+<h2 id="transformer">Transformer</h2>
+<p>Transformer 클래스를 구현하기 위해 TransformerEncoder와 TransformerDecoder에서 사용할 encoder_layer, encoder_norm, decoder_layer, decoder_norm을 선언합니다.</p>
+
+<h3 id="forward-2">Forward</h3>
+<script src="https://gist.github.com/emeraldgoose/ba48acb781e5437b6585d18d57ecd83e.js"></script>
+
+<h3 id="backward-2">Backward</h3>
+<p>Backward에서는 Encoder와 Decoder의 backward 함수를 호출하고 리턴되는 기울기들을 저장합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/a9b4402ce637590185e56919604d6efe.js"></script>
+
+<h2 id="result">Result</h2>
+<p>이전 테스트와 마찬가지로 MNIST 5000장과 테스트 1000장으로 실험했습니다. hidden_size는 32, learning_rate는 1e-3, 10 epoch로 학습을 진행했습니다.</p>
+
+<p>다음은 학습에 사용한 모델을 정의한 코드입니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/b998ee81096e78ccc7694291df5f242e.js"></script>
+
+<p>MNIST 이미지에 순서 정보를 주기 위해 positional encoding 정보를 추가하고 Transformer의 출력값을 Linear 레이어를 통해 logits 값을 받도록 했습니다.</p>
+
+<p>Transformer의 출력값이 (batch_size, 28, embed_size)이므로 바로 Linear 레이어로 통과시키게 되면 (batch_size, 28, 10)이 되어버립니다. 그래서 Flatten 레이어를 통해 (batch_size, 28 * embed_size)로 크기를 변경해주어 Linear 레이어를 통해 (batch_size, 10) 크기의 logits 값으로 출력하도록 모델을 구성했습니다.</p>
+
+<p>아래 왼쪽 그래프는 loss, 오른쪽 그래프는 accuracy를 기록한 것입니다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/d/1epA5L2HrTdj0b9uFXM8Jn2mdtW-jI7X5" alt="" width="450" />
+<img src="https://lh3.googleusercontent.com/d/1ePHIHmU0QPcUtIeOhHfGkU5EZkS0aJUM" alt="" width="450" /></p>
+
+<p>hidden size가 크지 않았지만 잘 학습되는 것을 볼 수 있습니다. hidden size를 256으로 올리고 학습을 돌려보면 accuracy가 0.95 이상으로 올라가기도 합니다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#torch" class="page__taxonomy-item p-category" rel="tag">torch</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#pytorch" class="page__taxonomy-item p-category" rel="tag">Pytorch</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2024-08-01T00:00:00+09:00">August 1, 2024</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/pytorch/transformer-scratch-implementation-1/" class="pagination--pager" title="python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/pytorch/transformer-scratch-implementation-1/" rel="permalink">python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 31 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Transformer
+트랜스포머(Transformer)는 2017년에 등장한 모델입니다. Attention is all you need 논문은 트랜스포머 모델에 대해 설명하고 있으며 이후 BERT, GPT라는 새로운 모델을 탄생시키는 배경이 됩니다.
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/paper/1-bit-llm/" rel="permalink">The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 03 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Abstract
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/airflow/airflow-task-design/" rel="permalink">Airflow task 디자인
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 09 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다.
+
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/coursera/finetuning-LLMs/" rel="permalink">Finetuning Large Language Models 정리
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> December 07 2023</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  Finetuning Large Language Models - Deeplearning.ai
+
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2024 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>
