@@ -1,16 +1,15 @@
-I"�<h2 id="objective">Objective</h2>
+I"<h1 id="objective">Objective</h1>
 <p>앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.</p>
 
-<h2 id="transformerencoder">TransformerEncoder</h2>
+<h1 id="transformerencoder">TransformerEncoder</h1>
 <p>Transformer의 Encoder는 EncoderLayer들이 스택되어 있는 구조로 구현됩니다. 하나의 EncoderLayer는 MHA(MultiHead-Attention), Add &amp; Norm, Feedforward 과정을 수행하여 인코딩된 정보가 출력됩니다.</p>
 
-<h3 id="forward">Forward</h3>
+<h2 id="forward">Forward</h2>
 <p>Encoder의 구조는 다음 그림과 같습니다.</p>
 
-<p><img src="https://lh3.googleusercontent.com/d/1IpLJerkwQqNfm0MWNJMk-5vURTHb26Ve" alt="" /></p>
+<p><img src="https://lh3.googleusercontent.com/d/1IpLJerkwQqNfm0MWNJMk-5vURTHb26Ve" alt="" width="300" /></p>
 
-<p>회색박스가 인코더 레이어입니다. 레이어로 들어온 입력은 MHA의 출력과 더한(residual connection) 후에 LayerNorm 과정을 거치게 됩니다. 이 값을 FF(FeedForward)의 출력과 더한 후에 LayerNorm을 거쳐 최종 출력을 만들게 됩니다.<br />
-인코더 레이어가 여러개인 경우 이 과정을 여러번 반복합니다.</p>
+<p>회색박스가 인코더 레이어입니다. 인코더 레이어 뿐만 아니라 뒤에 나올 디코더 레이어에도 Residual Connection 구조를 가지고 있고 그 후에 Layer Normalization을 적용합니다. 인코더 레이어가 여러개인 경우 이 과정을 여러번 반복합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/511db6e7427152cf747b55f2982e3570.js"></script>
 
@@ -18,7 +17,7 @@
 
 <script src="https://gist.github.com/emeraldgoose/c3997f35f4a3e76a6da5d697109de5ae.js"></script>
 
-<h3 id="backward">Backward</h3>
+<h2 id="backward">Backward</h2>
 <p>먼저, EncoderLayer의 Backward 구현입니다.</p>
 
 <p>잔차 연결(residual connection)은 upstream gradient와 더하면서 전파됩니다.<br />
@@ -32,12 +31,12 @@
 
 <script src="https://gist.github.com/emeraldgoose/734b8145dc245a8199e3f3a271081ffe.js"></script>
 
-<h2 id="transformerdecoder">TransformerDecoder</h2>
+<h1 id="transformerdecoder">TransformerDecoder</h1>
 <p>Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코더 정보를 입력으로 받아 다음 정보를 예측하게 됩니다.</p>
 
 <p><img src="https://lh3.googleusercontent.com/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS" alt="" width="500" /></p>
 
-<h3 id="forward-1">Forward</h3>
+<h2 id="forward-1">Forward</h2>
 
 <p>Transformer 그림처럼 DecoderLayer는 MHA 과정을 2번, FF를 1번 거치고 각 단계마다 잔차 연결과 Layer Normalization을 수행해야 합니다.</p>
 
@@ -49,7 +48,7 @@
 
 <script src="https://gist.github.com/emeraldgoose/23d416bbbe0732af2d080e7c1aa4f1eb.js"></script>
 
-<h3 id="backward-1">Backward</h3>
+<h2 id="backward-1">Backward</h2>
 <p>먼저, DecoderLayer의 Backward 구현입니다. Foward의 역순으로 구현하면서 <code class="language-plaintext highlighter-rouge">self.multihead_attn</code>에는 Query에만 x가 들어가므로 입력에 대한 기울기를 구할 때는 dQ만 더해줍니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/be7a478bcd7b067516a81ca37e4d2239.js"></script>
@@ -60,18 +59,18 @@
 
 <script src="https://gist.github.com/emeraldgoose/52a3b5ed4af3d7a7bbb7606455d9e39c.js"></script>
 
-<h2 id="transformer">Transformer</h2>
+<h1 id="transformer">Transformer</h1>
 <p>Transformer 클래스를 구현하기 위해 TransformerEncoder와 TransformerDecoder에서 사용할 encoder_layer, encoder_norm, decoder_layer, decoder_norm을 선언합니다.</p>
 
-<h3 id="forward-2">Forward</h3>
+<h2 id="forward-2">Forward</h2>
 <script src="https://gist.github.com/emeraldgoose/ba48acb781e5437b6585d18d57ecd83e.js"></script>
 
-<h3 id="backward-2">Backward</h3>
+<h2 id="backward-2">Backward</h2>
 <p>Backward에서는 Encoder와 Decoder의 backward 함수를 호출하고 리턴되는 기울기들을 저장합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/a9b4402ce637590185e56919604d6efe.js"></script>
 
-<h2 id="result">Result</h2>
+<h1 id="result">Result</h1>
 <p>이전 테스트와 마찬가지로 MNIST 5000장과 테스트 1000장으로 실험했습니다. hidden_size는 32, learning_rate는 1e-3, 10 epoch로 학습을 진행했습니다.</p>
 
 <p>다음은 학습에 사용한 모델을 정의한 코드입니다.</p>
@@ -89,5 +88,6 @@
 
 <p>hidden size가 크지 않았지만 잘 학습되는 것을 볼 수 있습니다. hidden size를 256으로 올리고 학습을 돌려보면 accuracy가 0.95 이상으로 올라가기도 합니다.</p>
 
-<h2 id="reference">Reference</h2>
+<h1 id="code">Code</h1>
+<p><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></p>
 :ET

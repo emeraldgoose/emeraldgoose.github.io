@@ -4,31 +4,29 @@ categories:
   - Pytorch
 tags: [torch]
 ---
-## Objective
+# Objective
 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.
 
-## TransformerEncoder
+# TransformerEncoder
 Transformer의 Encoder는 EncoderLayer들이 스택되어 있는 구조로 구현됩니다. 하나의 EncoderLayer는 MHA(MultiHead-Attention), Add & Norm, Feedforward 과정을 수행하여 인코딩된 정보가 출력됩니다.
 
-### Forward
+## Forward
 Encoder의 구조는 다음 그림과 같습니다.
 
-![](https://lh3.googleusercontent.com/d/1IpLJerkwQqNfm0MWNJMk-5vURTHb26Ve)
+![](https://lh3.googleusercontent.com/d/1IpLJerkwQqNfm0MWNJMk-5vURTHb26Ve){:width="300"}
 
-회색박스가 인코더 레이어입니다. 레이어로 들어온 입력은 MHA의 출력과 더한(residual connection) 후에 LayerNorm 과정을 거치게 됩니다. 이 값을 FF(FeedForward)의 출력과 더한 후에 LayerNorm을 거쳐 최종 출력을 만들게 됩니다.  
-인코더 레이어가 여러개인 경우 이 과정을 여러번 반복합니다.
+회색박스가 인코더 레이어입니다. 인코더 레이어 뿐만 아니라 뒤에 나올 디코더 레이어에도 Residual Connection 구조를 가지고 있고 그 후에 Layer Normalization을 적용합니다. 인코더 레이어가 여러개인 경우 이 과정을 여러번 반복합니다.
 
 <script src="https://gist.github.com/emeraldgoose/511db6e7427152cf747b55f2982e3570.js"></script>
 
-TransformerEncoder는 pytorch 기준 인코더 레이어를 `num_layers`만큼 복사하여 ModuleList로 구성합니다. 따라서, Transformer 클래스에서 선언된 EncoderLayer를 `copy.deepcopy`로 복사하기 때문에 스택되어 있는 인코더 레이어들은 같은 초기 파라미터를 가지고 다른 기울기를 가지게 됩니다.
+Pytorch의 TransformerEncoder 클래스는 인코더 레이어를 `num_layers`만큼 복사하여 ModuleList로 구성합니다. Transformer 클래스에서 선언된 EncoderLayer를 `_get_clone` 함수에서 `copy.deepcopy()`로 복사하기 때문에 스택되어 있는 인코더 레이어들은 같은 초기 파라미터를 가지고 다른 기울기를 가지게 됩니다.
 
 <script src="https://gist.github.com/emeraldgoose/c3997f35f4a3e76a6da5d697109de5ae.js"></script>
 
-### Backward
+## Backward
 먼저, EncoderLayer의 Backward 구현입니다.
 
-잔차 연결(residual connection)은 upstream gradient와 더하면서 전파됩니다.  
-또한, Self-attention의 입력에 대한 기울기를 계산할 때는 dQ, dK, dV를 더한 값이 됩니다. 왜냐하면, Self-attention의 Query, Key, Value에 모두 x가 들어가기 때문입니다.
+잔차 연결(residual connection)은 upstream gradient와 더하면서 전파됩니다. 또한, Self-attention의 입력에 대한 기울기를 계산할 때는 dQ, dK, dV를 더한 값이 됩니다. 왜냐하면, Self-attention의 Query, Key, Value에 모두 x가 들어가기 때문입니다.
 
 <script src="https://gist.github.com/emeraldgoose/5ce3f68358a1d4c2b1a0b9151981f1e7.js"></script>
 
@@ -38,16 +36,16 @@ Forward에서 반복문을 통해 순서대로 계산하고 있으므로 그 역
 
 <script src="https://gist.github.com/emeraldgoose/734b8145dc245a8199e3f3a271081ffe.js"></script>
 
-## TransformerDecoder
-Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코더 정보를 입력으로 받아 다음 정보를 예측하게 됩니다.
+# TransformerDecoder
+Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코딩 정보를 입력으로 받아 출력값을 계산합니다.
 
 ![](https://lh3.googleusercontent.com/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS){:width="500"}
 
-### Forward
+## Forward
 
 Transformer 그림처럼 DecoderLayer는 MHA 과정을 2번, FF를 1번 거치고 각 단계마다 잔차 연결과 Layer Normalization을 수행해야 합니다.
 
-forward 함수의 argument로 tgt와 memory가 있습니다. tgt는 output 임베딩을 말하고 memory는 인코더 출력을 말합니다.
+forward 함수의 argument로 `tgt`와 `memory`가 있습니다. `tgt`는 output 임베딩을 말하고 `memory`는 인코더 출력을 말합니다.
 
 <script src="https://gist.github.com/emeraldgoose/d55c7cf1dda2b952a0e3ac3610f2f84d.js"></script>
 
@@ -55,7 +53,7 @@ Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderL
 
 <script src="https://gist.github.com/emeraldgoose/23d416bbbe0732af2d080e7c1aa4f1eb.js"></script>
 
-### Backward
+## Backward
 먼저, DecoderLayer의 Backward 구현입니다. Foward의 역순으로 구현하면서 `self.multihead_attn`에는 Query에만 x가 들어가므로 입력에 대한 기울기를 구할 때는 dQ만 더해줍니다.
 
 <script src="https://gist.github.com/emeraldgoose/be7a478bcd7b067516a81ca37e4d2239.js"></script>
@@ -66,31 +64,32 @@ Foward에서 반복문을 통해 순서대로 계산하고 있으므로 그 역�
 
 <script src="https://gist.github.com/emeraldgoose/52a3b5ed4af3d7a7bbb7606455d9e39c.js"></script>
 
-## Transformer
+# Transformer
 Transformer 클래스를 구현하기 위해 TransformerEncoder와 TransformerDecoder에서 사용할 encoder_layer, encoder_norm, decoder_layer, decoder_norm을 선언합니다.
 
-### Forward
+## Forward
 <script src="https://gist.github.com/emeraldgoose/ba48acb781e5437b6585d18d57ecd83e.js"></script>
 
-### Backward
+## Backward
 Backward에서는 Encoder와 Decoder의 backward 함수를 호출하고 리턴되는 기울기들을 저장합니다.
 
 <script src="https://gist.github.com/emeraldgoose/a9b4402ce637590185e56919604d6efe.js"></script>
 
-## Result
+# Result
 이전 테스트와 마찬가지로 MNIST 5000장과 테스트 1000장으로 실험했습니다. hidden_size는 32, learning_rate는 1e-3, 10 epoch로 학습을 진행했습니다.
 
 다음은 학습에 사용한 모델을 정의한 코드입니다.
 
 <script src="https://gist.github.com/emeraldgoose/b998ee81096e78ccc7694291df5f242e.js"></script>
 
-MNIST 이미지에 순서 정보를 주기 위해 positional encoding 정보를 추가하고 Transformer의 출력값을 Linear 레이어를 통해 logits 값을 받도록 했습니다. 
+MNIST 이미지에 순서 정보를 주기 위해 positional encoding 정보를 추가했습니다. 그리고 Transformer의 출력값이 (batch_size, 28, embed_size)이므로 Linear 레이어로 통과시키게 되면 (batch_size, 28, 10)이 되어버리기 때문에 Flatten 레이어를 통해 (batch_size, 28 * embed_size)로 바꿔준 후 Linear 레이어를 통해 (batch_size, 10) 크기를 가진 logits 값으로 출력하도록 모델을 구성했습니다.
 
-Transformer의 출력값이 (batch_size, 28, embed_size)이므로 바로 Linear 레이어로 통과시키게 되면 (batch_size, 28, 10)이 되어버립니다. 그래서 Flatten 레이어를 통해 (batch_size, 28 * embed_size)로 크기를 변경해주어 Linear 레이어를 통해 (batch_size, 10) 크기의 logits 값으로 출력하도록 모델을 구성했습니다.
-
-아래 왼쪽 그래프는 loss, 오른쪽 그래프는 accuracy를 기록한 것입니다.
+아래 그래프들은 학습시킨 결과입니다. 왼쪽 그래프는 loss, 오른쪽 그래프는 accuracy를 기록한 것입니다.
 
 ![](https://lh3.googleusercontent.com/d/1epA5L2HrTdj0b9uFXM8Jn2mdtW-jI7X5){:width="450"}
 ![](https://lh3.googleusercontent.com/d/1ePHIHmU0QPcUtIeOhHfGkU5EZkS0aJUM){:width="450"}
 
 hidden size가 크지 않았지만 잘 학습되는 것을 볼 수 있습니다. hidden size를 256으로 올리고 학습을 돌려보면 accuracy가 0.95 이상으로 올라가기도 합니다.
+
+# Code
+[https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
