@@ -118,7 +118,7 @@ sentences = [
 ]
 ```
 
-다음 토큰을 예측할 때는 간단하게 구현하기 위해 logits의 가장 높은 확률을 가진 토큰을 선택했고 다음의 코드를 사용하여 문장을 생성해봤습니다.
+다음 토큰을 예측할 때는 간단하게 구현하기 위해 logits의 가장 높은 확률을 가진 토큰을 선택했고 다음의 코드를 사용하여 start_sequence 이후의 문장을 생성해봤습니다.
 
 <script src="https://gist.github.com/emeraldgoose/02072ada41a9bcc83c962c98693ca3f1.js"></script>
 
@@ -138,7 +138,9 @@ Input : To be
 Output : To be not to be or not to be or not <eos>
 ```
 
-여러번 생성할 때마다 다른 문장들이 등장하는 것과 Transformer 모델 특징답게 토큰이 반복적으로 등장하는 문제도 볼 수 있습니다. 이 결과를 통해 LLM 사용시 볼 수 있는 Presence penalty나 Frequency penalty를 조절하는 이유를 알 수 있습니다.
+Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼 수 있습니다. 시작 문장이 "To"인 경우 over는 관련이 없지만 그 이후 등장하는 토큰들이 sentences의 첫 번째 문장과 관련있는 것을 볼 수 있습니다.
+
+여러번 생성할 때마다 다른 문장들이 등장하는 랜덤성과 Transformer 모델 특징답게 토큰이 반복적으로 등장하는 문제도 볼 수 있습니다. 이 결과를 통해 LLM이 생성하는 토큰을 선택하는 전략이 필요함을 알 수 있습니다.
 
 # Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
