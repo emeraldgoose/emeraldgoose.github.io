@@ -690,7 +690,7 @@ var store = [{
         "teaser": null
       },{
         "title": "python으로 Transformer 바닥부터 구현하기[2] (Transformer)",
-        "excerpt":"Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다. TransformerEncoder Transformer의 Encoder는 EncoderLayer들이 스택되어 있는 구조로 구현됩니다. 하나의 EncoderLayer는 MHA(MultiHead-Attention), Add &amp; Norm, Feedforward 과정을 수행하여 인코딩된 정보가 출력됩니다. Forward Encoder의 구조는 다음 그림과 같습니다. 회색박스가 인코더 레이어입니다. 인코더 레이어 뿐만...","categories": ["Pytorch"],
+        "excerpt":"Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다. 가장 바깥쪽에 위치한 Transformer부터 시작해서 EncoderLayer, DecoderLayer 순으로 설명하고자 합니다. Transformer Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다. Forward Transformer 클래스를 구현하기 위해 TransformerEncoder와...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/transformer-scratch-implementation-2/",
         "teaser": null
