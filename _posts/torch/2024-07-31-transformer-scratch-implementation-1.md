@@ -31,7 +31,7 @@ Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-pr
 ![](https://lh3.googleusercontent.com/d/1xtAU8ILAlJVy5ccRNU_HIvVnhjItgF9A){:width="400"}
 ![](https://lh3.googleusercontent.com/d/1-ijEpK6PB2SwK81ZlucnUMJwqKw23lXl){:width="400"}
 
-왼쪽 그래프에서 하나가 1.0이지만 오른쪽 그래프에서는 0.4x로 줄고 나머지 정보들이 드러나는 것을 볼 수 있습니다. 즉, softmax로 정보가 사라지는 문제를 스케일링으로 해결할 수 있습니다. 
+왼쪽 그래프에서 9번 확률이 1.0이지만 오른쪽 그래프에서는 0.4x로 줄고 나머지 번호들의 정보들이 드러나는 것을 볼 수 있습니다. 즉, softmax로 정보가 사라지는 문제를 스케일링으로 해결할 수 있습니다.
 
 또한, $d_k$를 사용하는 이유는 다음과 같습니다.
 
