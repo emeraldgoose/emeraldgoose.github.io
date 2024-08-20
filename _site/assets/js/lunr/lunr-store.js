@@ -624,7 +624,7 @@ var store = [{
         "teaser": null
       },{
         "title": "데이터 파이프라인 구축해보기",
-        "excerpt":"Motivation 빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서 이 사이드 프로젝트를 진행하게 되었습니다. Data 먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 다양한 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging 모듈로 기록하는 방법으로 로그를 생산했습니다. 생산되는...","categories": ["data-engineer"],
+        "excerpt":"Motivation 빅데이터를 지탱하는 기술을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서 이 사이드 프로젝트를 진행하게 되었습니다. figjam으로 aws 아이콘들을 사용하여 다이어그램을 그렸습니다. Data 먼저, 수집할 데이터는 nginx로부터 나오는 로그를 생각했습니다. 하지만 많은 양의 다양한 로그를 생산하려면 nginx로부터 나오게 하기는 어려워서 python 코드로 비슷한 nginx 로그를 생성하고 /var/log/httpd/access_log/*.log에 logging...","categories": ["data-engineer"],
         "tags": ["data-engineering"],
         "url": "/data-engineer/data-pipeline/",
         "teaser": null
