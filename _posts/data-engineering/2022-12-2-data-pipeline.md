@@ -8,7 +8,7 @@ tags: [data-engineering]
 > **빅데이터를 지탱하는 기술**을 읽다가 데이터 엔지니어링에 사용되는 플랫폼들을 전체 파이프라인으로 구축해보고 싶어서
 > 이 사이드 프로젝트를 진행하게 되었습니다.
 
-![](https://lh3.googleusercontent.com/d/120Qm-GqcemSzTLhS6_db7pFg_Z6RMWmv)
+![](https://lh3.googleusercontent.com/d/1MZuofwLuFLVIFtMaV8tgG8abJp7CR8co)
 
 figjam으로 aws 아이콘들을 사용하여 다이어그램을 그렸습니다.
 
