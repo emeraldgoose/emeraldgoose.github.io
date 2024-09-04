@@ -1,4 +1,4 @@
-I"e(<h1 id="objective">Objective</h1>
+I"c(<h1 id="objective">Objective</h1>
 <p>앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.</p>
 
 <p>가장 바깥쪽에 위치한 Transformer부터 시작해서 EncoderLayer, DecoderLayer 순으로 설명하고자 합니다.</p>
@@ -136,6 +136,6 @@ Output : To be not to be or not to be or not &lt;eos&gt;
 <h1 id="code">Code</h1>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
-  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb">https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb">https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb</a></li>
 </ul>
 :ET

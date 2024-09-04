@@ -690,8 +690,14 @@ var store = [{
         "teaser": null
       },{
         "title": "python으로 Transformer 바닥부터 구현하기[2] (Transformer)",
-        "excerpt":"Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다. 가장 바깥쪽에 위치한 Transformer부터 시작해서 EncoderLayer, DecoderLayer 순으로 설명하고자 합니다. Transformer Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다. Forward Transformer 클래스를 구현하기 위해 TransformerEncoder와...","categories": ["Pytorch"],
+        "excerpt":"Objective 앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다. 가장 바깥쪽에 위치한 Transformer부터 시작해서 EncoderLayer, DecoderLayer 순으로 설명하고자 합니다. Transformer Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다. Transformer Architecture Forward Transformer 클래스를 구현하기...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/transformer-scratch-implementation-2/",
+        "teaser": null
+      },{
+        "title": "ksqlDB: 실시간 데이터 처리 후 시각화까지",
+        "excerpt":"ksqlDB ksqlDB는 Kafka Streams에 기반하는 SQL 엔진입니다. ksqlDB는 Kafka topic에 이벤트 스트리밍 애플리케이션을 구축할 수 있는 쿼리 계층을 제공합니다. Kafka Streams와 달리 ksqlDB는 SQL로 새로운 스트림을 생성하거나 Materialized View를 생성할 수 있습니다. 왜 ksqlDB? 다음과 같이 실시간 데이터를 처리하기 위한 파이프라인을 가정해볼 수 있습니다. Source Database -&gt; CDC(Debezium-connector) -&gt; Kafka...","categories": ["data-engineer"],
+        "tags": ["data-engineering"],
+        "url": "/data-engineer/kafka-pipeline/",
         "teaser": null
       }]

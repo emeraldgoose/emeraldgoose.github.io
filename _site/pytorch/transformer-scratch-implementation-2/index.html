@@ -355,7 +355,10 @@
 <h1 id="transformer">Transformer</h1>
 <p>Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다.</p>
 
-<p><img src="https://lh3.googleusercontent.com/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS" alt="" width="500" /></p>
+<figure>
+    <a href="https://drive.google.com/file/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" /></a>
+    <figcaption>Transformer Architecture</figcaption>
+</figure>
 
 <h2 id="forward">Forward</h2>
 <p>Transformer 클래스를 구현하기 위해 TransformerEncoder와 TransformerDecoder에서 사용할 encoder_layer, encoder_norm, decoder_layer, decoder_norm을 선언합니다.</p>
@@ -431,8 +434,10 @@
 
 <p>아래 그래프들은 학습시킨 결과입니다. 왼쪽 그래프는 loss, 오른쪽 그래프는 accuracy를 기록한 것입니다.</p>
 
-<p><img src="https://lh3.googleusercontent.com/d/1epA5L2HrTdj0b9uFXM8Jn2mdtW-jI7X5" alt="" width="450" />
-<img src="https://lh3.googleusercontent.com/d/1ePHIHmU0QPcUtIeOhHfGkU5EZkS0aJUM" alt="" width="450" /></p>
+<figure class="half">
+  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm08fTVKlHgRMYqb4?embed=1&amp;width=846&amp;height=833" />
+  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm03PeZKru6RF6coJ?embed=1&amp;width=841&amp;height=833" />
+</figure>
 
 <p>hidden size가 크지 않았지만 잘 학습되는 것을 볼 수 있습니다. hidden size를 256으로 올리고 학습을 돌려보면 accuracy가 0.95 이상으로 올라가기도 합니다.</p>
 
@@ -485,7 +490,7 @@ Output : To be not to be or not to be or not &lt;eos&gt;
 <h1 id="code">Code</h1>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
-  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb">https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb">https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb</a></li>
 </ul>
 
         
@@ -540,7 +545,8 @@ Output : To be not to be or not to be or not &lt;eos&gt;
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/data-engineer/kafka-pipeline/" class="pagination--pager" title="ksqlDB: 실시간 데이터 처리 후 시각화까지
+">Next</a>
     
   </nav>
 
@@ -554,6 +560,31 @@ Output : To be not to be or not to be or not &lt;eos&gt;
     <div class="page__related">
       <h4 class="page__related-title">You may also enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/kafka-pipeline/" rel="permalink">ksqlDB: 실시간 데이터 처리 후 시각화까지
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> September 03 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">ksqlDB
+ksqlDB는 Kafka Streams에 기반하는 SQL 엔진입니다. ksqlDB는 Kafka topic에 이벤트 스트리밍 애플리케이션을 구축할 수 있는 쿼리 계층을 제공합니다. Kafka Streams와 달리 ksqlDB는 SQL로 새로운 스트림을 생성하거나 Mate...</p>
+  </article>
+</div>
+
         
           
 
@@ -627,33 +658,6 @@ Output : To be not to be or not to be or not &lt;eos&gt;
     
     <p class="archive__item-excerpt" itemprop="description">
   Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다.
-
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/coursera/finetuning-LLMs/" rel="permalink">Finetuning Large Language Models 정리
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> December 07 2023</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">
-  Finetuning Large Language Models - Deeplearning.ai
 
 </p>
   </article>
