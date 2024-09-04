@@ -217,8 +217,7 @@ CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
 CONNECT_REST_ADVERTISED_HOST_NAME=kafka-connect.kafka.svc.cluster.local
 CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
 ```
-카프카 커넥터를 배포할 때는 따로 Dockerfile을 작성하고 빌드한 이미지를 사용해야 합니다. 카프카 커넥터에 debezium 커넥터와 jdbc sink 커넥터를 설치해야 정상적으로 커넥터를 사용할 수 있기 때문입니다.
-카프카 커넥터는 confluent hub를 이용해 설치를 진행합니다. 이렇게 Dcokerfile을 작성해야 하는 이유는 confluent-hub로 설치한 커넥터는 목록으로 바로 잡히지 않고 재시작해야 목록으로 잡히기 때문입니다.  
+postgresql과 연결하기 위해 source connector로 debezium connector를 사용하고 sink connector로 jdbc sink connector를 사용할 것입니다. 카프카 커넥터는 confluent hub를 이용해 설치를 진행합니다. 카프카 커넥터를 배포할 때는 따로 Dockerfile을 작성하고 빌드한 이미지를 사용해야 합니다. Dcokerfile을 작성해야 하는 이유는 confluent-hub로 설치한 커넥터는 목록으로 바로 잡히지 않고 재시작해야 목록으로 잡히기 때문입니다.  
 
 실제로 confluentinc/cp-kafka-connect 이미지를 실행시켜 플러그인 설치 직후 `curl -X GET localhost:8083/connector-plugins` 명령어로 플러그인 목록을 보게 되면 설치한 플러그인들이 목록으로 나타나지 않습니다. 이 목록에 없다면 당연히 커넥터 설정 시 해당 커넥터를 사용하지 못하기 때문에 배포 전에 플러그인을 받고 커넥터를 시작하는 이미지를 만들어야 합니다.
 ```
@@ -227,6 +226,9 @@ FROM confluentinc/cp-kafka-connect-base:latest
 
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.7.11 && \
     confluent-hub install --no-prompt debezium/debezium-connector-postgresql:2.5.4
+```
+```
+docker build --no-cache -t kafka-connector:latest kafka/kafka-connector/
 ```
 
 대시보드 배포를 위해 `provectuslabs/kafka-ui` 이미지를 사용했습니다. 대안으로 confluent/control-center도 있습니다. 대시보드는 localhost:8080으로 접속할 수 있도록 service.yaml에서 type을 LoadBalancer 혹은 NodePort로 변경해야 합니다.
@@ -291,7 +293,7 @@ spec:
     <figcaption>UI For Apache Kafka</figcaption>
 </figure>
 
-Kafka Connect와 KSQL DB 탭은 kafka-connect나 ksqldb-server와 연결되지 않으면 사이드바 목록에 존재하지 않습니다. 만약 사이드바에 없다면 kafka-connect와 ksqldb의 상태를 확인해야 합니다.
+Kafka Connect와 KSQL DB 탭은 kafka-connect나 ksqldb-server와 연결되지 않으면 사이드바 목록에 나타나지 않습니다. 만약 사이드바에 없다면 kafka-connect와 ksqldb의 상태를 확인해야 합니다.
 
 이전 배포한 Postgresql과 연결하기 위해 Connector를 생성합니다.
 ```
@@ -401,7 +403,7 @@ create table count_type_by_account as
     group by bt.after->account_id
     emit changes;
 ```
-이 쿼리처럼 account_id로 group by하려면 반드시 select 절에 account_id가 등장해야 합니다. `emit changes`는 참조하는 스트림에 변화가 생길때 이 테이블을 업데이트하겠다는 의미로 pull query를 push query로 사용할 수 있습니다.
+이 쿼리처럼 account_id로 group by하려면 반드시 select 절에 account_id가 등장해야 합니다. `emit changes`는 참조하는 스트림에 변화가 생길때 이 테이블을 업데이트합니다.
 ```sql
 create table success_ratio_by_account as
   select
@@ -414,7 +416,7 @@ create table success_ratio_by_account as
   group by bt.after->account_id
   emit changes;
 ```
-이 쿼리에서 스트림인 bank_transaction_base와 transaction_log_base를 조인하여 10분 간격으로 테이블을 생성합니다.
+이 쿼리에서 스트림인 bank_transaction_base와 transaction_log_base를 조인하여 현재 시점을 기준으로 10분 이내로 들어온 메시지들을 사용하여 테이블을 업데이트합니다.
 ```sql
 create table transaction_volume_per_minute as
     select
@@ -429,9 +431,9 @@ create table transaction_volume_per_minute as
     group by after->account_id
     emit changes;
 ```
-`window tumbling(size 1 minute)`은 1분간격을 의미합니다. 즉, account_id마다 1분간 amount 총합을 계산하는 쿼리입니다. 타임스탬프가 계속 기록되므로 이런 타임스탬프를 이용한 쿼리를 사용할 수 있는 것이 ksqlDB의 장점입니다.
+`window tumbling(size 1 minute)`은 1분간격을 의미합니다. 즉, account_id마다 1분간 amount 총합을 계산하는 쿼리입니다.
 
-테이블과 스트림을 생성하면 topic에 자동 등록되고 처리된 데이터가 메시지로 쌓이게 됩니다.
+테이블과 스트림을 생성하면 topic에 자동 등록되고 메시지로 쌓이게 됩니다.
 
 <figure>
     <a href="https://drive.google.com/file/d/1XKq0Pe5ikGZw3GBXiNRseJaWf9NbcoLD/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzcQq59oeLhF9RJl?embed=1&width=2339&height=1005"></a>
