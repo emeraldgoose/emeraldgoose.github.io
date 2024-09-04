@@ -18,13 +18,13 @@ Source Database -> CDC(Debezium-connector) -> Kafka Cluster -> Kafka-sink-connec
 하지만, ksqlDB는 스트리밍 데이터 파이프라인을 작성할 수 있고 Kafka를 저장소로 활용하게 됩니다. 여러개의 스트림과 테이블을 sql로 관리할 수 있어 번거로운 과정을 줄일 수 있습니다. 단순히 스트림이나 테이블을 생성하는 것이 아닌 SQL처럼 스트림-스트림, 스트림-테이블, 테이블-테이블을 조인할 수도 있습니다.
 
 ## Persistent, Push, Pull query
-1. Persistent Query
+1. Persistent Query:  
 Persistent query는 이벤트 행을 무기한으로 처리하는 서버측 쿼리입니다. `CREATE STREAM AS SELECT`나 `CREATE TABLE AS SELECT`가 이에 해당합니다.
 
-2. Push Query
+2. Push Query:  
 Push query는 클라이언트가 실시간으로 변경된는 결과를 구독하는 쿼리입니다. push query를 사용하면 스트림이나 테이블의 결과를 실시간으로 받아볼 수 있습니다. 이러한 쿼리는 비동기 작업에 적합한 쿼리입니다.
 
-3. Pull Query
+3. Pull Query:  
 Pull query는 클라이언트가 현재 결과를 가져오게 하는 쿼리입니다. 새 이벤트가 도착하면 pull query를 통해 Materialized View를 업데이트합니다. 이러한 쿼리는 요청/응답 작업에 적합한 쿼리입니다.
 
 ## 파이프라인
