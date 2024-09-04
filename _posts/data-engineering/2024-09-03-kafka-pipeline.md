@@ -33,7 +33,7 @@ Pull query는 클라이언트가 현재 결과를 가져오게 하는 쿼리입�
 > 로컬 쿠버네티스를 이용하므로 하나의 노드만 사용하게 됩니다. 그래서 각각의 네임스페이스를 생성하고 네임스페이스에 맞게 배포했습니다.
 
 ### 데이터 생성
-Source 데이터베이스인 Postgresql에 가상의 은행 데이터를 생성하여 적재한다고 가정하겠습니다.
+Source 데이터베이스인 Postgresql에 가상의 은행 데이터를 생성하여 적재했습니다.
 
 account, bank_transaction, transaction_log 테이블을 만들고 sqlalchemy를 이용해 source db에 데이터를 적재했습니다. 아래는 테이블의 스키마를 정의한 것입니다.
 
