@@ -144,4 +144,4 @@ Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼
 
 # Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
-- [https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/transformer.ipynb)
+- [https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb)
