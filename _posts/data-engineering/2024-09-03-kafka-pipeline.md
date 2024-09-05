@@ -31,6 +31,10 @@ Pull query는 클라이언트가 현재 결과를 가져오게 하는 쿼리입�
 > 파이프라인을 구축할 때는 Docker Desktop에서 제공하는 쿠버네티스를 사용했고 모니터링 툴은 k9s와 Docker Desktop을 이용했습니다.
 
 > 로컬 쿠버네티스를 이용하므로 하나의 노드만 사용하게 됩니다. 그래서 각각의 네임스페이스를 생성하고 네임스페이스에 맞게 배포했습니다.
+<figure>
+  <img width="1365" alt="19" src="https://github.com/user-attachments/assets/8f4dacc6-dd6b-449a-8bd0-1c2b1c755c64">
+  <figcaption>pipeline</figcaption>
+</figure>
 
 ### 데이터 생성
 Source 데이터베이스인 Postgresql에 가상의 은행 데이터를 생성하여 적재했습니다.
