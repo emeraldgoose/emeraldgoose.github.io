@@ -78,7 +78,7 @@ class Transaction_log(Base):
 랜덤하게 계좌를 생성하거나 거래를 시도하게 되고 거래 시 금액도 랜덤하게 결정됩니다. 만약 출금시 계좌 잔액이 부족한 경우 bank_transaction 테이블에 기록되지 않지만 로그는 남게 했습니다. 그래서 transaction_log 테이블에 모든 거래 시도에 대해 성공 혹은 실패를 기록하게 됩니다.
 
 ### Postgres 배포
-Postgresql을 k8s에 배포하기 위해 deployment.yaml, configmap.yaml, service.yaml을 작성했습니다.
+가장 먼저 생성된 데이터를 적재할 source 데이터베이스를 배포합니다. 가장 많이 사용해본 Postgresql을 k8s에 배포하기 위해 deployment.yaml, configmap.yaml, service.yaml을 작성했습니다.
 ```
 # postgresql/deployment.yaml
 apiVersion: apps/v1
@@ -170,7 +170,7 @@ kubectl exec -it <postgresql-pod-name> -n postgres -- psql -U postgres -c "\list
 ```
 
 ### Kafka 배포
-Kafka는 kafka, kafka-connect, kafka-ui, ksqldb-server, schema-registry, zookeeper를 배포해야 합니다.
+실시간으로 생성되는 데이터를 캡쳐해서 Sink 데이터베이스로 적재하기 위해 Kafka나 Flink와 같은 스트리밍 플랫폼이 필요합니다. ksqlDB를 사용하는 것이 목적이므로 Kafka를 배포합니다. Kafka는 kafka, kafka-connect, kafka-ui, ksqldb-server, schema-registry, zookeeper를 배포해야 합니다.
 
 저는 deployment, service를 모두 작성하지는 않았고 docker-compose.yml로 먼저 작성 후에 kompose를 사용해서 deployment와 service로 변환 후 환경변수들만 수정해서 사용했습니다. 모든 yaml을 올리는 것은 너무 길어지므로 환경변수들만 작성하겠습니다.
 
@@ -234,8 +234,8 @@ RUN confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.7.11 &&
 ```
 docker build --no-cache -t kafka-connector:latest kafka/kafka-connector/
 ```
-
-대시보드 배포를 위해 `provectuslabs/kafka-ui` 이미지를 사용했습니다. 대안으로 confluent/control-center도 있습니다. 대시보드는 localhost:8080으로 접속할 수 있도록 service.yaml에서 type을 LoadBalancer 혹은 NodePort로 변경해야 합니다.
+### Kakfa 대시보드 배포
+대시보드 배포를 위해 `provectuslabs/kafka-ui` 이미지를 사용했습니다. broker 모니터링, kafka-connect, ksqldb 탭을 제공하는 대시보드라서 선택했습니다. 대안으로 confluent/control-center도 있지만 Production 환경에서 라이센스 문제가 있는 것으로 알고 있습니다. 대시보드는 localhost:8080으로 접속할 수 있도록 service.yaml에서 type을 LoadBalancer 혹은 NodePort로 변경해야 합니다.
 ```
 # kafka/kafka-ui-deployment.yaml
 apiVersion: apps/v1
@@ -289,6 +289,9 @@ spec:
   - protocol: TCP
     port: 8080
     targetPort: 8080
+```
+```
+kubectl apply -f kafka/kafka-ui-deployment.yaml,kafka/kafka-ui-service.yaml -n kafka
 ```
 대시보드가 배포된 후 localhost:8080으로 접속하면 아래와 같은 화면을 볼 수 있습니다.
 
@@ -476,7 +479,7 @@ create table transaction_volume_per_minute as
 ```
 
 ### Superset 배포
-Superset은 따로 yaml로 작성하지 않고 helm을 이용하여 배포했습니다. helm 통해 superset, redis, postgresql, superset-worker가 배포됩니다.
+시각화 도구로 Superset을 선택했습니다. Superset은 따로 yaml로 작성하지 않고 helm을 이용하여 배포했습니다. helm 통해 superset, redis, postgresql, superset-worker가 배포됩니다.
 
 먼저 superset 네임스페이스를 생성합니다.
 ```
@@ -560,4 +563,4 @@ SQL Lab에서는 데이터베이스에 쿼리를 날릴 수 있습니다. 오른
 각 차트 우측 상단 ...을 누르게 되면 refresh interval을 설정하거나 차트를 공유할 수도 있습니다.
 
 ## 마무리
-실시간으로 데이터를 생성하고 kafka-ksqlDB를 거쳐 superset으로 시각화까지 이어지도록 해봤습니다. ksqlDB이 window 관련 내용이 재밌는게 많았지만 깊게 파지 못한 점이 아쉬웠습니다. 실제로 해본 느낌으로는 kafka 이후 배치 파이프라인이 필요없어질 수 있겠다는 생각과 kafka에서 superset으로 바로 연결가능한 솔루션이 있었으면 좋겠다는 생각이 들었습니다.
+실시간으로 데이터를 생성하고 kafka-ksqlDB를 거쳐 superset으로 시각화까지 이어지도록 해봤습니다. ksqlDB에는 window 관련 내용이 재밌는게 많았지만 깊게 파지 못한 점이 아쉬웠습니다. 실제로 해본 느낌으로는 kafka 이후 배치 파이프라인이 필요없어질 수 있겠다는 생각과 kafka에서 superset으로 바로 연결가능한 솔루션이 있었으면 좋겠다는 생각이 들었습니다.
