@@ -379,7 +379,7 @@ AvroConvert를 사용하고 있으므로 format을 avro로 설정하면 스트�
         "db": "postgres",
         "sequence": "[\"26901096\",\"26901200\"]",
         "schema": "public",
-        "table": "transaction_log",
+        "table": "account",
         "txId": 748,
         "lsn": 26901200
     },
