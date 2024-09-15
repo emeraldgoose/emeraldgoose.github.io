@@ -142,7 +142,7 @@ $\frac{\partial \hat{x}}{\partial \sigma^2} = -\frac{1}{2}(x - \mu)(\sigma^2 + \
 
 $\frac{\partial L}{\partial \sigma^2} = \frac{\partial L}{\partial \hat{x}} \cdot -\frac{1}{2}(x - \mu)(\sigma^2 + \epsilon)^{-\frac{3}{2}}$
 
-다음, 평균에 대한 기울기를 계산하겠습니다. 2번에서 분산을 계산할 때 평균이 참여하므로 분산을 평균에 대한 기울기도 추가되어야 합니다.
+다음, 평균에 대한 기울기를 계산하겠습니다. 2번에서 분산을 계산할 때 평균이 참여하므로 분산을 평균으로 미분하여 얻은 기울기도 추가되어야 합니다.
 
 $\frac{\partial L}{\partial \mu} = \frac{\partial L}{\partial \hat{x}} \cdot \frac{\partial \hat{x}}{\partial \mu} + \frac{\partial L}{\partial \sigma^2} \cdot \frac{\partial \sigma^2}{\partial \mu}$
 
