@@ -169,6 +169,12 @@ kubectl exec -it <postgresql-pod-name> -n postgres -- createdb -U postgres sink
 kubectl exec -it <postgresql-pod-name> -n postgres -- psql -U postgres -c "\list"
 ```
 
+배포가 완료되면 다음의 명령을 통해 postgres 데이터베이스에 데이터를 적재합니다.
+```
+kubectl create ns app
+kubectl apply -f producer/deployment.yaml -n app
+```
+
 ### Kafka 배포
 실시간으로 생성되는 데이터를 캡쳐해서 Sink 데이터베이스로 적재하기 위해 Kafka나 Flink와 같은 스트리밍 플랫폼이 필요합니다. ksqlDB를 사용하는 것이 목적이므로 Kafka를 배포합니다. Kafka는 kafka, kafka-connect, kafka-ui, ksqldb-server, schema-registry, zookeeper를 배포해야 합니다.
 
