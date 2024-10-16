@@ -509,6 +509,11 @@ kubectl apply -f postgres/ -n postgres
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl exec -it &lt;postgresql-pod-name&gt; -n postgres -- psql -U postgres -c "\list"
 </code></pre></div></div>
 
+<p>배포가 완료되면 다음의 명령을 통해 postgres 데이터베이스에 데이터를 적재합니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create ns app
+kubectl apply -f producer/deployment.yaml -n app
+</code></pre></div></div>
+
 <h3 id="kafka-배포">Kafka 배포</h3>
 <p>실시간으로 생성되는 데이터를 캡쳐해서 Sink 데이터베이스로 적재하기 위해 Kafka나 Flink와 같은 스트리밍 플랫폼이 필요합니다. ksqlDB를 사용하는 것이 목적이므로 Kafka를 배포합니다. Kafka는 kafka, kafka-connect, kafka-ui, ksqldb-server, schema-registry, zookeeper를 배포해야 합니다.</p>
 
@@ -929,7 +934,8 @@ display name: PostgreSQL-sink
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/github/code-review-action/" class="pagination--pager" title="Github Action 코드리뷰 봇 만들기(Gemini-1.5-flash)
+">Next</a>
     
   </nav>
 
@@ -943,6 +949,31 @@ display name: PostgreSQL-sink
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/github/code-review-action/" rel="permalink">Github Action 코드리뷰 봇 만들기(Gemini-1.5-flash)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> October 16 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Github Action 설정
+Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LL...</p>
+  </article>
+</div>
+
         
           
 
@@ -1016,33 +1047,6 @@ display name: PostgreSQL-sink
       <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 03 2024</p>
     
     <p class="archive__item-excerpt" itemprop="description">Abstract
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/airflow/airflow-task-design/" rel="permalink">Airflow task 디자인
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 09 2024</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">
-  Apache Airflow 기반의 데이터 파이프라인 책의 내용 중 일부를 정리한 내용입니다.
-
 </p>
   </article>
 </div>

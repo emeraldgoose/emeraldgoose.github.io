@@ -1,4 +1,4 @@
-I"M�<h1 id="ksqldb">ksqlDB</h1>
+I"��<h1 id="ksqldb">ksqlDB</h1>
 <p>ksqlDB는 Kafka Streams에 기반하는 SQL 엔진입니다. ksqlDB는 Kafka topic에 이벤트 스트리밍 애플리케이션을 구축할 수 있는 쿼리 계층을 제공합니다. Kafka Streams와 달리 ksqlDB는 SQL로 새로운 스트림을 생성하거나 Materialized View를 생성할 수 있습니다.</p>
 
 <h2 id="왜-ksqldb">왜 ksqlDB?</h2>
@@ -162,6 +162,11 @@ kubectl apply -f postgres/ -n postgres
 
 <p>만약 db가 생성되었는지 확인하고 싶다면 아래 명령어로 확인가능합니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl exec -it &lt;postgresql-pod-name&gt; -n postgres -- psql -U postgres -c "\list"
+</code></pre></div></div>
+
+<p>배포가 완료되면 다음의 명령을 통해 postgres 데이터베이스에 데이터를 적재합니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create ns app
+kubectl apply -f producer/deployment.yaml -n app
 </code></pre></div></div>
 
 <h3 id="kafka-배포">Kafka 배포</h3>

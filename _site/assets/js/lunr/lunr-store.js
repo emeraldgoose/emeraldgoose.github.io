@@ -700,4 +700,10 @@ var store = [{
         "tags": ["data-engineering"],
         "url": "/data-engineer/kafka-pipeline/",
         "teaser": null
+      },{
+        "title": "Github Action 코드리뷰 봇 만들기(Gemini-1.5-flash)",
+        "excerpt":"Github Action 설정 Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LLM이 코드리뷰할 수 있도록 워크플로우를 생성하는 과정을 설명할 것입니다. 이 워크플로우를 실행하기 위해 필요한 것은 Pull Request 권한이 주어진 GITHUB TOKEN과 Gemini API TOKEN이 필요합니다....","categories": ["github"],
+        "tags": ["Ops"],
+        "url": "/github/code-review-action/",
+        "teaser": null
       }]
