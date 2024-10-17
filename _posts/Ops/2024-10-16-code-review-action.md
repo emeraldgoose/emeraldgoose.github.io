@@ -5,7 +5,7 @@ categories:
 tags: [Ops]
 ---
 ## Github Action 설정
-Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LLM이 코드리뷰할 수 있도록 워크플로우를 생성하는 과정을 설명할 것입니다. 이 워크플로우를 실행하기 위해 필요한 것은 Pull Request 권한이 주어진 GITHUB TOKEN과 Gemini API TOKEN이 필요합니다.
+Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LLM이 코드리뷰할 수 있도록 워크플로우를 생성하는 과정을 설명할 것입니다. 이 워크플로우를 실행하기 위해 필요한 것은 Pull Request 권한이 주어진 GITHUB TOKEN과 Gemini API KEY가 필요합니다.
 
 ### workflow.yml
 repository에 `.github/workflows`에 워크플로우가 정의된 yml파일이 있으면 github action을 사용할 수 있습니다.
@@ -83,7 +83,7 @@ on은 워크플로우가 시작하기 위한 트리거를 의미합니다. open�
 - name: Checkout Repo
   uses: actions/checkout@v3
 ```
-레포를 체크아웃하여 워크플로우가 레포에 접근할 수 있도록 하는 작업입니다. `git diff`명령어를 실행하기 위해 action이 동작하는 환경에 코드에 접근하도록 하기 위함입니다.
+레포를 체크아웃하여 워크플로우가 레포에 접근할 수 있도록 하는 작업입니다. `git diff`명령어를 실행하기 위해 action이 동작하는 환경에서 코드에 접근하도록 하기 위함입니다.
 
 ```yaml
 - name: Set up Node
