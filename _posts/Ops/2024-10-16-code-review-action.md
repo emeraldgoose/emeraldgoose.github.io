@@ -123,7 +123,18 @@ on은 워크플로우가 시작하기 위한 트리거를 의미합니다. open�
     fs.writeFileSync('res.txt',text);
     console.log('Save Results!')
 ```
-이 작업에서 "diff.txt"파일을 diff_output에 저장하고 Gemini에게 지시와 함께 전달합니다. LLM은 [{"path": filepath, "line": line_number, "text": "review content", "side": "RIGHT"}]형태로 정리하여 출력하고 결과값을 "res.txt"에 저장합니다. 하지만 LLM의 출력이 마크다운 코드블럭(```) 형태로 출력되어 다음 단계에서 내용물을 파싱합니다.
+이 작업에서 "diff.txt"파일을 `diff_output`에 저장하고 Gemini에게 지시와 함께 전달합니다. 
+
+```
+You are a senior software engineer and need to perform a code review based on the results of a given git diff. 
+Review the changed code from different perspectives and let us know if there are any changes that need to be made. 
+If you see any code that needs to be fixed in the result of the git diff, you need to calculate the exact line number by referring to the “@@ -0,0 +0,0 @@” part. 
+The output format is \[{“path”:“{ filepath }”, “line”: { line }, “text”: { review comment }, “side”: “RIGHT"}\] format must be respected.
+<git diff>${diff_output}</git diff>
+```
+이 프롬프트는 Gemini에게 보낼 프롬프트입니다. git diff XML 태그 사이에 저장해둔 `dff_output` 내용을 넣어 LLM에게 전달합니다. 저는 간단하게만 프롬프트를 작성했지만 저 프롬프트를 수정해서 어떻게 리뷰해야 할지 다양한 아이디어를 실험해볼 수 있습니다.
+
+다음, LLM은 [{"path": filepath, "line": line_number, "text": "review content", "side": "RIGHT"}]형태로 정리하여 출력하고 결과값을 "res.txt"에 저장합니다. 하지만 LLM의 출력이 마크다운 코드블럭(```) 형태로 출력되어 다음 단계에서 내용물을 파싱합니다.
 
 ```yaml
 - name: output
