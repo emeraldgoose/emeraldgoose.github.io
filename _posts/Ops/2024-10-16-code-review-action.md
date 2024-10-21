@@ -101,7 +101,7 @@ on은 워크플로우가 시작하기 위한 트리거를 의미합니다. open�
     git fetch origin "${% raw %}{{ github.event.pull_request.head.ref }}{% endraw %}"
     git diff --unified=0 "origin/${% raw %}{{ github.event.pull_request.base.ref }}{% endraw %}" > "diff.txt"
 ```
-이 단계에서는 PR이 되는 base 브랜치와 head 브랜치의 코드 변경 내역을 조회하고 "diff.txt"에 저장합니다. `git diff` 명령어의 `--unified`는 수정되기 전 몇개의 라인을 남겨놓을지 설정하는 옵션입니다. 기본값은 3으로 설정되어 있고 저는 0으로 설정하여 모든 줄이 드라나도록 했습니다. 이 이유는 원본 파일의 라인 넘버가 필요한데 생략하게 되면 정확한 위치를 LLM이 파악하기 어려워했기 때문입니다.
+이 단계에서는 PR이 되는 base 브랜치와 head 브랜치의 코드 변경 내역을 조회하고 "diff.txt"에 저장합니다. `git diff` 명령어의 `--unified`는 수정되기 전 몇개의 라인을 남겨놓을지 설정하는 옵션입니다. 기본값은 3으로 설정되어 있고 저는 0으로 설정하여 모든 줄이 드러나도록 했습니다. 이 이유는 원본 파일의 라인 넘버가 필요한데 생략하게 되면 정확한 위치를 LLM이 파악하는데 어려워했기 때문입니다.
 
 ```yaml
 - name: Run Gemini-1.5-flash
@@ -157,7 +157,7 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
 마지막 작업은 파싱된 내용을 바탕으로 PR Review Comment를 생성하는 작업입니다. 다른 사람이 만들어둔 Action을 사용하여 코멘트를 등록합니다.
 
 ## Sample
-아래는 실제 review라는 워크플로우의 일부를 캡쳐한 사진입니다. Gemini-1.5-flash를 사용하여 출력된 결과물이 ```처럼 코드블럭으로 보여지고 있습니다.
+아래는 review 워크플로우의 실행 일부를 캡쳐한 사진입니다. Gemini-1.5-flash를 사용하여 반환된 결과를 출력한 것인데 결과가 마크다운 코드블럭으로 보여지고 있습니다.
 <figure>
     <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm369AZoebGqnqsyD?embed=1&width=1631&height=1094">
 </figure>
