@@ -163,16 +163,12 @@ $\frac{\partial L}{\partial x} = \frac{\partial L}{\partial \hat{x}} \cdot \frac
 # GELU
 GELU는 ReLU의 단점을 보완한 활성화 함수입니다.
 
-ReLU는 다음의 그래프와 같이 입력값이 음수일 경우 0을 출력하여 뉴런이 죽는 현상인 Dying ReLU 문제가 발생했습니다. 입력된 값이 음수가 한번이라도 등장하게 되면 활성화 함수의 기울기가 0이므로 그 뉴런과 연결된 다른 뉴런들 또한 기울기가 0이 됩니다. 
+ReLU는 다음의 그래프와 같이 입력값이 음수일 경우 0을 출력하여 뉴런이 죽는 현상인 Dying ReLU 문제가 발생했습니다. 입력된 값이 음수가 한번이라도 등장하게 되면 활성화 함수의 기울기가 0이므로 그 뉴런과 연결된 다른 뉴런들 또한 기울기가 0이 됩니다. 대안으로 음수 입력에도 기울기를 제공하는 leaky relu가 있지만 음수에 대한 boundary가 없기 때문에 어떠한 음수값에 대해서도 기울기를 제공해버립니다. 그래서 swish나 GELU와 같이 음수 boundary를 제공하는 활성화 함수가 제안되었습니다.
 
-<figure>
+<figure class="half">
   <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0o_jVY2iJmV4LNq?embed=1&width=640&height=480">
-</figure>
-
-대안으로 음수 입력에도 기울기를 제공하는 leaky relu가 있지만 음수에 대한 boundary가 없기 때문에 어떠한 음수값에 대해서도 기울기를 제공해버립니다. 그래서 swish나 GELU와 같이 음수 boundary를 제공하는 활성화 함수가 제안되었습니다.
-
-<figure>
   <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0yGxsrvrjyLkgip?embed=1&width=640&height=480">
+  <figcaption>Refs: https://pytorch.org</figcaption>
 </figure>
 
 하지만, NLP 태스크에서 꼭 GELU여야 하는 이유는 잘 모르겠습니다. 다른 블로그에서는 "ReLU나 ELU보다 GELU가 성능이 좋았다"정도로만 다들 기록하고 있습니다.  

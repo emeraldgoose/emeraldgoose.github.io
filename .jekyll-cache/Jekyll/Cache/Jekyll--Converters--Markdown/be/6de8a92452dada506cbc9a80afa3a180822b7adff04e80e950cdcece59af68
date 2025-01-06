@@ -1,3 +1,0 @@
-I"�<h2 id="github-action-설정">Github Action 설정</h2>
-<p>Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LLM이 코드리뷰할 수 있도록 워크플로우를 생성하는 과정을 설명할 것입니다.</p>
-:ET

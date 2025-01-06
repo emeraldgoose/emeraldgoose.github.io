@@ -12,8 +12,8 @@ tags: [torch]
 # Transformer
 Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다.
 
-<figure>
-    <a href="https://drive.google.com/file/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100"></a>
+<figure style="text-align:center;">
+    <a href="https://drive.google.com/file/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS/view?usp=sharing"><img style="width:70%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100"></a>
     <figcaption>Transformer Architecture</figcaption>
 </figure>
 
@@ -44,9 +44,7 @@ Forward에서 반복문을 통해 순서대로 계산하고 있으므로 그 역
 Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코딩 정보를 입력으로 받아 출력값을 계산합니다.
 
 ## Forward
-forward 함수의 argument로 `tgt`와 `memory`가 있습니다. `tgt`는 output 임베딩을 말하고 `memory`는 인코더 출력을 말합니다.
-
-Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderLayer를 복사하여 ModuleList로 구성하고 반복문을 통해 호출하여 계산합니다.
+forward 함수의 argument로 `tgt`와 `memory`가 있습니다. `tgt`는 output 임베딩을 말하고 `memory`는 인코더 출력을 말합니다. Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderLayer를 복사하여 ModuleList로 구성하고 반복문을 통해 호출하여 계산합니다.
 
 <script src="https://gist.github.com/emeraldgoose/23d416bbbe0732af2d080e7c1aa4f1eb.js"></script>
 

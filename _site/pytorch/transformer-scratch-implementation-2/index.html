@@ -351,8 +351,8 @@
 <h1 id="transformer">Transformer</h1>
 <p>Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다.</p>
 
-<figure>
-    <a href="https://drive.google.com/file/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" /></a>
+<figure style="text-align:center;">
+    <a href="https://drive.google.com/file/d/1gZ0C9THux083GBFOzvyd9J2nuQ2iAdPS/view?usp=sharing"><img style="width:70%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" /></a>
     <figcaption>Transformer Architecture</figcaption>
 </figure>
 
@@ -383,9 +383,7 @@
 <p>Transformer의 Decoder는 DecoderLayer들이 스택되어 있는 구조로 구현됩니다. 다음 그림의 오른쪽 처럼 Decoder는 Output 임베딩과 인코딩 정보를 입력으로 받아 출력값을 계산합니다.</p>
 
 <h2 id="forward-2">Forward</h2>
-<p>forward 함수의 argument로 <code class="language-plaintext highlighter-rouge">tgt</code>와 <code class="language-plaintext highlighter-rouge">memory</code>가 있습니다. <code class="language-plaintext highlighter-rouge">tgt</code>는 output 임베딩을 말하고 <code class="language-plaintext highlighter-rouge">memory</code>는 인코더 출력을 말합니다.</p>
-
-<p>Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderLayer를 복사하여 ModuleList로 구성하고 반복문을 통해 호출하여 계산합니다.</p>
+<p>forward 함수의 argument로 <code class="language-plaintext highlighter-rouge">tgt</code>와 <code class="language-plaintext highlighter-rouge">memory</code>가 있습니다. <code class="language-plaintext highlighter-rouge">tgt</code>는 output 임베딩을 말하고 <code class="language-plaintext highlighter-rouge">memory</code>는 인코더 출력을 말합니다. Encoder 구현과 마찬가지로 Transformer 클래스에서 선언된 DecoderLayer를 복사하여 ModuleList로 구성하고 반복문을 통해 호출하여 계산합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/23d416bbbe0732af2d080e7c1aa4f1eb.js"></script>
 
@@ -707,7 +705,7 @@ ksqlDB는 Kafka Streams에 기반하는 SQL 엔진입니다. ksqlDB는 Kafka top
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2024 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2025 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
