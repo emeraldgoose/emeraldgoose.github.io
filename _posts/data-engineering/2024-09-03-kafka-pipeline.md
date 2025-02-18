@@ -32,7 +32,9 @@ Pull query는 클라이언트가 현재 결과를 가져오게 하는 쿼리입�
 
 > 로컬 쿠버네티스를 이용하므로 하나의 노드만 사용하게 됩니다. 그래서 각각의 네임스페이스를 생성하고 네임스페이스에 맞게 배포했습니다.
 <figure>
-  <img width="1365" alt="19" src="https://github.com/user-attachments/assets/8f4dacc6-dd6b-449a-8bd0-1c2b1c755c64">
+  <a href="https://github.com/user-attachments/assets/8f4dacc6-dd6b-449a-8bd0-1c2b1c755c64" onclick="return false;" data-lightbox="gallery">
+    <img src="https://github.com/user-attachments/assets/8f4dacc6-dd6b-449a-8bd0-1c2b1c755c64" alt="01" style="max-width: 100%; height: auto;">
+  </a>
   <figcaption>pipeline</figcaption>
 </figure>
 
@@ -302,7 +304,9 @@ kubectl apply -f kafka/kafka-ui-deployment.yaml,kafka/kafka-ui-service.yaml -n k
 대시보드가 배포된 후 localhost:8080으로 접속하면 아래와 같은 화면을 볼 수 있습니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1XUDVuAmSgqtcWPh8ST-f1N6bfhU8PGG0/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmzx_0fT-PPlqG5Wm?embed=1&width=2544&height=1195"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qmzx_0fT-PPlqG5Wm?embed=1&width=2544&height=1195" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmzx_0fT-PPlqG5Wm?embed=1&width=2544&height=1195" alt="02" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>UI For Apache Kafka</figcaption>
 </figure>
 
@@ -339,7 +343,9 @@ kubectl exec -it <postgres-pod> -n postgres -- psql -U postgres -c "alter user <
 schema-registry를 배포했기 때문에 AvroConverter를 사용할 수 있습니다. schema-registry는 데이터 스키마를 저장하고 불러오는 공간으로 사용자가 스키마를 입력하지 않아도 알아서 스키마를 관리합니다. 뒤에 나올 ksqldb를 사용할 때도 스키마 입력을 하지 않아도 되는 장점도 있습니다. connector가 연결되면 아래와 같이 커넥터 목록들을 볼 수 있습니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1yNMwz2tnhVfvBVyfvV_h0rg4p2i8YG0K/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzpLv8yOSVwta8q4?embed=1&width=2345&height=687"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9QmzpLv8yOSVwta8q4?embed=1&width=2345&height=687" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzpLv8yOSVwta8q4?embed=1&width=2345&height=687" alt="03" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>Connectors</figcaption>
 </figure>
 
@@ -347,7 +353,9 @@ schema-registry를 배포했기 때문에 AvroConverter를 사용할 수 있습�
 대시보드에서 ksqlDB 탭으로 들어가면 다음과 같은 화면을 볼 수 있습니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1zyoubY48lF0Yzb7cmJDE5vf5zuhrXNC3/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzlLlxoK6QOdJKjj?embed=1&width=2342&height=409"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9QmzlLlxoK6QOdJKjj?embed=1&width=2342&height=409" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzlLlxoK6QOdJKjj?embed=1&width=2342&height=409" alt="04" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>ksqlDB</figcaption>
 </figure>
 
@@ -356,7 +364,9 @@ schema-registry를 배포했기 때문에 AvroConverter를 사용할 수 있습�
 오른쪽 상단에 `Execute KSQL Request`버튼을 누르면 쿼리를 실행할 수 있는 공간을 볼 수 있습니다. 아래 사진은 bank_transaction_base라는 스트림을 생성하고 실행한 모습입니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1e9xQBs4njpdKk4Pio6nukwE2xZYugYsR/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmz0O6ZFyrCda0Gob?embed=1&width=2343&height=1175"></a>
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qmz0O6ZFyrCda0Gob?embed=1&width=2343&height=1175" onclick="return false;" data-lightbox="gallery">
+    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmz0O6ZFyrCda0Gob?embed=1&width=2343&height=1175" alt="05" style="max-width: 100%; height: auto;">
+  </a>
 </figure>
 
 source-connector로 데이터를 가져오면 topic에 메시지가 쌓이게 되는데 ksqlDB에서는 이 메시지를 바로 사용하지 못합니다. 그래서 stream을 먼저 생성하고 그 스트림을 사용하여 어떠한 처리 로직이 반영된 스트림 혹은 테이블을 만들 수 있습니다.
@@ -449,14 +459,18 @@ create table transaction_volume_per_minute as
 테이블과 스트림을 생성하면 topic에 자동 등록되고 메시지로 쌓이게 됩니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1XKq0Pe5ikGZw3GBXiNRseJaWf9NbcoLD/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzcQq59oeLhF9RJl?embed=1&width=2339&height=1005"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9QmzcQq59oeLhF9RJl?embed=1&width=2339&height=1005  " onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9QmzcQq59oeLhF9RJl?embed=1&width=2339&height=1005" alt="06" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>topics</figcaption>
 </figure>
 
 그리고 schema-registry에도 스키마가 등록됩니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1QQa_1B0vc-zz7WMiiwcYc-iL5h-JNsTl/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmzh4uvzmuM_QLZMt?embed=1&width=2340&height=1123"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qmzh4uvzmuM_QLZMt?embed=1&width=2340&height=1123" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qmzh4uvzmuM_QLZMt?embed=1&width=2340&height=1123" alt="07" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>schema-registry</figcaption>
 </figure>
 
@@ -523,7 +537,9 @@ kubectl port-forward superset -n superset 8088:8088
 접속 후 database를 먼저 연결해줍니다. 오른쪽 상단 `+`에서 데이터베이스를 연결하거나 `Settings`에서 데이터베이스 커넥션 관리 탭을 눌러 관리할 수 있습니다.
 
 <figure>
-    <a href="https://drive.google.com/file/d/1MNCZA5gVFc4Ok1hiQ8_M9UuS_PvAZStN/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0IU71HSJmWMKCVj?embed=1&width=2553&height=1219"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0IU71HSJmWMKCVj?embed=1&width=2553&height=1219" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0IU71HSJmWMKCVj?embed=1&width=2553&height=1219" alt="08" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>superset, connect a database</figcaption>
 </figure>
 
@@ -549,7 +565,9 @@ display name: PostgreSQL-sink
 
 SQL Lab에서는 데이터베이스에 쿼리를 날릴 수 있습니다. 오른쪽에 데이터베이스를 선택하면 해당 데이터베이스에 직접 쿼리를 날려 결과를 볼 수 있습니다.
 <figure>
-    <a href="https://drive.google.com/file/d/1gctLb0021N_7nV9OWO4uJCeZbGrYAMHG/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0RWMGZmtZXGd9z4?embed=1&width=2543&height=1212"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0RWMGZmtZXGd9z4?embed=1&width=2543&height=1212" onclick="return false;" data-lightbox="gallery">
+      <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0RWMGZmtZXGd9z4?embed=1&width=2543&height=1212" alt="09" style="max-width: 100%; height: auto;">
+    </a>
     <figcaption>superset, sql lab</figcaption>
 </figure>
 
@@ -557,13 +575,17 @@ SQL Lab에서는 데이터베이스에 쿼리를 날릴 수 있습니다. 오른
 
 몇 가지 쿼리를 만들어 간단하게 대시보드를 구성해봤습니다.
 <figure>
-    <a href="https://drive.google.com/file/d/1L22GmE9SBNjaJ-q0-aGHrQeNUZm7dEsc/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0U95QrnHpAev6Xi?embed=1&width=2558&height=1209"></a>
-    <figcaption>superset, dashboard transaction</figcaption>
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0U95QrnHpAev6Xi?embed=1&width=2558&height=1209" onclick="return false;" data-lightbox="gallery">
+    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0U95QrnHpAev6Xi?embed=1&width=2558&height=1209" alt="10" style="max-width: 100%; height: auto;">
+  </a>
+  <figcaption>superset, dashboard transaction</figcaption>
 </figure>
 
 <figure>
-    <a href="https://drive.google.com/file/d/1l-CHHk2PcepbZGiCYemRgzEAkBSn3uVn/view?usp=sharing"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ZjPZ3xzWCi0V2X?embed=1&width=2552&height=1214"></a>
-    <figcaption>superset, dashboard transaction-event</figcaption>
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ZjPZ3xzWCi0V2X?embed=1&width=2552&height=1214" onclick="return false;" data-lightbox="gallery">
+    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ZjPZ3xzWCi0V2X?embed=1&width=2552&height=1214" alt="11" style="max-width: 100%; height: auto;">
+  </a>
+  <figcaption>superset, dashboard transaction-event</figcaption>
 </figure>
 
 각 차트 우측 상단 ...을 누르게 되면 refresh interval을 설정하거나 차트를 공유할 수도 있습니다.
