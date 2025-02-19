@@ -5,18 +5,19 @@ categories:
 tags: [data-engineering, Opensearch]
 ---
 ## Reranker
-문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사시키는 기술로 인해 정보 손실이 발생합니다. 이로 인해 필요한 문서가 누락되는 경우가 발생할 수 있지만 가져오는 문서의 개수 k를 조정하여 해결할 수 있습니다. 하지만, 문서의 순위가 낮아지므로 LLM이 해당 문서를 참조하지 않을 수 있고 LLM 토큰 비용도 증가하기 때문에 비효율적이게 됩니다. 
-그래서 Reranker를 도입하여 Retriever로부터 가져온 문서와 유저 질문 사이 관련성을 측정하여 순위를 재조정하여 관련이 높은 문서의 순위를 높이는 방법을 사용하게 됩니다.
-
+문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사 기법으로 인해 정보 손실이 발생합니다. 
+이로 인해 필요한 문서가 누락될 가능성이 있으며, 이를 보완하기 위해 가져오는 문서의 개수 k를 조정할 수 있습니다. 그러나 문서의 순위가 낮아질 수 있으며, LLM이 해당 문서를 참조하지 않거나 LLM 토큰 비용이 증가하는 비효율적인 상황이 발생하게 됩니다. 
+이를 해결하기 위해 Reranker를 도입하여 Retriever가 가져온 문서와 사용자 질문 간의 관련성을 측정하여 보다 연관성이 높은 문서의 순위를 조정하는 방법을 활용할 수 있습니다.
 
 ## Opensearch Machine Learning
-RAG 시스템에 Reranker를 추가하려면 AWS Sagemaker와 같은 클라우드 서비스에 배포하거나 추가적인 자원이 없다면 Cohere.ai와 같은 상용 서비스를 사용해야 합니다. 
-만약 Opensearch 클러스터를 운영하고 있다면 대안으로 Opensearch 클러스터에 직접 아티팩트를 배포할 수 있고 REST API를 통해 모델을 사용할 수 있습니다. 또한, 파이프라인에 포함시킬 수도 있습니다.
+RAG 시스템에 Reranker를 추가하려면 AWS Sagemaker와 같은 클라우드 서비스를 이용해 모델을 배포하거나 Cohere.ai와 같은 상용 서비스를 사용하는 방법이 있지만 비용이 추가됩니다. 
+Opensearch는 클러스터에 직접 아티팩트를 배포하고 사용할 수 있는 기능을 지원하고 있습니다. 
+만약 Opensearch 클러스터를 운영하고 있다면 대안으로 클러스터에 직접 아티팩트를 배포할 수 있고 REST API를 통해 모델을 사용할 수 있습니다. 또한, 파이프라인에 포함시킬 수도 있습니다.
 
 ### Settings
 프로덕션 환경에서의 Opensearch의 ML 작업은 ML 노드에서 실행하는 것을 추천합니다. 
 프로덕션 환경이라면 아래 쿼리에서 `plugins.ml_commons.only_run_on_ml_node: true`로 설정합니다. 그렇지 않다면 아무 노드에서나 ml 작업을 할 수 있도록 `false`로 설정합니다. 
-`native_memory_threshold` 옵션은 ML작업을 하는데 메모리 사용률 한계를 설정할 수 있습니다. 100이면 아무런 제한도 하지 않는 것이고 90이라면 90%까지 허용하며 넘어가는 경우 에러를 일으키게 됩니다.
+`native_memory_threshold` 옵션은 ML작업을 하는데 메모리 사용률 한계를 설정할 수 있습니다. 100이면 아무런 제한도 하지 않는 것이고 90이라면 90%까지 허용하며 넘어가는 경우 에러를 일으키게 됩니다. 클러스터 자원에 따라 자유롭게 조정합니다. 
 ```json
 PUT _cluster/settings
 {
@@ -29,7 +30,7 @@ PUT _cluster/settings
 ```
 
 ### Register a model group
-ML 모델을 배포하기 전에 모델 그룹을 먼저 등록해야 합니다. 모델 그룹의 역할은 모델 버전을 관리하는 것입니다. 추가로 접근 제어에도 활용되어 public, private, restricted 세 가지 액세스 모드 중 하나를 선택할 수 있습니다.
+ML 모델을 배포하기 전에 모델 그룹을 먼저 등록해야 합니다. 모델 그룹의 역할은 모델 버전을 관리하고 접근 제어에 활용됩니다. 
 모델 그룹을 등록하려면 다음 요청을 보내야 합니다.
 ```json
 POST /_plugins/_ml/model_groups/_register
@@ -47,7 +48,10 @@ POST /_plugins/_ml/model_groups/_register
 ```
 
 ### Register a model
-모델을 등록하는 단계입니다. Opensearch에서 제공하는 pretrained model 또는 Custom model를 등록할 수 있습니다. Custom model인 경우, torchscript로 변환되어 있어야 합니다. Opensearch에서 제공하는 Reranking 모델인 `cross-encoders/ms-marco-MiniLM-L-12-v2`를 배포하겠습니다.
+모델을 등록하는 단계입니다. 
+Opensearch에서 제공하는 pretrained model 또는 Custom model를 등록할 수 있습니다. 
+Custom model인 경우, torchscript 또는 ONNX로 변환되어 있어야 합니다. 
+저는 Opensearch에서 제공하는 Reranking 모델인 `cross-encoders/ms-marco-MiniLM-L-12-v2`를 배포하겠습니다.
 
 아래 요청에서 `model_group_id는` 위에서 등록된 `model_group_id`와 같아야 합니다.
 ```json
@@ -98,12 +102,16 @@ GET /_plugins/_ml/tasks/cVeMb4kBJ1eYAeTMFFgj
   "is_async": false
 }
 ```
-조회 결과로 `model_id`가 없고 state가 `CREATED` 상태라면 아직 아티팩트를 다운로드 받고 있는 것이므로 기다려야 합니다. state가 `FAILED`라면 `error`가 응답에 포함됩니다. 여기서 `model_id`를 따로 메모합니다.
+조회 결과로 `model_id`가 없고 state가 `CREATED` 상태라면 아직 아티팩트를 다운로드 받고 있는 것이므로 기다려야 합니다. 
+state가 `FAILED`라면 `error`가 응답에 포함됩니다. 
+완료되었다면 `model_id`를 따로 메모합니다.
 
 ### Deploy a model
-모델 인덱스로부터 읽어와 메모리에 모델을 적재하는 단계입니다. 모델을 메모리에 올리기 위해 다음의 요청을 실행합니다. /models 다음에는 위 단계에서의 `model_id`를 넣어줍니다.
+모델 인덱스로부터 읽어와 메모리에 모델을 적재하는 단계입니다. 
+모델을 메모리에 올리기 위해 다음의 요청을 실행합니다. 
+/models 다음에는 위 단계에서의 등록된 `model_id`를 넣어줍니다.
 ```
-POST /_plugins/_ml/models/cleMb4kBJ1eYAeTMFFg4/_deploy
+POST /_plugins/_ml/models/{model_id}/_deploy
 ```
 이전처럼 응답으로부터 task_id를 받을 수 있는데 마찬가지로 태스크를 조회할 수 있습니다.
 ```json
@@ -131,7 +139,7 @@ GET /_plugins/_ml/tasks/vVePb4kBJ1eYAeTM7ljG
 ```
 배포 도중이라면 state가 `RUNNING`일 것이고 완료되었다면 위와 같이 `COMPLETED`로 표시됩니다.
 
-모델 배포가 완료되었다면 Opensearch Dashboard에서 모델 리스트를 확인할 수 있습니다. Opensearch plugins > Machine Learning 탭에서 다음의 사진처럼 모델 목록을 확인할 수 있습니다.
+모델 배포가 완료되었다면 Opensearch Dashboard에서 모델 리스트를 확인할 수 있습니다. **Opensearch plugins > Machine Learning** 탭에서 다음의 사진처럼 모델 목록을 확인할 수 있습니다.
 
 <figure>
     <img src="https://opensearch.org/docs/latest/images/ml/ml-dashboard/deployed-models.png" alt="01" style="max-width: 100%; height: auto;">
@@ -260,54 +268,7 @@ response = client.transport.perform_request(
 )
 ```
 
-실제로 모델을 돌려보면서 payload의 구성이 궁금해서 opensearch-project github를 찾아봤습니다. 
-predict 요청을 보내면 Request를 처리하는데 MLInput 클래스에 사용자 입력들이 들어가게 됩니다.
-```java
-// opensearch-project/ml-commons/blob/main/common/src/main/java/org/opensearch/ml/common/input/MLInput.java
-
-@Data
-@NoArgsConstructor
-public class MLInput implements Input {
-
-    public static final String ALGORITHM_FIELD = "algorithm";
-    public static final String ML_PARAMETERS_FIELD = "parameters";
-    public static final String INPUT_INDEX_FIELD = "input_index";
-    public static final String INPUT_QUERY_FIELD = "input_query";
-    public static final String INPUT_DATA_FIELD = "input_data";
-
-    // For trained model
-    // Return bytes in model output
-    public static final String RETURN_BYTES_FIELD = "return_bytes";
-    // Return bytes in model output. This can be used together with return_bytes.
-    public static final String RETURN_NUMBER_FIELD = "return_number";
-    // Filter target response with name in model output
-    public static final String TARGET_RESPONSE_FIELD = "target_response";
-    // Filter target response with position in model output
-    public static final String TARGET_RESPONSE_POSITIONS_FIELD = "target_response_positions";
-    // Input text sentences for text embedding model
-    public static final String TEXT_DOCS_FIELD = "text_docs";
-    // Input query text to compare against for text similarity model
-    public static final String QUERY_TEXT_FIELD = "query_text";
-    public static final String PARAMETERS_FIELD = "parameters";
-
-    // Input question in question answering model
-    public static final String QUESTION_FIELD = "question";
-
-    // Input context in question answering model
-    public static final String CONTEXT_FIELD = "context";
-
-    // Algorithm name
-    protected FunctionName algorithm;
-    // ML algorithm parameters
-    protected MLAlgoParams parameters;
-    // Input data to train model, run trained model to predict or run ML algorithms(no-model-based) directly.
-    protected MLInputDataset inputDataset;
-
-    private int version = 1;
-```
-만약에 다른 모델을 사용할 때 필요한 field를 위에 있는 field 이름을 요청에 포함하면 됩니다.
-
-### 한국어 문서로 테스트
+### Query
 한국어 문서를 이용해 테스트를 진행했습니다. 경제 관련 문서들이 저장되어 있고 아래 쿼리를 이용해 결과를 확인했습니다.
 ```json
 // Lexical Search
@@ -365,7 +326,8 @@ public class MLInput implements Input {
 }
 ```
 
-Rerank를 쿼리로 사용하려면 pipeline 정의가 필요합니다. 저는 아래 요청을 통해 파이프라인을 정의했습니다.
+Rerank를 쿼리에 포함하려면 pipeline 정의가 필요합니다. 저는 아래 요청을 통해 파이프라인을 정의했습니다.
+
 ```json
 PUT /_search/pipeline/rerank_pipeline
 {
@@ -385,16 +347,26 @@ PUT /_search/pipeline/rerank_pipeline
 ```
 
 그 결과로 아래 이미지와 같이 Lexical search만 사용한 결과와 Rerank 모델을 같이 사용한 결과가 다름을 알 수 있습니다. 
-왼쪽은 Lexical search만 사용한 결과이고 오른쪽은 Lexical search + Rerank를 사용한 결과입니다.
-아래 이미지처럼 왼쪽의 4위에 위치한 문서가 Reranker로 인해 1위로 올라오는 것처럼 순위를 재조정한 결과를 볼 수 있습니다.
+첫 번째 이미지는 Lexical search만 사용한 결과이고 두 번째 이미지는 Lexical search + Rerank를 사용한 결과입니다.
 
-<figure class="half">
+<figure>
   <a href="https://lh3.googleusercontent.com/d/1j5YfrSJw9SLLRQlorbGL3optQR9gJg_D" onclick="return false;" data-lightbox="gallery">
     <img src="https://lh3.googleusercontent.com/d/1j5YfrSJw9SLLRQlorbGL3optQR9gJg_D" alt="02" style="max-width: 100%; height: auto;">
   </a>
+  <figcaption>Only Lexical search</figcaption>
+</figure>
+<figure>
   <a href="https://lh3.googleusercontent.com/d/1SrB8HE_f5oo60dNTwXPBH1Yskyu3I9O4" onclick="return false;" data-lightbox="gallery">
-    <img src="https://lh3.googleusercontent.com/d/1SrB8HE_f5oo60dNTwXPBH1Yskyu3I9O4" alt="02" style="max-width: 100%; height: auto;">
+    <img src="https://lh3.googleusercontent.com/d/1SrB8HE_f5oo60dNTwXPBH1Yskyu3I9O4" alt="03" style="max-width: 100%; height: auto;">
   </a>
-  <figcaption>사실 ms-marco-minilm-l-12-v2 모델은 영어만 지원하는데 어떻게 원하는 문서의 순위가 올라갔는지는 잘 모르겠습니다</figcaption>
+  <figcaption>Lexical search + Rerank</figcaption>
 </figure>
 
+실제로 문서의 순위가 변경된 것을 볼 수 있습니다. 
+이처럼 Opensearch 클러스터 내에서 Rerank 모델이 동작하여 문서의 순위를 변경할 수 있지만 그 만큼 지연시간이 증가하는 단점이 있습니다. 
+
+
+## References
+- [한국어 Reranker를 활용한 검색 증강 생성(RAG) 성능 올리기](https://aws.amazon.com/ko/blogs/tech/korean-reranker-rag/)
+- [Retrieval-Augmented Generation (RAG) for Large Language Models on AWS](https://github.com/aws-samples/aws-ai-ml-workshop-kr/tree/master/genai/aws-gen-ai-kr/20_applications/02_qa_chatbot)
+- [Opensearch docs - Machine learning](https://opensearch.org/docs/latest/ml-commons-plugin/)

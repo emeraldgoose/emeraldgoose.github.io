@@ -708,8 +708,8 @@ var store = [{
         "teaser": null
       },{
         "title": "Reranking - Opensearch",
-        "excerpt":"Reranker 문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사시키는 기술로 인해 정보 손실이 발생합니다. 이로 인해 필요한 문서가 누락되는 경우가 발생할 수 있지만 가져오는 문서의 개수 k를 조정하여 해결할 수 있습니다. 하지만, 문서의 순위가 낮아지므로 LLM이 해당 문서를 참조하지 않을...","categories": ["data-engineer"],
+        "excerpt":"Reranker 문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사 기법으로 인해 정보 손실이 발생합니다. 이로 인해 필요한 문서가 누락될 가능성이 있으며, 이를 보완하기 위해 가져오는 문서의 개수 k를 조정할 수 있습니다. 그러나 문서의 순위가 낮아질 수 있으며, LLM이 해당 문서를...","categories": ["data-engineer"],
         "tags": ["data-engineering","Opensearch"],
-        "url": "/data-engineer/opensearch-ml/",
+        "url": "/data-engineer/reranking-opensearch/",
         "teaser": null
       }]
