@@ -1,0 +1,949 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>RAG: Hybrid search + Reranker - gooooooooooose</title>
+<meta name="title" content="RAG: Hybrid search + Reranker">
+<meta name="description" content="RAG RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<!-- open-graph tags -->
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="RAG: Hybrid search + Reranker">
+<meta property="og:url" content="http://localhost:4000/data-engineer/simple-rag/">
+
+
+  <meta property="og:description" content="RAG RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-02-20T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/data-engineer/simple-rag/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+<!-- Lightbox2 -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.js" integrity="sha512-oaWLach/xXzklmJDBjHkXngTCAkPch9YFqOSphnw590sy86CVEnAbcpw17QjkUGppGmVJojwqHmGO/7Xxx6HCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.min.js" integrity="sha512-U9dKDqsXAE11UA9kZ0XKFyZ2gQCj+3AwZdBMni7yXSvWqLFEj8C1s7wRmWl9iyij8d5zb4wm56j4z/JVEwS77g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+           
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#data-engineer" itemprop="item"><span itemprop="name">Data engineer</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">RAG: Hybrid search + Reranker</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Interested in ML/DL, Data Engineering.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+            <li><a href="https://gooooooooooose.tistory.com/" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Problem Solving OJ (KOR)</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="RAG: Hybrid search + Reranker">
+    <meta itemprop="description" content="RAGRAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.">
+    <meta itemprop="datePublished" content="2025-02-20T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">RAG: Hybrid search + Reranker
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2025-02-20T00:00:00+09:00">February 20, 2025</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="rag">RAG</h2>
+<p>RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.</p>
+
+<h2 id="retriever">Retriever</h2>
+<p>Retriever는 유저의 질문에 관련이 높은 문서를 가져오는 역할을 담당하는 구성요소입니다. 관련 문서를 가져오는 전략으로는 BM25, Bi-Encoder 등의 방식이 있습니다.</p>
+
+<h3 id="lexical-search-bm25">Lexical Search: BM25</h3>
+<p>BM25는 키워드 매칭을 통해 점수를 내는 방식을 말합니다. TF-IDF를 활용해 질의와 문서간의 유사도를 계산하여 빠르고 간단한 질문에 적합합니다. 하지만, 질의의 문맥을 이용하지 못해 관련된 문서가 검색되는 경우도 있습니다.</p>
+
+<h3 id="semantic-search-bi-encoder">Semantic Search: Bi-Encoder</h3>
+<p>Bi-Encoder는 질의와 문서간의 임베딩 벡터 유사도를 계산하여 점수를 내는 방식입니다. BERT와 같은 언어모델을 이용해 문맥적 의미가 담긴 임베딩 벡터를 생성하여 질의와 문서의 의미적인 유사성을 잘 찾아낼 수 있습니다. 미리 벡터로 변환하여 저장할 수 있어 검색 시 유사도만 계산하면 되므로 크게 느리지 않습니다. 하지만, 질의나 문서가 길어질수록 벡터로 표현할 때 정보가 손실될 수 있고 Query와 Candidates간의 관계성을 고려하지 않기 때문에 Cross-Encoder 대비 정확도가 떨어집니다.</p>
+
+<h3 id="hybrid-search-lexical-search--semantic-search">Hybrid Search: Lexical Search + Semantic Search</h3>
+<p>Hybrid Search는 유저 질의의 키워드를 중점으로 찾는 BM25와 유저 질의와 의미적으로 유사한 문서를 찾는 Bi-Encoder를 같이 사용하는 방법을 말합니다. Hybrid Search의 검색 결과는 Lexcial Search 혹은 Semantic Search를 단독으로 사용한 결과보다 정확한 문서를 검색할 수 있습니다. 검색 결과에 가중치를 부여하면 도메인 특성에 따라 최적화할 수 있습니다. 보통 자주 사용하는 계산방식으로는 CC(Convex Combination)과 RRF(Reciprocal Rank Fusion)이 있습니다.</p>
+
+<p><strong>Convex Combination</strong></p>
+<ul>
+  <li>$score(doc) = \alpha * score_{lex}(doc) + \beta * score_{sem}(doc)$</li>
+</ul>
+
+<p>CC는 alpha와 beta을 각각 스코어에 곱해 최종 스코어를 계산하는 방식입니다. 두 스코어 값을 합치기 위해 각 스코어마다 Normalization 과정이 필요합니다.</p>
+
+<p><strong>Reciprocal Rank Fusion</strong></p>
+<ul>
+  <li>$score(doc) = \frac{1}{k + rank_{lex}(doc)} + \frac{1}{k + rank_{sem}(doc)}$</li>
+</ul>
+
+<p>RRF는 가중치가 아닌 문서의 순위를 이용하는 방식입니다. 가중치를 이용하지 않기 때문에 Normalization 과정이 필요하지 않고 순위가 낮은 문서를 위해 조정하는 임의의 값입니다.</p>
+
+<h3 id="cross-encoder">Cross-Encoder</h3>
+<p>Cross-Encoder는 하나의 언어모델에 Query와 Candidate를 같이 넣어 유사도를 계산하는 방식입니다. Bi-Encoder 대비 예측 성능이 괜찮지만 Cross-Encoder를 Retreiver로 사용한다면 매 질의마다 모든 문서와의 유사도를 계산해야 하기 때문에 단독으로 사용하기 어렵습니다.</p>
+
+<h3 id="reranking-전략">Reranking 전략</h3>
+<p>Reranking 전략은 적절한 문서 후보군을 선별하고 Cross-Encoder로 순위를 재조정하는 전략을 말합니다. 이렇게 구성하면, Cross-Encoder만 사용했을 때보다 계산 비용이 줄고 정확도를 확보할 수 있는 방법입니다.</p>
+
+<figure>
+    <img src="https://framerusercontent.com/images/4atMCrE67i6XDQdSySevR8sVhM.png" />
+    <figcaption>https://dify.ai/blog/hybrid-search-rerank-rag-improvement</figcaption>
+</figure>
+
+<p>그렇다면 RAG 시스템에서 Reranking 전략이 왜 필요한지 생각해볼 수 있는데 LLM의 답변 정확도가 Context의 순서와 관계가 있기 때문입니다.
+<a href="https://arxiv.org/abs/2307.03172">Lost in the Middle: How Language Models Use Long Contexts</a> 논문에는 정답과 관련된 문서가 가운데 위치할 수록 답변 성능이 떨어지는 것을 확인할 수 있습니다. 따라서, 이러한 이유 때문에 RAG 시스템에서 Hybrid Search의 문서 순위를 재조정하는 Reranking 전략이 필요함을 알 수 있습니다.</p>
+
+<h2 id="rag-구현">RAG 구현</h2>
+<h3 id="pipeline">Pipeline</h3>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQTHCBiTNjXJSrDfn8ZtMHRJAXPh5Xy2ex78zUYezRLVn8s?width=1024" onclick="return false;" data-lightbox="gallery">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQTHCBiTNjXJSrDfn8ZtMHRJAXPh5Xy2ex78zUYezRLVn8s?width=1024" alt="01" style="max-width: 80%; height: auto;" />
+    </a>
+</figure>
+
+<p>RAG 파이프라인 순서는 다음과 같습니다.</p>
+<ol>
+  <li>유저가 질문을 보내면 <code class="language-plaintext highlighter-rouge">text-embedding-004</code> 모델로부터 임베딩 벡터를 받습니다.</li>
+  <li>유저 쿼리와 임베딩 벡터를 이용해 Vector Store인 <code class="language-plaintext highlighter-rouge">Opensearch</code>에 Hybrid Search로 후보 문서들을 가져옵니다.</li>
+  <li>후보 문서들을 Opensearch ML 기능을 이용해 Reranking합니다.</li>
+  <li>최종 Context와 유저 질의를 LLM(<code class="language-plaintext highlighter-rouge">Gemini-2.0-flash</code>)에 전달해 답변을 받아옵니다.</li>
+  <li>LLM의 답변을 유저에게 전달합니다.</li>
+</ol>
+
+<h3 id="opensearch">Opensearch</h3>
+<p>Vector Store로 Opensearch를 선택했는데 그 이유는 lexical search와 semantic search 모두 지원하기 때문입니다. Semantic search는 knn(K-Nearest Neighbor) 알고리즘을 지원하고 있어 빠른 검색 결과를 받아볼 수 있습니다. 또한, Opensearch 클러스터에 ML모델을 배포하고 REST API로 사용할 수 있는 기능이 있어 이를 이용해 Reranking 전략을 사용할 수 있었습니다.</p>
+
+<h3 id="gemini">Gemini</h3>
+<p>LLM은 Google의 Gemini 모델을 선택했습니다. 그 이유는 1M의 토큰 컨텍스트를 지원하고 있어 프롬프트에 충분히 많은 Context들을 넣을 수 있다는 장점이 있기 때문입니다.</p>
+
+<blockquote>
+  <p>Gemini 2.0 Flash의 무료 등급은 시간당 1백만개의 토큰 제한이 걸려있습니다. 제품 개선에 사용 내역이 사용되기는 하지만 토이 프로젝트로 사용하기에 충분하다고 생각합니다.</p>
+</blockquote>
+
+<h3 id="demo-app">Demo APP</h3>
+<p>많이 사용하는 프레임워크인 Streamlit을 사용해서 앞단을 구성했습니다.</p>
+<figure>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRhkcrRacG5QoIRDWhpuPswAUx8mqDtVT69w05eslUP6sI?width=2828&amp;height=1342" onclick="return false;" data-lightbox="gallery">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQRhkcrRacG5QoIRDWhpuPswAUx8mqDtVT69w05eslUP6sI?width=2828&amp;height=1342" alt="02" style="max-width: 100%; height: auto'" />
+    </a>
+    <figcaption>Frontend</figcaption>
+</figure>
+
+<p>사용자가 PDF파일을 업로드하면 파싱 후 Vector Store에 문서를 적재하고 아래 조건에 따라 유저 질의에 따라 문서를 가져올 수 있도록 구성했습니다.</p>
+
+<h3 id="pdf-parse">PDF Parse</h3>
+<p>PDF 문서 내에서 정보를 추출하는 라이브러리 중 하나인 Unstructured를 이용했습니다. 클라우드 서비스를 제공하고 있고 Langchain과 연동이 되어 있어 쉽게 사용가능했습니다. 하지만, PDF의 표를 추출하는 과정에서 문제가 발생했습니다.</p>
+
+<p><strong>Llamaindex</strong><br />
+PDF 문서를 Unstructured 라이브러리로 바로 파싱하는 경우, 테이블 형식이 제대도 파싱되지 않는 문제가 발생했습니다. 이를 해결하기 위해 중간 변환 과정이 필요했고 마크다운과 이미지 형식 두 가지를 고려했습니다. 이미지 변환 방식도 LLM이 이미지도 잘 해석해주기 때문에 가능한 방법이지만 그 만큼 비용이 들어가기 때문에 마크다운 변환을 선택하게 되었습니다. 마크다운 변환을 이용할 때는 <a href="https://www.llamaindex.ai/">Llamaindex</a>라는 상용 서비스를 이용했고 괜찮은 결과물을 반환해주었습니다.</p>
+
+<blockquote>
+  <p>Llamaindex의 Free Plan은 하루에 1000페이지 변환이 가능합니다. 이 정도면 토이 프로젝트로 사용할 때 충분하다고 생각됩니다.</p>
+</blockquote>
+
+<blockquote>
+  <p>Llamaindex 말고도 Upstage에서도 <a href="https://www.upstage.ai/blog/en/let-llms-read-your-documents-with-speed-and-accuracy">Document Parse</a> 서비스를 제공중에 있습니다.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">llama_cloud_services</span> <span class="kn">import</span> <span class="n">LlamaParse</span>
+
+<span class="n">llamaparse</span> <span class="o">=</span> <span class="n">LlamaParse</span><span class="p">(</span>
+        <span class="n">result_type</span><span class="o">=</span><span class="s">"markdown"</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'LLAMA_CLOUD_API_KEY'</span><span class="p">)</span>
+    <span class="p">).</span><span class="n">load_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Unstructured.io</strong><br />
+Llamaindex로 변화된 마크다운들로부터 정보를 추출해야 합니다. Langchain에서 제공하는 UnstructuredMarkdownLoader를 이용해 문서를 파싱하고 Vector Store에 저장할 준비를 합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain_community.document_loaders</span> <span class="kn">import</span> <span class="n">UnstructuredMarkdownLoader</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">UnstructuredMarkdownLoader</span><span class="p">(</span>
+        <span class="n">file_path</span><span class="o">=</span><span class="n">markdown_path</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s">"elements"</span><span class="p">,</span>
+        <span class="n">chunking_strategy</span><span class="o">=</span><span class="s">"by_title"</span><span class="p">,</span>
+        <span class="n">strategy</span><span class="o">=</span><span class="s">"hi_res"</span><span class="p">,</span>
+        <span class="n">max_characters</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+        <span class="n">new_after_n_chars</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+        <span class="n">combine_text_under_n_chars</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">docs</span> <span class="o">=</span> <span class="n">loader</span><span class="p">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div></div>
+<p>여기서 추출된 테이블은 벡터 스토어에서 검색할 때 좋지 못하므로 LLM을 이용해 테이블 내용을 요약하도록 하고 요약된 설명을 검색에 활용하도록 합니다.</p>
+
+<p><strong>OpenSearchVectorSearch</strong><br />
+Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현체를 제공합니다. 이 클래스를 이용하면 docs를 쉽게 Opensearch에 적재할 수 있습니다. OpenSearchVectorSearch의 embedding_function에는 embedding 모델을 넣어 Semantic search를 위해 문서의 임베딩 벡터를 추가합니다.</p>
+
+<p>단, Opensearch에 문서들을 적재하기 전에 반드시 인덱스를 생성해야 합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">langchain_google_genai</span> <span class="kn">import</span> <span class="n">GoogleGenerativeAIEmbeddings</span>
+<span class="kn">from</span> <span class="nn">langchain_community.vectorstores</span> <span class="kn">import</span> <span class="n">OpenSearchVectorSearch</span>
+
+<span class="n">llm_emb</span> <span class="o">=</span> <span class="n">GoogleGenerativeAIEmbeddings</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s">'models/text-embedding-004'</span><span class="p">,</span>
+        <span class="n">google_api_key</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'GOOGLE_API_KEY'</span><span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="n">vector_db</span> <span class="o">=</span> <span class="n">OpenSearchVectorSearch</span><span class="p">(</span>
+        <span class="n">index_name</span><span class="o">=</span><span class="n">index_name</span><span class="p">,</span>
+        <span class="n">opensearch_url</span><span class="o">=</span><span class="n">opensearch_url</span><span class="p">,</span>
+        <span class="n">embedding_function</span><span class="o">=</span><span class="n">llm_emb</span><span class="p">,</span>
+        <span class="n">http_auth</span><span class="o">=</span><span class="p">(</span><span class="n">opensearch_id</span><span class="p">,</span> <span class="n">opensearch_password</span><span class="p">),</span>
+        <span class="n">use_ssl</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">verify_certs</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">is_aoss</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">engine</span><span class="o">=</span><span class="s">"faiss"</span><span class="p">,</span>
+        <span class="n">space_type</span><span class="o">=</span><span class="s">"l2"</span><span class="p">,</span>
+        <span class="n">bulk_size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">ssl_show_warn</span><span class="o">=</span><span class="bp">False</span>
+    <span class="p">)</span>
+
+<span class="n">vector_db</span><span class="p">.</span><span class="n">add_documents</span><span class="p">(</span>
+        <span class="n">documents</span><span class="o">=</span><span class="n">docs</span><span class="p">,</span>
+        <span class="n">vector_field</span><span class="o">=</span><span class="s">'vector_field'</span><span class="p">,</span>
+        <span class="n">bulk_size</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="retrievals">Retrievals</h3>
+<p>Opensearch를 이용할 수 있는 Python 라이브러리인 opensearchpy를 사용할 수 있습니다. 라이브러리를 이용해 lexical search와 semantic search를 구현하고 이를 이용해 hybrid search를 구현합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">opensearchpy</span> <span class="kn">import</span> <span class="n">OpenSearch</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenSearch</span><span class="p">(</span>
+        <span class="n">hosts</span><span class="p">,</span>
+        <span class="p">...</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">index_name</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_lexical_search</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"index_name"</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"query"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"match"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">"text"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"query"</span><span class="p">:</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'query'</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">"size"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"k"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">get_document</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">index_name</span><span class="o">=</span><span class="n">index_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
+
+<span class="k">def</span> <span class="nf">get_semantic_search</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"index_name"</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"query"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"knn"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">"vector_field"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"vector"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"vector"</span><span class="p">),</span>
+                    <span class="s">"k"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"k"</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">get_document</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">index_name</span><span class="o">=</span><span class="n">index_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+<p>각 search 함수의 response에는 문서와 스코어가 튜플 형태로 저장되어 있습니다. 스코어를 normalization하는 함수와 CC 혹은 RRF를 적용하는 함수를 작성하여 최종 문서를 반환하도록 합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">normalization</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'hits'</span><span class="p">]</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'max_score'</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">hits</span><span class="p">:</span>
+        <span class="n">hit</span><span class="p">[</span><span class="s">'_score'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hit</span><span class="p">[</span><span class="s">'_score'</span><span class="p">])</span> <span class="o">/</span> <span class="n">max_score</span>
+    <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'max_score'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">'_score'</span><span class="p">]</span> <span class="c1"># 1.0
+</span>    <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'hits'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits</span>
+    <span class="k">return</span> <span class="n">response</span>
+
+<span class="k">def</span> <span class="nf">get_ensemble_results</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">]],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+    <span class="c1"># Weighted RRF
+</span>    <span class="c1"># 동점자 처리에 가중치를 주는 것으로 해결할 수 있습니다
+</span>    <span class="n">documents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># unique docs
+</span>    <span class="n">content_to_document</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">doc_list</span> <span class="ow">in</span> <span class="n">doc_lists</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">doc_list</span><span class="p">:</span>
+            <span class="n">documents</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc</span><span class="p">.</span><span class="n">page_content</span><span class="p">)</span>
+            <span class="n">content_to_document</span><span class="p">[</span><span class="n">content</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="n">content</span><span class="p">:</span> <span class="p">.</span><span class="mi">0</span> <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">doc_list</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">,</span><span class="n">weights</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc_list</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">doc</span><span class="p">.</span><span class="n">page_content</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">content</span><span class="p">]</span> <span class="o">+=</span> <span class="n">score</span>
+
+    <span class="n">sorted_results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">sorted_docs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">content_to_document</span><span class="p">[</span><span class="n">content</span><span class="p">],</span> <span class="n">score</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="ow">in</span> <span class="n">sorted_results</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">sorted_docs</span>
+</code></pre></div></div>
+
+<p>Rerank를 수행할 때는 opensearchpy의 REST API를 따로 호출하도록 구현했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rerank_documents</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">retrievals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Document</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]):</span>
+    <span class="n">model_id</span> <span class="o">=</span> <span class="s">""</span> <span class="c1"># Opensearch Rerank Model id
+</span>    <span class="n">text_docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="p">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">retrievals</span><span class="p">]</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"query_text"</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span>
+        <span class="s">"text_docs"</span><span class="p">:</span> <span class="n">text_docs</span>
+    <span class="p">}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">transport</span><span class="p">.</span><span class="n">perform_request</span><span class="p">(</span>
+        <span class="n">method</span><span class="o">=</span><span class="s">"POST"</span><span class="p">,</span>
+        <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s">"/_plugins/_ml/models/</span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s">/_predict"</span><span class="p">,</span>
+        <span class="n">body</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s">'inference_results'</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+
+<h3 id="question-answering">Question Answering</h3>
+<p>QA 단계에서는 Retriever가 가져온 문서와 유저 질문을 묶어 프롬프트를 구성하여 답변을 받아오면 됩니다. ChatGPT처럼 한글자씩 나타나도록 하고 싶다면 아래 코드처럼 stream을 사용하여 generator 함수로 구성하면 됩니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain.schema</span> <span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span> <span class="nn">langchain_core.prompts</span> <span class="kn">import</span> <span class="n">HumanMessagePromptTemplate</span><span class="p">,</span> <span class="n">SystemMessagePromptTemplate</span><span class="p">,</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span> <span class="nn">langchain_google_genai</span> <span class="kn">import</span> <span class="n">GoogleGenerativeAI</span>
+
+<span class="k">def</span> <span class="nf">get_answer</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">instruction</span> <span class="o">=</span> <span class="s">''</span> <span class="c1"># system prompt
+</span>    <span class="n">human_prompt</span> <span class="o">=</span> <span class="s">''</span> <span class="c1"># user prompt
+</span>
+    <span class="n">system_template</span> <span class="o">=</span> <span class="n">SystemMessagePromptTemplate</span><span class="p">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">instruction</span><span class="p">)</span>
+    <span class="n">human_template</span> <span class="o">=</span> <span class="n">HumanMessagePromptTemplate</span><span class="p">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">human_prompt</span><span class="p">)</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="p">.</span><span class="n">from_messages</span><span class="p">([</span><span class="n">system_template</span><span class="p">,</span> <span class="n">human_template</span><span class="p">])</span>
+
+    <span class="n">invoke_args</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># user prompt의 f-string 요소가 있다면 해당 위치에 값을 넣을 수 있습니다
+</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="p">.</span><span class="n">stream</span><span class="p">(</span><span class="n">invoke_args</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">chunk</span>
+</code></pre></div></div>
+
+<h3 id="rag-demo-app">RAG Demo app</h3>
+<p>아래 이미지처럼 검색 시 어떤 문서를 참조했는지 확장탭을 넣어 확인할 수 있도록 구현했습니다.</p>
+<figure>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSh7E_2NEAHTrG_aoS179uxAcSg6a6iNY6n12wVtah-ds0?width=2836&amp;height=1474" data-lightbox="gallery">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQSh7E_2NEAHTrG_aoS179uxAcSg6a6iNY6n12wVtah-ds0?width=2836&amp;height=1474" alt="03" style="max-width: 100%; height: auto;" />
+    </a>
+</figure>
+
+<p>아래 이미지처럼 정보를 찾을 수 없는 경우에는 관련된 내용이 없다는 답변을 받게 됩니다. 주어진 컨텍스트에는 미국채 10년만 있는데 쿼리에는 미국채 1년을 물어보고 있어 찾을 수 없다는 원했던 답변이 제대로 출력되었습니다.</p>
+<figure style="text-align:center">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQhGcqbU2XHRrBUuD6G9GkTASpNdBZtf51dAeIeKLjCZIo?width=793&amp;height=1144" data-lightbox="gallery">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQQhGcqbU2XHRrBUuD6G9GkTASpNdBZtf51dAeIeKLjCZIo?width=793&amp;height=1144" alt="04" style="max-width: 80%; height: auto;" />
+    </a>
+</figure>
+
+<h3 id="problem">Problem</h3>
+<p>예상하지 못했던 문제입니다. PDF로부터 정보를 추출할 때, 표의 형식이 마크다운으로 표현하지 못하는 경우 문제가 발생했습니다. 예를 들어, 다음 이미지와 같이 헤더부분이 나뉘어 있는 경우 마크다운으로 제대로 표현하지 못했습니다.</p>
+
+<figure style="text-align:center">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQQjsZ_jn4oR6otzm40Nb-GATalvb77XwrTsmsQhhWj34Y?width=1024" data-lightbox="gallery">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQQQjsZ_jn4oR6otzm40Nb-GATalvb77XwrTsmsQhhWj34Y?width=1024" alt="05" style="max-width: 80%; height: auto;" />
+    </a>
+</figure>
+
+<p>이런 테이블 형식이라면 이미지 변환 방식이 필요하겠다는 생각을 했습니다. 여기에는 적용하지 않고 마크다운으로 변환된 테이블을 사용했지만 프로덕션 환경에서 사용할 때는 이미지로 변환하는 것도 고려할 필요가 있다고 생각됩니다.</p>
+
+<h2 id="code">Code</h2>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/simple-rag">emeraldgoose/simple-rag</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://aws.amazon.com/ko/blogs/tech/korean-reranker-rag/">한국어 Reranker를 활용한 검색 증강 생성(RAG) 성능 올리기</a></li>
+  <li><a href="https://www.elastic.co/search-labs/blog/hybrid-search-elasticsearch">hyrbrid-search-elasticsearch</a></li>
+  <li><a href="https://medium.com/@nuatmochoi/%ED%95%98%EC%9D%B4%EB%B8%8C%EB%A6%AC%EB%93%9C-%EA%B2%80%EC%83%89-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-feat-ensembleretriever-knowledge-bases-for-amazon-bedrock-d6ef1a0daaf1">하이브리드 검색 구현하기 (feat. EnsembleRetriever, Knowledge Bases for Amazon Bedrock)</a></li>
+  <li><a href="https://heygeronimo.tistory.com/101">[논문이해] Lost in the Middle: How Language Models Use Long Contexts</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#data-engineering" class="page__taxonomy-item p-category" rel="tag">data-engineering</a><span class="sep">, </span>
+    
+      <a href="/tags/#opensearch" class="page__taxonomy-item p-category" rel="tag">Opensearch</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#data-engineer" class="page__taxonomy-item p-category" rel="tag">data-engineer</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2025-02-20T00:00:00+09:00">February 20, 2025</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/data-engineer/reranking-opensearch/" class="pagination--pager" title="Reranking - Opensearch
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/reranking-opensearch/" rel="permalink">Reranking - Opensearch
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 17 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Reranker
+문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사 기법으로 인해 정보 손실이 발생합니다. 
+이로 인해 필요한 문서가 누락될 가능성이 있으며, 이를 ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/github/code-review-action/" rel="permalink">Github Action 코드리뷰 봇 만들기(Gemini-1.5-flash)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> October 16 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Github Action 설정
+Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LL...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/kafka-pipeline/" rel="permalink">ksqlDB: 실시간 데이터 처리 후 시각화까지
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> September 03 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">ksqlDB
+ksqlDB는 Kafka Streams에 기반하는 SQL 엔진입니다. ksqlDB는 Kafka topic에 이벤트 스트리밍 애플리케이션을 구축할 수 있는 쿼리 계층을 제공합니다. Kafka Streams와 달리 ksqlDB는 SQL로 새로운 스트림을 생성하거나 Mate...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/pytorch/transformer-scratch-implementation-2/" rel="permalink">python으로 Transformer 바닥부터 구현하기[2] (Transformer)
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> August 01 2024</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Objective
+앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2025 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

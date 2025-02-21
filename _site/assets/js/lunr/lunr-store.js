@@ -712,4 +712,10 @@ var store = [{
         "tags": ["data-engineering","Opensearch"],
         "url": "/data-engineer/reranking-opensearch/",
         "teaser": null
+      },{
+        "title": "RAG: Hybrid search + Reranker",
+        "excerpt":"RAG RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다. Retriever Retriever는 유저의 질문에 관련이 높은 문서를 가져오는 역할을 담당하는 구성요소입니다. 관련 문서를 가져오는 전략으로는 BM25,...","categories": ["data-engineer"],
+        "tags": ["data-engineering","Opensearch"],
+        "url": "/data-engineer/simple-rag/",
+        "teaser": null
       }]
