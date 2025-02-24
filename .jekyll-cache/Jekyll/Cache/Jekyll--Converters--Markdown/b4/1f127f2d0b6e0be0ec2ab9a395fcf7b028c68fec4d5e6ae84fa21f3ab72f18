@@ -1,0 +1,107 @@
+I"1D<h2 id="related">Related</h2>
+<blockquote>
+  <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
+</blockquote>
+
+<h2 id="rnn">RNN</h2>
+<p>RNN은 Recurrent Neural Network의 약자로 계산을 담당하는 Cell이 순환되는 구조를 말합니다. 이전 timestep의 hidden state vector가 현재 timestep의 계산에 활용되는 특징을 가지고 있습니다.</p>
+
+<p>이번에 구현한 RNN 레이어를 학습하기 위해 계속 사용하던 MNIST를 사용할 생각입니다. MNIST를 (28, 28)의 크기를 가지고 있기 때문에 길이가 28이고 크기 28인 벡터의 시퀀스 데이터로 생각해볼 수 있습니다.</p>
+
+<h2 id="forward">Forward</h2>
+<p>RNN 레이어의 수식과 파라미터들의 size들은 pytorch RNN 문서에 있는 수식으로 사용했습니다.</p>
+
+<p>$h_t = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+
+<p>그리고 pytorch의 RNN 레이어에는 <code class="language-plaintext highlighter-rouge">num_layers</code>라는 인자를 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">num_layers</code>는 하나의 순회를 담당하는 레이어를 얼마나 쌓을지 결정하는 인자이고 기본값은 1입니다. 만약, <code class="language-plaintext highlighter-rouge">num_layers = 2</code>으로 준다면 다음과 같은 그림의 RNN을 얻을 수 있습니다.</p>
+
+<figure style="text-align:central;">
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213274&amp;authkey=%21AB8yPnYJBf1XKsM&amp;width=1446&amp;height=802" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213274&amp;authkey=%21AB8yPnYJBf1XKsM&amp;width=1446&amp;height=802" alt="01" style="max-width: 50%; height: auto;" />
+  </a>
+</figure>
+
+<p>X를 입력으로 받는 레이어의 출력값이 다음 레이어의 입력으로 들어오고 hidden state의 초기값인 h0는 각 레이어마다 별도의 벡터로 주어집니다.</p>
+
+<p>RNN의 출력은 <code class="language-plaintext highlighter-rouge">batch_first=False</code>인 경우 (input_length, batch_size, hidden_size) 크기인 output과 (num_layers, batch_size, hidden_size) 크기인 hidden state 벡터를 얻을 수 있습니다. <code class="language-plaintext highlighter-rouge">batch_first=True</code>인 경우 input_length와 batch_size의 위치가 바뀝니다. 그리고 입력과 출력의 shape만 바뀔 뿐 내부 파라미터의 shape가 변하지는 않습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/76f18d1eae4dba2b35ec8a5eade3c650.js"></script>
+
+<p>pytorch의 RNN 레이어의 또 다른 특징은 <code class="language-plaintext highlighter-rouge">nonlinearity</code>를 선택할 수 있습니다. 비선형 함수의 기본값으로 <code class="language-plaintext highlighter-rouge">tanh</code>을 사용하고 있는데 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있어서 저도 <code class="language-plaintext highlighter-rouge">relu</code>를 사용할 수 있도록 구현하고 테스트해봤습니다.</p>
+
+<h2 id="backward">Backward</h2>
+<p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
+
+<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+
+<p>foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
+
+<p>$s_t = x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh}$</p>
+
+<p>$h_t = \text{tanh}(s_t)$</p>
+
+<p>cost function $J$를 $W_{ih}$, $W_{hh}$, ${x_t}$에 대해 편미분하여 gradient를 구해야 합니다. bias의 경우 편미분할 경우 1이 되므로 따로 유도하지 않겠습니다.</p>
+
+<p>${\partial J \over \partial x_t} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial x_t}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{ih}}$</p>
+
+<p>${\partial J \over \partial W_{hh}} = {\partial J \over \partial h_t} \cdot {\partial h_t \over \partial s_t} \cdot {\partial s_t \over \partial W_{hh}}$</p>
+
+<p>여기서 <code class="language-plaintext highlighter-rouge">tanh</code> 함수의 미분은 다음과 같습니다.</p>
+
+<p>$\partial \text{tanh}(x) = 1 - \text{tanh}(x)^2$</p>
+
+<p>따라서, ${\partial h_t \over \partial s_t} = 1 - \text{tanh}(s_t)^2 = 1 - h_t^2$</p>
+
+<p>역전파 과정에서 출력층에서 들어오는 gradient ${\partial J \over \partial h_t}$를 $dout$라고 생각하게 되면 다음과 같은 수식으로 구할 수 있습니다.</p>
+
+<p>${\partial J \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
+
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = [dout \cdot (1 - h_t^2)]^T \cdot x_t$</p>
+
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = [dout \cdot (1 - h_t^2)]^T \cdot h_{t-1}$</p>
+
+<p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
+
+<p><img src="https://lh3.googleusercontent.com/fife/ALs6j_GlG-hlEvRVrpuTxh9vgQGZYKGAVLhe6rHgLeympu4Z8aFdRfWTGL67uUztMWLhsacXfsELBTqqCI0ttYKDKVmVrBl_8lcFdE_hIQQy27prDMERgDDeg5tZ0zO6A5fLWvfE9TUPhNHoZqAtRYh32TgU7SSvr0-DPCbXjtW2z6j7ynr6lelRaxkMNI8Box3IxItN_dK2XCrngUQJhZ-ZYD6TwtYbb-1TgxpNcH_mqbHUeDzCSkNdZO0KlzgG5YQQJvFXlHWVkBUjjOD4TLeXe99EGEvsdXwpuGspNY-Cbk9u38jl8enLICWVHDpeARfesfLKyDAZAoc1m-bKSZeELYimSkU7EFHtfp7L1NEyAsQHwRCzldXnt6QV2fJ-p8bYQpKH7ehn-xfLc-LXtNOjngppJJK_5r4MfDZfkrFCnFSkrBaQ9_xH6hvHs7xlQa7KI_ZniE9KfkAM1MhGfjHG85EmVYpIe-iRlwA1PYrwVKw0p8Pnrehxq7NMICiGEeqtaB4rQiQmESeDEkFq-h5SzrqGPg-LCiSENSSW0cjLXe-tIMteS3E5c8NPPVbTorxnZoJKYGV8NWaDpfCsf8K--Q5Y9Qr3CY0sEWD6Di7NyGQDA6YGzHM0C95Pq_rYPzuWdrCrW9gWgcCha3Vi7Rw4SO3YtdaKrom2TcbmZfOkMzsX21Y0_2vnRpNMH9JecR4X9-x9peCu0Z94L6nDiQWNiQX_2nFpCZX2YbgUNwv8n_YnecmMKkob8ULd0KJBtiwg4OekL-8QqD_xyqkPxHcT5U0QBh6jqNjqX5NKGuTgTC6lDlvj5xL0YW9OM8wOC_1DJtgY97UUhWh6SPnJSsniDS_BAiBAKAUjiR6y7MOVJCmtfgZHE6mgKbmDPu2Zw4Hj9byKMRjEVEplDeMNTOV68bQUYTIyeX8EYo1QurPc1Qz5kv5Uo-1axP2aUDYdEGjr_d0GijFXlBbHo_GxMMXkNHRTNL293vMgVyX6Kr9NJPuIO4P44iRmQ6S5lwzAy8MKSc8xfmlhjR8A4fimo5jMk2M0yNh8ewGuJxP5RtIwJsMfcR4O1upkRLPpIyrFGq6m6U3p33r9tTPPQgH0IKd2vdOm3qsCTbx0zOTm5wuRvvzEtQgTyS5l-RAeBPyUgarPgejwisMYdQgrR-DbQAMlljxQnd5jdIt2sGyKMXatTsjbOmXWl4N6FB3PpbQ8C1cFSs7bwINNpnwS8clnE7PlhLYgwvcVI2JMZF2-VVgAUBwsHmcjHdDPGtXWLgk0v-VeOP2Z3VUrm9ja09b9yYx94mKu98KLthZOTWoJLiuXH_mhSM4fhVBSVX41Y4YsJ0wP72Dz0pcCpijAL-P_uxbvmA1zDJ1aYyjyB7tebn6CQXdpXsPdFd3Aqfp5tS3iPUGBC23pjNGpMzp1O8SMaiGusuyq5lkXdpr3oeoDwXugYn9AaC9EvW83qOCmsFijiZU5KdX0GjNjuPBFBNlQBBQ_HRp-c7_ZTFeZFpVa-CFPVyeuVh0IM7k2PbFMiUMCce1AE5Rv-lVmzt5cstmlpRx3e-4z_sAPBOj82E2BckUOdQBZrp6WNGtox-qL6NJnRBfRaZoPc_gP68w2vmbKTfDAM4loRF0PGxCTgY0Q0koyeEzywMorzQ" alt="" width="500" /></p>
+
+<p>&lt;&gt;</p>
+
+<p>따라서 현제 셀에 대해 다음과 같은 코드로 구현할 수 있습니다. 가장 마지막 셀에 들어가는 <code class="language-plaintext highlighter-rouge">dhnext</code>는 0으로 초기화하여 넣어주면 됩니다. <code class="language-plaintext highlighter-rouge">h_next</code>는 t시점의 셀에서 계산된 hidden state 벡터이고 <code class="language-plaintext highlighter-rouge">h_prev</code>는 t시점의 셀로 들어온 hidden state 벡터를 말합니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/7d17b6e294d5f746a91b542b093a6b68.js"></script>
+
+<h2 id="result">Result</h2>
+<p>이전과 마찬가지로 MNIST 5000장을 훈련데이터, 1000장을 테스트데이터로 사용하여 <code class="language-plaintext highlighter-rouge">tanh</code>, <code class="language-plaintext highlighter-rouge">relu</code>를 사용하여 결과를 확인해봤습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/1a03bf1d8296cf80e74e55d46a324d68.js"></script>
+
+<p>사용된 모델은 RNN과 Linear 레이어를 사용하고 RNN의 마지막 출력 벡터를 Linear에 통과시키는 방법으로 사용했습니다.</p>
+
+<p>먼저, <code class="language-plaintext highlighter-rouge">tanh</code>을 사용한 경우 loss와 Acc의 결과입니다.<br />
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_Fm1V9e1FVYvhdgPXP1ob9GlKi_I8LW7yo4eslcvaIZO7nGWtirLG2ap6s-ebrqHz3JlafDpE2YX9GiJAIXt_U3Ipytc34DWL_NW7e6_r3pdpW-dl7dx9LazRd7IDMfe6zQetiuUPApp0Dqw92Z9jQ-6mpJ-GkeE1zs7fW39sw7H1NmJQNxSRy2OsM6bxkE1BB3_jXyoM_9sd-VUiQ3-hpAvSmTyD7IQQrSCcJoDBendUvP5srV2CwDYzZHDXp6xCNA19K8RMVZDdi5LtG3WShrTv4YvfnLSuT7lI7_5Rza0snMWt1JC1DPtSBshNdS7xZFhxIcCsRc-Md78ehqWahIvqEMMFzyXhTmcBiAiWjrGPMjM6-i_Ei9fyZwZ9W32QMTq2u4xPisLC6xQM2Jd17burgWptki7nOGXNRh7bGzMNb7L_Jo1UBEFaMrF2El-fAYDOCrjX_CgIjifoxvXxNVupo3LgRPirrmPbA3nS6GyL98huIMA07DM6ewWlRM3Z9NCs91kpyU-nemZ2sn3wwT5ECxSOyspUHjTRmtsfSKR91WyLBl1RduDjYMT8dq3K9nPyIcrpYWqW9quKHa8hLSTNCveUk7r38U-XOHT3MoxSUr81P5-l7D4L-YmjbAiWRtF6SR5qzBI2upvHJKvlyPNjBVatCo8G7gJypRDRgi1ObSG1x6JTCjlccpM_tJmk1K4-oMTaS9ZiAI4xwHPAp_UaH5TDY8DZ_xOVI8HbgIVv6PKhf-36jMXWHE0oEKC7k672Bt26_DztfX41B4HEI8GDDRQSZsfkjwuDQZlgRCoNlQUz5oTmjCQCUHH_P2O6qcqb5uQYY8NQHMjRVTs1eIpCo8byVNH3hswpB7-svura3drPfF2nvf-sTxQi2GGVtGMlj2xtXAqPUMWqcN_DLN4dvZsle9kIEvlrG0Ra7bykTEurulODj7c8ywxUdX2RaYRIqbbl19q9Kbyp9xM_jLqCiNEz_MyFU3atnX1ubgpVMjYzrmcFj8NQiLFxA5BMNQMuogWcmob1GPM9082XwjLfudtvxtxkmaMQyMUzVsGCB_1_D7tIoEYipZwS0zBtmPhw3N_mmQYFtqREr09olvIkYLyc4FYZdpaaOw-mRtCIKIAi3y9z4aWq6Va7KS019Ug3TuuvdBh5gEcgs9YSQPwryvX40c64xZcs0XE1UnCXKBU8tOyccQnOFNevDd2ljYUDdsUkzyff52L_PbMvXKlvDbLXQm0JomNqmA9ddH1oGhcfryVPIbyRqbyg7mqGY2QXdrpB-XZteQ-D0p_0t2RICRDePoRC5p2a0JZdLZCbED9HGo_zVr95sx1JU8esQw96CWGr-Al8Uw43JBUzDQ0uuQhxV171GoarMJF3AVKVDXl7Z1YMZBbhtQIUMedt679BfzkOU-ny4Up10d9dM7O0JXTOY-Ekq6PUa_ZLt_CaqioNIyr7t7NUbdG-mfOYVQVCp_gtdWBxDNIW0-YXaqJgK1lZvxDDhgt9fSXbqPa3OEj-wwweT7MRblLDW2Jy6fsfcvfX28OXVyVvhszF8y_BOiXxzyIXxjntOQWv0g4COgQGmFSH6Ac8KlhilJg7oTkLHQHHcjiycinoPLajwrbVf9_h_t0lStrBpBRiit13xnYQ" alt="" width="400" />
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_F8X4xSsWAKA3zVY6LYTLTex9oy54zNzwnkINxgAoPOMvZEn-O8y1GVOIfC3nPdmmMIT7s2EfYk9xPKJ6U7fJhXd4qb9ijI_7lkH_P-5Ri5vEo7STr2n9rQ9KG7-TQ5Iw9_hNxxdjDJB8TNq4OVLZ_HgSLW4ibWGW2L6Ve0i7QlzHQzsSn4yLkCF4LgIRSIbBFLU77d-2DVZaru29EE8WqKawUdL3A_VT4E7GpLQkdgk2eAWuOEKMTk9mppAEbWENNXlCDSF2pw7yfb0__kU5_D7kR__GguwSDfQVRUnFPq_ToY8O6YGmXn14R8_SnOhb2Rj016V5iu1TMSYHLtKlDUugaJgqpp627BLkGRs7N299wiXVlIuq_2QdKeSM7oVcKskLCxwzk5to-43PXYpI8z5fMF8mES26-lcXfXosUV2uGOETpSw9N3LqMyGzZwl3Y_xwwGPpmD3SyyWdgMMilQolexKPo5PnFtwU_3E-aAfQ2D5kV-yDOQ4lP08CHA0OixGTWGX-fQJOH_yXGYwpMOEyP-uiCmLiAe4N9wut6r8lkJTndVzEwcl6SQSyyQAN_36czDwBqK3rtQW2TzSkyNyx60glfh1NoOM5CjFZ5mRuFecelZK-n2Jwsg8qxoFvU7lOHLWxMO-BlSWqC20rIz55KSQQnk3Lf7qqhQaGgiv2gIw1heIlkbgfJ9Q_g0gwuX9k5BK2IoATKw8_2PtE0mQkX-jVHW4Tz39M6JYuPWOuLD-YEfG1HnedtVX0uxKzMsbQNqsRlnNAOlOOCpw-IE2n6soT9wK4CcqnzIWLef4I10A0nYIDr9vzNuu7_IcpoWLzEyZw4Eqn7ZYaK9b8BHIzm6JlHrj099i6edWcXqybz_iOQVtAhCi6j6b474s3mij9s9mQmdFd7y0P9Uc4ELUUWsrBi8E1MjcF6TqzzRdZf3mtgE9qfIcsjvWTVD6uVvXHzj09ZnTxT2kVzXKFcz0HxKz78GPaEccVEjV-pSUQsr_cMZD9AhrKevpiHzaa73RQawUBwfYuWrr_Ey5808AF785ZI2TQiBxeSjkIoQ94h0a6zCX9KPzlJTnO4xu9sGxfdChriGCRCUn9HK7AR1vJPXejFjgizagfFG1xUFJy8EYSTPiUsUKMuYNJs9vUR2mx9Ihb-21waMeqKgvPTYFZSSZZFmBYA61AjkGmCeWefF4F16iqGt6yW-U9LIdX1XEhY_eKtfkzR9ZvHGrNP5odxp0fP-sDwg0hYybOJwSwjlmypSBuwtF2arSVF3qZ-m4rxbPnErvNFUbf_jnuEOFfZKMX0ypypA79bpWuW6CYaLObNNvq6749ZSDG5OaEJLqHvfnr3RkC9nU6TwpPEwxwCNzN9TDxDIjNYKm3ZVdrtVe-eoy0c5bqR0ybKatWkPgtLCNxlXTrsddeWyKkbB84RZQpQJs7vrTHXFStVwUoMWC1JgScgBRQ1P6iyo7AYwN2oklj7Xo4y3kA-MH6T1mmv4SJ3OVrViqlpuOTDECp3g3B9XKRTDB5okrlNVGhanwEzai8rgY76_VBvj9XQ7n1hnkBNUzyVac64IkxsYPMDXVo_ZLyAN0T9ZyUbN3qk8spTlGqFTSGCwPu8fFRqTMdPCxNqonFj62FTXD4mZm2JJ" alt="" width="400" /></p>
+
+<p>다음, <code class="language-plaintext highlighter-rouge">relu</code>를 사용한 경우 loss와 Acc의 결과입니다.<br />
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_FFKm-A_famrJ68Xi1Bun0iVv5x9VXaM8D_dceBPJFneJRhzAPFXyYCU5ZsdmJvsXLLOHihnecOAAT5zzGqdJix4sef5BFr1mjW9VLdNDaRYhoGIOlq9gpoELPYuoAKknjL-PDqts2d3Y1wNpWBikSDk_eRXaYQCFGn6SxQupAWIDXtmtd3-s2rTj664Dnwn4ZtNJwh-a9C4XM1m-_bEHC2Wg-8e4gC-ZoyVINsNlUyd8X0OLxAuGIk0Y56FRL8vkCLDPgWMgqWUgcGlISejk1vxOkg1iJ5KTCCLWxdm0E1l1DxNbhRYjPAVNa_Xoie0vdPR7JwD9CmmGEV0hhRFtJOSxUfHQK2j44LwHPebrayvGK_li8xMlVDut8DN7ujjuOXy895WgIAJZZZ_2uYi31XtdiiIg1JmB89v6ZZJX0N4zz42-PqzEsXRUHUnCoz9kk8RDf7RU61vynx_R2-VlRANBfMimq5KLbZECHvkoYCpyIvn1ADDWJ3_3GwIbbfrB6c2BkGJ-ALxCKB6R3oGZnWWuT7AhghJYJVBlrczFZPZZNgmixgxOIjzWtknV20pJnKYcZLQKMRcCbrxuDtarTFREe755nKbMkGkOboSY-XHOh3Zd72qweK1-RDxUzVLxCxjmLkA3Jiv2Zal6cgRbb0wJu-BXtoWPpKx_5hyj6lXmQ5xXratShu12WJQixe7htOVWD6K-YOeuYihKPvuRUJP6HMLjHDpw-BPOAnyvqDg0PwS_JUjlAjK4cQBN4HTWRw_ud0bEiIl009Ls6HZcxeGJ_4Wvn4iQPppcVY1HVdAR7I4j5sXkuBAbpb7KeJKQoI6tvYo5qYIpmeoZJTEddtqgsBCpAxw3fC97-cAe2Iwh209UfbfIGANB-AbuQEEw5wPmAWROR7reiyiUESzP2vd1ndU_O8k0Oj0GaQ6Trrd2xTENsOr2tCeMCZBgRtEOonkJjPcLPkElqQFP450HvR8aCd393hx56ruaURoYkcWeMN7YXLxgW78KG8iAYAJUhqD15EKOMfj83nbWLrCq0yUQIrNFxV3iQxwYNFJro5rxpyJVcl9Ht5RhGJpri05JNQuLP3OV7JzDuXO6qxMItAUGr0tKXoBV9uDkuVkm6fiEwnTdrmcfpmjmyale8XoTT5yChWW6eTLzAnlCwlSm-kd6J2bo7OOQ5noXcIISWsSQTydTNxSsYoM-7FyTKf8eDGusTj0yvYucAwxg4RrvesQF1G5LoUgSqOdzPkCECw4vOsPQdLcuJdEgUBrrNPMmYcKxP4lzwx8Ce3DxQrYu-XUa1gD5fPdfAU0JYK5YazHjA1m_ueeypesZqzOluhBVV59ZCqUqtkA5llDbV_A7cAKM4i1Ybp6R-1PC1bPWCgpJzefctldimKYorxZqsj0jQ1Rl5qo34p6XrBXCjeRVddkr4DVjZ0QYJWWskdnsBQwR8OTpHOQMKXXdE6K5otBqVL_LLagaU7lsQp8fx5W0R5hDDf-suIstK1rye1uwg4baWfciMDGEB9PihVh30-bZ_b4yRTaX4WKltT3Lebym-IIayZ3QHkaXdtkqzzgBb0dtCcVUtzDpZ1bXbKrbrTrQiS7-ycTBnthw4PTjhzEw0e9i0CKq_ohD8VBGTFWH7q-bNW" alt="" width="400" />
+<img src="https://lh3.googleusercontent.com/fife/ALs6j_F2NaKfN4xiZhwpPQ9sBfdTCqdATCjrUwQ_HkgFUPvRQEhDw30Cd_GYlHFXL8X498ym91tW1uQgyh_SYMJAdy1a2tmywwYagfRFFdOBRooZxxUj4-4uJ3ogZ69JfowdVmm0IjEU_H-w7FDYpshUxTiRQMxu2UAh5wBW9BzlZpzj988nd0mcb0ztjzoLMoWRaXJE5yPPG9IyPRUXnyFbDQAhPEeDGEj9ZatcRDx5LBLkQkXh2jCVcrhiZPSLO2YZw54fxruI6sNxFZG59fS2-G4JR9rO409sbu7UnpghiNP7l8DfIWy2-SHQDnXV0GGEWkC8cy1BHf5Hzm4jUr4vuRPThAdKaWMp_xiuFd1pxHKFZDsbRbhLU56qgbU3CEpeNZIPRkW3G__gIa18EFrgV2_QssfOaKjGuqsfLqYAWWGz3rqWH7x3bO7xaLeJnzeQojiBXe65NvvcxxsYsIXqE6udbUFp1JZEvMUWc7W1wOXWa7Qetc7uDZVOqLgQUzncIDPVMtvn9MFeKuqqGpAzUN16pxJVA99hIVLdsmq20geSwHDjHQ_Uy_7Z_5eqb1g565C06p17ICAkLizov7PnSHV233AqXaIFWgvt1O-QyuOaKbxsbMjjyYusyjRtAp8sTUtYKnbLMoMFlxMibTiJq-fenjOzwnCVpKSrGAUqibHtiSLebjkfxx_SQG74LGXULJ4Msb-pIbMXKuiKQo5pf6r4oL69L-T8RkAj-0c6TwTiQqWSygng89m-c-ujNfV9aM-pE581gh7IwZwY-WF1tiTNE1jO1EhaCtIYyj3-0hJt4LC7QHLgmGFDeLPV4oQwDLe3HCgrDxUmCK1L4ZbwOl472jsgQocD4YY9H_2QVW66-zPTWUA31PDQ3FgsssHCO0dA9DOZw7u4XRPGyW8vYfl6sfqhiBHWFCTwvOCxklcDHBIdWTp1l9Fcca9PNqx9mDNMnLVuixNlm3Uzo9vngFRxTgm8qDxxwg_ktePNtw-j0c0jikzROtqXhEc0kJ3MCjlXk0r1TtJYwrGcnwdnpF957D1f4g5GblBQc-fzZGWbC40f0LVO8CpRRQYtUO4kS_2ATYgRIYasgD5WPxee0Uhvohez2x22S8oY2pAmVEDTi33yfaa7z4z1fOgZS06IRRnJlS3Sh7u5J9-AzwFhEXkM-iYwX5eSUYXNnwvaeFnOewkz8LS-x8Pnf6dSpQYGBk_CA24fqyM2jyWJ8CmYgzWwBczzDBeYZUBWK5ZRDlh_nzLKnIkw2r_yesrmT_hiNve_juhsDuyZTZzbMc3bEOUituPEKsv5qdRRtMyeDYI7-A5N1oTEM2r8R0z3C4AHC4e_FziIyEIIs4nXHYDViK9RaPc6aVHtR6x5W0nKtkgx8TkMRFerJf3v5BGgOj1-0pn6ux4KYjcNq0dQ0B0qQzL9AKl-jOIqTAi_G-7SrWj1WR8bMCkbf48r-HiR8T9pn3IfH35osnWKwfQQBeai1pmZDY12WS6kBlBk5snXj0I0Ys3-EtFLA0mksP2o1tfP43znPGWDWkjImTuTvWHkqSDB8sLEX8CBf1PcWmKdSu75ZVR0BczM8lPc9HgqpojuELddGDO2aVbBHu5ju92z7Uit7gIIeW5uvVFx6Qg08KD17AaYPA" alt="" width="400" /></p>
+
+<p>두 함수 모두 10 epochs에 loss가 떨어지기는 하지만 앞의 MLP나 CNN처럼 잘 떨어지지는 않았습니다. RNN에 MNIST 태스크가 적합하지 않아 생기는 이유일 수도 있고 MLP 모델의 파라미터가 660K개인 반면 RNN 모델의 파라미터가 200K개여서 생기는 문제일 수도 있습니다. 아무튼 학습이 된다는 점에 의미를 두려고 합니다.</p>
+
+<h3 id="next">Next</h3>
+<p>LSTM은 RNN의 시퀀스 길이가 길어질 수록 과거의 정보에 대한 학습이 어려워지는 장기의존성(long-term dependency) 문제를 해결한 모델로 RNN 계열에서 중요하다고 생각되는 모델입니다. 다음 목표는 LSTM 레이어의 구현입니다.</p>
+
+<h3 id="code">Code</h3>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/</a></li>
+  <li><a href="https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2">https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2</a></li>
+  <li><a href="https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html">https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html</a></li>
+  <li><a href="https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py">https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py</a></li>
+</ul>
+:ET

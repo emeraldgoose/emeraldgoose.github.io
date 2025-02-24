@@ -29,8 +29,8 @@ Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-pr
 간단하게 랜덤한 Query와 Key가 주어질 때 dot-product를 수행하고 softmax를 실행하면 다음의 왼쪽 그래프를 얻을 수 있습니다. 그러나 위 코드에서 `softmax(np.dot(Q, k.T) / np.sqrt(d_k))`로 수정하게 되면 다음의 오른쪽 그래프를 얻을 수 있습니다.
 
 <figure class="half">
-  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ld7x9iBmT1MwWP?embed=1&width=826&height=813">
-  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0tbtiMJQyPGzMUW?embed=1&width=826&height=813">
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ld7x9iBmT1MwWP?embed=1&width=826&height=813" data-lightbox="gallery"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0ld7x9iBmT1MwWP?embed=1&width=826&height=813" alt="01"></a>
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0tbtiMJQyPGzMUW?embed=1&width=826&height=813" data-lightbox="gallery"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0tbtiMJQyPGzMUW?embed=1&width=826&height=813" alt="02"></a>
 </figure>
 
 왼쪽 그래프에서 9번 확률이 1.0이지만 오른쪽 그래프에서는 0.4x로 줄고 나머지 번호들의 정보들이 드러나는 것을 볼 수 있습니다. 즉, softmax로 정보가 사라지는 문제를 스케일링으로 해결할 수 있습니다.
@@ -166,8 +166,8 @@ GELU는 ReLU의 단점을 보완한 활성화 함수입니다.
 ReLU는 다음의 그래프와 같이 입력값이 음수일 경우 0을 출력하여 뉴런이 죽는 현상인 Dying ReLU 문제가 발생했습니다. 입력된 값이 음수가 한번이라도 등장하게 되면 활성화 함수의 기울기가 0이므로 그 뉴런과 연결된 다른 뉴런들 또한 기울기가 0이 됩니다. 대안으로 음수 입력에도 기울기를 제공하는 leaky relu가 있지만 음수에 대한 boundary가 없기 때문에 어떠한 음수값에 대해서도 기울기를 제공해버립니다. 그래서 swish나 GELU와 같이 음수 boundary를 제공하는 활성화 함수가 제안되었습니다.
 
 <figure class="half">
-  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0o_jVY2iJmV4LNq?embed=1&width=640&height=480">
-  <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0yGxsrvrjyLkgip?embed=1&width=640&height=480">
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0o_jVY2iJmV4LNq?embed=1&width=640&height=480" data-lightbox="gallery"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0o_jVY2iJmV4LNq?embed=1&width=640&height=480" alt="03"></a>
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm0yGxsrvrjyLkgip?embed=1&width=640&height=480" data-lightbox="gallery"><img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm0yGxsrvrjyLkgip?embed=1&width=640&height=480" alt="04"></a>
   <figcaption>Refs: https://pytorch.org</figcaption>
 </figure>
 

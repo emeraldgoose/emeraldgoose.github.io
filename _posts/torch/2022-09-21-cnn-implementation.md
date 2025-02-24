@@ -172,12 +172,26 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 <script src="https://gist.github.com/emeraldgoose/d5198773511fc9da28517861b7df4160.js"></script>
 
 MaxPool2d를 사용한 결과입니다.  
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213267&authkey=%21AGS5LwJF6asYL2A&width=835&height=855){:width="400"}
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213268&authkey=%21ADJCVOwK9-BfcI8&width=853&height=855){:width="400"}
+
+<figure class="half">
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213267&authkey=%21AGS5LwJF6asYL2A&width=835&height=855" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213267&authkey=%21AGS5LwJF6asYL2A&width=835&height=855" alt="01">
+  </a>
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213268&authkey=%21ADJCVOwK9-BfcI8&width=853&height=855" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213268&authkey=%21ADJCVOwK9-BfcI8&width=853&height=855" alt="02">
+  </a>
+</figure>
 
 AvgPool2d를 사용한 결과입니다.  
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213271&authkey=%21AGzFHbahJdrYi-Y&width=835&height=855){:width="400"}
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213269&authkey=%21ABIFF7Ga1quAIRc&width=844&height=855){:width="400"}
+
+<figure class="half">
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213271&authkey=%21AGzFHbahJdrYi-Y&width=835&height=855" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213271&authkey=%21AGzFHbahJdrYi-Y&width=835&height=855" alt="03">
+  </a>
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213269&authkey=%21ABIFF7Ga1quAIRc&width=844&height=855" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213269&authkey=%21ABIFF7Ga1quAIRc&width=844&height=855" alt="04">
+  </a>
+</figure>
 
 결과만 봐서는 loss의 경우 MaxPool2d와 AvgPool2d의 결과가 비슷했고 accuracy의 경우 MaxPool2d가 조금 더 좋았습니다.
 

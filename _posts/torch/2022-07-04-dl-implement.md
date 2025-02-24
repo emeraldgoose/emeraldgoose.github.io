@@ -77,8 +77,14 @@ MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터�
 
 모델은 Linear -> Sigmoid -> Dropout(0.3) -> Linear -> Sigmoid -> Linear으로 이어지도록 구현했습니다.
 
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213207&authkey=%21AHbDw6fwQLOIC2Y&width=608&height=604){:width="400"}
-![](https://onedrive.live.com/embed?resid=502FD124B305BA80%213206&authkey=%21ANIblIieb6OZcuE&width=601&height=604){:width="400"}  
+<figure class="half">
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213207&authkey=%21AHbDw6fwQLOIC2Y&width=608&height=604" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213207&authkey=%21AHbDw6fwQLOIC2Y&width=608&height=604" alt="01">
+  </a>
+  <a href="https://onedrive.live.com/embed?resid=502FD124B305BA80%213206&authkey=%21ANIblIieb6OZcuE&width=601&height=604" data-lightbox="gallery">
+    <img src="https://onedrive.live.com/embed?resid=502FD124B305BA80%213206&authkey=%21ANIblIieb6OZcuE&width=601&height=604" alt="02">
+  </a>
+</figure>
 
 10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다. 
 

@@ -1,4 +1,0 @@
-I"�<h2 id="rag">RAG</h2>
-<p>RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.</p>
-
-:ET
