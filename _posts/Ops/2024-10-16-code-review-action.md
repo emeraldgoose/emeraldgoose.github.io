@@ -15,7 +15,6 @@ name: code-review
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-  workflow_dispatch:
 
 jobs:
   review:
@@ -75,7 +74,6 @@ jobs:
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-  workflow_dispatch:
 ```
 on은 워크플로우가 시작하기 위한 트리거를 의미합니다. open은 PR이 열리는 경우, reopened는 PR이 다시 open되는 경우, synchronize는 PR에 커밋이 되어 업데이트 되는 경우를 말합니다. 이러한 이벤트가 실행될 때마다 github action은 실행되며, 변경 코드에 대해 리뷰를 남기게 됩니다.
 
