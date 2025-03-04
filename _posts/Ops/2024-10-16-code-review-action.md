@@ -157,12 +157,16 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
 ## Sample
 아래는 review 워크플로우의 실행 일부를 캡쳐한 사진입니다. Gemini-1.5-flash를 사용하여 반환된 결과를 출력한 것인데 결과가 마크다운 코드블럭으로 보여지고 있습니다.
 <figure>
-    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm369AZoebGqnqsyD?embed=1&width=1631&height=1094">
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm369AZoebGqnqsyD?embed=1&width=1631&height=1094" data-lightbox="gallery">
+    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm369AZoebGqnqsyD?embed=1&width=1631&height=1094" alt="01">
+  </a>
 </figure>
 
 아래 사진은 실제로 PR 리뷰를 위한 Comment가 등록된 모습입니다. 이는 LLM을 실행할 때 프롬프트를 어떻게 작성하냐에 따라 다르게 리뷰할 수도 있습니다.
 <figure>
-    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm30-fNFY1PqDL6DL?embed=1&width=928&height=451">
+  <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm30-fNFY1PqDL6DL?embed=1&width=928&height=451" data-lightbox="gallery">
+    <img src="https://1drv.ms/i/s!AoC6BbMk0S9Qm30-fNFY1PqDL6DL?embed=1&width=928&height=451" alt="02">
+  </a>
 </figure>
 
 한가지 문제점으로는 Line Number 계산이 쉽지 않을 수 있습니다. 원본 파일을 그대로 올리는 것이 아니고 git diff의 결과로 유추해야만 합니다. 따라서, 리뷰 코멘트의 코드 위치가 잘못된 위치에 가있을 수도 있는 문제가 있습니다.
