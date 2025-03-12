@@ -145,6 +145,40 @@ Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼
 
 여러번 생성할 때마다 다른 문장들이 등장하는 랜덤성과 Transformer 모델 특징답게 토큰이 반복적으로 등장하는 문제도 볼 수 있습니다. 이 결과를 통해 LLM이 생성하는 토큰을 선택하는 전략이 필요함을 알 수 있습니다.
 
+## BERT
+인코더만을 이용해 [MASK]토큰을 예측하도록 구성할 수 있습니다.
+
+사용된 파라미터는 다음과 같습니다.
+```
+embed_size=128, num_heads=8, num_layers=2, learning_rate=1e-3, epochs=100
+```
+<script src="https://gist.github.com/emeraldgoose/0309e135c7e6235a0798ffd9d01e794b.js"></script>
+
+학습과정은 MLM(Masked Langugae Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.
+
+<script src="https://gist.github.com/emeraldgoose/e3a7a8c2285066e62c116b1d211e09b3.js"></script>
+
+토큰을 예측할 때는 logits의 가장 높은 확률을 가진 토큰을 선택했습니다.
+
+<script src="https://gist.github.com/emeraldgoose/c67f7fe6ff72e87faadb594ec8970ce7.js"></script>
+
+마스킹된 토큰을 예측하고 어떤 토큰이 top-5에 속하는지 확인해보고 싶어 이렇게 코드를 작성했습니다.
+
+결과는 다음과 같습니다.
+
+```
+Orignal: Great minds think alike, but they also think differently
+
+Input: Great minds [MASK] alike, but they also think differently
+
+Output: <sos> Great minds think alike, but they also think differently <pad> <pad> <pad> <pad> <pad> <pad> <eos>
+
+Token(Prob): think(0.31) | alike,(0.08) | best(0.05) | differently(0.02) | but(0.02)
+```
+신기하게 [MASK] 토큰 위치에 들어갈 토큰 후보들이 주로 학습한 문장 내에서 나오는 것을 볼 수 있습니다.
+
+> GPT와 BERT 실험 코드는 아래 simple_gpt.ipynb에 작성되어 있습니다.
+
 # Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
 - [https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb)

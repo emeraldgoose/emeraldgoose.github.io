@@ -1,4 +1,4 @@
-I"t*<h1 id="objective">Objective</h1>
+I"o1<h1 id="objective">Objective</h1>
 <p>앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.</p>
 
 <p>가장 바깥쪽에 위치한 Transformer부터 시작해서 EncoderLayer, DecoderLayer 순으로 설명하고자 합니다.</p>
@@ -135,6 +135,36 @@ Output : To be not to be or not to be or not &lt;eos&gt;
 <p>Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼 수 있습니다. 시작 문장이 “To”인 경우 over는 관련이 없지만 그 이후 등장하는 토큰들이 sentences의 첫 번째 문장과 관련있는 것을 볼 수 있습니다.</p>
 
 <p>여러번 생성할 때마다 다른 문장들이 등장하는 랜덤성과 Transformer 모델 특징답게 토큰이 반복적으로 등장하는 문제도 볼 수 있습니다. 이 결과를 통해 LLM이 생성하는 토큰을 선택하는 전략이 필요함을 알 수 있습니다.</p>
+
+<h2 id="bert">BERT</h2>
+<p>인코더만을 이용해 [MASK]토큰을 예측하도록 구성할 수 있습니다.</p>
+
+<p>사용된 파라미터는 다음과 같습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>embed_size=128, num_heads=8, num_layers=2, learning_rate=1e-3, epochs=100
+</code></pre></div></div>
+<script src="https://gist.github.com/emeraldgoose/0309e135c7e6235a0798ffd9d01e794b.js"></script>
+
+<p>학습과정은 MLM(Masked Langugae Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/e3a7a8c2285066e62c116b1d211e09b3.js"></script>
+
+<p>토큰을 예측할 때는 logits의 가장 높은 확률을 가진 토큰을 선택했습니다.</p>
+
+<script src="https://gist.github.com/emeraldgoose/c67f7fe6ff72e87faadb594ec8970ce7.js"></script>
+
+<p>마스킹된 토큰을 예측하고 어떤 토큰이 top-5에 속하는지 확인해보고 싶어 이렇게 코드를 작성했습니다.</p>
+
+<p>결과는 다음과 같습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Orignal: Great minds think alike, but they also think differently
+
+Input: Great minds [MASK] alike, but they also think differently
+
+Output: &lt;sos&gt; Great minds think alike, but they also think differently &lt;pad&gt; &lt;pad&gt; &lt;pad&gt; &lt;pad&gt; &lt;pad&gt; &lt;pad&gt; &lt;eos&gt;
+
+Token(Prob): think(0.31) | alike,(0.08) | best(0.05) | differently(0.02) | but(0.02)
+</code></pre></div></div>
+<p>신기하게 [MASK] 토큰 위치에 들어갈 토큰 후보들이 주로 학습한 문장 내에서 나오는 것을 볼 수 있습니다.</p>
 
 <h1 id="code">Code</h1>
 <ul>
