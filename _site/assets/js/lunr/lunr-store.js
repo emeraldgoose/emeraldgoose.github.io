@@ -718,4 +718,10 @@ var store = [{
         "tags": ["data-engineering","Opensearch"],
         "url": "/data-engineer/simple-rag/",
         "teaser": null
+      },{
+        "title": "Langgraph: Reflection Agents",
+        "excerpt":"Langgraph Langgraph는 노드(Node)와 엣지(Edge)를 이용해 워크플로우의 흐름을 정의하여 AI Agent 애플리케이션을 빌드할 수 있는 플랫폼입니다. 노드(Node): 특정 작업을 수행하는 단계를 말합니다. 예를 들어, 텍스트 요약, 검색, 코드 생성 노드 등이 있습니다. 엣지(Edge): 노드 간의 연결을 말하며 데이터 흐름을 정의합니다. 특정 조건에 따라 분기도 가능합니다. 상태(State): 애플리케이션의 현재 상태를 공유하는 데이터...","categories": ["ai-agent"],
+        "tags": ["ai-agent","langgraph"],
+        "url": "/ai-agent/langgraph-ai-agent/",
+        "teaser": null
       }]
