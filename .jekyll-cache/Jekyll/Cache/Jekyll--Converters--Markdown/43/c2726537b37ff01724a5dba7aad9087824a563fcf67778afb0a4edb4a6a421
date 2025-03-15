@@ -1,0 +1,45 @@
+I"�<h2 id="softmax">Softmax</h2>
+<p>Softmax는 입력받은 값을 확률로 변환하는 함수입니다. 입력 값을 0과 1사이의 확률값으로 변환하고 총합은 항상 1이 되는 특징을 가집니다. 주로 딥러닝에서 마지막 출력층의 활성화함수로 사용되어 각 클래스에 속할 확률을 계산하는데 사용합니다. 그리고 지수함수를 사용하기 때문에 큰 값에 대해 오버플로우가 발생할 수 있습니다.</p>
+
+<h3 id="forward">Forward</h3>
+<p>Softmax의 수식은 다음과 같습니다.</p>
+
+<p>$\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$</p>
+
+<script src="https://gist.github.com/emeraldgoose/16326706b8cc37c31eb8da0ae27e97b1.js"></script>
+
+<p>위와 같이 구현한 이유는 안정성때문입니다. x값이 너무 크면 오버플로우가 발생할 수 있기 때문에 최대값을 0으로(<code class="language-plaintext highlighter-rouge">np.exp(x) = 1</code>) 보정하는 작업을 수행합니다. <code class="language-plaintext highlighter-rouge">np.exp(x)</code>를 <code class="language-plaintext highlighter-rouge">np.exp(x - np.max(x))</code>로 구현하더라도 변화량은 같기 때문에 최종 소프트맥스 결과값은 같습니다.</p>
+
+<h3 id="backward">Backward</h3>
+<p>2차원 입력을 받는 Softmax 함수를 미분하는 과정은 다음과 같습니다.</p>
+
+<p>$\frac{\partial S(x_i)}{\partial x_k} = \frac{\partial}{\partial x_k} \frac{e^{x_i}}{\sum_j e^{x_j}} = \frac{(\frac{\partial}{\partial x_k}e^{x_i})\sum_j e^{x_j} - e^{x_i}(\frac{\partial}{\partial x_k}\sum_j e^{x_j})}{(\sum_j e^{x_j})^2}$</p>
+
+<p>이때, 다음 두 가지를 생각해볼 수 있습니다.</p>
+
+<p>1) $k = i$</p>
+
+<p>$\frac{\partial}{\partial x_i} \frac{e^{x_i}}{\sum_j e^{x_j}} = \frac{e^{x_i} \sum_j e^{x_j} \ - \ e^{x_i} e^{x_i}} {(\sum_j e^{x_j})^2} = \frac{e^{x_i}(\sum_j e^{x_j} - e^{x_i})}{(\sum_j e^{x_j})^2} = \frac{e^{x_i}}{\sum_j e^{x_j}} (1 - \frac{e^{x_i}}{\sum_j e^{x_j}}) = S_{x_i}(1-S_{x_i})$</p>
+
+<p>2) $k \neq i$</p>
+
+<p>$\frac{\partial}{\partial x_i} \frac{e^{x_i}}{\sum_j e^{x_j}} = \frac{0 \ - \ e^{x_i} \ \frac{\partial}{\partial x_k}\sum_j e^{x_j}}{(\sum_j e^{x_j})^2} = \frac{- e^{x_i} e^{x_k}}{(\sum_j e^{x_j})^2} = - \frac{e^{x_i}}{\sum_j e^{x_j}} \ \frac{e^{x_k}}{\sum_j e^{x_j}} = -S_{x_i} \ S_{x_k}$</p>
+
+<p>따라서 Jacobian 행렬이 생성되고 이 행렬이 Softmax의 기울기가 됩니다.</p>
+
+<p>$Jacobian = \begin{cases} 
+S_{x_i}(1-S_{x_i}) &amp; i = k \\ 
+-S_{x_i} S_{x_k} &amp; i \neq k 
+\end{cases}$</p>
+
+<script src="https://gist.github.com/emeraldgoose/a1bb6f44b227ca37a451612f68213223.js"></script>
+
+<h2 id="crossentropyloss">CrossEntropyLoss</h2>
+
+<h3 id="forward-1">Forward</h3>
+<script src="https://gist.github.com/emeraldgoose/8917e4f3ab587bb59e53828cc8004b81.js"></script>
+
+<h3 id="backward-1">Backward</h3>
+<script src="https://gist.github.com/emeraldgoose/139b6199df3edfa26a078bfb20712645.js"></script>
+
+:ET

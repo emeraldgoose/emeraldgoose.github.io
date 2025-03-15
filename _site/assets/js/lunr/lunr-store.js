@@ -724,4 +724,10 @@ var store = [{
         "tags": ["ai-agent","langgraph"],
         "url": "/ai-agent/langgraph-ai-agent/",
         "teaser": null
+      },{
+        "title": "Python으로 Softmax와 CrossEntropyLoss 바닥부터 구현하기",
+        "excerpt":"Softmax Softmax는 입력받은 값을 확률로 변환하는 함수입니다. 입력 값을 0과 1사이의 확률값으로 변환하고 총합은 항상 1이 되는 특징을 가집니다. 주로 딥러닝에서 마지막 출력층의 활성화함수로 사용되어 각 클래스에 속할 확률을 계산하는데 사용합니다. 그리고 지수함수를 사용하기 때문에 큰 값에 대해 오버플로우가 발생할 수 있습니다. Forward Softmax의 수식은 다음과 같습니다. $\\text{Softmax}(x_i) = \\frac{e^{x_i}}{\\sum_j...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/softmax-and-crossentropyloss/",
+        "teaser": null
       }]
