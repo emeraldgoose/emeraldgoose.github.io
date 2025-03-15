@@ -1,5 +1,5 @@
 ---
-title: python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)
+title: Python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)
 categories:
   - Pytorch
 tags: [torch]

@@ -1,5 +1,5 @@
 ---
-title: python으로 Transformer 바닥부터 구현하기[2] (Transformer)
+title: Python으로 Transformer 바닥부터 구현하기[2] (Transformer)
 categories:
   - Pytorch
 tags: [torch]

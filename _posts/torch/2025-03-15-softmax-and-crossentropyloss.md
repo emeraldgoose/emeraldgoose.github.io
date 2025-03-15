@@ -40,12 +40,11 @@ S_{x_i}(1-S_{x_i}) & i = k \\\\
 -S_{x_i} S_{x_k} & i \neq k 
 \end{cases}$
 
-Softmax 함수의 입력에 대한 기울기를 구하는 코드는 다음과 같다.
+Softmax 함수의 입력에 대한 기울기를 구하는 코드는 다음과 같습니다.
 
 <script src="https://gist.github.com/emeraldgoose/a1bb6f44b227ca37a451612f68213223.js"></script>
 
-**축 변경**
-
+**축 변경**  
 아래처럼 계산을 용이하게 하기 위해 축을 변경합니다. 적용하고자 하는 축을 마지막 축과 바꿔줍니다. 
 
 이때 `np.reshape`를 사용하는 것은 추천하지 않습니다. `np.reshape`함수는 배열의 원소 순서를 고려하지 않고 모양만 변경합니다. 물리적 연속성을 보장하지 않기 때문에 저장한 정보가 뒤틀릴 수 있습니다. 그래서 `np.transpose`를 사용해 물리적인 연속성을 보존하면서 축만 바꿔주게 합니다.
@@ -58,7 +57,7 @@ transposed_softmax = np.transpose(self.output, transposed_axes)
 transposed_dx = np.transpose(dx, transposed_axes)
 ```
 
-**Jacobian 행렬과 dz의 행렬곱**
+**Jacobian 행렬과 dz의 행렬곱**  
 다음, softmax 값을 이용해 대각행렬(`np.diagflat`)을 구하고 $S^2$ 값을 빼서 Jacobian 행렬을 만든 뒤 축이 변환된 dz와 곱해줍니다. 
 마지막은 축을 원상태로 돌려줍니다.
 ```python
@@ -109,4 +108,5 @@ $\frac{\partial p(x_k)}{\partial x_k} = -p(x_k)p(x_i) \rightarrow -\frac{1}{p(x_
 <script src="https://gist.github.com/emeraldgoose/139b6199df3edfa26a078bfb20712645.js"></script>
 
 ## Code
-- [hcrot/layers](https://github.com/emeraldgoose/hcrot/tree/master/hcrot/layers)
+- [Softmax Class](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/activation.py#L7)
+- [CrossEntropyLoss](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/loss.py#L20)
