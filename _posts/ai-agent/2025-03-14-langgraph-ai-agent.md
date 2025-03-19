@@ -37,21 +37,315 @@ Reflection은 Agent의 과거 행동을 반성하고 비판해서 Agent의 품�
 </figure>
 
 ### workflow (plan and execution)
-1. **get_document_node**: 이 노드에서는 요약하고자 하는 블로그 주소에 접속하여 html을 가져오는 노드입니다. 이렇게 가져온 html은 다음 단계에서 이미지, 표를 추출하고 계획 단계로 넘어갑니다.
-2.  plan
-    - **extract_materials**: 이 단계에서는 html에서 이미지와 표 형식을 추출합니다. 여기서 추출된 자료들은 execution_node에서 사용됩니다.
-    - **plan_node**: 이 단계에서는 html로부터 주요 포인트를 추출하고 요약합니다. 여기서 작성된 계획은 execute_node에서 자세히 서술됩니다.
-3. **execute_node**: 이 단계는 이미지, 표 자료를 이용해 plan_node에서 세운 계획마다 초안을 생성합니다. 가독성을 위해 구조화된 형식을 만족할 수 있는 마크다운 문법을 이용해 작성됩니다.
-4. **revise_answers**: 이 단계에서 각 초안마다 reflect-revise 과정을 거쳐 얻어진 수정본을 모아 최종본을 만들어 사용자에게 전달합니다.
+**State**
+
+```python
+from typing import TypedDict, List
+
+class State(TypedDict):
+    url: str
+    planning_steps: List[str]
+    title: str
+    document: str
+    figures: List[str]
+    tables: List[str]
+    drafts: List[str]
+    final_doc: str
+```
+
+**get_document_node**: 이 노드에서는 요약하고자 하는 블로그 주소에 접속하여 html을 가져오는 노드입니다. 이렇게 가져온 html은 다음 단계에서 이미지, 표를 추출하고 계획 단계로 넘어갑니다.
+
+```python
+from langchain_community.document_loaders import AsyncHtmlLoader
+from langchain_community.document_transformers import MarkdownifyTransformer
+
+def get_document_node(state: State):
+    url = state.get('url')
+    loader = AsyncHtmlLoader(url)
+    docs = loader.load()
+    
+    md = MarkdownifyTransformer()
+    converted_docs = md.transform_documents(docs)
+    
+    title = converted_docs[0].metadata['title']
+    document = converted_docs[0].page_content
+
+    return State(title=title, document=document)
+```
+
+**LLM**: Gemini-2.0-flash 모델을 사용했습니다.
+```python
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+def get_chat():
+    chat = ChatGoogleGenerativeAI(model='gemini-2.0-flash-001')
+    return chat
+```
+
+**extract_materials**: 이 단계에서는 html에서 이미지와 표 형식을 추출합니다. 여기서 추출된 자료들은 execution_node에서 사용됩니다.
+
+```python
+def extract_materials(state: State):
+    print("##### Extract Materials #####")
+    document = state.get('document')
+
+    materials_prompt = ChatPromptTemplate([('human', extract_materials_instruction)])
+    chat = get_chat()
+    
+    extracted_materials = materials_prompt | chat
+    response = extracted_materials.invoke({"document": document})
+    materials = response.content
+
+    figure_materials = materials[materials.find('<figures>')+9:materials.find('</figures>')].split('\n\n')
+    table_materials = materials[materials.find('<tables>')+8:materials.find('</tables>')].split('\n\n')
+
+    figures, tables = [], []
+    for figure in figure_materials:
+        figures.append(figure.strip())
+
+    for table in table_materials:
+        tables.append(table.strip())
+    
+    return State(figures=figures, tables=tables)
+```
+
+**plan_node**: 이 단계에서는 html로부터 주요 포인트를 추출하고 요약합니다. 여기서 작성된 계획은 execute_node에서 자세히 서술됩니다.
+
+```python
+def plan_node(state: State):
+    print("##### Plan ######")
+    document = state.get('document')
+    
+    planner_prompt = ChatPromptTemplate([('human', plan_instruction)])
+    chat = get_chat()
+
+    planner = planner_prompt | chat
+    response = planner.invoke({"document": document})
+    plan = response.content.strip().replace('\n\n','\n')
+    planning_steps = plan.split('\n')
+
+    return State(planning_steps=planning_steps)
+```
+
+**execute_node**: 이 단계는 이미지, 표 자료를 이용해 plan_node에서 세운 계획마다 초안을 생성합니다. 가독성을 위해 구조화된 형식을 만족할 수 있는 마크다운 문법을 이용해 작성됩니다.
+
+```python
+def execute_node(state: State):
+    print("##### Write (execute) #####")
+    document = state.get('document')
+    planning_steps = state.get('planning_steps')
+    figures = state.get('figures')
+    tables = state.get('tables')
+
+    write_prompt = ChatPromptTemplate([('human', write_instruction)])
+    text = ""
+    drafts = []
+    for step in planning_steps:
+        chat = get_chat()
+        write_chain = write_prompt | chat
+
+        result = write_chain.invoke({
+            "document": document,
+            "plan": planning_steps,
+            "text": text,
+            "STEP": step,
+            "figures": figures,
+            "tables": tables
+        })
+        output = result.content
+
+        draft = output[output.find('<result>')+8:len(output)-9]
+
+        # print(f"--> step:{step}")
+        # print(f"--> {draft}")
+
+        drafts.append(draft)
+        text += draft + '\n\n'
+    
+    return State(drafts=drafts)
+```
+
+**revise_answers**: 이 단계에서 각 초안마다 reflect-revise 과정을 거쳐 얻어진 수정본을 모아 최종본을 만들어 사용자에게 전달합니다.
+
+```python
+def get_reflect_workflow():
+    workflow = StateGraph(ReflectionState)
+
+    workflow.add_node("reflect_node", reflect_node)
+    workflow.add_node("revise_draft", revise_draft)
+
+    workflow.set_entry_point("reflect_node")
+    workflow.add_conditional_edges(
+        "revise_draft",
+        should_continue,
+        {"end": END, "continue": "reflect_node"}
+    )
+
+    workflow.add_edge("reflect_node", "revise_draft")
+    return workflow.compile()
+```
+
+```python
+def revise_answers(state: State, config):
+    print("##### revise #####")
+    drafts = state.get("drafts")
+
+    # 이 부분을 멀티프로세싱으로 구성하면 처리 속도를 높일 수 있습니다.
+    reflection_process = get_reflect_workflow()
+    
+    final_doc = ""
+    for draft in drafts:
+        output = reflection_process.invoke({"draft":draft}, config)
+        final_doc += output.get('revised_draft') + '\n\n'
+    
+    return State(final_doc=final_doc)
+```
+
+**Define workflow**
+```python
+from langgraph.graph import StateGraph, END
+
+workflow = StateGraph(State)
+
+workflow.add_node("get_document_node", get_document_node)
+workflow.add_node("plan_node",plan_node)
+workflow.add_node("extract_materials", extract_materials)
+workflow.add_node("execute_node", execute_node)
+workflow.add_node("revise_answers",revise_answers)
+
+workflow.set_entry_point("get_document_node")
+
+workflow.add_edge("get_document_node","plan_node")
+workflow.add_edge("get_document_node","extract_materials")
+workflow.add_edge("plan_node","execute_node")
+workflow.add_edge("extract_materials","execute_node")
+workflow.add_edge("execute_node", "revise_answers")
+workflow.add_edge("revise_answers",END)
+
+graph = workflow.compile()
+```
 
 ### workflow (reflect)
-1. **reflect_node**: execute_node에서 생성된 초안을 비판합니다. 어떤 부분이 포함되지 않았는지, 뭘 추가해야 더 나은 글이 되는지, 불필요한 부분에 대한 비평을 작성합니다. TavilySearch를 이용해 외부에서 정보를 넣어줄 수도 있습니다.
-2. **revise_draft**: reflect_node에서 작성된 비판을 기반으로 초안을 수정합니다.
-3. **should_continue**: 계속 수정해야 하는지 판단합니다. 여기서는 단순하게 수정 횟수를 기준으로 하여 기준을 넘어가면 END로 향하게 합니다.
+
+**State**
+
+```python
+class ReflectionState(TypedDict):
+    draft: str
+    reflection: List[str]
+    search_queries: List[str]
+    revised_draft: str
+    revision_number: int
+```
+
+**reflect_node**: execute_node에서 생성된 초안을 비판합니다. 어떤 부분이 포함되지 않았는지, 뭘 추가해야 더 나은 글이 되는지, 불필요한 부분에 대한 비평을 작성합니다. TavilySearch를 이용해 외부에서 정보를 넣어줄 수도 있습니다.
+
+```python
+from pydantic import BaseModel, Field
+from langchain_community.tools import TavilySearchResults
+
+class Reflection(BaseModel):
+    missing: str = Field(description="Critique of what is missing")
+    advisable: str = Field(description="Critique of what is helpful for better writing")
+    superfluous: str = Field(description="Critique of what is superfluous")
+
+class Research(BaseModel):
+    """Provide reflection and then follow up with search queries to improve the writing."""
+
+    reflection: Reflection = Field(description="Your reflection on the initial writing for summary.")
+    search_queries: List[str] = Field(description="1-3 search queries for researching improvements to address the critique of your current writing.")
+
+def reflect_node(state: ReflectionState, config):
+    print('##### Reflect #####')
+    draft = state.get('draft')
+    on_search = config['configurable'].get('on_search',True)
+
+    reflection = []
+    search_queries = []
+    for _ in range(2):
+        chat = get_chat()
+        structured_llm = chat.with_structured_output(Research, include_raw=True)
+
+        info = structured_llm.invoke(draft)
+        if not info['parsed'] == None:
+            parsed_info = info['parsed']
+            reflection = [parsed_info.reflection.missing, parsed_info.reflection.advisable]
+            if on_search:
+                search_queries = parsed_info.search_queries
+            break
+
+    revision_number = state.get('revision_number') if state.get('revision_number') is not None else 1
+    return ReflectionState(revision_number=revision_number, search_queries=search_queries, reflection=reflection)
+```
+
+**revise_draft**: reflect_node에서 작성된 비판을 기반으로 초안을 수정합니다.
+
+```python
+def revise_draft(state: ReflectionState, config):
+    print("##### Revise Draft #####")
+    on_search = config['configurable'].get('on_search',True)
+    draft = state.get('draft')
+    search_queries = state.get('search_queries')
+    reflection = state.get('reflection')
+
+    content = []
+    if on_search:
+        search = TavilySearchResults(max_results=1)
+        for q in search_queries:
+            response = search.invoke(q)
+            for r in response:
+                if 'content' in r:
+                    content.append(r.get('content'))
+    
+    # print("draft: ", draft)
+    # print("reflection: ", reflection)
+    # print("search quries: ", search_queries)
+    # print("search results: ", content)
+
+    chat = get_chat()
+    revise_prompt = ChatPromptTemplate([('human',revise_instruction)])
+    reflect = revise_prompt | chat
+    result = reflect.invoke({
+        "draft": draft,
+        "reflection": reflection,
+        "content": content,
+    })
+    output = result.content
+    revision_draft = output[output.find('<result>')+8:len(output)-9]
+    revision_number = state.get("revision_number",1)
+    
+    # print("revision draft: ", revision_draft)
+    
+    return ReflectionState(revised_draft=revision_draft, revision_number=revision_number+1)
+```
+
+**should_continue**: 계속 수정해야 하는지 판단합니다. 여기서는 단순하게 수정 횟수를 기준으로 하여 기준을 넘어가면 END로 향하게 합니다.
+
+```python
+def should_continue(state: ReflectionState, config):
+    print("##### should continue #####")
+    max_revision = config['configurable'].get("max_revision",2)
+    # print(f"revision: {state.get('revision_number',0)} / {max_revision}")
+    
+    if state.get('revision_number') > max_revision:
+        return "end"
+    return "continue"
+```
+
+### Run
+```python
+final_state = graph.invoke({
+    "url":""}, 
+    config={'max_revision': 1, 'on_search': False}
+    )
+
+with open('final_draft.md', 'w') as f:
+    f.write(final_state['final_doc'])
+```
 
 이 Agent를 실제로 동작하게 되면 약 2~3분정도 시간이 걸리게 됩니다. 시간을 단축하려면 reflect workflow를 multiprocessing 라이브러리를 이용해 병렬처리하도록 구성하면 빠르게 시간을 단축시킬 수 있습니다.
 
-### 단순 요약, 번역과 Agent 결과의 비교
+## 단순 요약, 번역과 Agent 결과의 비교
 같은 원문을 번역, Gemini로 단순 요약 그리고 Reflection Agent의 요약결과를 비교해보겠습니다.
 ```
 # 번역
