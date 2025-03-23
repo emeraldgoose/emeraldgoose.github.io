@@ -406,7 +406,7 @@ DoorDash는 검색 시스템의 성능을 평가하기 위해 다양한 지표�
 무언가 설명이 필요한 경우(예를 들면, "Langgraph에 대해 설명해줘")에 검색이라는 도구가 유용하다고 생각합니다.
 
 ## Code
-- []()
+- [simple-summarize-agent](https://github.com/emeraldgoose/simple-summarize-agent)
 
 ## Reference
 - [Reflection Agents](https://blog.langchain.dev/reflection-agents/)
