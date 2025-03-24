@@ -1,0 +1,911 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Apache Iceberg: Architecture - gooooooooooose</title>
+<meta name="title" content="Apache Iceberg: Architecture">
+<meta name="description" content="What is a Data Lakehouse?">
+
+
+  <meta name="author" content="goooose">
+  
+  <meta property="article:author" content="goooose">
+  
+
+
+<!-- open-graph tags -->
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:site_name" content="gooooooooooose">
+<meta property="og:title" content="Apache Iceberg: Architecture">
+<meta property="og:url" content="http://localhost:4000/data-engineer/apache-iceberg-architecture/">
+
+
+  <meta property="og:description" content="What is a Data Lakehouse?">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2025-03-24T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/data-engineer/apache-iceberg-architecture/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "emeraldgoose",
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+  <meta name="google-site-verification" content="googleb34ce5276ba6573e" />
+
+
+
+
+
+  <meta name="naver-site-verification" content="naver93cdc79a5629ab3736d7cf8ff7b51d80">
+
+
+<!-- end _includes/seo.html -->
+
+
+
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
+
+<!-- Lightbox2 -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.js" integrity="sha512-oaWLach/xXzklmJDBjHkXngTCAkPch9YFqOSphnw590sy86CVEnAbcpw17QjkUGppGmVJojwqHmGO/7Xxx6HCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox-plus-jquery.min.js" integrity="sha512-U9dKDqsXAE11UA9kZ0XKFyZ2gQCj+3AwZdBMni7yXSvWqLFEj8C1s7wRmWl9iyij8d5zb4wm56j4z/JVEwS77g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+           
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/">Categories</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/">Tags</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <i class="fas fa-search"></i>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+  
+    
+
+
+
+<nav class="breadcrumbs">
+  <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+    
+    
+    
+      
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+
+          <meta itemprop="position" content="1" />
+        </li>
+        <span class="sep">/</span>
+      
+      
+        
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a href="/categories/#data-engineer" itemprop="item"><span itemprop="name">Data engineer</span></a>
+          <meta itemprop="position" content="2" />
+        </li>
+        <span class="sep">/</span>
+      
+    
+      
+      
+        <li class="current">Apache Iceberg: Architecture</li>
+      
+    
+  </ol>
+</nav>
+
+  
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
+
+  
+    <div class="author__avatar">
+      <a href="http://localhost:4000/">
+        <img src="/assets/images/bio-photo.png" alt="goooose" itemprop="image" class="u-photo" width="110px" height="110px">
+      </a>
+    </div>
+  
+
+  <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/" itemprop="url">goooose</a>
+    </h3>
+    
+      <div class="author__bio p-note" itemprop="description">
+        <p>Interested in ML/DL, Data Engineering.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">South Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:smk6221@naver.com" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/emeraldgoose" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://www.linkedin.com/in/minseong-kim-84428b231/" rel="nofollow noopener noreferrer me"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+            <li><a href="https://gooooooooooose.tistory.com/" rel="nofollow noopener noreferrer me"><i class="fas fa-fw fa-link" aria-hidden="true"></i><span class="label">Problem Solving OJ (KOR)</span></a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Apache Iceberg: Architecture">
+    <meta itemprop="description" content="What is a Data Lakehouse?">
+    <meta itemprop="datePublished" content="2025-03-24T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Apache Iceberg: Architecture
+</h1>
+          
+<!--
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  0 minute read
+</p>
+            devinlife comments :
+                싱글 페이지(포스트)에 제목 밑에 Updated 시간 표기
+                기존에는 read_time이 표기. read_time -> date 변경
+-->
+            <p class="page__date"><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated: <time datetime="2025-03-24T00:00:00+09:00">March 24, 2025</time></p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="what-is-a-data-lakehouse">What is a Data Lakehouse?</h2>
+
+<p>보통 구조화된 데이터와 구조화되지 않은 데이터를 모두 데이터 레이크에 저장한 뒤, 데이터 일부를 분석 등의 목적에 맞춰 데이터 웨어하우스에 옮기는 기존의 패러다임은 데이터의 규모가 점점 커져가면서 더 이상 유지하기 어려워지고 있습니다. 이 시스템의 한계점은 여러 개의 데이터 복사본을 저장하고, 동기화 및 일관되게 유지하며, 최신 데이터 요구사항에 맞는 빠른 데이터를 전송하는 과정에서 문제가 발생합니다. 이러한 문제를 해결하기 위해 데이터 레이크하우스라는 새로운 아키텍처가 등장했습니다.</p>
+
+<p>데이터 레이크하우스는 데이터 레이크에 저장된 데이터를 데이터 웨어하우스 처럼 사용하기 위해 성능 및 편의성을 제공하는 것을 목표로 하고 있습니다.</p>
+
+<p>이것이 가능하게 하는 다음의 핵심이 있습니다.</p>
+
+<ul>
+  <li><strong>Apache Parquet</strong>: 구조화된 데이터를 저장하고 빠르게 분석할 수 있도록 이진 열 기반 파일 포맷(Binary Columnar File Format)입니다.</li>
+  <li><strong>Apache Iceberg</strong>: 오픈 레이크하우스 테이블 형식은 메타데이터를 읽고 쓰기 위한 표준으로, Parquet 파일 그룹을 하나의 테이블로 일관되게 인식할 수 있게 합니다. 이를 통해 여러 Parquet 파일을 단일 데이터베이스 테이블처럼 사용할 수 있게 해줍니다.</li>
+  <li><strong>Open Source Catalogs (e.g., Nessie and Polaris)</strong>: 데이터 레이크하우스에 있는 테이블을 추적하여 모든 도구에서 전체 데이터셋 라이브러리를 즉시 인식할 수 있습니다.</li>
+</ul>
+
+<h2 id="why-a-data-lakehouse">Why a data lakehouse?</h2>
+
+<p>데이터 레이크하우스 아키텍처로 전환하면 여러 개의 데이터 복사본이 필요하지 않다는 점에서 상당한 이점을 얻을 수 있습니다. 기존의 데이터 아키텍처에서는 운영 시스템, 데이터 웨어하우스, 데이터 마트와 같은 시스템마다 별도의 데이터 복사본을 만들어야 하는 경우가 있어 스토리지 비용이 증가하고 데이터 관리가 복잡해집니다.</p>
+
+<ul>
+  <li><strong>중앙집중화된 데이터 스토리지</strong>: 하나의 저장소(데이터 레이크하우스)에서 원본 데이터를 보관하면서도 다양한 분석 및 쿼리 엔진이 직접 액세스할 수 있습니다.</li>
+  <li><strong>ACID 트랜잭션 및 메타데이터 관리</strong>: 일관성을 보장할 뿐만 아니라 스토리지 오버헤드를 줄여 상당한 비용을 절감할 수 있습니다.</li>
+  <li><strong>다양한 도구 및 애플리케이션 접근</strong>: 각 도구 또는 애플리케이션 각자의 포맷에 맞게 데이터를 변환하고 복사했지만 레이크하우스에서는 오픈 테이블 형식을 사용하여 Spark, Presto, Trino, Pandas 같은 도구가 직접 원본 데이터에 접근할 수 있습니다. → 데이터 가공 컴퓨팅 비용이 줄어드는 추가 효과까지!</li>
+  <li><strong>데이터 거버넌스 단순화</strong>: 기존의 분산된 데이터 환경에서는 각 시스템이 자체적으로 데이터 보안과 거버넌스를 관리해야 했지만 레이크하우스는 중앙에서 거버넌스를 관리할 수 있어 정책을 일관성있게 적용할 수 있습니다.</li>
+</ul>
+
+<h2 id="what-is-a-table-format">What is a Table Format?</h2>
+
+<p>테이블 형식은 데이터셋의 파일들을 하나의 테이블처럼 조직하는 방식입니다. 이를 통해 여러 사용자나 도구가 동시에 테이블과 상호작용할 수 있습니다.</p>
+
+<p>테이블 형식의 주요 목표는 사용자가 데이터를 쉽게 다룰 수 있는 추상화 계층을 제공하고 효율적으로 관리하며 다양한 도구가 접근할 수 있도록 하는 것입니다.</p>
+
+<h3 id="the-hive-table-format">The Hive Table Format</h3>
+
+<p>Hive는 파일 형식을 가리지 않고 파티셔닝(Partitioning)과 버킷(Bucket)을 도입하여 성능을 향상시켰으며 중앙 집중화된 메타스토어(Metastore)를 제공하여 다양한 도구들이 읽기/쓰기 작업을 수행하는데 활용할 수 있었습니다.</p>
+
+<p>하지만, 파티션은 트랜잭션 스토어에 저장되므로 트랜잭션 방식으로 파티션을 추가하거나 삭제할 수 있지만 파일 추적은 파일 시스템에서 이루어지기 때문에 트랜잭션 방식으로 데이터를 추가하거나 삭제할 수 없습니다. 따라서, 일반적인 해결 방법은 파티션 수준에서 파티션 전체를 새 위치에 복사해 변경사항을 적용하고 메타스토어에서 파티션 위치를 새 위치로 업데이트하는 것입니다. 파티션이 거대하면서 해당 파티션에 작은 양의 데이터를 변경해야 할 때 이러한 방법은 비효율적입니다.</p>
+
+<h2 id="what-is-apache-iceberg">What is Apache Iceberg</h2>
+
+<figure style="text-align:center;">
+    <a>
+        <img src="https://www.dremio.com/wp-content/uploads/2022/08/iceberg-metadata-991x1024.png" alt="01" style="max-width: 80%;height:auto;" />
+    </a>
+    <figcaption>Apache Iceberg Architecture</figcaption>
+</figure>
+
+<p>Apache Iceberg Architecture</p>
+
+<p>Iceberg 테이블의 아키텍처는 3개의 계층이 있습니다.</p>
+
+<ol>
+  <li><strong>Iceberg Catalog</strong></li>
+  <li><strong>Metadata Layer</strong>: 메타데이터 파일, 매니페스트 리스트 및 매니페스트 파일을 포함</li>
+  <li><strong>Data Layer</strong></li>
+</ol>
+
+<h3 id="iceberg-catalog">Iceberg Catalog</h3>
+
+<p>테이블을 읽으려는 사용자가 먼저 해야 할 일은 메타데이터 포인터의 위치를 찾는 것입니다. 메타데이터 포인터의 현재 위치를 찾기 위해 중앙에 위치한 Iceberg catalog에 이동해야 합니다.</p>
+
+<p>Iceberg 카탈로그의 기본 요구 사항은 현재 메타데이터 포인터를 업데이트하기 위한 연산을 지원해야 한다는 것입니다. 이것이 Iceberg 테이블의 트랜잭션이 원자적이고 정확성을 보장할 수 있는 이유입니다.</p>
+
+<p>카탈로그 내에는 각 테이블마다 해당 테이블의 현재 메타데이터 파일에 대한 참조 또는 포인터가 있습니다. 예를 들어 위에 표시된 다이터그램에는 2개의 메타데이터 파일이 있습니다. 카탈로그에서 테이블의 현재 메타데이터 포인터 값은 오른쪽에 있는 메타데이터 파일의 위치입니다.</p>
+
+<h3 id="metadata-file">Metadata File</h3>
+
+<p>메타데이터 파일은 테이블에 대한 메타데이터를 저장합니다. 여기에는 테이블의 스키마, 파티션 정보, 스냅샷, 현재 스냅샷에 대한 정보가 포함됩니다.</p>
+
+<h3 id="manifest-list">Manifest List</h3>
+
+<p>매니페스트 목록은 매니페스트 파일의 목록입니다. 매니페스트 목록에는 스냅샷을 구성하는 각 매니페스트 파일에 대한 정보가 있습니다. 여기에는 매니페스트 파일의 위치, 어떤 스냅샷의 일부로 추가되었는지, 해당 매니페스트 파일이 속한 파티션에 대한 정보와 추적하는 데이터 파일의 파티션 열에 대한 하한 및 상한 정보가 포함됩니다.</p>
+
+<h3 id="manifest-file">Manifest File</h3>
+
+<p>매니페스트 파일은 데이터 파일과 각 파일에 대한 추가 세부 정보 및 통계를 추적합니다. Iceberg가 Hive 테이블 형식의 문제를 해결할 수 있게 해주는 주요 차이점은 파일 수준에서 데이터를 추적하는 것입니다.</p>
+
+<p>각 매니페스트 파일은 병렬 처리 및 대규모 재사용 효율성을 위해 데이터 파일의 하위 집합을 추적합니다. 여기에는 파티션 멥버쉽, 레코드 수, 열의 하한 및 상한과 같은 데이터 파일에서 데이터를 읽는 동안 효율성과 성능을 개선하느데 사용하는 많은 유용한 정보가 포함되어 있습니다. 이러한 통계는 쓰기 작업 중에 각 매니페스트 데이터 파일 하위 집합에 대해 작성되므로 Hive의 통계보다 존재하고 정확하며 최신 상태일 가능성이 높습니다.</p>
+
+<p>또한, Iceberg는 파일 형식에 독립적이므로 매니페스트 파일에도 파일 형식(Parquet, ORC, Avro 등)을 명시합니다.</p>
+
+<h2 id="a-look-under-the-covers-when-cruding"><strong>A Look Under the Covers When CRUDing</strong></h2>
+
+<h3 id="create-table">CREATE TABLE</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">table1</span> <span class="p">(</span>
+    <span class="n">order_id</span> <span class="nb">BIGINT</span><span class="p">,</span>
+    <span class="n">customer_id</span> <span class="nb">BIGINT</span><span class="p">,</span>
+    <span class="n">order_amount</span> <span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">order_ts</span> <span class="nb">TIMESTAMP</span>
+<span class="p">)</span>
+<span class="k">USING</span> <span class="n">iceberg</span>
+<span class="n">PARTITIONED</span> <span class="k">BY</span> <span class="p">(</span> <span class="n">HOUR</span><span class="p">(</span><span class="n">order_ts</span><span class="p">)</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<p>데이터베이스 <code class="language-plaintext highlighter-rouge">db1</code>에 <code class="language-plaintext highlighter-rouge">table1</code>이라는 테이블을 생성했습니다. 이 테이블은 4개의 컬럼을 가지고 <code class="language-plaintext highlighter-rouge">order_ts</code> 타임스탬프의 시간에 따라 파티셔닝됩니다.</p>
+
+<figure>
+    <a>
+        <img src="https://www.dremio.com/wp-content/uploads/2021/06/create-table-1-1024x531.png" />
+    </a>
+</figure>
+
+<p>위 쿼리를 실행하면 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>가 포함된 메타데이터 파일이 메타데이터 계층에 생성됩니다. 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>는 테이블에 데이터가 없기 때문에 어떠한 매니페스트 목록을 포함하지 않습니다. 카탈로그의 메타데이터 포인터는 생성된 메타데이터 파일을 가리게 됩니다.</p>
+
+<h3 id="insert">INSERT</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">table1</span> <span class="k">VALUES</span> <span class="p">(</span>
+    <span class="mi">123</span><span class="p">,</span>
+    <span class="mi">456</span><span class="p">,</span>
+    <span class="mi">36</span><span class="p">.</span><span class="mi">17</span><span class="p">,</span>
+    <span class="s1">'2021-01-26 08:10:23'</span>
+<span class="p">);</span>
+</code></pre></div></div>
+<figure>
+    <a><img src="https://www.dremio.com/wp-content/uploads/2021/06/insert-1024x545.png" /></a>
+</figure>
+
+<p>INSERT 쿼리를 실행하면 다음의 과정이 수행됩니다.</p>
+
+<ol>
+  <li>데이터를 포함한 Parquet 파일(<code class="language-plaintext highlighter-rouge">table1/data/order_ts_hour=2021-01-26-08/00000-5-cae2d.parquet</code>)이 생성됩니다.</li>
+  <li>데이터 파일을 가리키고 통계 및 상세 정보를 포함한 매니페스트 파일(<code class="language-plaintext highlighter-rouge">table1/metadata/d8f9-ad19-4e.avro</code>)이 생성됩니다.</li>
+  <li>매니페스트 파일을 가리키고 통계 및 상세 정보를 포함한 매니페스트 리스트(<code class="language-plaintext highlighter-rouge">table1/metadata/snap-2938-1-4103.avro</code>)가 생성됩니다.</li>
+  <li>현재 메타데이터 파일을 기반으로 하는 새로운 메타데이터 파일(<code class="language-plaintext highlighter-rouge">table1/metadata/v2.metadata.json</code>)은 매니페스트 리스트를 가리키는 스냅샷 s1을 포함하고 이전 스냅샷인 s0도 유지한 채 생성됩니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">db1.table1</code>의 현재 메타데이터 포인터가 새로운 메타데이터 파일을 가리키도록 원자성을 지키면서 업데이트됩니다.</li>
+</ol>
+
+<p>위 5단계를 모두 거치기 전에 테이블에 접근한 사용자는 이전 메타데이터 파일을 읽게 됩니다. 이는 누구도 테이블의 일관적이지 않은 상태와 뷰를 제공하지 않는다는 의미입니다.</p>
+
+<h3 id="merge-into--upsert">MERGE INTO / UPSERT</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MERGE</span> <span class="k">INTO</span> <span class="n">table1</span>
+<span class="k">USING</span> <span class="p">(</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">table1_stage</span> <span class="p">)</span> <span class="n">s</span>
+    <span class="k">ON</span> <span class="n">table1</span><span class="p">.</span><span class="n">order_id</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">order_id</span>
+<span class="k">WHEN</span> <span class="n">MATCHED</span> <span class="k">THEN</span>
+    <span class="k">UPDATE</span> <span class="n">table1</span><span class="p">.</span><span class="n">order_amount</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">order_amount</span>
+<span class="k">WHEN</span> <span class="k">NOT</span> <span class="n">MATCHED</span> <span class="k">THEN</span>
+    <span class="k">INSERT</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<p>이 쿼리는 테이블에 주문 ID가 이미 있는 경우 주문 금액을 갱신하고 없는 경우 새 주문에 대한 레코드를 삽입하는 Upsert 쿼리입니다.</p>
+
+<p>이 예제에서는 테이블에 있는 주문(<code class="language-plaintext highlighter-rouge">order_id=123</code>)에 대한 업데이트와 2021년 1월 27일 10:21:46에 발생한 아직 테이블에 없는 새 주문에 대한 업데이트가 포함됩니다. 스테이징 테이블인 <code class="language-plaintext highlighter-rouge">table1_stage</code>에 업데이트할 레코드가 포함되어 기존 <code class="language-plaintext highlighter-rouge">table1</code>과 머지합니다.</p>
+
+<figure>
+    <a><img src="https://www.dremio.com/wp-content/uploads/2023/04/merge-into-1024x570.png" /></a>
+</figure>
+
+<p>MERGE INTO를 실행할 때, 다음의 과정을 수행합니다.</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">table1</code>과 <code class="language-plaintext highlighter-rouge">table1_stage</code>에서 <code class="language-plaintext highlighter-rouge">order_id</code>가 같은 모든 레코드를 확인합니다.</li>
+  <li>데이터 수정 후 저장(Copy-on-Write)
+    <ol>
+      <li><code class="language-plaintext highlighter-rouge">order_id=123</code>을 포함하는 기존 데이터 파일(<code class="language-plaintext highlighter-rouge">00000-5-cae2d.parquet</code>)이 쿼리 엔진 메모리로 로드</li>
+      <li><code class="language-plaintext highlighter-rouge">order_id=123</code>인 레코드를 찾아서 <code class="language-plaintext highlighter-rouge">order_amount</code>값을 <code class="language-plaintext highlighter-rouge">table1_stage</code>에 있는 값으로 업데이트</li>
+      <li>업데이트된 새로운 Parquet파일(<code class="language-plaintext highlighter-rouge">00000-1-aef71.parquet</code>)로 저장</li>
+    </ol>
+
+    <blockquote>
+      <p>파일을 통째로 다시 쓰지 않고, 변경된 데이터만 별도로 기록하는 방식 Merge-on-Road라는 방식이 현재 도입되었습니다.</p>
+
+    </blockquote>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">table1</code>의 어떤 레코드와도 일치하지 않는 <code class="language-plaintext highlighter-rouge">table1_stage</code>의 레코드는 일치하는 레코드와 다른 파티션에 속하기 때문에 새로운 Parquet 파일(<code class="language-plaintext highlighter-rouge">00000-3-0fa3a.parquet</code>)로 작성</li>
+  <li>
+    <p>두 데이터 파일을 가리키는 새로운 매니페스트 파일(<code class="language-plaintext highlighter-rouge">table1/metadata/0d9a-98fa-77.avro</code>)이 생성</p>
+
+    <blockquote>
+      <p>이 예제에서는 스냅샷 <code class="language-plaintext highlighter-rouge">s1</code>에 있는 데이터 파일의 레코드가 변경되었으므로 매니페스트 파일과 데이터 파일을 새로 생성했습니다. 일반적으로 변경되지 않은 데이터 파일과 매니페스트 파일은 여러 스냅샷에서 재사용됩니다.</p>
+
+    </blockquote>
+  </li>
+  <li>생성된 매니페스트 파일을 가리키는 새로운 매니페스트 리스트(<code class="language-plaintext highlighter-rouge">table1/metadata/snap-9fa1-3-16c3.avro</code>)가 생성됩니다.</li>
+  <li>새로운 스냅샷 <code class="language-plaintext highlighter-rouge">s2</code>를 가리키고 이전 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>, <code class="language-plaintext highlighter-rouge">s1</code>을 여전히 가리키는 새로운 메타데이터 파일(<code class="language-plaintext highlighter-rouge">table1/metadata/v3.metadata.json</code>)이 생성됩니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">db1.table1</code>의 현재 메타데이터 포인터가 새로운 메타데이터 파일을 가리키게 합니다.</li>
+</ol>
+
+<h3 id="select">SELECT</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">db1</span><span class="p">.</span><span class="n">table1</span>
+</code></pre></div></div>
+
+<figure>
+    <a><img src="https://www.dremio.com/wp-content/uploads/2023/04/select-1024x505.png" /></a>
+</figure>
+
+<p>SELECT 쿼리를 실행하면 다음과 같이 실행합니다.</p>
+
+<ol>
+  <li>쿼리 엔진이 Iceberg catalog를 조회합니다.</li>
+  <li>현재 메타데이터 파일 위치를 가져옵니다.</li>
+  <li>메타데이터 파일을 열어 최신 스냅샷 <code class="language-plaintext highlighter-rouge">s2</code>의 매니페스트 리스트를 찾습니다.</li>
+  <li>매니페스트 리스트를 열어 매니페스트 파일 위치를 찾습니다.</li>
+  <li>매니페스트 파일을 열어 데이터 파일 경로를 찾습니다.</li>
+  <li>데이터 파일을 읽고 결과를 반합니다.</li>
+</ol>
+
+<h3 id="hidden-partitioning">Hidden Partitioning</h3>
+
+<p>Hive 테이블 형식의 문제 중 하나는 사용자가 쿼리 최적화를 위해 테이블의 물리적 레이아웃을 알아야 한다는 점입니다.</p>
+
+<p>예를 들면, <code class="language-plaintext highlighter-rouge">WHERE event_ts &gt;= ‘2021-05-10 12:00:00’</code> 조건을 사용하면 풀스캔을 해야 하고 <code class="language-plaintext highlighter-rouge">WHERE event_ts &gt;= ‘2021-05-10 12:00:00’ AND event_year &gt;= ‘2021’ AND event_month &gt;= ‘05’ AND (event_day &gt;= ‘10’ OR event_month &gt;= '06')</code> 와 같이 파티셔닝 스키마를 적용해야 느린 쿼리를 피할 수 있습니다.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">table1</span>
+<span class="k">WHERE</span> <span class="n">order_ts</span> <span class="o">=</span> <span class="nb">DATE</span> <span class="s1">'2021-01-26'</span>
+</code></pre></div></div>
+<figure>
+    <a><img src="https://www.dremio.com/wp-content/uploads/2021/06/hidden-partitioning-1024x509.png" /></a>
+</figure>
+
+<p>SELECT 쿼리를 실행하면 다음의 과정을 수행합니다.</p>
+
+<ol>
+  <li>쿼리 엔진이 Iceberg catalog에 접근합니다.</li>
+  <li>현재 메타데이터 파일 위치를 가져옵니다.</li>
+  <li>메타데이터 파일을 열어 최신 스냅샷 <code class="language-plaintext highlighter-rouge">s2</code>의 매니페스트 리스트를 찾고 이 매니페스트 리스트에는 <code class="language-plaintext highlighter-rouge">order_ts</code> 필드의 시간별로 파티션되어 있다는 것이 명시되어 있습니다.</li>
+  <li>이 매니페스트 리스트를 열고 매니페스트 파일 위치를 가져옵니다.</li>
+  <li>매니페스트 파일을 열면, 각 데이터 파일이 어떤 파티션에 속하는지에 대한 정보가 저장되어 있기 때문에 데이터 파일이 해당 날짜의 파티션에 속하는지 비교함. 이를 이용해 2021-01-26에 해당하는 데이터 파일을 찾습니다.</li>
+  <li>매칭된 데이터 파일을 읽고 쿼리 결과를 반환합니다.</li>
+</ol>
+
+<h3 id="time-travel">Time Travel</h3>
+
+<p>Iceberg 테이블 포맷의 또 다른 장점으로 “time travel”이라 부르는 기능이 있습니다.</p>
+
+<p>거버넌스나 재현성을 위해 이전 테이블 상태를 추적하려면 특정 시점의 복사본을 생성하고 관리하는 작업이 필요했습니다. 하지만 Iceberg는 과거 다양한 시점에 테이블이 어떤 모습이었는지 바로 추적이 가능합니다.</p>
+
+<p>예를 들어, 사용자가 2021년 1월 28일 시점에서 UPSERT가 되기 전의 테이블을 확인해야 한다고 가정하겠습니다.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">table1</span> <span class="k">AS</span> <span class="k">OF</span> <span class="s1">'2021-01-28 00:00:00'</span>
+<span class="c1">-- (timestamp is from before UPSERT operation)</span>
+</code></pre></div></div>
+<figure>
+    <a><img src="https://www.dremio.com/wp-content/uploads/2023/04/time-travel-1024x507.png" /></a>
+</figure>
+
+<p>SELECT 쿼리가 실행되면 다음의 과정을 수행합니다.</p>
+
+<ol>
+  <li>쿼리 엔진이 Iceberg catalog에 접근합니다.</li>
+  <li>현재 메타데이터 파일 위치를 가져옵니다.</li>
+  <li>메타데이터 파일을 열어 요청한 시간에 활성화된 스냅샷 <code class="language-plaintext highlighter-rouge">s1</code>을 찾고 <code class="language-plaintext highlighter-rouge">s1</code>에 해당하는 매니페스트 리스트 위치를 가져옵니다.</li>
+  <li>매니페스트 리스트를 열어 매니페스트 파일 위치를 가져옵니다.</li>
+  <li>매니페스트 파일을 열어 두 데이터 파일의 위치를 가져옵니다.</li>
+  <li>데이터 파일들을 열어 해당 시점에 존재하는 데이터를 읽어서 SELECT 쿼리의 결과를 반환합니다.</li>
+</ol>
+
+<p>이전 매니페스트 리스트, 매니페스트 파일, 데이터 파일들이 현재 테이블 상태에서 사용되지 않지만, 아직 데이터 레이크에는 존재하고 사용가능합니다.</p>
+
+<p>과거 시점의 메타데이터와 데이터 파일을 보관하는 것이 가치가 없어지는 경우 가비지 컬렉션이라는 비동기 백그라운드 프로세스를 이용해 오래된 파일을 정리할 수 있습니다. 이는 비즈니스 요구사항에 따라 적절한 세팅이 필요합니다.</p>
+
+<h2 id="compaction">Compaction</h2>
+
+<p>Iceberg에서 Compaction은 비동기 백그라운드 프로세스로 많고 사이즈가 작은 파일들을 적지만 사이즈가 큰 파일로 압축하는 기능입니다. 너무 많은 파일은 쿼리 엔진이 여러 파일을 읽어야 하고 파일을 여는데 필요한 메타데이터 조회 비용이 높아지게 됩니다. 따라서, 압축은 파일 수를 줄이고 쿼리 성능을 높이는데 도움됩니다.</p>
+
+<p>Read-side와 Write-side 사이에는 다음의 Trade-off가 있습니다.</p>
+
+<ul>
+  <li>Write-side: 사용자는 <strong>낮은 지연시간</strong>(Low latency)을 요구합니다. 사용자는 데이터를 빠르게 쓰고 빠르게 사용하고 싶어합니다. 극단적으로, 매 레코드를 파일로 기록하면 읽기 작업에서 조회하는데 오버헤드가 커지게 됩니다.</li>
+  <li>Read-side: 사용자는 <strong>높은 처리량</strong>(High throughput)을 요구합니다. 단일 파일에 최대한 많은 레코드가 있어야 효율적입니다. 하지만 그 만큼 업데이트 작업에 대한 비용이 커지게 됩니다.</li>
+</ul>
+
+<p>따라서, 쓰기 측면에서 저지연을 원한다면 파일이 너무 작아져서 작은 파일이 쌓이고 데이터를 읽을 때 성능이 떨어지게 됩니다. 읽기 측면에서 높은 처리량을 원한다면 데이터 파일 크기가 커져 새로운 데이터가 추가될 때 지연이 발생하게 됩니다.</p>
+
+<p>Compaction은 이러한 트레이드 오프의 균형을 잡는데 도움을 줍니다. 사용자가 데이터를 쓰면 row format 파일이 생성되고 바로 사용 가능하게 합니다. 백그라운드 압축 프로세스가 주기적으로 이러한 작은 파일들을 열 기반 형식이며 사이즈가 크고 적은 파일로 묶게 합니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://medium.com/data-engineering-with-dremio/data-lakehouse-101-the-who-what-and-why-of-data-lakehouses-b55c56912ac2">[Blog]Data Lakehouse 101</a></li>
+  <li><a href="https://www.dremio.com/resources/guides/apache-iceberg-an-architectural-look-under-the-covers/">[Blog] Apache Iceberg: An Architectural Look Under the Covers</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/tags/#data-engineering" class="page__taxonomy-item p-category" rel="tag">data-engineering</a><span class="sep">, </span>
+    
+      <a href="/tags/#iceberg" class="page__taxonomy-item p-category" rel="tag">iceberg</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      <a href="/categories/#data-engineer" class="page__taxonomy-item p-category" rel="tag">data-engineer</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2025-03-24T00:00:00+09:00">March 24, 2025</time></p>
+        
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/pytorch/softmax-and-crossentropyloss/" class="pagination--pager" title="Python으로 Softmax와 CrossEntropyLoss 바닥부터 구현하기
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/pytorch/softmax-and-crossentropyloss/" rel="permalink">Python으로 Softmax와 CrossEntropyLoss 바닥부터 구현하기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 15 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Softmax
+Softmax는 입력받은 값을 확률로 변환하는 함수입니다. 입력 값을 0과 1사이의 확률값으로 변환하고 총합은 항상 1이 되는 특징을 가집니다. 주로 딥러닝에서 마지막 출력층의 활성화함수로 사용되어 각 클래스에 속할 확률을 계산하는데 사용합니다. 그리고 지수함수를 사...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai-agent/langgraph-ai-agent/" rel="permalink">Langgraph: Reflection Agents
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 14 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Langgraph
+Langgraph는 노드(Node)와 엣지(Edge)를 이용해 워크플로우의 흐름을 정의하여 AI Agent 애플리케이션을 빌드할 수 있는 플랫폼입니다.
+
+  노드(Node): 특정 작업을 수행하는 단계를 말합니다. 예를 들어, 텍스트 요약, 검색, 코드 생성 노드...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/simple-rag/" rel="permalink">RAG: Hybrid search + Reranker
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 20 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">RAG
+RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/reranking-opensearch/" rel="permalink">Reranking - Opensearch
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 17 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Reranker
+문서 검색 과정에서 문서를 임베딩 벡터로 변환하는 과정과 검색 시간 단축을 위해 Approximate Nearest Neighbor search(ANNs)와 같이 근사 기법으로 인해 정보 손실이 발생합니다. 
+이로 인해 필요한 문서가 누락될 가능성이 있으며, 이를 ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';" role="search">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2025 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    <script>
+  'use strict';
+
+  (function() {
+    var commentContainer = document.querySelector('#utterances-comments');
+
+    if (!commentContainer) {
+      return;
+    }
+
+    var script = document.createElement('script');
+    script.setAttribute('src', 'https://utteranc.es/client.js');
+    script.setAttribute('repo', 'emeraldgoose/emeraldgoose.github.io');
+    script.setAttribute('issue-term', 'pathname');
+    
+    script.setAttribute('theme', 'github-light');
+    script.setAttribute('crossorigin', 'anonymous');
+
+    commentContainer.appendChild(script);
+  })();
+</script>
+
+  
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+  inlineMath: [['$','$']],
+  displayMath: [['$$','$$']],
+  processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+  </body>
+</html>

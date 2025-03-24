@@ -1,4 +1,4 @@
-I"��<h2 id="langgraph">Langgraph</h2>
+I"��<h2 id="langgraph">Langgraph</h2>
 <p>Langgraph는 노드(Node)와 엣지(Edge)를 이용해 워크플로우의 흐름을 정의하여 AI Agent 애플리케이션을 빌드할 수 있는 플랫폼입니다.</p>
 <ul>
   <li><strong>노드(Node)</strong>: 특정 작업을 수행하는 단계를 말합니다. 예를 들어, 텍스트 요약, 검색, 코드 생성 노드 등이 있습니다.</li>
@@ -33,10 +33,11 @@
 </figure>
 
 <h3 id="workflow-plan-and-execution">workflow (plan and execution)</h3>
-
 <p><strong>State</strong></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">planning_steps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
@@ -64,6 +65,14 @@
     <span class="n">document</span> <span class="o">=</span> <span class="n">converted_docs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">page_content</span>
 
     <span class="k">return</span> <span class="n">State</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>LLM</strong>: Gemini-2.0-flash 모델을 사용했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain_google_genai</span> <span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+
+<span class="k">def</span> <span class="nf">get_chat</span><span class="p">():</span>
+    <span class="n">chat</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">'gemini-2.0-flash-001'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">chat</span>
 </code></pre></div></div>
 
 <p><strong>extract_materials</strong>: 이 단계에서는 html에서 이미지와 표 형식을 추출합니다. 여기서 추출된 자료들은 execution_node에서 사용됩니다.</p>
@@ -169,7 +178,7 @@
     <span class="k">print</span><span class="p">(</span><span class="s">"##### revise #####"</span><span class="p">)</span>
     <span class="n">drafts</span> <span class="o">=</span> <span class="n">state</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"drafts"</span><span class="p">)</span>
 
-    <span class="c1"># Not using multiprocessing
+    <span class="c1"># 이 부분을 멀티프로세싱으로 구성하면 처리 속도를 높일 수 있습니다.
 </span>    <span class="n">reflection_process</span> <span class="o">=</span> <span class="n">get_reflect_workflow</span><span class="p">()</span>
     
     <span class="n">final_doc</span> <span class="o">=</span> <span class="s">""</span>
@@ -178,6 +187,29 @@
         <span class="n">final_doc</span> <span class="o">+=</span> <span class="n">output</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'revised_draft'</span><span class="p">)</span> <span class="o">+</span> <span class="s">'</span><span class="se">\n\n</span><span class="s">'</span>
     
     <span class="k">return</span> <span class="n">State</span><span class="p">(</span><span class="n">final_doc</span><span class="o">=</span><span class="n">final_doc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><strong>Define workflow</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langgraph.graph</span> <span class="kn">import</span> <span class="n">StateGraph</span><span class="p">,</span> <span class="n">END</span>
+
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">StateGraph</span><span class="p">(</span><span class="n">State</span><span class="p">)</span>
+
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">"get_document_node"</span><span class="p">,</span> <span class="n">get_document_node</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">"plan_node"</span><span class="p">,</span><span class="n">plan_node</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">"extract_materials"</span><span class="p">,</span> <span class="n">extract_materials</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">"execute_node"</span><span class="p">,</span> <span class="n">execute_node</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="s">"revise_answers"</span><span class="p">,</span><span class="n">revise_answers</span><span class="p">)</span>
+
+<span class="n">workflow</span><span class="p">.</span><span class="n">set_entry_point</span><span class="p">(</span><span class="s">"get_document_node"</span><span class="p">)</span>
+
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"get_document_node"</span><span class="p">,</span><span class="s">"plan_node"</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"get_document_node"</span><span class="p">,</span><span class="s">"extract_materials"</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"plan_node"</span><span class="p">,</span><span class="s">"execute_node"</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"extract_materials"</span><span class="p">,</span><span class="s">"execute_node"</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"execute_node"</span><span class="p">,</span> <span class="s">"revise_answers"</span><span class="p">)</span>
+<span class="n">workflow</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="s">"revise_answers"</span><span class="p">,</span><span class="n">END</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">workflow</span><span class="p">.</span><span class="nb">compile</span><span class="p">()</span>
 </code></pre></div></div>
 
 <h3 id="workflow-reflect">workflow (reflect)</h3>
@@ -194,7 +226,10 @@
 
 <p><strong>reflect_node</strong>: execute_node에서 생성된 초안을 비판합니다. 어떤 부분이 포함되지 않았는지, 뭘 추가해야 더 나은 글이 되는지, 불필요한 부분에 대한 비평을 작성합니다. TavilySearch를 이용해 외부에서 정보를 넣어줄 수도 있습니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Reflection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">langchain_community.tools</span> <span class="kn">import</span> <span class="n">TavilySearchResults</span>
+
+<span class="k">class</span> <span class="nc">Reflection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">missing</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">"Critique of what is missing"</span><span class="p">)</span>
     <span class="n">advisable</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">"Critique of what is helpful for better writing"</span><span class="p">)</span>
     <span class="n">superfluous</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s">"Critique of what is superfluous"</span><span class="p">)</span>
@@ -273,16 +308,26 @@
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">should_continue</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="n">ReflectionState</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="k">print</span><span class="p">(</span><span class="s">"##### should continue #####"</span><span class="p">)</span>
     <span class="n">max_revision</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s">'configurable'</span><span class="p">].</span><span class="n">get</span><span class="p">(</span><span class="s">"max_revision"</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"revision: </span><span class="si">{</span><span class="n">state</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'revision_number'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s"> / </span><span class="si">{</span><span class="n">max_revision</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
-    
+    <span class="c1"># print(f"revision: {state.get('revision_number',0)} / {max_revision}")
+</span>    
     <span class="k">if</span> <span class="n">state</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'revision_number'</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_revision</span><span class="p">:</span>
         <span class="k">return</span> <span class="s">"end"</span>
     <span class="k">return</span> <span class="s">"continue"</span>
 </code></pre></div></div>
 
+<h3 id="run">Run</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">final_state</span> <span class="o">=</span> <span class="n">graph</span><span class="p">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s">"url"</span><span class="p">:</span><span class="s">""</span><span class="p">},</span> 
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s">'max_revision'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'on_search'</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
+    <span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'final_draft.md'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">final_state</span><span class="p">[</span><span class="s">'final_doc'</span><span class="p">])</span>
+</code></pre></div></div>
+
 <p>이 Agent를 실제로 동작하게 되면 약 2~3분정도 시간이 걸리게 됩니다. 시간을 단축하려면 reflect workflow를 multiprocessing 라이브러리를 이용해 병렬처리하도록 구성하면 빠르게 시간을 단축시킬 수 있습니다.</p>
 
-<h3 id="단순-요약-번역과-agent-결과의-비교">단순 요약, 번역과 Agent 결과의 비교</h3>
+<h2 id="단순-요약-번역과-agent-결과의-비교">단순 요약, 번역과 Agent 결과의 비교</h2>
 <p>같은 원문을 번역, Gemini로 단순 요약 그리고 Reflection Agent의 요약결과를 비교해보겠습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 번역
 이러한 키워드들 중에서 마지막 세트만이 사용자 의도를 정확히 일치시킵니다. 
@@ -343,7 +388,7 @@ DoorDash는 검색 시스템의 성능을 평가하기 위해 다양한 지표�
 
 <h2 id="code">Code</h2>
 <ul>
-  <li><a href=""></a></li>
+  <li><a href="https://github.com/emeraldgoose/simple-summarize-agent">simple-summarize-agent</a></li>
 </ul>
 
 <h2 id="reference">Reference</h2>

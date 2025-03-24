@@ -730,4 +730,10 @@ var store = [{
         "tags": ["torch"],
         "url": "/pytorch/softmax-and-crossentropyloss/",
         "teaser": null
+      },{
+        "title": "Apache Iceberg: Architecture",
+        "excerpt":"What is a Data Lakehouse? 보통 구조화된 데이터와 구조화되지 않은 데이터를 모두 데이터 레이크에 저장한 뒤, 데이터 일부를 분석 등의 목적에 맞춰 데이터 웨어하우스에 옮기는 기존의 패러다임은 데이터의 규모가 점점 커져가면서 더 이상 유지하기 어려워지고 있습니다. 이 시스템의 한계점은 여러 개의 데이터 복사본을 저장하고, 동기화 및 일관되게 유지하며, 최신 데이터...","categories": ["data-engineer"],
+        "tags": ["data-engineering","iceberg"],
+        "url": "/data-engineer/apache-iceberg-architecture/",
+        "teaser": null
       }]
