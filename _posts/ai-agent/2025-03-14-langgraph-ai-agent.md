@@ -31,7 +31,7 @@ Reflection은 Agent의 과거 행동을 반성하고 비판해서 Agent의 품�
         <figcaption>plan and execution diagram</figcaption>
     </a>
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" data-lightbox="gallery" style="text-align:center;">
-        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" alt="03">
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" alt="03" style="max-width:29.5%;height:auto;">
         <figcaption>revise diagram</figcaption>
     </a>
 </figure>

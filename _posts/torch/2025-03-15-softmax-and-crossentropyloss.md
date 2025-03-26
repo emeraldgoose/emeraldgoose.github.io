@@ -19,7 +19,7 @@ $\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$
 위와 같이 구현한 이유는 안정성때문입니다. x값이 너무 크면 오버플로우가 발생할 수 있기 때문에 최대값을 0으로(`np.exp(x) = 1`) 보정하는 작업을 수행합니다. `np.exp(x)`를 `np.exp(x - np.max(x))`로 구현하더라도 변화량은 같기 때문에 최종 소프트맥스 결과값은 같습니다.
 
 ### Backward
-2차원 입력을 받는 Softmax 함수를 미분하는 과정은 다음과 같습니다.
+Softmax 함수를 미분하는 과정은 다음과 같습니다.
 
 $\frac{\partial S(x_i)}{\partial x_k} = \frac{\partial}{\partial x_k} \frac{e^{x_i}}{\sum_j e^{x_j}} = \frac{(\frac{\partial}{\partial x_k}e^{x_i})\sum_j e^{x_j} - e^{x_i}(\frac{\partial}{\partial x_k}\sum_j e^{x_j})}{(\sum_j e^{x_j})^2}$
 

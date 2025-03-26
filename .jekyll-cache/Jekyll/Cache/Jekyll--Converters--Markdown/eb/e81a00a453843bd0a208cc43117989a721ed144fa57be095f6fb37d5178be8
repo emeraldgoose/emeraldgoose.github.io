@@ -1,4 +1,4 @@
-I"��<h2 id="langgraph">Langgraph</h2>
+I"��<h2 id="langgraph">Langgraph</h2>
 <p>Langgraph는 노드(Node)와 엣지(Edge)를 이용해 워크플로우의 흐름을 정의하여 AI Agent 애플리케이션을 빌드할 수 있는 플랫폼입니다.</p>
 <ul>
   <li><strong>노드(Node)</strong>: 특정 작업을 수행하는 단계를 말합니다. 예를 들어, 텍스트 요약, 검색, 코드 생성 노드 등이 있습니다.</li>
@@ -27,7 +27,7 @@
         <figcaption>plan and execution diagram</figcaption>
     </a>
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" data-lightbox="gallery" style="text-align:center;">
-        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" alt="03" />
+        <img src="https://1drv.ms/i/c/502fd124b305ba80/IQRYsDzRPA4CSqn6O7Xk5l_rAe4DUDQ9DIHBm5K_MxHxdt8?width=1024" alt="03" style="max-width:25%;height:auto;" />
         <figcaption>revise diagram</figcaption>
     </a>
 </figure>
