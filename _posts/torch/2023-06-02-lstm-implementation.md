@@ -27,17 +27,17 @@ $b_{ih}$는 ($b_{ii}, b_{if}, b_{ig}, b_{io}$), $b_{hh}$는 ($b_{hi}, b_{hf}, b_
 
 input gate 
 
-- $i_t = \sigma(x_t W_{ii}^T + b_ii + h_{t-1} W_{hi}^T + b_hi)$
+- $i_t = \sigma(x_t W_{ii}^\top + b_ii + h_{t-1} W_{hi}^\top + b_hi)$
 
-- $g_t = \tanh(x_t W_{ig}^T + b_ig + h_{t-1} W_{hg}^T + b_hg)$
+- $g_t = \tanh(x_t W_{ig}^\top + b_ig + h_{t-1} W_{hg}^\top + b_hg)$
 
 forget gate 
 
-- $f_t = \sigma(x_t W_{if}^T + b_if + h_{t-1} W_{hf}^T + b_hf)$
+- $f_t = \sigma(x_t W_{if}^\top + b_if + h_{t-1} W_{hf}^\top + b_hf)$
 
 output gate 
 
-- $o_t = \sigma(x_t W_{io}^T + b_io + h_{t-1} W_{ho}^T + b_ho)$
+- $o_t = \sigma(x_t W_{io}^\top + b_io + h_{t-1} W_{ho}^\top + b_ho)$
 
 cell state 
 
@@ -70,21 +70,21 @@ ${dJ \over dc_t} = {dJ \over dh_t} \ {dh_t \over dc_t} + {dJ \over dc_{t+1}}$
 
 input gate 부터 output gate의 미분은 다음과 같습니다. bias는 따로 계산하지 않겠습니다.  
 
-${dJ \over dW_{ii}} = [{dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma]^T \cdot x_t$
+${dJ \over dW_{ii}} = ({dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma)^\top \cdot x_t$
 
-${dJ \over dW_{if}} = [{dJ \over dc_t} \ {dc_t \over df_t} \ d\sigma]^T \cdot x_t$  
+${dJ \over dW_{if}} = ({dJ \over dc_t} \ {dc_t \over df_t} \ d\sigma)^\top \cdot x_t$  
 
-${dJ \over dW_{ig}} = [{dJ \over dc_t} \ {dc_t \over dg_t} \ d\tanh]^T \cdot x_t$  
+${dJ \over dW_{ig}} = ({dJ \over dc_t} \ {dc_t \over dg_t} \ d\tanh)^\top \cdot x_t$  
 
-${dJ \over dW_{io}} = [{dJ \over dh_t} \ {dh_t \over do_t} \ d\sigma]^T \cdot x_t$  
+${dJ \over dW_{io}} = ({dJ \over dh_t} \ {dh_t \over do_t} \ d\sigma)^\top \cdot x_t$  
 
-${dJ \over dW_{hi}} = [{dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma]^T \cdot h_{t-1}$  
+${dJ \over dW_{hi}} = ({dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma)^\top \cdot h_{t-1}$  
 
-${dJ \over dW_{hf}} = [{dJ \over dc_t} \ {dc_t \over df_t} \ d\sigma]^T \cdot h_{t-1}$  
+${dJ \over dW_{hf}} = ({dJ \over dc_t} \ {dc_t \over df_t} \ d\sigma)^\top \cdot h_{t-1}$  
 
-${dJ \over dW_{hg}} = [{dJ \over dc_t} \ {dc_t \over dg_t} \ d\tanh]^T \cdot h_{t-1}$  
+${dJ \over dW_{hg}} = ({dJ \over dc_t} \ {dc_t \over dg_t} \ d\tanh)^\top \cdot h_{t-1}$  
 
-${dJ \over dW_{ho}} = [{dJ \over dh_t} \ {dh_t \over do_t} \ d\sigma]^T \cdot h_{t-1}$  
+${dJ \over dW_{ho}} = ({dJ \over dh_t} \ {dh_t \over do_t} \ d\sigma)^\top \cdot h_{t-1}$  
 
 $d\sigma$와 $d\tanh$는 다음의 예시로 설명할 수 있습니다.
 
@@ -96,21 +96,21 @@ sigmoid를 미분한다면 $\sigma \cdot (1 - \sigma)$이므로 ${di_t \over ds_
 
 위에서 구한 값들을 모두 대입하면 다음과 같은 결과를 얻을 수 있습니다. transpose를 취한 이유는 forward에서 weight에 transpose를 취하여 계산했기 때문입니다.
 
-${dJ \over dW_{ii}} = [{dJ \over dc_t} \cdot g_t \cdot i_t \ (1 - i_t)]^T \cdot x_t$
+${dJ \over dW_{ii}} = ({dJ \over dc_t} \cdot g_t \cdot i_t \ (1 - i_t))^\top \cdot x_t$
 
-${dJ \over dW_{if}} = [{dJ \over dc_t} \cdot c_{t-1} \cdot f_t \ (1 - f_t)]^T \cdot x_t$  
+${dJ \over dW_{if}} = ({dJ \over dc_t} \cdot c_{t-1} \cdot f_t \ (1 - f_t))^\top \cdot x_t$  
 
-${dJ \over dW_{ig}} = [{dJ \over dc_t} \cdot i_t \cdot (1 - g_t^2)]^T \cdot x_t$  
+${dJ \over dW_{ig}} = ({dJ \over dc_t} \cdot i_t \cdot (1 - g_t^2))^\top \cdot x_t$  
 
-${dJ \over dW_{io}} = [{dJ \over dh_t} \cdot \tanh(c_t) \cdot o_t \ (1 - o_t)]^T \cdot x_t$  
+${dJ \over dW_{io}} = ({dJ \over dh_t} \cdot \tanh(c_t) \cdot o_t \ (1 - o_t))^\top \cdot x_t$  
 
-${dJ \over dW_{hi}} = [{dJ \over dc_t} \cdot g_t \cdot i_t \ (1 - i_t)]^T  \cdot h_{t-1}$  
+${dJ \over dW_{hi}} = ({dJ \over dc_t} \cdot g_t \cdot i_t \ (1 - i_t))^\top  \cdot h_{t-1}$  
 
-${dJ \over dW_{hf}} = [{dJ \over dc_t} \cdot c_{t-1} \cdot f_t \ (1 - f_t)]^T \cdot h_{t-1}$  
+${dJ \over dW_{hf}} = ({dJ \over dc_t} \cdot c_{t-1} \cdot f_t \ (1 - f_t))^\top \cdot h_{t-1}$  
 
-${dJ \over dW_{hg}} = [{dJ \over dc_t} \cdot i_t \cdot (1 - g_t^2)]^T \cdot h_{t-1}$  
+${dJ \over dW_{hg}} = ({dJ \over dc_t} \cdot i_t \cdot (1 - g_t^2))^\top \cdot h_{t-1}$  
 
-${dJ \over dW_{ho}} = [{dJ \over dh_t} \cdot \tanh(c_t) \cdot o_t \ (1 - o_t)]^T \cdot h_{t-1}$  
+${dJ \over dW_{ho}} = ({dJ \over dh_t} \cdot \tanh(c_t) \cdot o_t \ (1 - o_t))^\top \cdot h_{t-1}$  
 
 ${dJ \over dc_t} = {dJ \over dh_t} \cdot o_t \cdot (1 - \tanh(c_t)^2) + {dJ \over dc_{t+1}}$
 

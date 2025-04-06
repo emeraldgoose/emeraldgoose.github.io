@@ -1,4 +1,4 @@
-I"A<h2 id="related">Related</h2>
+I"A<h2 id="related">Related</h2>
 <blockquote>
   <p>RNN에 이어서 LSTM을 구현했습니다.</p>
 </blockquote>
@@ -81,7 +81,7 @@
 
 <p>input gate 부터 output gate의 미분은 다음과 같습니다. bias는 따로 계산하지 않겠습니다.</p>
 
-<p>${dJ \over dW_{ii}} = [{dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma]^T \cdot x_t$</p>
+<p>${dJ \over dW_{ii}} = [{dJ \over dc_t} \ {dc_t \over di_t} \ d\sigma]^\top \cdot x_t$</p>
 
 <p>${dJ \over dW_{if}} = [{dJ \over dc_t} \ {dc_t \over df_t} \ d\sigma]^T \cdot x_t$</p>
 
