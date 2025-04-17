@@ -46,8 +46,6 @@ Hive는 파일 형식을 가리지 않고 파티셔닝(Partitioning)과 버킷(B
     <figcaption>Apache Iceberg Architecture</figcaption>
 </figure>
 
-Apache Iceberg Architecture
-
 Iceberg 테이블의 아키텍처는 3개의 계층이 있습니다.
 
 1. **Iceberg Catalog**
