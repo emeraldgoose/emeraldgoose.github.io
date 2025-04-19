@@ -15,12 +15,12 @@ Self Attention 매커니즘의 핵심은 Scaled Dot Product Attention입니다. 
 ## Forward
 SPDA의 forward 수식을 살펴보겠습니다.
 
-$Attention(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_k}})V$
+$Attention(Q,K,V) = \text{softmax}(\frac{QK^{\top}}{\sqrt{d_k}})V$
 
 Query는 현재 단어의 정보를 말합니다. 문장 내 임의의 단어들의 정보가 Query로 사용되면 다른 단어의 정보를 담은 Key와의 유사도(Similarity) 연산을 Dot-product로 수행하여 Softmax 연산을 통해 Attention Score를 구하게 됩니다. 스코어와 Value를 곱하여 Attention Value를 계산하게되는데 이것은 스코어를 이용해 Value에서 얼마나 정보를 가져올 것인지 결정하는 것입니다.  
 
 ### Scaling
-Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-product 후 값이 너무 커지는 것을 방지하기 위함입니다. $d_k$가 길어질 수록 $QK^T$의 값도 같이 커져 기울기가 0이 되어 gradient vanishing 문제가 발생할 수 있기 때문에 스케일링이 필요합니다.
+Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-product 후 값이 너무 커지는 것을 방지하기 위함입니다. $d_k$가 길어질 수록 $QK^{\top}$의 값도 같이 커져 기울기가 0이 되어 gradient vanishing 문제가 발생할 수 있기 때문에 스케일링이 필요합니다.
 
 다음의 간단한 코드와 그래프로 스케일링 전후의 차이를 쉽게 이해할 수 있습니다.
 
@@ -37,7 +37,7 @@ Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-pr
 
 또한, $d_k$를 사용하는 이유는 다음과 같습니다.
 
-Query와 Key가 가우시안 분포를 따른다고 가정하면 평균은 0, 분산은 1을 가지게 됩니다. $QK^T = \sum_{i}^{d_k}Q_iK_i$이고 Query와 Key는 independent하므로 평균은 0, 분산은 $d_k$를 가지게 됩니다. 따라서 $\sqrt{d_k}$로 스케일링하여 분산을 1로 줄일 수 있게 됩니다.
+Query와 Key가 가우시안 분포를 따른다고 가정하면 평균은 0, 분산은 1을 가지게 됩니다. $QK^{\top} = \sum_{i}^{d_k}Q_iK_i$이고 Query와 Key는 independent하므로 평균은 0, 분산은 $d_k$를 가지게 됩니다. 따라서 $\sqrt{d_k}$로 스케일링하여 분산을 1로 줄일 수 있게 됩니다.
 
 <script src="https://gist.github.com/emeraldgoose/a23756410bc023d518cabaef8e5e1945.js"></script>
 
@@ -48,7 +48,7 @@ Backward 함수를 구현하기 위해 Attention 계산에 참여하는 Query, K
 
 먼저, Attention forward 수식을 나눠서 생각해보겠습니다.
 
-$1. \\ A = \frac{QK^T}{\sqrt{d_k}}$  
+$1. \\ A = \frac{QK^{\top}}{\sqrt{d_k}}$  
 $2. \\ W = \text{softmax}(A)$  
 $3. \\ Z = WV$
 
@@ -58,12 +58,13 @@ $\frac{\partial A}{\partial Q} = \frac{K}{\sqrt{d_k}}$
 
 $\frac{\partial A}{\partial K} = \frac{Q}{\sqrt{d_k}}$
 
-2번 수식에서 얻을 수 있는 $\frac{\partial W}{\partial A}$는 softmax의 미분결과이므로 W(1 - W)로 가정해보겠습니다.(실제 계산은 W(1 - W)가 아닙니다. 저는 미리 구현해둔 softmax 클래스를 이용할 것입니다.)  
-또한, 3번 수식으로부터 $\frac{\partial Z}{\partial W} = V^T$도 알 수 있습니다.
+2번 수식에서 얻을 수 있는 $\frac{\partial W}{\partial A}$는 softmax의 미분결과이므로 W(1 - W)로 가정해보겠습니다.(실제 계산은 W(1 - W)가 아닙니다. 저는 미리 구현해둔 softmax 클래스를 이용할 것입니다.)
+
+또한, 3번 수식으로부터 $\frac{\partial Z}{\partial W} = V^{\top}$도 알 수 있습니다.
 
 다음, Value에 대한 기울기부터 계산합니다. upstream gradient를 $dZ$라 가정하겠습니다.  
 
-$\frac{\partial L}{\partial V} = \frac{\partial L}{\partial Z} \frac{\partial Z}{\partial V} = W^TdZ$
+$\frac{\partial L}{\partial V} = \frac{\partial L}{\partial Z} \frac{\partial Z}{\partial V} = W^{\top} dZ$
 
 다음, Query와 Key에 대한 기울기를 계산합니다.  
 
@@ -85,13 +86,13 @@ pytorch의 경우 MultiHead Attention의 파라미터는 self-attention인 경�
 ## Forward
 MultiHead Attention의 계산 수식은 다음과 같습니다.
 
-$\text{MultiHead}(Q, K, V) = \text{Concat}(head_1,...,head_h)W^O$, where $head_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$
+$\text{MultiHead}(Q, K, V) = \text{Concat}(head_1,...,head_h)W^O$, $head_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$
 
-MultiHead Attention 모듈의 embed_dim은 모델의 전체 차원을 말합니다. 이것을 head의 개수(num_heads)로 나눈 값을 각 head에서 사용될 차원 head_dim으로 사용하게 됩니다. 따라서, embed_dim은 num_heads의 배수로 설정해야 합니다.
+MultiHead Attention 모듈의 `embed_dim`은 모델의 전체 차원을 말합니다. 이것을 head의 개수(`num_heads`)로 나눈 값을 각 head에서 사용될 차원 `head_dim`으로 사용하게 됩니다. 따라서, `embed_dim`은 `num_heads`의 배수로 설정해야 합니다.
 
 <script src="https://gist.github.com/emeraldgoose/b8d3081f5885ead2f962bdcd337fbd47.js"></script>
 
-attn_output_transpose는 backward에서 shape가 필요하기 때문에 저장했고 attn_output_reshaped는 backward에서 d_out_proj_weight를 계산하기 위해 저장했습니다. 차원을 맞춰주는 것에 주의하면서 구현해야 했습니다.
+`attn_output_transpose`는 backward에서 shape가 필요하기 때문에 저장했고 `attn_output_reshaped`는 backward에서 `d_out_proj_weight`를 계산하기 위해 저장했습니다. 차원을 맞춰주는 것에 주의하면서 구현해야 했습니다.
 
 ## Backward
 backward 구현은 forward의 역순으로 구성하면 됩니다. 역시 차원을 맞춰주는 것이 가장 중요하기 때문에 이 부분만 주의하면 됩니다.

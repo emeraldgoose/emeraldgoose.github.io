@@ -1,4 +1,4 @@
-I"�e<h2 id="what-is-a-data-lakehouse">What is a Data Lakehouse?</h2>
+I"�e<h2 id="what-is-a-data-lakehouse">What is a Data Lakehouse?</h2>
 
 <p>보통 구조화된 데이터와 구조화되지 않은 데이터를 모두 데이터 레이크에 저장한 뒤, 데이터 일부를 분석 등의 목적에 맞춰 데이터 웨어하우스에 옮기는 기존의 패러다임은 데이터의 규모가 점점 커져가면서 더 이상 유지하기 어려워지고 있습니다. 이 시스템의 한계점은 여러 개의 데이터 복사본을 저장하고, 동기화 및 일관되게 유지하며, 최신 데이터 요구사항에 맞는 빠른 데이터를 전송하는 과정에서 문제가 발생합니다. 이러한 문제를 해결하기 위해 데이터 레이크하우스라는 새로운 아키텍처가 등장했습니다.</p>
 
@@ -44,8 +44,6 @@
     <figcaption>Apache Iceberg Architecture</figcaption>
 </figure>
 
-<p>Apache Iceberg Architecture</p>
-
 <p>Iceberg 테이블의 아키텍처는 3개의 계층이 있습니다.</p>
 
 <ol>
@@ -60,7 +58,7 @@
 
 <p>Iceberg 카탈로그의 기본 요구 사항은 현재 메타데이터 포인터를 업데이트하기 위한 연산을 지원해야 한다는 것입니다. 이것이 Iceberg 테이블의 트랜잭션이 원자적이고 정확성을 보장할 수 있는 이유입니다.</p>
 
-<p>카탈로그 내에는 각 테이블마다 해당 테이블의 현재 메타데이터 파일에 대한 참조 또는 포인터가 있습니다. 예를 들어 위에 표시된 다이터그램에는 2개의 메타데이터 파일이 있습니다. 카탈로그에서 테이블의 현재 메타데이터 포인터 값은 오른쪽에 있는 메타데이터 파일의 위치입니다.</p>
+<p>카탈로그 내에는 각 테이블마다 해당 테이블의 현재 메타데이터 파일에 대한 참조 또는 포인터가 있습니다. 예를 들어 위에 표시된 다이어그램에는 2개의 메타데이터 파일이 있습니다. 카탈로그에서 테이블의 현재 메타데이터 포인터 값은 오른쪽에 있는 메타데이터 파일의 위치입니다.</p>
 
 <h3 id="metadata-file">Metadata File</h3>
 
@@ -100,7 +98,7 @@
     </a>
 </figure>
 
-<p>위 쿼리를 실행하면 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>가 포함된 메타데이터 파일이 메타데이터 계층에 생성됩니다. 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>는 테이블에 데이터가 없기 때문에 어떠한 매니페스트 목록을 포함하지 않습니다. 카탈로그의 메타데이터 포인터는 생성된 메타데이터 파일을 가리게 됩니다.</p>
+<p>위 쿼리를 실행하면 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>가 포함된 메타데이터 파일이 메타데이터 계층에 생성됩니다. 스냅샷 <code class="language-plaintext highlighter-rouge">s0</code>는 테이블에 데이터가 없기 때문에 어떠한 매니페스트 목록을 포함하지 않습니다. 카탈로그의 메타데이터 포인터는 생성된 메타데이터 파일을 가리키게 됩니다.</p>
 
 <h3 id="insert">INSERT</h3>
 
