@@ -155,7 +155,7 @@ embed_size=128, num_heads=8, num_layers=2, learning_rate=1e-3, epochs=100
 ```
 <script src="https://gist.github.com/emeraldgoose/0309e135c7e6235a0798ffd9d01e794b.js"></script>
 
-학습과정은 MLM(Masked Langugae Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.
+학습과정은 MLM(Masked Language Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.
 
 <script src="https://gist.github.com/emeraldgoose/e3a7a8c2285066e62c116b1d211e09b3.js"></script>
 
