@@ -1,0 +1,158 @@
+I"�V<h2 id="model-context-protocol">Model Context Protocol</h2>
+<p>최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.</p>
+
+<p>표준화된 프로토콜을 사용하는 점은 사용자 입장에서 Tool을 추가하고 삭제할 때 편리하다는 장점이 있습니다. MCP 이전 Langchain 애플리케이션에서 Tool을 정의했을 때는 Tool의 추가, 삭제 때마다 새로 애플리케이션을 배포했어야 했습니다. 이런 점에서 사용자에게 MCP는 LLM의 확장을 도우면서 편의성을 제공하는 역할을 맡았습니다.<br />
+Langchain도 <code class="language-plaintext highlighter-rouge">mcp_adapters</code>를 지원하게 되면서 langchain 애플리케이션에서도 mcp를 사용할 수 있게 지원하고 있어 개발자에게도 tool을 모듈화할 수 있는 장점이 생겼습니다.</p>
+
+<p>그렇다면 Gemini-2.0-flash 모델을 이용해 Langchain의 ReAct Agent를 사용하면서 MCP 서버를 붙이는 예시를 들어보겠습니다.</p>
+
+<h2 id="tools">Tools</h2>
+<h3 id="get_weather">get_weather</h3>
+<p>가장 간단하게 테스트해볼 수 있는 예시입니다. 위치를 받게되면 날씨와 기온을 반환하는 임의의 함수를 작성하고 mcp로 연결해보겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">mcp.server.fastmcp</span> <span class="kn">import</span> <span class="n">FastMCP</span>
+
+<span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s">"TEST"</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">mcp</span><span class="p">.</span><span class="n">tool</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">get_weather</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">""" """</span>
+    <span class="kn">import</span> <span class="nn">random</span><span class="p">,</span> <span class="n">json</span>
+    <span class="n">weather</span><span class="p">,</span> <span class="n">celsius</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'맑음'</span><span class="p">,</span><span class="s">'흐림'</span><span class="p">,</span><span class="s">'비'</span><span class="p">]),</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">25</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"""{{"지역": </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s">, "날씨": </span><span class="si">{</span><span class="n">weather</span><span class="si">}</span><span class="s">, "기온": </span><span class="si">{</span><span class="n">celsius</span><span class="si">}</span><span class="s">}}"""</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">mcp</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">transport</span><span class="o">=</span><span class="s">"stdio"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>mcp의 실행 방식은 <code class="language-plaintext highlighter-rouge">mcp.run(transport='')</code>에서 정의할 수 있으며 <code class="language-plaintext highlighter-rouge">stdio</code>와 <code class="language-plaintext highlighter-rouge">sse</code> 두 가지 방식이 있습니다. <code class="language-plaintext highlighter-rouge">stdio</code>는 로컬에서 실행하는 방식, <code class="language-plaintext highlighter-rouge">sse</code>는 서버로 실행하는 방식을 말합니다. <code class="language-plaintext highlighter-rouge">sse</code>는 mcp로 추가하기 전에 서버로 실행되어 있어야 LLM이 정상적으로 접근할 수 있고 <code class="language-plaintext highlighter-rouge">stdio</code> 방식은 LLM이 접근할 때 실행되었다가 종료되는 방식입니다.</p>
+
+<p>위 코드는 위치를 받아 랜덤하게 날씨와 기온을 생성하고 값을 리턴하는 함수입니다. langchain에서 이 mcp를 실행할 때 아래와 같은 동작을 수행합니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span> <span class="nn">mcp</span> <span class="kn">import</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="n">StdioServerParameters</span>
+<span class="kn">from</span> <span class="nn">mcp.client.stdio</span> <span class="kn">import</span> <span class="n">stdio_client</span>
+<span class="kn">from</span> <span class="nn">langchain_mcp_adapters.tools</span> <span class="kn">import</span> <span class="n">load_mcp_tools</span>
+<span class="kn">from</span> <span class="nn">langgraph.prebuilt</span> <span class="kn">import</span> <span class="n">create_react_agent</span>
+<span class="kn">from</span> <span class="nn">langchain_google_genai</span> <span class="kn">import</span> <span class="n">ChatGoogleGenerativeAI</span>
+
+<span class="n">load_dotenv</span><span class="p">()</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatGoogleGenerativeAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">"gemini-2.0-flash"</span><span class="p">)</span>
+
+<span class="n">server_params</span> <span class="o">=</span> <span class="n">StdioServerParameters</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s">"python"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s">"mcp_server.py"</span><span class="p">])</span>
+
+<span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">session</span><span class="p">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_mcp_tools</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">create_react_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="p">.</span><span class="n">ainvoke</span><span class="p">({</span><span class="s">"messages"</span><span class="p">:</span> <span class="s">"오늘 서울 날씨는 어때?"</span><span class="p">})</span>
+
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s">'messages'</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">message</span><span class="p">.</span><span class="nb">type</span><span class="si">}</span><span class="s">:"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">additional_kwargs</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>human: 오늘 서울 날씨는 어때? {}
+ai:  {'function_call': {'name': 'get_weather', 'arguments': '{"location": "\\uc11c\\uc6b8"}'}}
+tool: {"지역": 서울, "날씨": 흐림, "기온": 21} {}
+ai: 오늘 서울 날씨는 흐리고, 기온은 21도입니다. {}
+</code></pre></div></div>
+<p>LLM에게 서울이라는 위치정보와 날씨를 물어보고 있고 LLM이 알아서 판단해서 function_call에 get_weather라는 tool을 호출하고 있습니다. tool의 반환된 결과로 서울, 흐림, 21도라는 정보를 이용해 LLM이 사용자에게 최종 답변을 해주고 있습니다.</p>
+
+<h3 id="execute-code">Execute Code</h3>
+<p>또 다른 예제로는 코드를 실행하는 mcp입니다. ChatGPT처럼 코드를 실행해달라고 요청하면 내부에서 실행하고 결과를 리턴해주는 기능이 있는데 mcp로도 충분히 구현가능하다는 것을 보여줍니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">mcp.server.fastmcp</span> <span class="kn">import</span> <span class="n">FastMCP</span>
+
+<span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s">"TEST"</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">mcp</span><span class="p">.</span><span class="n">tool</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">execute_python_code</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tempfile</span><span class="p">,</span> <span class="n">subprocess</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="p">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s">'.py'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+        <span class="n">tmp</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">.</span><span class="n">name</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s">'python'</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"""{{"stdout": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stdout</span><span class="si">}</span><span class="s">, "result.stderr": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stderr</span><span class="si">}</span><span class="s">, "result.returncode": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">returncode</span><span class="si">}</span><span class="s">}}"""</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">mcp</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">transport</span><span class="o">=</span><span class="s">"stdio"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 subprocess를 이용해 python 코드를 실행하는 함수입니다. code를 입력받으면 임시폴더에 작성하고 실행한 결과를 리턴하는 함수입니다. 제가 실행한 코드는 아래와 같습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># test.py
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"test.db"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">create_table</span><span class="p">():</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"CREATE TABLE IF NOT EXISTS phone (name text, phoneNumber text)"</span><span class="p">)</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">insert_data</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">phone_number</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"INSERT INTO phone VALUES ('{name}', '{phone_number}')"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="n">phone_number</span><span class="p">))</span>
+    <span class="n">db</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_data</span><span class="p">():</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">db</span><span class="p">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">cur</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="s">"SELECT * FROM phone"</span><span class="p">).</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="n">cur</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">create_table</span><span class="p">()</span>
+    <span class="n">insert_data</span><span class="p">(</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"00000"</span><span class="p">)</span>
+    <span class="n">insert_data</span><span class="p">(</span><span class="s">"B"</span><span class="p">,</span> <span class="s">"00001"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">get_data</span><span class="p">())</span>
+</code></pre></div></div>
+<p>sqlite3를 이용해 테이블을 만들고 데이터 삽입 및 조회하는 간단한 코드입니다. 이 코드를 LLM에게 전달해서 실행한 결과는 다음과 같습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="k">with</span> <span class="n">stdio_client</span><span class="p">(</span><span class="n">server_params</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">(</span><span class="n">read</span><span class="p">,</span> <span class="n">write</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">session</span><span class="p">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_mcp_tools</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">create_react_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tools</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'test.py'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+         
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent</span><span class="p">.</span><span class="n">ainvoke</span><span class="p">({</span><span class="s">"messages"</span><span class="p">:</span> <span class="sa">f</span><span class="s">"파이썬 파일을 실행해. &lt;code&gt;</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s">&lt;/code&gt;"</span><span class="p">})</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>human: 파이썬 파일을 실행해. &lt;code&gt;# test.py\nimport numpy as np\nimport sqlite3...insert_data("B", "00001")\nprint(get_data())&lt;/code&gt; {}
+ai:  {'function_call': {'name': 'execute_python_code', 'arguments': '{"code": "\\n#...print(get_data())\\n"}'}}
+tool: {"stdout": [('A', '00000'), ('B', '00001')]\n, "result.stderr": , "result.returncode": 0} {}
+ai: 파이썬 파일이 성공적으로 실행되었습니다. 결과는 `[('A', '00000'), ('B', '00001')]`입니다. {}
+</code></pre></div></div>
+
+<p>이미 phone이라는 테이블이 존재하고 있는 상황에서 IF NOT EXISTS를 빼버리고 일부러 에러를 일으킨다면 다음의 결과를 받아볼 수 있습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>human: 파이썬 파일을 실행해. &lt;code&gt;# test.py...&lt;/code&gt; {}
+ai:  {'function_call': {'name': 'execute_python_code', 'arguments': '{"code": "\\n# test.py\\n...print(get_data())\\n"}'}}
+tool: {"stdout": , "result.stderr": Traceback (most recent call last):
+  File "/tmp/tmpklro9fgx.py", line 27, in &lt;module&gt;
+    create_table()
+  File "/tmp/tmpklro9fgx.py", line 10, in create_table
+    cur.execute("CREATE TABLE phone (name text, phoneNumber text)")
+sqlite3.OperationalError: table phone already exists, "result.returncode": 1} {}
+ai: 파이썬 코드를 실행하는 동안 오류가 발생했습니다. 특히 'phone'이라는 테이블이 이미 존재하기 때문에 테이블을 만들 수 없습니다. {}
+</code></pre></div></div>
+
+<p>이처럼 stderr를 같이 리턴하고 있으므로 에러 메시지를 LLM이 파악할 수 있어 사용자에게 어떠한 에러로 실행되지 않았는지 설명하는 모습을 볼 수 있습니다.</p>
+
+<p>따라서, 개발자는 MCP를 이용해 Agent 애플리케이션 개발시 Tool을 같이 개발할 필요가 없고 애플리케이션과 독립적으로 Tool을 모듈로서 개발할 수 있게 되었습니다. 사용자는 원하는 Tool을 쉽게 추가, 삭제할 수 있어 편의성을 제공받을 수 있었습니다. 물론 보안의 문제가 당연히 존재하지만 결국 해결될 문제라고 생각하고 있어 다음이 기대되는 기능입니다.</p>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://docs.anthropic.com/ko/docs/agents-and-tools/mcp">모델 컨텍스트 프로토콜 (MCP)</a></li>
+</ul>
+:ET

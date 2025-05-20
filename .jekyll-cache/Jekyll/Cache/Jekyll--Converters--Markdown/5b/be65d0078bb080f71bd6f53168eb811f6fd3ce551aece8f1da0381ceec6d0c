@@ -147,7 +147,7 @@ Output : To be not to be or not to be or not &lt;eos&gt;
 </code></pre></div></div>
 <script src="https://gist.github.com/emeraldgoose/0309e135c7e6235a0798ffd9d01e794b.js"></script>
 
-<p>학습과정은 MLM(Masked Langugae Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.</p>
+<p>학습과정은 MLM(Masked Language Model) 태스크만 수행하고 문장마다 랜덤하게 30%의 마스킹을 하여 예측하도록 구성했습니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/e3a7a8c2285066e62c116b1d211e09b3.js"></script>
 
