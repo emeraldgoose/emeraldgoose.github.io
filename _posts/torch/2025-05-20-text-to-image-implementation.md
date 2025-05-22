@@ -20,8 +20,8 @@ ResidualBlock은 UNet에서 Down, Mid, Up 레이어 모두에서 사용됩니다
 아래는 ResidualBlock의 순전파를 도식화한 것입니다.
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQTvWaMGZmAGSIU8FBS020NDARcVqTbYZqiiBmYapB2RU30?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQTvWaMGZmAGSIU8FBS020NDARcVqTbYZqiiBmYapB2RU30?width=1024" alt="01">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSnS5YonF8-RrBFzMC0FJgvAYSXs9Z_dClj8upQDWUOSt0?width=1024" data-lightbox="gallery" style="width:120%;">
+      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSnS5YonF8-RrBFzMC0FJgvAYSXs9Z_dClj8upQDWUOSt0?width=1024" alt="01">
     </a>
     <figcaption>ResidualBlock Forward Flow</figcaption>
 </figure>
