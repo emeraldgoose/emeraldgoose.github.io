@@ -252,7 +252,7 @@ MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문�
 
 <script src="https://gist.github.com/emeraldgoose/4a4360b279711304bcdf1db2b80740f3.js"></script>
 
-다음은 숫자 5를 생성해본 이미지입니다. 약 500 step에서 틀이 잡히고 이후부터 모양이 잡혀가는 것을 볼 수 있습니다.
+다음은 숫자 5를 생성해본 이미지입니다. 노이즈로 시작해서 점차 숫자 모양을 잡아가는 모습을 볼 수 있습니다.
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQR2NytmlqyyRJIO-ohkQyGqAd467SprGDz8XyeXjijv9zI?width=1024" data-lightbox="gallery" style="width:120%;">
       <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQR2NytmlqyyRJIO-ohkQyGqAd467SprGDz8XyeXjijv9zI?width=1024" alt="01">
