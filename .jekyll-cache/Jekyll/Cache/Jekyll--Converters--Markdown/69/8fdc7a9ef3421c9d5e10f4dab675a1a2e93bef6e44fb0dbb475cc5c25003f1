@@ -1,0 +1,6 @@
+I"p<h2 id="objective">Objective</h2>
+<p>이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다.</p>
+<blockquote>
+  <p><a href="https://emeraldgoose.github.io/pytorch/text-to-image-implementation/">Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock)</a></p>
+</blockquote>
+:ET

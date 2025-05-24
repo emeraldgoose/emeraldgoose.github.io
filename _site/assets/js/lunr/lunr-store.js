@@ -737,15 +737,21 @@ var store = [{
         "url": "/data-engineer/apache-iceberg-architecture/",
         "teaser": null
       },{
+        "title": "Model Context Protocol(MCP)",
+        "excerpt":"Model Context Protocol 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다. 표준화된 프로토콜을 사용하는 점은 사용자 입장에서 Tool을 추가하고 삭제할 때 편리하다는 장점이 있습니다. MCP 이전 Langchain 애플리케이션에서 Tool을 정의했을 때는 Tool의 추가, 삭제 때마다 새로...","categories": ["ai-agent"],
+        "tags": ["ai-agent","mcp"],
+        "url": "/ai-agent/MCP/",
+        "teaser": null
+      },{
         "title": "Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock)",
         "excerpt":"Text-to-Image 최근 Stable Diffusion이라는 모델이 발전하면서 많은 사람들이 이미지 생성 AI를 사용하고 있습니다. Diffusion 모델은 노이즈를 기존 이미지에 더한 뒤에 노이즈를 예측하고 지워가며 복원하는 학습과정을 거치게 됩니다. 저는 Diffusion 모델을 구현하여 MNIST를 학습시키고 label이라는 condition을 주어 생성해보려고 합니다. Diffusion 모델 중 Huggingface의 UNet2DModel을 선택했는데 UNet2DModel 내부에 class_embedding 레이어가 있어 class...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/text-to-image-implementation/",
         "teaser": null
       },{
-        "title": "Model Context Protocol(MCP)",
-        "excerpt":"Model Context Protocol 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다. 표준화된 프로토콜을 사용하는 점은 사용자 입장에서 Tool을 추가하고 삭제할 때 편리하다는 장점이 있습니다. MCP 이전 Langchain 애플리케이션에서 Tool을 정의했을 때는 Tool의 추가, 삭제 때마다 새로...","categories": ["ai-agent"],
-        "tags": ["ai-agent","mcp"],
-        "url": "/ai-agent/MCP/",
+        "title": "Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)",
+        "excerpt":"Objective 이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다. Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock) 이 글에선 Conv2d의 개선, UNet, DDPMScheduler의 구현을 마무리하고 테스트 결과를 작성하겠습니다. Conv2d 기존 Conv2d의 컨볼루션 연산은 다음과 같았습니다. 이 코드는 나이브하게 구현한 컨볼루션 연산보단 빠르지만 UNet 구현 후 실제 테스트했을 때의 속도는 절망적이었습니다. 적어도...","categories": ["Pytorch"],
+        "tags": ["torch"],
+        "url": "/pytorch/unet-and-ddpm-implementation/",
         "teaser": null
       }]
