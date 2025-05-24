@@ -210,6 +210,14 @@ $x_t = \sqrt{\bar{\alpha_t}} \cdot x_0 + \sqrt{1-\bar{\alpha_t}}\cdot \epsilon$
 
 <script src="https://gist.github.com/emeraldgoose/f0f3df0a62a28d9cac1ab2f37fb1f4f8.js"></script>
 
+MNIST 이미지 중 하나에 노이즈를 섞게 되면 다음과 같이 기존의 모양을 유지할 수 없게 됩니다.
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" data-lightbox="gallery" style="width:120%;">
+      <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" alt="01">
+    </a>
+    <figcaption>add noise 1000 steps</figcaption>
+</figure>
+
 다음 코드는 노이즈를 걷어내는 수식과 함수입니다.
 
 이 과정에서는 noisy sample $x_t$와 예측한 노이즈 $\epsilon_\theta$를 이용해 이전 스텝의 이미지 $x_{t-1}$을 추정하는 것이 목적입니다.
@@ -231,14 +239,6 @@ $x_{t-1} = \tilde{\mu}_t + \sigma_t \cdot z$
 무작위 노이즈인 variance를 추가하는 과정을 통해 이미지에 무작위성을 추가하여 다양한 결과를 생성할 수 있도록 합니다.
 
 <script src="https://gist.github.com/emeraldgoose/373603dfd8054726ef9d689e82b0a15b.js"></script>
-
-MNIST 이미지 중 하나에 노이즈를 섞게 되면 다음과 같이 기존의 모양을 유지할 수 없게 됩니다.
-<figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" alt="01">
-    </a>
-    <figcaption>add noise 1000 steps</figcaption>
-</figure>
 
 ## Train
 MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.
