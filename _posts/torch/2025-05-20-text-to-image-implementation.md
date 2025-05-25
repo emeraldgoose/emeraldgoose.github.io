@@ -20,8 +20,8 @@ ResidualBlock은 UNet에서 Down, Mid, Up 레이어 모두에서 사용됩니다
 아래는 ResidualBlock의 순전파를 도식화한 것입니다.
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSnS5YonF8-RrBFzMC0FJgvAYSXs9Z_dClj8upQDWUOSt0?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSnS5YonF8-RrBFzMC0FJgvAYSXs9Z_dClj8upQDWUOSt0?width=1024" alt="01">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQR7nqBZCWA-S7k68T1w2uMBAa1NDGFx9LCkv8ji7VUL4K4?width=643&height=808" data-lightbox="gallery" style="width:120%;">
+      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQR7nqBZCWA-S7k68T1w2uMBAa1NDGFx9LCkv8ji7VUL4K4?width=643&height=808" alt="01">
     </a>
     <figcaption>ResidualBlock Forward Flow</figcaption>
 </figure>
@@ -37,8 +37,8 @@ ResidualBlock은 UNet에서 Down, Mid, Up 레이어 모두에서 사용됩니다
 아래는 ResidualBlock의 역전파를 도식화한 것입니다.
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRzpYI58Y86SrXOp2FmsjyqAd5cydP7G2kqN7gOibpBNg0?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRzpYI58Y86SrXOp2FmsjyqAd5cydP7G2kqN7gOibpBNg0?width=1024" alt="02">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQh0BcbN5ZHT4s1BufBP33VAfD8NDBrAcwUveakdjtUXWQ?width=598&height=785" data-lightbox="gallery" style="width:120%;">
+      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQh0BcbN5ZHT4s1BufBP33VAfD8NDBrAcwUveakdjtUXWQ?width=598&height=785" alt="02">
     </a>
     <figcaption>ResidualBlock Backward Flow</figcaption>
 </figure>
@@ -74,8 +74,8 @@ AttentionBlock은 노이즈가 섞인 이미지로부터 정보의 중요도를 
 아래는 AttentionBlock의 역전파를 도식화한 것입니다.
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQiJdyBKUnRQ7AKHV6jRh31Ab-UTSECoy71UlYue-zgZU0?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQiJdyBKUnRQ7AKHV6jRh31Ab-UTSECoy71UlYue-zgZU0?width=1024" alt="04">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&height=654" data-lightbox="gallery" style="width:120%;">
+      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&height=654" alt="04">
     </a>
     <figcaption>AttentionBlock Backward Flow</figcaption>
 </figure>
