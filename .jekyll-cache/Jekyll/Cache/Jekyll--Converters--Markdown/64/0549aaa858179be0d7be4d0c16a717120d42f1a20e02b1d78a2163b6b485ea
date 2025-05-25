@@ -1,4 +1,4 @@
-I"Cz<h2 id="objective">Objective</h2>
+I"{<h2 id="objective">Objective</h2>
 <p>이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다.</p>
 <blockquote>
   <p><a href="https://emeraldgoose.github.io/pytorch/text-to-image-implementation/">Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock)</a></p>
@@ -198,6 +198,9 @@
 
 <h2 id="ddpmscheduler">DDPMScheduler</h2>
 <p>DDPM(Denoising Diffusion Probabilistic Models)은 노이즈를 추가하는 forward process와 노이즈를 걷어내는 reverse process로 구성해서 고품질의 이미지 생성을 가능하게 한 방법입니다. DDPMScheduler는 이미지에 노이즈를 추가하고 걷어내는 역할을 수행합니다.</p>
+<blockquote>
+  <p>DDPM 스케줄러는 이해하는 것이 어려워서 diffusers 라이브러리의 DDPMScheduler 코드를 따라가면서 작성했습니다.</p>
+</blockquote>
 
 <p>노이즈를 추가하는 수식과 코드는 다음과 같습니다.</p>
 
@@ -206,6 +209,14 @@
 <p>원본 이미지 $x_0$인 <code class="language-plaintext highlighter-rouge">sample</code>에 노이즈 $\epsilon$인 <code class="language-plaintext highlighter-rouge">noise</code>를 원본이 얼마나 유지되어야 하는지 결정하는 $\sqrt{\bar{\alpha_t}}$인 <code class="language-plaintext highlighter-rouge">sqrt_alpha_prod</code>와 얼마나 노이즈를 섞어야 하는지 결정하는 $\sqrt{1-\bar{\alpha_t}}$인 <code class="language-plaintext highlighter-rouge">sqrt_one_minus_alpha_prod</code> 의해 forward process가 수행됩니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/f0f3df0a62a28d9cac1ab2f37fb1f4f8.js"></script>
+
+<p>MNIST 이미지 중 하나에 노이즈를 섞게 되면 다음과 같이 기존의 모양을 유지할 수 없게 됩니다.</p>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" data-lightbox="gallery" style="width:120%;">
+      <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" alt="01" />
+    </a>
+    <figcaption>add noise 1000 steps</figcaption>
+</figure>
 
 <p>다음 코드는 노이즈를 걷어내는 수식과 함수입니다.</p>
 
@@ -229,30 +240,19 @@
 
 <script src="https://gist.github.com/emeraldgoose/373603dfd8054726ef9d689e82b0a15b.js"></script>
 
-<p>MNIST 이미지 중 하나에 노이즈를 섞게 되면 다음과 같이 기존의 모양을 유지할 수 없게 됩니다.</p>
-<figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRNYSt_XlUtR7M1dvHGSHQOAVVVPhNZmXGqpZbPLkcn0aI?width=1024" alt="01" />
-    </a>
-    <figcaption>add noise 1000 steps</figcaption>
-</figure>
-
 <h2 id="train">Train</h2>
 <p>MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/b0b46612aab31c13ea8e8e2675be786a.js"></script>
 
 <p><code class="language-plaintext highlighter-rouge">lr_rate=1e-3, 25 epochs</code> 학습에 약 7시간정보 걸렸습니다. 여기에 <code class="language-plaintext highlighter-rouge">lr_rate=1e-4, 16 epochs</code>로 더 학습시켜 총 학습시간 11시간 ~ 12시간정도 걸렸던 것 같습니다.</p>
-<blockquote>
-  <p>제 생각엔 최적화 차이때문에 Pytorch로 같은 CPU 환경에서 학습시키면 더 빠를 것 같습니다.</p>
-</blockquote>
 
 <h2 id="inference">Inference</h2>
 <p>이미지 생성 시 시작 이미지 <code class="language-plaintext highlighter-rouge">latents</code>는 노이즈입니다. 또한, 추론 시간을 빠르게 하기 위해 <code class="language-plaintext highlighter-rouge">num_train_timesteps</code>를 <code class="language-plaintext highlighter-rouge">num_inference_steps</code>크기만큼 줄여 사용했습니다. 예를 들어, 학습이 10 timesteps라면 추론은 [0, 1, 3, 5, 7, 9] 총 6번의 timesteps로 노이즈를 걷어내는 것을 말합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/4a4360b279711304bcdf1db2b80740f3.js"></script>
 
-<p>다음은 숫자 5를 생성해본 이미지입니다. 약 500 step에서 틀이 잡히고 이후부터 모양이 잡혀가는 것을 볼 수 있습니다.</p>
+<p>다음은 숫자 5를 생성해본 이미지입니다. 노이즈로 시작해서 점차 숫자 모양을 잡아가는 모습을 볼 수 있습니다.</p>
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQR2NytmlqyyRJIO-ohkQyGqAd467SprGDz8XyeXjijv9zI?width=1024" data-lightbox="gallery" style="width:120%;">
       <img style="width:80%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQR2NytmlqyyRJIO-ohkQyGqAd467SprGDz8XyeXjijv9zI?width=1024" alt="01" />
@@ -271,6 +271,10 @@
 </figure>
 
 <h2 id="code">Code</h2>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/diffusion.ipynb">diffusion.ipynb</a></li>
+</ul>
 
 <h2 id="reference">Reference</h2>
 <ul>

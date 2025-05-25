@@ -404,10 +404,20 @@
 <p>Transformer의 인코딩을 담당하는 레이어입니다. TransformerEncoder로 들어온 입력은 EncoderLayer의 순서대로 처리되며 최종 출력은 Decoder에서 사용됩니다.</p>
 
 <h2 id="forward-3">Forward</h2>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" alt="01" /></a>
+    <figcaption>Encoder Layer forward</figcaption>
+</figure>
+
 <p>계산 순서는 들어온 입력이 먼저 MultiheadAttention을 거치고 FeedForward 연산을 통해 인코딩됩니다. 각 결과는 Residual Connection 구조를 사용하여 입력과 더해준 후 Layer Normalization을 수행합니다.
 <script src="https://gist.github.com/emeraldgoose/511db6e7427152cf747b55f2982e3570.js"></script></p>
 
 <h2 id="backward-3">Backward</h2>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" alt="01" /></a>
+    <figcaption>Encoder Layer backward</figcaption>
+</figure>
+
 <p>Backward 연산은 Forward의 역순으로 진행되며 Forward에서 사용된 Residual Connection은 Backward에서는 upstream gradient와 더해지게 됩니다.
 <script src="https://gist.github.com/emeraldgoose/5ce3f68358a1d4c2b1a0b9151981f1e7.js"></script></p>
 
@@ -415,11 +425,19 @@
 <p>Transformer의 디코딩을 담당하는 레이어입니다. 인코더의 출력을 디코더에서 사용하여 output 시퀀스 이후에 나올 토큰을 예측하게 됩니다.</p>
 
 <h2 id="forward-4">Forward</h2>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" alt="01" /></a>
+    <figcaption>Encoder Layer backward</figcaption>
+</figure>
 <p>forward의 argument로 <code class="language-plaintext highlighter-rouge">tgt</code>와 <code class="language-plaintext highlighter-rouge">memory</code>가 있습니다. <code class="language-plaintext highlighter-rouge">tgt</code>는 output 임베딩 입력을 담당하고 <code class="language-plaintext highlighter-rouge">memory</code>는 인코더의 출력을 의미합니다. EncoderLayer와 마찬가지로 각 단계마다 Residual Connection 구조를 사용합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/d55c7cf1dda2b952a0e3ac3610f2f84d.js"></script>
 
 <h2 id="backward-4">Backward</h2>
+<figure style="text-align:center;">
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" alt="01" /></a>
+    <figcaption>Encoder Layer backward</figcaption>
+</figure>
 <p>Backward 연산은 Forward의 역순으로 진행되며 Residual Connection은 upstream gradient와 더해지게 됩니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/be7a478bcd7b067516a81ca37e4d2239.js"></script>
