@@ -14,7 +14,7 @@ tags: [torch]
 Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다.
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100" data-lightbox="gallery"><img style="width:70%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100" alt="01"></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100" data-lightbox="gallery"><img style="width:50%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&width=798&height=1100" alt="01"></a>
     <figcaption>Transformer Architecture</figcaption>
 </figure>
 

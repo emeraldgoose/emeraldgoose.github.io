@@ -57,7 +57,7 @@ AttentionBlock은 노이즈가 섞인 이미지로부터 정보의 중요도를 
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" alt="03">
+      <img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" alt="03">
     </a>
     <figcaption>AttentionBlock Forward Flow</figcaption>
 </figure>
@@ -75,7 +75,7 @@ AttentionBlock은 노이즈가 섞인 이미지로부터 정보의 중요도를 
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&height=654" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&height=654" alt="04">
+      <img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&height=654" alt="04">
     </a>
     <figcaption>AttentionBlock Backward Flow</figcaption>
 </figure>
