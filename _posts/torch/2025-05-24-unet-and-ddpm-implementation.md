@@ -245,10 +245,10 @@ MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문�
 
 <script src="https://gist.github.com/emeraldgoose/b0b46612aab31c13ea8e8e2675be786a.js"></script>
 
-`lr_rate=1e-3, 25 epochs` 학습에 약 7시간정보 걸렸습니다. 여기에 `lr_rate=1e-4, 16 epochs`로 더 학습시켜 총 학습시간 11시간 ~ 12시간정도 걸렸던 것 같습니다.
+`lr_rate=1e-3, 25 epochs` 학습에 약 7시간 정도 걸렸습니다. 여기에 `lr_rate=1e-4, 16 epochs`로 더 학습시켜 총 학습시간 11시간 ~ 12시간정도 걸렸던 것 같습니다.
 
 ## Inference
-이미지 생성 시 시작 이미지 `latents`는 노이즈입니다. 또한, 추론 시간을 빠르게 하기 위해 `num_train_timesteps`를 `num_inference_steps`크기만큼 줄여 사용했습니다. 예를 들어, 학습이 10 timesteps라면 추론은 [0, 1, 3, 5, 7, 9] 총 6번의 timesteps로 노이즈를 걷어내는 것을 말합니다.
+이미지 생성 시 시작 이미지 `latents`는 노이즈입니다. 또한, 추론 시간을 빠르게 하기 위해 `num_train_timesteps`를 `num_inference_steps`크기만큼 줄여 사용했습니다. 예를 들어, 학습이 10 timesteps라면 추론은 [0, 1, 3, 5, 7, 9] 총 6번의 timestep으로 노이즈를 걷어내는 것을 말합니다.
 
 <script src="https://gist.github.com/emeraldgoose/4a4360b279711304bcdf1db2b80740f3.js"></script>
 
