@@ -173,3 +173,6 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
 
 ### PR Link
 - [https://github.com/emeraldgoose/github-action-test/pull/3](https://github.com/emeraldgoose/github-action-test/pull/3)
+
+## Reference
+- [LLM을 활용한 GitHub PR 코드 리뷰 자동화](https://jjaegii.tistory.com/32)
