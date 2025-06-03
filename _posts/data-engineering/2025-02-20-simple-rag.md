@@ -64,7 +64,7 @@ Vector Store로 Opensearch를 선택했는데 그 이유는 lexical search와 se
 ### Gemini
 LLM은 Google의 Gemini 모델을 선택했습니다. 그 이유는 1M의 토큰 컨텍스트를 지원하고 있어 프롬프트에 충분히 많은 Context들을 넣을 수 있다는 장점이 있기 때문입니다.
 
-> Gemini 2.0 Flash의 무료 등급은 시간당 1백만개의 토큰 제한이 걸려있습니다. 제품 개선에 사용 내역이 사용되기는 하지만 토이 프로젝트로 사용하기에 충분하다고 생각합니다.
+> Gemini 2.0 Flash의 무료 등급은 시간당 1백만개의 토큰 제한이 걸려있고 제품 개선에 사용 됩니다.
 
 ### Demo APP
 많이 사용하는 프레임워크인 Streamlit을 사용해서 앞단을 구성했습니다.
@@ -83,7 +83,7 @@ PDF 문서 내에서 정보를 추출하는 라이브러리 중 하나인 Unstru
 **Llamaindex**  
 PDF 문서를 Unstructured 라이브러리로 바로 파싱하는 경우, 테이블 형식이 제대로 파싱되지 않는 문제가 발생했습니다. 이를 해결하기 위해 중간 변환 과정이 필요했고 마크다운과 이미지 형식 두 가지를 고려했습니다. 이미지 변환 방식도 LLM이 이미지도 잘 해석해주기 때문에 가능한 방법이지만 그 만큼 비용이 들어가기 때문에 마크다운 변환을 선택하게 되었습니다. 마크다운 변환을 이용할 때는 [Llamaindex](https://www.llamaindex.ai/)라는 상용 서비스를 이용했고 괜찮은 결과물을 반환해주었습니다. 
 
-> Llamaindex의 Free Plan은 하루에 1000페이지 변환이 가능합니다. 이 정도면 토이 프로젝트로 사용할 때 충분하다고 생각됩니다.
+> Llamaindex의 Free Plan은 하루에 1000페이지 변환이 가능합니다.
 
 > Llamaindex 말고도 Upstage에서도 [Document Parse](https://www.upstage.ai/blog/en/let-llms-read-your-documents-with-speed-and-accuracy) 서비스를 제공중에 있습니다.
 
