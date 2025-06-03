@@ -141,7 +141,7 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
     COMMENT=$(sed '/^```/d' res.txt | jq -c .)
     echo "comment=$COMMENT" >> $GITHUB_OUTPUT
 ```
-이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 `steps.{id}.outputs.{key}`로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 하는 것으로 알고 있습니다.
+이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 `steps.{id}.outputs.{key}`로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 합니다.
 
 ```yaml
 - name: Add Pull Request Review Comment
