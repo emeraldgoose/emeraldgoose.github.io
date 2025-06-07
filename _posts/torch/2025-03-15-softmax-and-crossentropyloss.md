@@ -108,5 +108,5 @@ $\frac{\partial p(x_k)}{\partial x_k} = -p(x_k)p(x_i) \rightarrow -\frac{1}{p(x_
 <script src="https://gist.github.com/emeraldgoose/139b6199df3edfa26a078bfb20712645.js"></script>
 
 ## Code
-- [Softmax Class](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/activation.py#L7)
-- [CrossEntropyLoss](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/loss.py#L20)
+- [Softmax Class](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/activation.py#L10)
+- [CrossEntropyLoss](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/loss.py#L32)

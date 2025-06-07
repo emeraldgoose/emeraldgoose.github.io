@@ -89,7 +89,8 @@ MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터�
 10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다. 
 
 ## 코드
-[https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
+- [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
+- [mlp.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/mlp.ipynb)
 
 ## Reference
 - [http://taewan.kim/post/sigmoid_diff/](http://taewan.kim/post/sigmoid_diff/)

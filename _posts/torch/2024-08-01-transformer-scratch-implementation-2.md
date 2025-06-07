@@ -200,4 +200,4 @@ Token(Prob): think(0.31) | alike,(0.08) | best(0.05) | differently(0.02) | but(0
 
 # Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
-- [https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb)
+- [simple_LM.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/simple_LM.ipynb)

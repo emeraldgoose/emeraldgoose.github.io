@@ -146,6 +146,7 @@ LSTM과 Linear레이어만으로 이루어진 모델을 사용했고 hidden size
 
 ### Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
+- [rnn.ipynb#LSTM](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/rnn.ipynb)
 
 ## Reference
 - [https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/](https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/)

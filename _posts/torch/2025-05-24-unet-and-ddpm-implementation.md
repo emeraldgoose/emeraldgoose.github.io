@@ -272,7 +272,7 @@ MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문�
 
 ## Code
 - [hcrot](https://github.com/emeraldgoose/hcrot)
-- [diffusion.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/diffusion.ipynb)
+- [diffusion.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/diffusion.ipynb)
 
 ## Reference
 - [Introduction to 🤗 Diffusers](https://huggingface.co/learn/diffusion-course/unit1/2)

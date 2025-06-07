@@ -197,6 +197,7 @@ AvgPool2d를 사용한 결과입니다.
 
 ### Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
+- [cnn.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/cnn.ipynb)
 
 ## Reference
 - [Convolve2d(StackOverflow)](https://stackoverflow.com/a/43087771)
