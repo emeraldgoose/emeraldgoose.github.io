@@ -218,7 +218,7 @@ MNIST 이미지 중 하나에 노이즈를 섞게 되면 다음과 같이 기존
     <figcaption>add noise 1000 steps</figcaption>
 </figure>
 
-다음 코드는 노이즈를 걷어내는 수식과 함수입니다.
+다음은 노이즈를 걷어내는 수식과 코드입니다.
 
 이 과정에서는 noisy sample $x_t$와 예측한 노이즈 $\epsilon_\theta$를 이용해 이전 스텝의 이미지 $x_{t-1}$을 추정하는 것이 목적입니다.
 
