@@ -196,8 +196,9 @@ Token(Prob): think(0.31) | alike,(0.08) | best(0.05) | differently(0.02) | but(0
 ```
 신기하게 [MASK] 토큰 위치에 들어갈 토큰 후보들이 주로 학습한 문장 내에서 나오는 것을 볼 수 있습니다.
 
-> GPT와 BERT 실험 코드는 아래 simple_gpt.ipynb에 작성되어 있습니다.
+> GPT와 BERT 실험 코드는 아래 simple_LM.ipynb에 작성되어 있고 토크나이저까지 구현해서 GPT를 실험하는 코드는 simple_gpt.ipynb에 작성되어 있습니다.
 
 # Code
 - [https://github.com/emeraldgoose/hcrot](https://github.com/emeraldgoose/hcrot)
 - [simple_LM.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/simple_LM.ipynb)
+- [simple_gpt.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/simple_gpt.ipynb)
