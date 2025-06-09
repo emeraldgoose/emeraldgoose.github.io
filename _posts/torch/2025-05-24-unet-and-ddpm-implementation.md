@@ -17,11 +17,11 @@ tags: [torch]
 
 이 코드는 나이브하게 구현한 컨볼루션 연산보단 빠르지만 UNet 구현 후 실제 테스트했을 때의 속도는 절망적이었습니다. 적어도 3개의 Conv2d 레이어가 포함되는 ResidualBlock이 UNet의 Down, Mid, Up 레이어마다 쌓여있기 때문에 매우 느린 연산 속도를 보여주었고 개선이 필요하다는 판단을 하게 되었습니다.
 
-컨볼루션 연산을 행렬곱으로 해결할 수 있는 Image to Colum(im2col), Column to Image(col2im)을 구현하게 되었고 연산 속도가 약 30% 향상되었습니다.
+컨볼루션 연산을 행렬곱으로 해결할 수 있는 Image to Column(im2col), Column to Image(col2im)을 구현하게 되었고 연산 속도가 약 30% 향상되었습니다.
 > CNN 모델로 5000장의 MNIST 학습 시 기존 방식 1분에서 im2col을 도입했을 때 40초로 감소
 
 ### im2col, col2im
-Image to Column과 Column to Image의 아이디어는 컨볼루션 연산을 행렬곱으로 변환하는 것입니다. 컨볼루션 연산은 커널이 슬라이딩하면서 연산을 수행하는데 커널은 고정이고 입력이 바뀌기 때문에 커널을 똑같이 늘리면 행렬곱으로 만들 수 있다는 아이디어입니다.
+Image to Column과 Column to Image의 아이디어는 컨볼루션 연산을 행렬곱으로 변환하는 것입니다. 컨볼루션 연산은 커널이 슬라이딩하면서 연산을 수행하는데 커널은 고정이고 입력이 바뀌기 때문에 커널과 입력 배열을 재구성하면 행렬곱으로 똑같은 결과를 얻을 수 있다는 아이디어입니다.
 
 먼저, MNIST와 같은 1채널 짜리를 생각해보겠습니다. 2 $\times$ 2 Filter와 3 $\times$ 3 Input을 컨볼루션해야 한다고 가정하겠습니다.
 
@@ -32,7 +32,7 @@ Image to Column과 Column to Image의 아이디어는 컨볼루션 연산을 행
     <figcaption>1 channel im2col</figcaption>
 </figure>
 
-그림과 같이 Filter를 1 $\times$ 4 배열로 변환하고 Input을 연산이 수행될 4 $\times$ 1 배열짜리 4개를 이어서 4 $\times$ 4 행렬로 구성합니다. 이후 행렬곱을 수행하면 1 $\times$ 4 배열이 생성되고 다시 원래의 2 $\times$ 2 배열로 변환하면 기존의 컨볼루션 연산과 동일한 계산이 이루어지게 됩니다.
+그림과 같이 Filter를 1 $\times$ 4 배열로 변환하고 Input을 컨볼루션 연산에 참여하는 원소들을 4 $\times$ 1 배열로 구성한 뒤, 4개를 이어서 4 $\times$ 4 행렬로 구성합니다. 이후 행렬곱을 수행하면 1 $\times$ 4 배열이 생성되고 다시 원래의 2 $\times$ 2 배열로 변환하면 기존의 컨볼루션 연산과 동일한 계산이 이루어지게 됩니다.
 
 실제로 코드로 구현하게 되면 다음과 같습니다.
 ```python
@@ -161,7 +161,7 @@ Backward 연산도 기존과 동일하고 컨볼루션 연산만 행렬곱으로
 <script src="https://gist.github.com/emeraldgoose/1d30ca03f7a64c3b4207b78eb5dc1379.js"></script>
 
 ## UNet2dModel
-UNet의 아키텍처 구조는 이미지를 Downsample 과정에서 해상도를 낮추고 Upsample 과정에서 해상도를 복원하면서 어떤 타임스텝의 노이즈를 예측하게 됩니다.
+UNet의 아키텍처 구조는 이미지를 Downsample 과정에서 해상도를 낮추고 Upsample 과정에서 해상도를 복원하면서 어떤 타임스텝의 노이즈 $\epsilon$를 예측하게 됩니다.
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQTXWSwqQ5GqRLDBN-Dl4TQHAaA5cd9_segjuDlKoyrwxBo?width=1024" data-lightbox="gallery" style="width:120%;">
@@ -170,37 +170,38 @@ UNet의 아키텍처 구조는 이미지를 Downsample 과정에서 해상도를
     <figcaption>UNet architecture (https://huggingface.co/learn/diffusion-course/unit1/2#step-4-define-the-model)</figcaption>
 </figure>
 
-제가 구현한 UNet은 diffusers 라이브러리의 UNet2dModel 구조를 따라서 구현했고 DownBlock, MidBlock, UpBlock 모두 2개, 2개, 3개의 레이어로 구성됩니다. 또한, skip connection이 있기 때문에 이를 위한 저장 공간도 필요합니다.
+제가 구현한 UNet은 diffusers 라이브러리의 UNet2dModel 구조를 따라서 구현했습니다. 또한, skip connection이 있기 때문에 이를 위한 저장 공간도 필요합니다.
 
 ### Init
 UNetModel을 이루는 구성요소 중 `down_blocks`, `mid_blocks`는 2개의 레이어를 사용하고 `up_blocks`는 3개의 레이어로 구성했습니다.
 > `UNet2dModel`의 `layers_per_blocks=2`인 것과 같음
 
-`down_blocks`의 각 블럭의 마지막 연산은 stride가 적용되어 있어 해상도를 낮추고 마지막 블럭은 해상도를 낮추지 않도록 Identity 레이어를 사용했습니다. 반대로 `up_blocks`의 각 블럭의 마지막 연산은 Upsample 레이어를 사용하여 해상도를 복원하고 마지막 블럭은 Identity 레이어를 사용합니다.
+`down_blocks`의 각 블럭의 마지막 연산인 Conv2d 레이어에서 stride가 적용되어 있기 때문에 해상도를 낮추고 마지막 블럭은 해상도를 낮추지 않도록 Identity 레이어를 사용했습니다. 반대로 `up_blocks`의 각 블럭의 마지막 연산은 Upsample 레이어를 사용하여 해상도를 복원하고 마지막 블럭은 Identity 레이어를 사용합니다.
 > Identity 레이어의 forward는 입력을 그대로 출력하고 backward도 upstream gradient를 그대로 전달합니다.
 
 <script src="https://gist.github.com/emeraldgoose/35c1b236d4a625477a8eef5fd1c3b0a5.js"></script>
 
 ### Forward
-`class_labels`를 입력받게 되면 임베딩되어 time_embedding과 합치게 됩니다. 이는 시간 정보와 조건 정보를 합쳐 모든 영역에 함께 주기 위함이라고 생각합니다.
+`class_labels`를 입력받게 되면 임베딩되어 time_embedding과 합치게 됩니다. 이는 시간 정보와 조건 정보를 합쳐 모든 영역에 함께 주기 위함입니다.
 
-이후, `sample` 이미지는 `down_blocks`, `mid_blocks`, `up_blocks`를 차례로 지나가게 됩니다. UNet의 아키텍처에서 볼 수 있듯이 Down Layer의 출력을 Up Layer에서 사용하도록 Skip connection이 사용되었습니다.
+이후, `sample` 이미지는 `down_blocks`, `mid_blocks`, `up_blocks`를 차례로 지나가게 됩니다. UNet의 아키텍처 그림에서 볼 수 있듯이 Downsample의 출력을 Upsample에서 사용하도록 Skip connection이 사용되었습니다.
 
-diffusers의 `UNet2dModel`에서는 각 블럭의 출력이 아닌 각 블럭 내 레이어마다 출력을 저장하고 똑같이 Up Layer에서도 각 블럭의 입력에 사용되도록 구현되었습니다. 따라서, `down_block_res_sample`이라는 변수를 두어 Up Layer에서 사용할 수 있도록 출력값을 저장합니다.
+diffusers의 `UNet2dModel`에서는 Down Layers의 레이어의 출력이 아닌 레이어를 구성하는 블럭의 출력을 저장하여 Up Layers의 레이어를 구성하는 블럭의 입력으로 사용되도록 구현되었습니다. 따라서, `down_block_res_sample`이라는 변수를 두어 Up Layers에서 사용할 수 있도록 출력값을 저장합니다.
 
-Up Layer에서 `res_sample_channels`라는 리스트를 볼 수 있는데 이는 Backward에서 concat되어 있는 기울기를 두 기울기로 나누기 위해서입니다. 여기서 나눠진 `sample`과 관련된 기울기와 `res_sample`과 관련된 기울기는 각각 Down Layer에서 사용됩니다.
+Up Layers에서 `res_sample_channels`라는 변수를 볼 수 있는데 이 공간에는 skip connection으로 들어오는 `res_sample`의 채널이 저장되어 있습니다.
+이는 Backward에서 concat되어 있는 기울기를 `sample`과 관련된 기울기와 `res_sample`과 관련된 기울기로 나누기 위해서입니다.
 
 <script src="https://gist.github.com/emeraldgoose/56130c10419897cb664328982c1d87cb.js"></script>
 
 ### Backward
-Backward의 연산 순서는 Forward의 역순입니다. 주의할 점은 Forward에서 concat된 변수들을 올바른 크기로 나누는 작업이 필요하기 때문에 Forward에서 저장했던 `res_sample_channels`를 이용해 `res_sample`의 채널 크기를 알아낼 수 있습니다.
+주의할 점은 Forward에서 concat된 변수들을 올바른 크기로 나누는 작업이 필요하기 때문에 Forward에서 저장했던 `res_sample_channels`를 이용해 `res_sample`의 채널 크기를 알아낼 수 있습니다.
 
-Forward와는 반대로 Backward에서는 Up Layer에서 출력된 기울기가 Down Layer에 사용되어야 하므로 `up_block_dres_sample`이라는 변수를 두었습니다. 이것을 이용해 Down Layer의 각 블록마다 입력에 대한 기울기인 `dz_sample`과 `res_sample`에 대한 기울기인 dres_sample을 더한 기울기로 backward를 계산합니다.
+Forward와는 반대로 Backward에서는 Up Layers에서 출력된 기울기가 Down Layers에 사용되어야 하므로 `up_block_dres_sample`이라는 변수를 두었습니다. 이것을 이용해 Down Layers의 각 블록마다 입력에 대한 기울기인 `dz_sample`과 `res_sample`에 대한 기울기인 `dres_sample`을 더한 기울기로 backward를 계산합니다.
 <script src="https://gist.github.com/emeraldgoose/cd76f5b9801763071ff78ab5e36c8788.js"></script>
 
 ## DDPMScheduler
 DDPM(Denoising Diffusion Probabilistic Models)은 노이즈를 추가하는 forward process와 노이즈를 걷어내는 reverse process로 구성해서 고품질의 이미지 생성을 가능하게 한 방법입니다. DDPMScheduler는 이미지에 노이즈를 추가하고 걷어내는 역할을 수행합니다.
-> DDPM 스케줄러는 이해하는 것이 어려워서 diffusers 라이브러리의 DDPMScheduler 코드를 따라가면서 작성했습니다.
+> DDPM 스케줄러는 이해하는 것이 어려워서 diffusers 라이브러리의 DDPMScheduler 코드와 필요한 수식만 따라가면서 작성했습니다.
 
 노이즈를 추가하는 수식과 코드는 다음과 같습니다.
 
@@ -230,7 +231,7 @@ $\hat{x_0} = \frac{1}{\sqrt{\bar{\alpha_t}}}(x_t - \sqrt{1-\bar{\alpha_t}}\cdot 
 
 $\tilde{\mu}\_t = \frac{\bar{\alpha_{t-1}}\beta\_t}{1-\bar{\alpha\_t}}x\_0 + \frac{\sqrt{\alpha\_t}\cdot(1-\bar{\alpha\_{t-1}})}{1-\bar{\alpha\_t}}x\_t$
 
-이미지에 곱하는 가중치 값은 `pred_original_sample_coeff`와 `current_sample_coeff`를 사용합니다.
+이미지 $\hat{x_0}, x_t$ 에 곱하는 가중치 값은 각각 `pred_original_sample_coeff`와 `current_sample_coeff`를 사용합니다.
 
 이제 `prev_sample`인 $x_{t-1}$을 추정하기 위해 다음 수식을 사용합니다.
 
@@ -241,7 +242,7 @@ $x_{t-1} = \tilde{\mu}_t + \sigma_t \cdot z$
 <script src="https://gist.github.com/emeraldgoose/373603dfd8054726ef9d689e82b0a15b.js"></script>
 
 ## Train
-MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.
+MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 `average_pooling` 함수를 이용해 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.
 
 <script src="https://gist.github.com/emeraldgoose/b0b46612aab31c13ea8e8e2675be786a.js"></script>
 
