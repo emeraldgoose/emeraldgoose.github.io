@@ -41,11 +41,11 @@ $\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} \cdot \frac{\part
 
 출력 레이어로부터 오는 upstream gradient를 $dz$라 가정하여 수식을 정리합니다.
 
-$\frac{\partial L}{\partial W} = x^Tdz$
+$\frac{\partial L}{\partial W} = x^\top dz$
 
 $\frac{\partial L}{\partial b} = \sum dz$
 
-$\frac{\partial L}{\partial x} = dzW^T$
+$\frac{\partial L}{\partial x} = dzW^\top$
 
 <script src="https://gist.github.com/emeraldgoose/0e2d30464acae480545d5e98a1cfd4dc.js"></script>
 
