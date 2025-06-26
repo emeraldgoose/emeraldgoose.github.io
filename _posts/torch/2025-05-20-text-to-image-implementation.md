@@ -65,6 +65,8 @@ AttentionBlock은 노이즈가 섞인 이미지로부터 정보의 중요도를 
 입력 X는 정규화를 진행한 뒤에 Query, Key, Value로 만드는 Linear 레이어를 통과하게 됩니다. 
 이 Query, Key, Value는 다시 Scaled-dot Product Attention 연산에 의해 `hidden_states`가 생성되고 이 벡터를 `to_out`레이어를 거쳐 AttentionBlock의 출력으로 사용됩니다.
 
+> Scaled Dot Product Attention 함수의 forward와 backward는 [Python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)](https://emeraldgoose.github.io/pytorch/transformer-scratch-implementation-1/#scaled-dot-product-attention) 글을 참고해주세요.
+
 연산 중간마다 reshape을 통해 변환을 수행하고 있는데 주석으로 어떤 형태가 되어야 하는지 추가로 적어두었습니다.
 
 <script src="https://gist.github.com/emeraldgoose/639b6da6ebf46b458e79144db691f3df.js"></script>
