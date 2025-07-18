@@ -13,7 +13,7 @@ tags: [torch]
 Self Attention 매커니즘의 핵심은 Scaled Dot Product Attention입니다. Dot-product한 값을 Scale Down하여 어텐션을 구하는 매커니즘으로 하나의 단어마다 계산하는 것이 아닌 문장 전체 단어에 대해 어텐션을 계산할 수 있습니다.
 
 ## Forward
-SPDA의 forward 수식을 살펴보겠습니다.
+SDPA의 forward 수식을 살펴보겠습니다.
 
 $Attention(Q,K,V) = \text{softmax}(\frac{QK^{\top}}{\sqrt{d_k}})V$
 
