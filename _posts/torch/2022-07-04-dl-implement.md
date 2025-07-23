@@ -93,8 +93,8 @@ MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터�
 - [mlp.ipynb](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/mlp.ipynb)
 
 ## Reference
-- [http://taewan.kim/post/sigmoid_diff/](http://taewan.kim/post/sigmoid_diff/)
-- [https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/](https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/)
-- [https://pytorch.org/docs/stable/generated/torch.nn.Linear.html](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
-- [https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84](https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84)
-- [https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html](https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html)
+- [Sigmoid 함수 미분 정리](http://taewan.kim/post/sigmoid_diff/)
+- [Softmax-with-Loss 계층](https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/)
+- [Linear - Pytorch Docs](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
+- [Softmax-with-Loss 계층 계산그래프](https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84)
+- [Activation Functions and Their Gradients](https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html)

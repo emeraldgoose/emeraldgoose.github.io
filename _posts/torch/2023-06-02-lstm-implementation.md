@@ -149,7 +149,7 @@ LSTM과 Linear레이어만으로 이루어진 모델을 사용했고 hidden size
 - [rnn.ipynb#LSTM](https://github.com/emeraldgoose/hcrot/blob/master/notebooks/rnn.ipynb)
 
 ## Reference
-- [https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/](https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/)
-- [https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
-- [https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9](https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9)
-- [http://colah.github.io/posts/2015-08-Understanding-LSTMs/](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+- [RNN과 LSTM을 이해해보자!](https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/)
+- [LSTM - Pytorch Docs](https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html)
+- [Backpropogating an LSTM: A Numerical Example](https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9)
+- [Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)

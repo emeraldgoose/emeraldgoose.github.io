@@ -93,5 +93,5 @@ lecunn init 논문인 **Efficient BackProp**의 섹션 4.6을 보면 sqrt(1/fan_
 - [Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification](https://arxiv.org/abs/1502.01852v1)
 - [Efficient BackProp](http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf)
 - [갈아먹는 딥러닝 기초 [2] weight initialization](https://yeomko.tistory.com/40)
-- [https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules](https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules)
-- [https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)
+- [torch/nn/modules](https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules)
+- [In PyTorch how are layer weights and biases initialized by default?](https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default)

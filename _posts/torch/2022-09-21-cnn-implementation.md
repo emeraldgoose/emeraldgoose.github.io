@@ -201,7 +201,5 @@ AvgPool2d를 사용한 결과입니다.
 
 ## Reference
 - [Convolve2d(StackOverflow)](https://stackoverflow.com/a/43087771)
-- [https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/](https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/)
-- [https://velog.io/@changdaeoh/backpropagationincnn](https://velog.io/@changdaeoh/backpropagationincnn)
-- [https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509](https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509)
-- [https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec](https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec)
+- [CNN의 역전파(backpropagation)](https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/)
+- [Forward and Backward propagation of Max Pooling Layer in Convolutional Neural Networks](https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec)
