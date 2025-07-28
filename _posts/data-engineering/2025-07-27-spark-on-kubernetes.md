@@ -47,7 +47,7 @@ Driver가 클러스터 내부(Kubernetes, YARN 등)에 Executor와 같이 배포
 **Spark on Kubernetes**  
 Spark on Kubernetes에도 Client 모드와 Cluster 모드를 지원합니다.
 
-Client 모드는 클라이언트에서 Driver가 실행되며 Driver가 쿠버네티스에 Executor 할당을 요청하고 배치된 xecutor가 작업을 수행하는 방식입니다.
+Client 모드는 클라이언트에서 Driver가 실행되며 Driver가 쿠버네티스에 Executor 할당을 요청하고 배치된 executor가 작업을 수행하는 방식입니다.
 
 > Client 모드는 Spark 2.4.0 이후부터 지원합니다.
 
