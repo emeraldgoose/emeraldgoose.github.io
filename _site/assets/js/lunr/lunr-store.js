@@ -754,4 +754,10 @@ var store = [{
         "tags": ["torch"],
         "url": "/pytorch/unet-and-ddpm-implementation/",
         "teaser": null
+      },{
+        "title": "Spark on Kubernetes",
+        "excerpt":"Apache Spark Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은 기능을 지원합니다. Spark on Kubernetes Apache Spark의 애플리케이션은 기본적으로 YARN, Mesos 등의 리소스 매니저에 의해 관리됩니다. 하지만, Spark...","categories": ["data-engineer"],
+        "tags": ["data-engineering","spark"],
+        "url": "/data-engineer/spark-on-kubernetes/",
+        "teaser": null
       }]

@@ -1,4 +1,4 @@
-I"WA<h2 id="related">Related</h2>
+I"DA<h2 id="related">Related</h2>
 <blockquote>
   <p>RNN에 이어서 LSTM을 구현했습니다.</p>
 </blockquote>
@@ -158,13 +158,14 @@
 <h3 id="code">Code</h3>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/rnn.ipynb">rnn.ipynb#LSTM</a></li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
-  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html">https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html</a></li>
-  <li><a href="https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9">https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9</a></li>
-  <li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">http://colah.github.io/posts/2015-08-Understanding-LSTMs/</a></li>
+  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">RNN과 LSTM을 이해해보자!</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html">LSTM - Pytorch Docs</a></li>
+  <li><a href="https://medium.com/@aidangomez/let-s-do-this-f9b699de31d9">Backpropogating an LSTM: A Numerical Example</a></li>
+  <li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a></li>
 </ul>
 :ET

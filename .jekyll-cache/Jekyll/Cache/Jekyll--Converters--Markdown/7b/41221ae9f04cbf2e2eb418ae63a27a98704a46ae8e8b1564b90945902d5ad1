@@ -1,4 +1,4 @@
-I"WD<h2 id="github-action-설정">Github Action 설정</h2>
+I"�D<h2 id="github-action-설정">Github Action 설정</h2>
 <p>Github Action은 사용자가 원하는 트리거에 따라 워크플로우를 실행할 수 있는 CI(Continuous Integration) 도구입니다. 구글의 Gemini-1.5-flash 모델을 사용하여 Pull Request시 코드 변경사항에 대해 LLM이 코드리뷰할 수 있도록 워크플로우를 생성하는 과정을 설명할 것입니다. 이 워크플로우를 실행하기 위해 필요한 것은 Pull Request 권한이 주어진 GITHUB TOKEN과 Gemini API KEY가 필요합니다.</p>
 
 <h3 id="workflowyml">workflow.yml</h3>
@@ -127,7 +127,7 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
     <span class="s">COMMENT=$(sed '/^```/d' res.txt | jq -c .)</span>
     <span class="s">echo "comment=$COMMENT" &gt;&gt; $GITHUB_OUTPUT</span>
 </code></pre></div></div>
-<p>이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 <code class="language-plaintext highlighter-rouge">steps.{id}.outputs.{key}</code>로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 하는 것으로 알고 있습니다.</p>
+<p>이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 <code class="language-plaintext highlighter-rouge">steps.{id}.outputs.{key}</code>로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 합니다.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add Pull Request Review Comment</span>
   <span class="na">uses</span><span class="pi">:</span> <span class="s">nbaztec/add-pr-review-comment@v1.0.7</span>
@@ -159,5 +159,10 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
 <h3 id="pr-link">PR Link</h3>
 <ul>
   <li><a href="https://github.com/emeraldgoose/github-action-test/pull/3">https://github.com/emeraldgoose/github-action-test/pull/3</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://jjaegii.tistory.com/32">LLM을 활용한 GitHub PR 코드 리뷰 자동화</a></li>
 </ul>
 :ET

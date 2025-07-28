@@ -1,4 +1,4 @@
-I"&4<h2 id="related">Related</h2>
+I"3<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 MLP를 구현했고 이번에는 CNN을 구현하는 삽질을 진행했습니다.<br />
 여기서는 Conv2d의 구현에 대해서만 정리하려고 합니다. 밑바닥부터 구현하실때 도움이 되었으면 좋겠습니다.</p>
@@ -201,14 +201,13 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 <h3 id="code">Code</h3>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/cnn.ipynb">cnn.ipynb</a></li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
   <li><a href="https://stackoverflow.com/a/43087771">Convolve2d(StackOverflow)</a></li>
-  <li><a href="https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/">https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/</a></li>
-  <li><a href="https://velog.io/@changdaeoh/backpropagationincnn">https://velog.io/@changdaeoh/backpropagationincnn</a></li>
-  <li><a href="https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509">https://towardsdatascience.com/backpropagation-in-a-convolutional-layer-24c8d64d8509</a></li>
-  <li><a href="https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec">https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/04/05/CNNbackprop/">CNN의 역전파(backpropagation)</a></li>
+  <li><a href="https://towardsdatascience.com/forward-and-backward-propagation-of-pooling-layers-in-convolutional-neural-networks-11e36d169bec">Forward and Backward propagation of Max Pooling Layer in Convolutional Neural Networks</a></li>
 </ul>
 :ET

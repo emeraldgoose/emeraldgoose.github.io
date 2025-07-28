@@ -1,4 +1,4 @@
-I"�G<h1 id="transformer">Transformer</h1>
+I"G<h1 id="transformer">Transformer</h1>
 <p>트랜스포머(Transformer)는 2017년에 등장한 모델입니다. <a href="https://arxiv.org/abs/1706.03762">Attention is all you need</a> 논문은 트랜스포머 모델에 대해 설명하고 있으며 이후 BERT, GPT라는 새로운 모델을 탄생시키는 배경이 됩니다.</p>
 
 <h1 id="scaled-dot-product-attention">Scaled Dot-Product Attention</h1>
@@ -7,7 +7,7 @@
 <p>Self Attention 매커니즘의 핵심은 Scaled Dot Product Attention입니다. Dot-product한 값을 Scale Down하여 어텐션을 구하는 매커니즘으로 하나의 단어마다 계산하는 것이 아닌 문장 전체 단어에 대해 어텐션을 계산할 수 있습니다.</p>
 
 <h2 id="forward">Forward</h2>
-<p>SPDA의 forward 수식을 살펴보겠습니다.</p>
+<p>SDPA의 forward 수식을 살펴보겠습니다.</p>
 
 <p>$Attention(Q,K,V) = \text{softmax}(\frac{QK^{\top}}{\sqrt{d_k}})V$</p>
 
@@ -219,11 +219,11 @@ $3. \ Z = WV$</p>
 <ul>
   <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention">torch.nn.functional.scaled_dot_product_attention.html</a></li>
   <li><a href="https://ai.stackexchange.com/questions/21237/why-does-this-multiplication-of-q-and-k-have-a-variance-of-d-k-in-scaled">why-does-this-multiplication-of-q-and-k-have-a-variance-of-d-k-in-scaled</a></li>
-  <li><a href="https://www.blossominkyung.com/deeplearning/transformer-mha">https://www.blossominkyung.com/deeplearning/transformer-mha</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html">https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html">https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html</a></li>
-  <li><a href="https://lifeignite.tistory.com/47">https://lifeignite.tistory.com/47</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.GELU.html">https://pytorch.org/docs/stable/generated/torch.nn.GELU.html</a></li>
-  <li><a href="https://brunch.co.kr/@kdh7575070/27">https://brunch.co.kr/@kdh7575070/27</a></li>
+  <li><a href="https://www.blossominkyung.com/deeplearning/transformer-mha">Understanding LSTM Networks</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html">MultiheadAttention - Pytorch Docs</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html">LayerNorm - Pytorch Docs</a></li>
+  <li><a href="https://lifeignite.tistory.com/47">Batch Normalization을 제대로 이해해보자</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.GELU.html">GELU - Pytorch Docs</a></li>
+  <li><a href="https://brunch.co.kr/@kdh7575070/27">#1 Dying ReLU</a></li>
 </ul>
 :ET

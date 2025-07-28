@@ -1,4 +1,4 @@
-I"of<h2 id="related">Related</h2>
+I"�e<h2 id="related">Related</h2>
 <blockquote>
   <p>이전 포스트에서 CNN을 구현했고 이번에는 RNN을 구현하는 과정을 정리하려고 합니다.</p>
 </blockquote>
@@ -11,7 +11,7 @@
 <h2 id="forward">Forward</h2>
 <p>RNN 레이어의 수식과 파라미터들의 size들은 pytorch RNN 문서에 있는 수식으로 사용했습니다.</p>
 
-<p>$h_t = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+<p>$h_t = \text{tanh}(x_t \cdot W_{ih}^\top + b_{ih} + h_{t-1} \cdot W_{hh}^\top + b_{hh})$</p>
 
 <p>그리고 pytorch의 RNN 레이어에는 <code class="language-plaintext highlighter-rouge">num_layers</code>라는 인자를 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">num_layers</code>는 하나의 순회를 담당하는 레이어를 얼마나 쌓을지 결정하는 인자이고 기본값은 1입니다. 만약, <code class="language-plaintext highlighter-rouge">num_layers = 2</code>으로 준다면 다음과 같은 그림의 RNN을 얻을 수 있습니다.</p>
 
@@ -32,11 +32,11 @@
 <h2 id="backward">Backward</h2>
 <p>RNN의 역전파 과정은 시간순으로 forward가 되었으므로 시간의 역순으로 돌아야 합니다. Pytorch RNN 문서에 있는 수식을 사용했습니다.</p>
 
-<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh})$</p>
+<p>${h_t} = \text{tanh}(x_t \cdot W_{ih}^\top + b_{ih} + h_{t-1} \cdot W_{hh}^\top + b_{hh})$</p>
 
 <p>foward에서 사용된 위의 수식을 분리해서 생각해보겠습니다.(정확한 방법과 차이가 있을 수 있습니다.)</p>
 
-<p>$s_t = x_t \cdot W_{ih}^T + b_{ih} + h_{t-1} \cdot W_{hh}^T + b_{hh}$</p>
+<p>$s_t = x_t \cdot W_{ih}^\top + b_{ih} + h_{t-1} \cdot W_{hh}^\top + b_{hh}$</p>
 
 <p>$h_t = \text{tanh}(s_t)$</p>
 
@@ -58,9 +58,9 @@
 
 <p>${\partial J \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial x_t} = dout \cdot (1 - h_t^2) \cdot W_{ih}$</p>
 
-<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = [dout \cdot (1 - h_t^2)]^T \cdot x_t$</p>
+<p>${\partial J \over \partial W_{ih}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{ih}} = (dout \cdot (1 - h_t^2))^\top \cdot x_t$</p>
 
-<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = [dout \cdot (1 - h_t^2)]^T \cdot h_{t-1}$</p>
+<p>${\partial J \over \partial W_{hh}} = dout \cdot (1 - h_t^2) \cdot {\partial s_t \over \partial W_{hh}} = (dout \cdot (1 - h_t^2))^\top \cdot h_{t-1}$</p>
 
 <p>한 가지 더 고려해야 하는 점이 있습니다. RNN은 hidden state를 다음 셀에 전달하고 계산에 사용하기 때문에 hidden state에 대한 gradient를 고려해야 합니다. 여기서 얻은 gradient는 현재 셀에서의 hidden_state에 더하게 됩니다.</p>
 
@@ -111,13 +111,13 @@
 <h3 id="code">Code</h3>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/rnn.ipynb">rnn.ipynb#rnn</a></li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
-  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/</a></li>
-  <li><a href="https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2">https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2</a></li>
-  <li><a href="https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html">https://datascience-enthusiast.com/DL/Building_a_Recurrent_Neural_Network-Step_by_Step_v1.html</a></li>
-  <li><a href="https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py">https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py</a></li>
+  <li><a href="https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/">RNN과 LSTM을 이해해보자!</a></li>
+  <li><a href="https://towardsdatascience.com/backpropagation-in-rnn-explained-bdf853b4e1c2">Understanding Backpropagation</a></li>
+  <li><a href="https://github.com/young-hun-jo/DeepLearningOnlyNumpy/blob/main/season2/common/time_layers.py">DeepLearningOnlyNumpy/season2/common/time_layers.py</a></li>
 </ul>
 :ET

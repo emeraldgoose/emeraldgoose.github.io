@@ -477,7 +477,7 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
     <span class="s">COMMENT=$(sed '/^```/d' res.txt | jq -c .)</span>
     <span class="s">echo "comment=$COMMENT" &gt;&gt; $GITHUB_OUTPUT</span>
 </code></pre></div></div>
-<p>이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 <code class="language-plaintext highlighter-rouge">steps.{id}.outputs.{key}</code>로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 하는 것으로 알고 있습니다.</p>
+<p>이 작업에서는 LLM 출력을 코드블럭 형식으로부터 파싱하고 GITHUB_OUTPUT에 저장합니다. 파싱 방법은 코드블럭 형식을 제거한 뒤 jq라는 도구를 이용해 json 직렬화 변환을 수행합니다. GITHUB OUTPUT은 (Key=Value)형태로 저장하고 같은 jobs 내에서 <code class="language-plaintext highlighter-rouge">steps.{id}.outputs.{key}</code>로 접근할 수 있게 해줍니다. 만약 다른 job에서 접근하려면 GLOBAL 세팅을 해야 합니다.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add Pull Request Review Comment</span>
   <span class="na">uses</span><span class="pi">:</span> <span class="s">nbaztec/add-pr-review-comment@v1.0.7</span>
@@ -509,6 +509,11 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
 <h3 id="pr-link">PR Link</h3>
 <ul>
   <li><a href="https://github.com/emeraldgoose/github-action-test/pull/3">https://github.com/emeraldgoose/github-action-test/pull/3</a></li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li><a href="https://jjaegii.tistory.com/32">LLM을 활용한 GitHub PR 코드 리뷰 자동화</a></li>
 </ul>
 
         
@@ -588,6 +593,31 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apache Spark
+Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/pytorch/unet-and-ddpm-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)
 </a>
       
@@ -653,31 +683,6 @@ The output format is \[{“path”:“{ filepath }”, “line”: { line }, “
     
     <p class="archive__item-excerpt" itemprop="description">Model Context Protocol
 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/data-engineer/apache-iceberg-architecture/" rel="permalink">Apache Iceberg: Architecture
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 24 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">What is a Data Lakehouse?
 </p>
   </article>
 </div>

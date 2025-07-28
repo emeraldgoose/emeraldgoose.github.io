@@ -1,4 +1,4 @@
-I"1<blockquote>
+I"�<blockquote>
   <p>코딩테스트로 Python으로만 MLP를 구현하는 문제가 나왔던 적이 있습니다. 당시에 역전파 구현을 하지 못해 코딩테스트에서 떨어졌었고 완전히 바닥에서부터 구현해보고자 시작한 프로젝트입니다.</p>
 </blockquote>
 
@@ -36,11 +36,11 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
 
 <p>출력 레이어로부터 오는 upstream gradient를 $dz$라 가정하여 수식을 정리합니다.</p>
 
-<p>$\frac{\partial L}{\partial W} = x^Tdz$</p>
+<p>$\frac{\partial L}{\partial W} = x^\top dz$</p>
 
 <p>$\frac{\partial L}{\partial b} = \sum dz$</p>
 
-<p>$\frac{\partial L}{\partial x} = dzW^T$</p>
+<p>$\frac{\partial L}{\partial x} = dzW^\top$</p>
 
 <script src="https://gist.github.com/emeraldgoose/0e2d30464acae480545d5e98a1cfd4dc.js"></script>
 
@@ -84,14 +84,17 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
 <p>10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다.</p>
 
 <h2 id="코드">코드</h2>
-<p><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></p>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/mlp.ipynb">mlp.ipynb</a></li>
+</ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
-  <li><a href="http://taewan.kim/post/sigmoid_diff/">http://taewan.kim/post/sigmoid_diff/</a></li>
-  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
-  <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
-  <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</a></li>
+  <li><a href="http://taewan.kim/post/sigmoid_diff/">Sigmoid 함수 미분 정리</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">Softmax-with-Loss 계층</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">Linear - Pytorch Docs</a></li>
+  <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">Softmax-with-Loss 계층 계산그래프</a></li>
+  <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">Activation Functions and Their Gradients</a></li>
 </ul>
 :ET

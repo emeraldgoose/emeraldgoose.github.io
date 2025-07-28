@@ -1,4 +1,4 @@
-I"�7<blockquote>
+I":7<blockquote>
   <p>모델링을 하게되면 초기화를 신경쓰지 않게 되는데 어떤식으로 이루어지는지 잘 모르고 있었습니다.
 그래서 Linear layer를 선언했을 때 weight와 bias를 어떻게 초기화하는지 알아보고자 합니다.</p>
 </blockquote>
@@ -89,7 +89,7 @@
   <li><a href="https://arxiv.org/abs/1502.01852v1">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a></li>
   <li><a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">Efficient BackProp</a></li>
   <li><a href="https://yeomko.tistory.com/40">갈아먹는 딥러닝 기초 [2] weight initialization</a></li>
-  <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules</a></li>
-  <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default</a></li>
+  <li><a href="https://github.com/pytorch/pytorch/tree/v0.3.1/torch/nn/modules">torch/nn/modules</a></li>
+  <li><a href="https://stackoverflow.com/questions/48529625/in-pytorch-how-are-layer-weights-and-biases-initialized-by-default">In PyTorch how are layer weights and biases initialized by default?</a></li>
 </ul>
 :ET

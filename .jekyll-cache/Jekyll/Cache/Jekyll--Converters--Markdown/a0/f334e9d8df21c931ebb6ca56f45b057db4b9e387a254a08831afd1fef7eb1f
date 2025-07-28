@@ -1,4 +1,4 @@
-I"�8<h1 id="objective">Objective</h1>
+I"�9<h1 id="objective">Objective</h1>
 <p>앞에서 구현한 LayerNorm, MultiHeadAttention, GELU를 사용하고 이전에 구현해둔 Linear, Dropout, Softmax 클래스를 사용하여 Transformer 클래스를 구현하여 테스트해봅니다.</p>
 <blockquote>
   <p><a href="https://emeraldgoose.github.io/pytorch/transformer-scratch-implementation-1/">Python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)</a></p>
@@ -10,7 +10,7 @@
 <p>Transformer 클래스의 구조는 TransformerEncoder와 TransformerDeocder로 구성됩니다. Transformer로 들어오는 입력은 인코더를 통해 인코딩되어 디코더의 입력으로 사용됩니다.</p>
 
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" data-lightbox="gallery"><img style="width:70%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" alt="01" /></a>
+    <a href="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" data-lightbox="gallery"><img style="width:50%;" src="https://1drv.ms/i/s!AoC6BbMk0S9Qm07_7PVAiXxoixjr?embed=1&amp;width=798&amp;height=1100" alt="01" /></a>
     <figcaption>Transformer Architecture</figcaption>
 </figure>
 
@@ -55,7 +55,7 @@
 
 <h2 id="forward-3">Forward</h2>
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:70%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" alt="01" /></a>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQREv7BEX40uQLTR1Sy8KDZXAWUehzE-LH83Rw4WIW0oQm0?width=1024" alt="01" /></a>
     <figcaption>Encoder Layer forward</figcaption>
 </figure>
 
@@ -64,7 +64,7 @@
 
 <h2 id="backward-3">Backward</h2>
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:70%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" alt="01" /></a>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQRVtS1PfLIFTJ0K8RzrSNlwAc9q9HElWPxwrEcgZJQ-LzY?width=1024" alt="01" /></a>
     <figcaption>Encoder Layer backward</figcaption>
 </figure>
 
@@ -76,7 +76,7 @@
 
 <h2 id="forward-4">Forward</h2>
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:70%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" alt="01" /></a>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSOmRpxl0G5RINabXS-mKZIAVyiQITuF0imLAiB-pNmHFM?width=1024" alt="01" /></a>
     <figcaption>Encoder Layer backward</figcaption>
 </figure>
 <p>forward의 argument로 <code class="language-plaintext highlighter-rouge">tgt</code>와 <code class="language-plaintext highlighter-rouge">memory</code>가 있습니다. <code class="language-plaintext highlighter-rouge">tgt</code>는 output 임베딩 입력을 담당하고 <code class="language-plaintext highlighter-rouge">memory</code>는 인코더의 출력을 의미합니다. EncoderLayer와 마찬가지로 각 단계마다 Residual Connection 구조를 사용합니다.</p>
@@ -85,7 +85,7 @@
 
 <h2 id="backward-4">Backward</h2>
 <figure style="text-align:center;">
-    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:70%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" alt="01" /></a>
+    <a href="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" data-lightbox="gallery" style="width:120%;"><img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQSAbNENQ2jXTJqRZ7lQDx60AZf6AFmNJIuMybiJdB0bh60?width=1024" alt="01" /></a>
     <figcaption>Encoder Layer backward</figcaption>
 </figure>
 <p>Backward 연산은 Forward의 역순으로 진행되며 Residual Connection은 upstream gradient와 더해지게 됩니다.</p>
@@ -153,7 +153,7 @@ Input : To be
 Output : To be not to be or not to be or not &lt;eos&gt;
 </code></pre></div></div>
 
-<p>Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼 수 있습니다. 시작 문장이 “To”인 경우 over는 관련이 없지만 그 이후 등장하는 토큰들이 sentences의 첫 번째 문장과 관련있는 것을 볼 수 있습니다.</p>
+<p>Output을 보면 학습 문장과 관련있는 토큰을 생성하는 것을 볼 수 있습니다. 시작 문장이 “To”인 경우 over는 관련이 없지만 그 이후 등장하는 토큰들이 over에 의해 첫 번째 학습 문장과 관련있는 것을 볼 수 있습니다.</p>
 
 <p>여러번 생성할 때마다 다른 문장들이 등장하는 랜덤성과 Transformer 모델 특징답게 토큰이 반복적으로 등장하는 문제도 볼 수 있습니다. 이 결과를 통해 LLM이 생성하는 토큰을 선택하는 전략이 필요함을 알 수 있습니다.</p>
 
@@ -188,12 +188,13 @@ Token(Prob): think(0.31) | alike,(0.08) | best(0.05) | differently(0.02) | but(0
 <p>신기하게 [MASK] 토큰 위치에 들어갈 토큰 후보들이 주로 학습한 문장 내에서 나오는 것을 볼 수 있습니다.</p>
 
 <blockquote>
-  <p>GPT와 BERT 실험 코드는 아래 simple_gpt.ipynb에 작성되어 있습니다.</p>
+  <p>GPT와 BERT 실험 코드는 아래 simple_LM.ipynb에 작성되어 있고 토크나이저까지 구현해서 GPT를 실험하는 코드는 simple_gpt.ipynb에 작성되어 있습니다.</p>
 </blockquote>
 
 <h1 id="code">Code</h1>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
-  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb">https://github.com/emeraldgoose/hcrot/blob/master/simple_gpt.ipynb</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/simple_LM.ipynb">simple_LM.ipynb</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/simple_gpt.ipynb">simple_gpt.ipynb</a></li>
 </ul>
 :ET

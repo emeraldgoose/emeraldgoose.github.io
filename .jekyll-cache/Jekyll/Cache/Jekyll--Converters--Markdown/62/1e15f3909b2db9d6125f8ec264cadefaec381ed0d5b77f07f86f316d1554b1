@@ -1,4 +1,4 @@
-I"�!<h2 id="text-to-image">Text-to-Image</h2>
+I"D#<h2 id="text-to-image">Text-to-Image</h2>
 <p>최근 Stable Diffusion이라는 모델이 발전하면서 많은 사람들이 이미지 생성 AI를 사용하고 있습니다. Diffusion 모델은 노이즈를 기존 이미지에 더한 뒤에 노이즈를 예측하고 지워가며 복원하는 학습과정을 거치게 됩니다.</p>
 
 <p>저는 Diffusion 모델을 구현하여 MNIST를 학습시키고 label이라는 condition을 주어 생성해보려고 합니다.</p>
@@ -51,13 +51,17 @@ Forward에서 입력 X가 두 Conv2d에 동일하게 전파되었으므로 Backw
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" alt="03" />
+      <img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQf3pJ3nmNISI-XqKVt098wAc--Gzj57c1pILtBEcTlmVA?width=1024" alt="03" />
     </a>
     <figcaption>AttentionBlock Forward Flow</figcaption>
 </figure>
 
 <p>입력 X는 정규화를 진행한 뒤에 Query, Key, Value로 만드는 Linear 레이어를 통과하게 됩니다. 
 이 Query, Key, Value는 다시 Scaled-dot Product Attention 연산에 의해 <code class="language-plaintext highlighter-rouge">hidden_states</code>가 생성되고 이 벡터를 <code class="language-plaintext highlighter-rouge">to_out</code>레이어를 거쳐 AttentionBlock의 출력으로 사용됩니다.</p>
+
+<blockquote>
+  <p>Scaled Dot Product Attention 함수의 forward와 backward는 <a href="https://emeraldgoose.github.io/pytorch/transformer-scratch-implementation-1/#scaled-dot-product-attention">Python으로 Transformer 바닥부터 구현하기[1] (MultiHead-Attention, LayerNorm, GELU)</a> 글을 참고해주세요.</p>
+</blockquote>
 
 <p>연산 중간마다 reshape을 통해 변환을 수행하고 있는데 주석으로 어떤 형태가 되어야 하는지 추가로 적어두었습니다.</p>
 
@@ -69,7 +73,7 @@ Forward에서 입력 X가 두 Conv2d에 동일하게 전파되었으므로 Backw
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&amp;height=654" data-lightbox="gallery" style="width:120%;">
-      <img style="width:50%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&amp;height=654" alt="04" />
+      <img style="width:30%;" src="https://1drv.ms/i/c/502fd124b305ba80/IQQ9-xJ_j0LiT72Lb2Wg-E7gAfHopBmSAf1dM--nAzu0NAc?width=382&amp;height=654" alt="04" />
     </a>
     <figcaption>AttentionBlock Backward Flow</figcaption>
 </figure>

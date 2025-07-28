@@ -415,7 +415,7 @@
 <p>LLM은 Google의 Gemini 모델을 선택했습니다. 그 이유는 1M의 토큰 컨텍스트를 지원하고 있어 프롬프트에 충분히 많은 Context들을 넣을 수 있다는 장점이 있기 때문입니다.</p>
 
 <blockquote>
-  <p>Gemini 2.0 Flash의 무료 등급은 시간당 1백만개의 토큰 제한이 걸려있습니다. 제품 개선에 사용 내역이 사용되기는 하지만 토이 프로젝트로 사용하기에 충분하다고 생각합니다.</p>
+  <p>Gemini 2.0 Flash의 무료 등급은 시간당 1백만개의 토큰 제한이 걸려있고 제품 개선에 사용 됩니다.</p>
 </blockquote>
 
 <h3 id="demo-app">Demo APP</h3>
@@ -430,13 +430,13 @@
 <p>사용자가 PDF파일을 업로드하면 파싱 후 Vector Store에 문서를 적재하고 아래 조건에 따라 유저 질의에 따라 문서를 가져올 수 있도록 구성했습니다.</p>
 
 <h3 id="pdf-parse">PDF Parse</h3>
-<p>PDF 문서 내에서 정보를 추출하는 라이브러리 중 하나인 Unstructured를 이용했습니다. 클라우드 서비스를 제공하고 있고 Langchain과 연동이 되어 있어 쉽게 사용가능했습니다. 하지만, PDF의 표를 추출하는 과정에서 문제가 발생했습니다.</p>
+<p>PDF 문서 내에서 정보를 추출하는 라이브러리 중 하나인 Unstructured를 이용했습니다. 하지만, PDF의 표를 추출하는 과정에서 문제가 발생했습니다.</p>
 
 <p><strong>Llamaindex</strong><br />
 PDF 문서를 Unstructured 라이브러리로 바로 파싱하는 경우, 테이블 형식이 제대로 파싱되지 않는 문제가 발생했습니다. 이를 해결하기 위해 중간 변환 과정이 필요했고 마크다운과 이미지 형식 두 가지를 고려했습니다. 이미지 변환 방식도 LLM이 이미지도 잘 해석해주기 때문에 가능한 방법이지만 그 만큼 비용이 들어가기 때문에 마크다운 변환을 선택하게 되었습니다. 마크다운 변환을 이용할 때는 <a href="https://www.llamaindex.ai/">Llamaindex</a>라는 상용 서비스를 이용했고 괜찮은 결과물을 반환해주었습니다.</p>
 
 <blockquote>
-  <p>Llamaindex의 Free Plan은 하루에 1000페이지 변환이 가능합니다. 이 정도면 토이 프로젝트로 사용할 때 충분하다고 생각됩니다.</p>
+  <p>Llamaindex의 Free Plan은 하루에 1000페이지 변환이 가능합니다.</p>
 </blockquote>
 
 <blockquote>
@@ -742,6 +742,31 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apache Spark
+Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/pytorch/unet-and-ddpm-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)
 </a>
       
@@ -807,31 +832,6 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
     
     <p class="archive__item-excerpt" itemprop="description">Model Context Protocol
 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/data-engineer/apache-iceberg-architecture/" rel="permalink">Apache Iceberg: Architecture
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 24 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">What is a Data Lakehouse?
 </p>
   </article>
 </div>

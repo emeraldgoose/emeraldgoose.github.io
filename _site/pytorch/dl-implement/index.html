@@ -386,11 +386,11 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
 
 <p>출력 레이어로부터 오는 upstream gradient를 $dz$라 가정하여 수식을 정리합니다.</p>
 
-<p>$\frac{\partial L}{\partial W} = x^Tdz$</p>
+<p>$\frac{\partial L}{\partial W} = x^\top dz$</p>
 
 <p>$\frac{\partial L}{\partial b} = \sum dz$</p>
 
-<p>$\frac{\partial L}{\partial x} = dzW^T$</p>
+<p>$\frac{\partial L}{\partial x} = dzW^\top$</p>
 
 <script src="https://gist.github.com/emeraldgoose/0e2d30464acae480545d5e98a1cfd4dc.js"></script>
 
@@ -434,15 +434,18 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
 <p>10 에포크에도 loss가 잘 떨어지고 Accuracy도 잘 증가하는 것을 볼 수 있습니다.</p>
 
 <h2 id="코드">코드</h2>
-<p><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></p>
+<ul>
+  <li><a href="https://github.com/emeraldgoose/hcrot">https://github.com/emeraldgoose/hcrot</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/mlp.ipynb">mlp.ipynb</a></li>
+</ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
-  <li><a href="http://taewan.kim/post/sigmoid_diff/">http://taewan.kim/post/sigmoid_diff/</a></li>
-  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">https://pytorch.org/docs/stable/generated/torch.nn.Linear.html</a></li>
-  <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84</a></li>
-  <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html</a></li>
+  <li><a href="http://taewan.kim/post/sigmoid_diff/">Sigmoid 함수 미분 정리</a></li>
+  <li><a href="https://ratsgo.github.io/deep%20learning/2017/10/02/softmax/">Softmax-with-Loss 계층</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html">Linear - Pytorch Docs</a></li>
+  <li><a href="https://velog.io/@gjtang/Softmax-with-Loss-%EA%B3%84%EC%B8%B5-%EA%B3%84%EC%82%B0%EA%B7%B8%EB%9E%98%ED%94%84">Softmax-with-Loss 계층 계산그래프</a></li>
+  <li><a href="https://aew61.github.io/blog/artificial_neural_networks/1_background/1.b_activation_functions_and_derivatives.html">Activation Functions and Their Gradients</a></li>
 </ul>
 
         
@@ -522,6 +525,31 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apache Spark
+Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/pytorch/unet-and-ddpm-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)
 </a>
       
@@ -587,31 +615,6 @@ Linear 레이어는 weight와 bias를 파라미터로 들고 있습니다. weigh
     
     <p class="archive__item-excerpt" itemprop="description">Model Context Protocol
 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/data-engineer/apache-iceberg-architecture/" rel="permalink">Apache Iceberg: Architecture
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 24 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">What is a Data Lakehouse?
 </p>
   </article>
 </div>

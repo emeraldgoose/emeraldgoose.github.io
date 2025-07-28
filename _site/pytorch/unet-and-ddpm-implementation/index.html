@@ -363,13 +363,13 @@
 
 <p>이 코드는 나이브하게 구현한 컨볼루션 연산보단 빠르지만 UNet 구현 후 실제 테스트했을 때의 속도는 절망적이었습니다. 적어도 3개의 Conv2d 레이어가 포함되는 ResidualBlock이 UNet의 Down, Mid, Up 레이어마다 쌓여있기 때문에 매우 느린 연산 속도를 보여주었고 개선이 필요하다는 판단을 하게 되었습니다.</p>
 
-<p>컨볼루션 연산을 행렬곱으로 해결할 수 있는 Image to Colum(im2col), Column to Image(col2im)을 구현하게 되었고 연산 속도가 약 30% 향상되었습니다.</p>
+<p>컨볼루션 연산을 행렬곱으로 해결할 수 있는 Image to Column(im2col), Column to Image(col2im)을 구현하게 되었고 연산 속도가 약 30% 향상되었습니다.</p>
 <blockquote>
   <p>CNN 모델로 5000장의 MNIST 학습 시 기존 방식 1분에서 im2col을 도입했을 때 40초로 감소</p>
 </blockquote>
 
 <h3 id="im2col-col2im">im2col, col2im</h3>
-<p>Image to Column과 Column to Image의 아이디어는 컨볼루션 연산을 행렬곱으로 변환하는 것입니다. 컨볼루션 연산은 커널이 슬라이딩하면서 연산을 수행하는데 커널은 고정이고 입력이 바뀌기 때문에 커널을 똑같이 늘리면 행렬곱으로 만들 수 있다는 아이디어입니다.</p>
+<p>Image to Column과 Column to Image의 아이디어는 컨볼루션 연산을 행렬곱으로 변환하는 것입니다. 컨볼루션 연산은 커널이 슬라이딩하면서 연산을 수행하는데 커널은 고정이고 입력이 바뀌기 때문에 커널과 입력 배열을 재구성하면 행렬곱으로 똑같은 결과를 얻을 수 있다는 아이디어입니다.</p>
 
 <p>먼저, MNIST와 같은 1채널 짜리를 생각해보겠습니다. 2 $\times$ 2 Filter와 3 $\times$ 3 Input을 컨볼루션해야 한다고 가정하겠습니다.</p>
 
@@ -380,7 +380,7 @@
     <figcaption>1 channel im2col</figcaption>
 </figure>
 
-<p>그림과 같이 Filter를 1 $\times$ 4 배열로 변환하고 Input을 연산이 수행될 4 $\times$ 1 배열짜리 4개를 이어서 4 $\times$ 4 행렬로 구성합니다. 이후 행렬곱을 수행하면 1 $\times$ 4 배열이 생성되고 다시 원래의 2 $\times$ 2 배열로 변환하면 기존의 컨볼루션 연산과 동일한 계산이 이루어지게 됩니다.</p>
+<p>그림과 같이 Filter를 1 $\times$ 4 배열로 변환하고 Input을 컨볼루션 연산에 참여하는 원소들을 4 $\times$ 1 배열로 구성한 뒤, 4개를 이어서 4 $\times$ 4 행렬로 구성합니다. 이후 행렬곱을 수행하면 1 $\times$ 4 배열이 생성되고 다시 원래의 2 $\times$ 2 배열로 변환하면 기존의 컨볼루션 연산과 동일한 계산이 이루어지게 됩니다.</p>
 
 <p>실제로 코드로 구현하게 되면 다음과 같습니다.</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
@@ -505,7 +505,7 @@
 <script src="https://gist.github.com/emeraldgoose/1d30ca03f7a64c3b4207b78eb5dc1379.js"></script>
 
 <h2 id="unet2dmodel">UNet2dModel</h2>
-<p>UNet의 아키텍처 구조는 이미지를 Downsample 과정에서 해상도를 낮추고 Upsample 과정에서 해상도를 복원하면서 어떤 타임스텝의 노이즈를 예측하게 됩니다.</p>
+<p>UNet의 아키텍처 구조는 이미지를 Downsample 과정에서 해상도를 낮추고 Upsample 과정에서 해상도를 복원하면서 어떤 타임스텝의 노이즈 $\epsilon$를 예측하게 됩니다.</p>
 
 <figure style="text-align:center;">
     <a href="https://1drv.ms/i/c/502fd124b305ba80/IQTXWSwqQ5GqRLDBN-Dl4TQHAaA5cd9_segjuDlKoyrwxBo?width=1024" data-lightbox="gallery" style="width:120%;">
@@ -514,7 +514,7 @@
     <figcaption>UNet architecture (https://huggingface.co/learn/diffusion-course/unit1/2#step-4-define-the-model)</figcaption>
 </figure>
 
-<p>제가 구현한 UNet은 diffusers 라이브러리의 UNet2dModel 구조를 따라서 구현했고 DownBlock, MidBlock, UpBlock 모두 2개, 2개, 3개의 레이어로 구성됩니다. 또한, skip connection이 있기 때문에 이를 위한 저장 공간도 필요합니다.</p>
+<p>제가 구현한 UNet은 diffusers 라이브러리의 UNet2dModel 구조를 따라서 구현했습니다. 또한, skip connection이 있기 때문에 이를 위한 저장 공간도 필요합니다.</p>
 
 <h3 id="init">Init</h3>
 <p>UNetModel을 이루는 구성요소 중 <code class="language-plaintext highlighter-rouge">down_blocks</code>, <code class="language-plaintext highlighter-rouge">mid_blocks</code>는 2개의 레이어를 사용하고 <code class="language-plaintext highlighter-rouge">up_blocks</code>는 3개의 레이어로 구성했습니다.</p>
@@ -522,7 +522,7 @@
   <p><code class="language-plaintext highlighter-rouge">UNet2dModel</code>의 <code class="language-plaintext highlighter-rouge">layers_per_blocks=2</code>인 것과 같음</p>
 </blockquote>
 
-<p><code class="language-plaintext highlighter-rouge">down_blocks</code>의 각 블럭의 마지막 연산은 stride가 적용되어 있어 해상도를 낮추고 마지막 블럭은 해상도를 낮추지 않도록 Identity 레이어를 사용했습니다. 반대로 <code class="language-plaintext highlighter-rouge">up_blocks</code>의 각 블럭의 마지막 연산은 Upsample 레이어를 사용하여 해상도를 복원하고 마지막 블럭은 Identity 레이어를 사용합니다.</p>
+<p><code class="language-plaintext highlighter-rouge">down_blocks</code>의 각 블럭의 마지막 연산인 Conv2d 레이어에서 stride가 적용되어 있기 때문에 해상도를 낮추고 마지막 블럭은 해상도를 낮추지 않도록 Identity 레이어를 사용했습니다. 반대로 <code class="language-plaintext highlighter-rouge">up_blocks</code>의 각 블럭의 마지막 연산은 Upsample 레이어를 사용하여 해상도를 복원하고 마지막 블럭은 Identity 레이어를 사용합니다.</p>
 <blockquote>
   <p>Identity 레이어의 forward는 입력을 그대로 출력하고 backward도 upstream gradient를 그대로 전달합니다.</p>
 </blockquote>
@@ -530,26 +530,27 @@
 <script src="https://gist.github.com/emeraldgoose/35c1b236d4a625477a8eef5fd1c3b0a5.js"></script>
 
 <h3 id="forward-1">Forward</h3>
-<p><code class="language-plaintext highlighter-rouge">class_labels</code>를 입력받게 되면 임베딩되어 time_embedding과 합치게 됩니다. 이는 시간 정보와 조건 정보를 합쳐 모든 영역에 함께 주기 위함이라고 생각합니다.</p>
+<p><code class="language-plaintext highlighter-rouge">class_labels</code>를 입력받게 되면 임베딩되어 time_embedding과 합치게 됩니다. 이는 시간 정보와 조건 정보를 합쳐 모든 영역에 함께 주기 위함입니다.</p>
 
-<p>이후, <code class="language-plaintext highlighter-rouge">sample</code> 이미지는 <code class="language-plaintext highlighter-rouge">down_blocks</code>, <code class="language-plaintext highlighter-rouge">mid_blocks</code>, <code class="language-plaintext highlighter-rouge">up_blocks</code>를 차례로 지나가게 됩니다. UNet의 아키텍처에서 볼 수 있듯이 Down Layer의 출력을 Up Layer에서 사용하도록 Skip connection이 사용되었습니다.</p>
+<p>이후, <code class="language-plaintext highlighter-rouge">sample</code> 이미지는 <code class="language-plaintext highlighter-rouge">down_blocks</code>, <code class="language-plaintext highlighter-rouge">mid_blocks</code>, <code class="language-plaintext highlighter-rouge">up_blocks</code>를 차례로 지나가게 됩니다. UNet의 아키텍처 그림에서 볼 수 있듯이 Downsample의 출력을 Upsample에서 사용하도록 Skip connection이 사용되었습니다.</p>
 
-<p>diffusers의 <code class="language-plaintext highlighter-rouge">UNet2dModel</code>에서는 각 블럭의 출력이 아닌 각 블럭 내 레이어마다 출력을 저장하고 똑같이 Up Layer에서도 각 블럭의 입력에 사용되도록 구현되었습니다. 따라서, <code class="language-plaintext highlighter-rouge">down_block_res_sample</code>이라는 변수를 두어 Up Layer에서 사용할 수 있도록 출력값을 저장합니다.</p>
+<p>diffusers의 <code class="language-plaintext highlighter-rouge">UNet2dModel</code>에서는 Down Layers의 레이어의 출력이 아닌 레이어를 구성하는 블럭의 출력을 저장하여 Up Layers의 레이어를 구성하는 블럭의 입력으로 사용되도록 구현되었습니다. 따라서, <code class="language-plaintext highlighter-rouge">down_block_res_sample</code>이라는 변수를 두어 Up Layers에서 사용할 수 있도록 출력값을 저장합니다.</p>
 
-<p>Up Layer에서 <code class="language-plaintext highlighter-rouge">res_sample_channels</code>라는 리스트를 볼 수 있는데 이는 Backward에서 concat되어 있는 기울기를 두 기울기로 나누기 위해서입니다. 여기서 나눠진 <code class="language-plaintext highlighter-rouge">sample</code>과 관련된 기울기와 <code class="language-plaintext highlighter-rouge">res_sample</code>과 관련된 기울기는 각각 Down Layer에서 사용됩니다.</p>
+<p>Up Layers에서 <code class="language-plaintext highlighter-rouge">res_sample_channels</code>라는 변수를 볼 수 있는데 이 공간에는 skip connection으로 들어오는 <code class="language-plaintext highlighter-rouge">res_sample</code>의 채널이 저장되어 있습니다.
+이는 Backward에서 concat되어 있는 기울기를 <code class="language-plaintext highlighter-rouge">sample</code>과 관련된 기울기와 <code class="language-plaintext highlighter-rouge">res_sample</code>과 관련된 기울기로 나누기 위해서입니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/56130c10419897cb664328982c1d87cb.js"></script>
 
 <h3 id="backward-1">Backward</h3>
-<p>Backward의 연산 순서는 Forward의 역순입니다. 주의할 점은 Forward에서 concat된 변수들을 올바른 크기로 나누는 작업이 필요하기 때문에 Forward에서 저장했던 <code class="language-plaintext highlighter-rouge">res_sample_channels</code>를 이용해 <code class="language-plaintext highlighter-rouge">res_sample</code>의 채널 크기를 알아낼 수 있습니다.</p>
+<p>주의할 점은 Forward에서 concat된 변수들을 올바른 크기로 나누는 작업이 필요하기 때문에 Forward에서 저장했던 <code class="language-plaintext highlighter-rouge">res_sample_channels</code>를 이용해 <code class="language-plaintext highlighter-rouge">res_sample</code>의 채널 크기를 알아낼 수 있습니다.</p>
 
-<p>Forward와는 반대로 Backward에서는 Up Layer에서 출력된 기울기가 Down Layer에 사용되어야 하므로 <code class="language-plaintext highlighter-rouge">up_block_dres_sample</code>이라는 변수를 두었습니다. 이것을 이용해 Down Layer의 각 블록마다 입력에 대한 기울기인 <code class="language-plaintext highlighter-rouge">dz_sample</code>과 <code class="language-plaintext highlighter-rouge">res_sample</code>에 대한 기울기인 dres_sample을 더한 기울기로 backward를 계산합니다.
+<p>Forward와는 반대로 Backward에서는 Up Layers에서 출력된 기울기가 Down Layers에 사용되어야 하므로 <code class="language-plaintext highlighter-rouge">up_block_dres_sample</code>이라는 변수를 두었습니다. 이것을 이용해 Down Layers의 각 블록마다 입력에 대한 기울기인 <code class="language-plaintext highlighter-rouge">dz_sample</code>과 <code class="language-plaintext highlighter-rouge">res_sample</code>에 대한 기울기인 <code class="language-plaintext highlighter-rouge">dres_sample</code>을 더한 기울기로 backward를 계산합니다.
 <script src="https://gist.github.com/emeraldgoose/cd76f5b9801763071ff78ab5e36c8788.js"></script></p>
 
 <h2 id="ddpmscheduler">DDPMScheduler</h2>
 <p>DDPM(Denoising Diffusion Probabilistic Models)은 노이즈를 추가하는 forward process와 노이즈를 걷어내는 reverse process로 구성해서 고품질의 이미지 생성을 가능하게 한 방법입니다. DDPMScheduler는 이미지에 노이즈를 추가하고 걷어내는 역할을 수행합니다.</p>
 <blockquote>
-  <p>DDPM 스케줄러는 이해하는 것이 어려워서 diffusers 라이브러리의 DDPMScheduler 코드를 따라가면서 작성했습니다.</p>
+  <p>DDPM 스케줄러는 이해하는 것이 어려워서 diffusers 라이브러리의 DDPMScheduler 코드와 필요한 수식만 따라가면서 작성했습니다.</p>
 </blockquote>
 
 <p>노이즈를 추가하는 수식과 코드는 다음과 같습니다.</p>
@@ -568,7 +569,7 @@
     <figcaption>add noise 1000 steps</figcaption>
 </figure>
 
-<p>다음 코드는 노이즈를 걷어내는 수식과 함수입니다.</p>
+<p>다음은 노이즈를 걷어내는 수식과 코드입니다.</p>
 
 <p>이 과정에서는 noisy sample $x_t$와 예측한 노이즈 $\epsilon_\theta$를 이용해 이전 스텝의 이미지 $x_{t-1}$을 추정하는 것이 목적입니다.</p>
 
@@ -580,7 +581,7 @@
 
 <p>$\tilde{\mu}_t = \frac{\bar{\alpha_{t-1}}\beta_t}{1-\bar{\alpha_t}}x_0 + \frac{\sqrt{\alpha_t}\cdot(1-\bar{\alpha_{t-1}})}{1-\bar{\alpha_t}}x_t$</p>
 
-<p>이미지에 곱하는 가중치 값은 <code class="language-plaintext highlighter-rouge">pred_original_sample_coeff</code>와 <code class="language-plaintext highlighter-rouge">current_sample_coeff</code>를 사용합니다.</p>
+<p>이미지 $\hat{x_0}, x_t$ 에 곱하는 가중치 값은 각각 <code class="language-plaintext highlighter-rouge">pred_original_sample_coeff</code>와 <code class="language-plaintext highlighter-rouge">current_sample_coeff</code>를 사용합니다.</p>
 
 <p>이제 <code class="language-plaintext highlighter-rouge">prev_sample</code>인 $x_{t-1}$을 추정하기 위해 다음 수식을 사용합니다.</p>
 
@@ -591,14 +592,14 @@
 <script src="https://gist.github.com/emeraldgoose/373603dfd8054726ef9d689e82b0a15b.js"></script>
 
 <h2 id="train">Train</h2>
-<p>MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.</p>
+<p>MNIST train 이미지 모두 학습하는 것이 너무 오래걸리기 때문에 5120장만 학습에 사용했습니다. MNIST의 이미지 크기는 28 $\times$ 28인데 <code class="language-plaintext highlighter-rouge">average_pooling</code> 함수를 이용해 14 $\times$ 14로 줄여 학습 시간을 좀 더 줄였습니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/b0b46612aab31c13ea8e8e2675be786a.js"></script>
 
-<p><code class="language-plaintext highlighter-rouge">lr_rate=1e-3, 25 epochs</code> 학습에 약 7시간정보 걸렸습니다. 여기에 <code class="language-plaintext highlighter-rouge">lr_rate=1e-4, 16 epochs</code>로 더 학습시켜 총 학습시간 11시간 ~ 12시간정도 걸렸던 것 같습니다.</p>
+<p><code class="language-plaintext highlighter-rouge">lr_rate=1e-3, 25 epochs</code> 학습에 약 7시간 정도 걸렸습니다. 여기에 <code class="language-plaintext highlighter-rouge">lr_rate=1e-4, 16 epochs</code>로 더 학습시켜 총 학습시간 11시간 ~ 12시간정도 걸렸던 것 같습니다.</p>
 
 <h2 id="inference">Inference</h2>
-<p>이미지 생성 시 시작 이미지 <code class="language-plaintext highlighter-rouge">latents</code>는 노이즈입니다. 또한, 추론 시간을 빠르게 하기 위해 <code class="language-plaintext highlighter-rouge">num_train_timesteps</code>를 <code class="language-plaintext highlighter-rouge">num_inference_steps</code>크기만큼 줄여 사용했습니다. 예를 들어, 학습이 10 timesteps라면 추론은 [0, 1, 3, 5, 7, 9] 총 6번의 timesteps로 노이즈를 걷어내는 것을 말합니다.</p>
+<p>이미지 생성 시 시작 이미지 <code class="language-plaintext highlighter-rouge">latents</code>는 노이즈입니다. 또한, 추론 시간을 빠르게 하기 위해 <code class="language-plaintext highlighter-rouge">num_train_timesteps</code>를 <code class="language-plaintext highlighter-rouge">num_inference_steps</code>크기만큼 줄여 사용했습니다. 예를 들어, 학습이 10 timesteps라면 추론은 [0, 1, 3, 5, 7, 9] 총 6번의 timestep으로 노이즈를 걷어내는 것을 말합니다.</p>
 
 <script src="https://gist.github.com/emeraldgoose/4a4360b279711304bcdf1db2b80740f3.js"></script>
 
@@ -623,7 +624,7 @@
 <h2 id="code">Code</h2>
 <ul>
   <li><a href="https://github.com/emeraldgoose/hcrot">hcrot</a></li>
-  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/diffusion.ipynb">diffusion.ipynb</a></li>
+  <li><a href="https://github.com/emeraldgoose/hcrot/blob/master/notebooks/diffusion.ipynb">diffusion.ipynb</a></li>
 </ul>
 
 <h2 id="reference">Reference</h2>
@@ -685,7 +686,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/data-engineer/spark-on-kubernetes/" class="pagination--pager" title="Spark on Kubernetes
+">Next</a>
     
   </nav>
 
@@ -699,6 +701,31 @@
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apache Spark
+Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
+  </article>
+</div>
+
         
           
 
@@ -773,31 +800,6 @@
     
     <p class="archive__item-excerpt" itemprop="description">What is a Data Lakehouse?
 </p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/softmax-and-crossentropyloss/" rel="permalink">Python으로 Softmax와 CrossEntropyLoss 바닥부터 구현하기
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 15 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Softmax
-Softmax는 입력받은 값을 확률로 변환하는 함수입니다. 입력 값을 0과 1사이의 확률값으로 변환하고 총합은 항상 1이 되는 특징을 가집니다. 주로 딥러닝에서 마지막 출력층의 활성화함수로 사용되어 각 클래스에 속할 확률을 계산하는데 사용합니다. 그리고 지수함수를 사...</p>
   </article>
 </div>
 

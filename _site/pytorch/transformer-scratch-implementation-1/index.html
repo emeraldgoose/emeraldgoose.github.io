@@ -357,7 +357,7 @@
 <p>Self Attention 매커니즘의 핵심은 Scaled Dot Product Attention입니다. Dot-product한 값을 Scale Down하여 어텐션을 구하는 매커니즘으로 하나의 단어마다 계산하는 것이 아닌 문장 전체 단어에 대해 어텐션을 계산할 수 있습니다.</p>
 
 <h2 id="forward">Forward</h2>
-<p>SPDA의 forward 수식을 살펴보겠습니다.</p>
+<p>SDPA의 forward 수식을 살펴보겠습니다.</p>
 
 <p>$Attention(Q,K,V) = \text{softmax}(\frac{QK^{\top}}{\sqrt{d_k}})V$</p>
 
@@ -569,12 +569,12 @@ $3. \ Z = WV$</p>
 <ul>
   <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention">torch.nn.functional.scaled_dot_product_attention.html</a></li>
   <li><a href="https://ai.stackexchange.com/questions/21237/why-does-this-multiplication-of-q-and-k-have-a-variance-of-d-k-in-scaled">why-does-this-multiplication-of-q-and-k-have-a-variance-of-d-k-in-scaled</a></li>
-  <li><a href="https://www.blossominkyung.com/deeplearning/transformer-mha">https://www.blossominkyung.com/deeplearning/transformer-mha</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html">https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html">https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html</a></li>
-  <li><a href="https://lifeignite.tistory.com/47">https://lifeignite.tistory.com/47</a></li>
-  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.GELU.html">https://pytorch.org/docs/stable/generated/torch.nn.GELU.html</a></li>
-  <li><a href="https://brunch.co.kr/@kdh7575070/27">https://brunch.co.kr/@kdh7575070/27</a></li>
+  <li><a href="https://www.blossominkyung.com/deeplearning/transformer-mha">Understanding LSTM Networks</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html">MultiheadAttention - Pytorch Docs</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html">LayerNorm - Pytorch Docs</a></li>
+  <li><a href="https://lifeignite.tistory.com/47">Batch Normalization을 제대로 이해해보자</a></li>
+  <li><a href="https://pytorch.org/docs/stable/generated/torch.nn.GELU.html">GELU - Pytorch Docs</a></li>
+  <li><a href="https://brunch.co.kr/@kdh7575070/27">#1 Dying ReLU</a></li>
 </ul>
 
         
@@ -654,6 +654,31 @@ $3. \ Z = WV$</p>
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apache Spark
+Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/pytorch/unet-and-ddpm-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)
 </a>
       
@@ -719,31 +744,6 @@ $3. \ Z = WV$</p>
     
     <p class="archive__item-excerpt" itemprop="description">Model Context Protocol
 최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.
-</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/data-engineer/apache-iceberg-architecture/" rel="permalink">Apache Iceberg: Architecture
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> March 24 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">What is a Data Lakehouse?
 </p>
   </article>
 </div>
