@@ -113,7 +113,7 @@ roleRef:
 ```
 
 ```
-kubectl apply -f spark-sa.yaml -n default
+kubectl apply -f spark-sa.yaml
 ```
 
 ## Example
