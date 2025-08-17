@@ -1,4 +1,4 @@
-I"�V<h2 id="model-context-protocol">Model Context Protocol</h2>
+I"{W<h2 id="model-context-protocol">Model Context Protocol</h2>
 <p>최근 MCP가 AI의 확장을 도움을 주는 사례가 많아지면서 크게 주목받고 있습니다. MCP는 Anthropic에서 처음 제안되어 LLM에 컨텍스트를 제공하는 방법을 표준화하는 개방형 프로토콜입니다.</p>
 
 <p>표준화된 프로토콜을 사용하는 점은 사용자 입장에서 Tool을 추가하고 삭제할 때 편리하다는 장점이 있습니다. MCP 이전 Langchain 애플리케이션에서 Tool을 정의했을 때는 Tool의 추가, 삭제 때마다 새로 애플리케이션을 배포했어야 했습니다. 이런 점에서 사용자에게 MCP는 LLM의 확장을 도우면서 편의성을 제공하는 역할을 맡았습니다.<br />
@@ -69,15 +69,16 @@ ai: 오늘 서울 날씨는 흐리고, 기온은 21도입니다. {}
 <span class="o">@</span><span class="n">mcp</span><span class="p">.</span><span class="n">tool</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">execute_python_code</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">tempfile</span><span class="p">,</span> <span class="n">subprocess</span>
-    <span class="k">with</span> <span class="n">tempfile</span><span class="p">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s">'.py'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="p">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s">'.py'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
         <span class="n">tmp</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="p">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">.</span><span class="n">name</span>
     
-    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="p">[</span><span class="s">'python'</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">],</span>
-        <span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">text</span><span class="o">=</span><span class="bp">True</span>
-    <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s">'python'</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="sa">f</span><span class="s">"""{{"stdout": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stdout</span><span class="si">}</span><span class="s">, "result.stderr": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stderr</span><span class="si">}</span><span class="s">, "result.returncode": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">returncode</span><span class="si">}</span><span class="s">}}"""</span>
 

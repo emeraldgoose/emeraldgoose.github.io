@@ -419,15 +419,16 @@ ai: 오늘 서울 날씨는 흐리고, 기온은 21도입니다. {}
 <span class="o">@</span><span class="n">mcp</span><span class="p">.</span><span class="n">tool</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">execute_python_code</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">tempfile</span><span class="p">,</span> <span class="n">subprocess</span>
-    <span class="k">with</span> <span class="n">tempfile</span><span class="p">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s">'.py'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="p">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s">'w'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s">'.py'</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
         <span class="n">tmp</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+        <span class="n">tmp</span><span class="p">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">tmp_path</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">.</span><span class="n">name</span>
     
-    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="p">[</span><span class="s">'python'</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">],</span>
-        <span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">text</span><span class="o">=</span><span class="bp">True</span>
-    <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s">'python'</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">],</span>
+            <span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="sa">f</span><span class="s">"""{{"stdout": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stdout</span><span class="si">}</span><span class="s">, "result.stderr": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">stderr</span><span class="si">}</span><span class="s">, "result.returncode": </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">returncode</span><span class="si">}</span><span class="s">}}"""</span>
 
