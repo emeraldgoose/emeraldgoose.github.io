@@ -38,7 +38,7 @@ Augmented coding은 AI와의 협업하여 코드를 작성하고 사용자가 �
 - [생성형 AI를 활용하여 자동차 소프트웨어 요구사항을 위한 테스트 케이스 생성하기](https://aws.amazon.com/ko/blogs/tech/using-generative-ai-to-create-test-cases-for-software-requirements/)
 - [Amazon Q Developer 를 이용한 엑심베이의 JDK 자동화 업그레이드 사례](https://aws.amazon.com/ko/blogs/tech/q-developer-eximbay-journey/)
 
-이처럼, 개발자를 AI가 대체하는 것이 아닌 AI를 잘 다루어 업무 효율성을 높일 수 있는 형태로 사용할 수 있음을 보여주고 있는 것 같습니다.
+위 사례가 Augmented coding에 직접적인 사례로 들 수는 없을 것 같지만, 개발자를 AI가 대체하는 것이 아닌 개발자가 AI를 잘 다루어 업무 효율성을 높일 수 있는 형태로 사용하는 형태로 변화될 것 같고 AI를 다루는 역량도 점차 중요하게 생각될 것 같습니다.
 
 ## Reference
 - [Augmented Coding: Beyond the Vibes](https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes)
