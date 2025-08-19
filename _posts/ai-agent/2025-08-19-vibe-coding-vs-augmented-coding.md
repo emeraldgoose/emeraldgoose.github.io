@@ -34,7 +34,7 @@ Augmented coding은 사용자가 AI 결과물을 보며 피드백하고 코드 �
 
 Augmented coding은 AI와의 협업하여 코드를 작성하고 사용자가 코드의 품질을 검도하며 완성도를 높이는 방식입니다. 이는 코드 품질과 테스트가 중요하며 신뢰성 높은 결과물을 원할 때 적합한 방식입니다.
 
-실제로 아래와 같이 AI를 활용해서 테스크 케이스를 생성하거나 코드 개선 사례가 있습니다.
+실제로 아래와 같이 AI를 활용해서 태스크 케이스를 생성하거나 코드 개선 사례가 있습니다.
 - [생성형 AI를 활용하여 자동차 소프트웨어 요구사항을 위한 테스트 케이스 생성하기](https://aws.amazon.com/ko/blogs/tech/using-generative-ai-to-create-test-cases-for-software-requirements/)
 - [Amazon Q Developer 를 이용한 엑심베이의 JDK 자동화 업그레이드 사례](https://aws.amazon.com/ko/blogs/tech/q-developer-eximbay-journey/)
 
