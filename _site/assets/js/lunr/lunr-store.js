@@ -760,4 +760,10 @@ var store = [{
         "tags": ["data-engineering","spark"],
         "url": "/data-engineer/spark-on-kubernetes/",
         "teaser": null
+      },{
+        "title": "바이브 코딩과 증강 코딩(Vibe Coding & Augmented Coding)",
+        "excerpt":"Vibe Coding 바이브 코딩은 자연어 프롬프트를 이용해 AI가 코드를 작성하고 사용자는 작동 결과에 관심을 기울이는 형태의 프로그래밍(?) 방식입니다. 만약, 작동 결과가 사용자의 의도와 맞지 않다면, 피드백을 통해 AI가 코드를 수정하는 방식이며 이러한 방식은 프로토타입을 생성하는데 적합합니다. 바이브 코딩의 장점은 다음과 같습니다. 뛰어난 접근성: 숙련자 뿐만 아니라 비숙련자도 AI를 통해 작업물을...","categories": ["ai-agent"],
+        "tags": ["ai-agent"],
+        "url": "/ai-agent/vibe-coding-vs-augmented-coding/",
+        "teaser": null
       }]
