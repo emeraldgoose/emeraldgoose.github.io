@@ -1,0 +1,127 @@
+I"�2<h2 id="v1-이전-structured-output">v1 이전 Structured Output</h2>
+<p>Langchain이 최근 v1.0으로 업데이트되면서 기존 애플리케이션을 마이그레이션해야 하는 상황에 놓였습니다.</p>
+
+<p>업데이트 이전 Langchain 애플리케이션에선 아래 코드처럼 ResponseSchema를 정의하여 Prompt에 통합하여 사용했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain.output_parsers</span> <span class="kn">import</span> <span class="n">StructuredOutputParser</span><span class="p">,</span> <span class="n">ResponseSchema</span>
+
+<span class="n">response_schemas</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ResponseSchema</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s">"answer"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s">"Answer"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s">"string"</span>
+    <span class="p">),</span>
+    <span class="n">ResponseSchema</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s">"reason"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s">"Reason"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s">"string"</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StructuredOutputParser</span><span class="p">.</span><span class="n">from_response_schemas</span><span class="p">(</span><span class="n">response_schemas</span><span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="p">.</span><span class="n">invoke</span><span class="p">({</span>
+    <span class="s">"question"</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+    <span class="s">"format_instruction"</span><span class="p">:</span> <span class="n">parser</span><span class="p">.</span><span class="n">get_format_instructions</span><span class="p">()</span>
+<span class="p">})</span>
+
+<span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">content</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">'text'</span><span class="p">]</span>
+<span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="v1-이후-structured-output">v1 이후 Structured Output</h2>
+<p>최신 Langchain에선 Pydantic BaseModel을 이용해 표준화된 형태로만 사용 가능하도록 변경되었습니다. 아래는 Langchain 공식 문서의 예제입니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain.agents</span> <span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span> <span class="nn">langchain.agents.structured_output</span> <span class="kn">import</span> <span class="n">ToolStrategy</span><span class="p">,</span> <span class="n">ProviderStrategy</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span> <span class="nc">OutputSchema</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sentiment</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Using ToolStrategy
+</span><span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s">"gpt-4o-mini"</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+    <span class="c1"># explicitly using tool strategy
+</span>    <span class="n">response_format</span><span class="o">=</span><span class="n">ToolStrategy</span><span class="p">(</span><span class="n">OutputSchema</span><span class="p">)</span>  
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="gpt-oss의-구조화된-출력-문제">gpt-oss의 구조화된 출력 문제</h2>
+<p>위의 예시처럼 response_format을 구성하면 모델의 출력을 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.</p>
+
+<p>오히려 아래와 같은 에러가 발생하여 제대로 출력되지 않습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BadRequestError: Error code: 400 - {'error_code': 'BAD_REQUEST', 'message': 'Model output is not in expected format, adjust parameters or prompt and try again.\n'}
+</code></pre></div></div>
+
+<h3 id="solution">Solution</h3>
+<p>이를 해결하기 위해 langchain에서 제공하는 함수를 사용하지 않고 스키마를 직접 작성하여 해결할 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span> <span class="nc">ResponseFormat</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Answer for the question"</span><span class="p">)</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Reason for the answer"</span><span class="p">)</span>
+
+<span class="n">response_format</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"type"</span><span class="p">:</span> <span class="s">"json_schema"</span><span class="p">,</span>
+    <span class="s">"json_schema"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"strict"</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s">"name"</span><span class="p">:</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">__name__</span><span class="p">,</span>
+        <span class="s">"schema"</span><span class="p">:</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">(),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">llm</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">response_format</span><span class="o">=</span><span class="n">response_format</span><span class="p">).</span><span class="n">invoke</span><span class="p">(</span><span class="s">"hello?"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>이를 이용하면 langchain.agents.create_agent에도 사용할 수 있습니다. create_agent의 response_schema를 이용하지 않고 bind된 LLM 모델을 넣어 사용하여 구조화된 출력을 기대할 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">langchain.agents</span> <span class="kn">import</span> <span class="n">create_agent</span>
+<span class="kn">from</span> <span class="nn">langchain.tools</span> <span class="kn">import</span> <span class="n">tool</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span> <span class="nc">ResponseFormat</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Answer for the question"</span><span class="p">)</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Reason for the answer"</span><span class="p">)</span>
+
+<span class="n">response_format</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"type"</span><span class="p">:</span> <span class="s">"json_schema"</span><span class="p">,</span>
+    <span class="s">"json_schema"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">"strict"</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="s">"name"</span><span class="p">:</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">__name__</span><span class="p">,</span>
+        <span class="s">"schema"</span><span class="p">:</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">(),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">create_agent</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">llm</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">response_format</span><span class="o">=</span><span class="n">response_format</span><span class="p">),</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s">"You are helpful agent and your output should be in korean"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">.</span><span class="n">invoke</span><span class="p">({</span><span class="s">"messages"</span><span class="p">:</span> <span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"human"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="s">"What is aEtbdwetq?"</span><span class="p">}]})</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s">'messages'</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
+    {
+        'type': 'reasoning',
+        'summary': [
+            {
+                'type': 'summary_text',
+                'text': 'Need to respond in Korean, JSON format with answer and reason. Unknown term. Probably explain unknown.'
+            }
+        ]
+    },
+    {
+        'type': 'text',
+        'text': '{"answer":"aEtbdwetq는 일반적으로 알려진 용어나 개념이 아니며, 현재로서는 특정한 의미를 파악하기 어렵습니다. 혹시 오타이거나 특정 분야에서 사용되는 전문 용어일 가능성이 있으니, 추가적인 맥락이나 정확한 철자를 알려주시면 보다 정확한 답변을 드릴 수 있습니다.","reason":"사용자가 제시한 용어가 표준 사전이나 일반적인 지식 데이터베이스에 존재하지 않으며, 문맥이 부족해 정확한 정의를 제공하기 어려웠습니다. 따라서 추가 정보를 요청하는 것이 가장 합리적인 접근입니다."}'
+    }
+]
+</code></pre></div></div>
+:ET

@@ -762,8 +762,14 @@ var store = [{
         "teaser": null
       },{
         "title": "바이브 코딩과 증강 코딩(Vibe Coding & Augmented Coding)",
-        "excerpt":"Vibe Coding 바이브 코딩은 자연어 프롬프트를 이용해 AI가 코드를 작성하고 사용자는 작동 결과에 관심을 기울이는 형태의 프로그래밍(?) 방식입니다. 만약, 작동 결과가 사용자의 의도와 맞지 않다면, 피드백을 통해 AI가 코드를 수정하는 방식이며 이러한 방식은 프로토타입을 생성하는데 적합합니다. 바이브 코딩의 장점은 다음과 같습니다. 뛰어난 접근성: 숙련자 뿐만 아니라 비숙련자도 AI를 통해 작업물을...","categories": ["ai-agent"],
+        "excerpt":"Vibe Coding 바이브 코딩은 자연어 프롬프트를 이용해 AI가 코드를 작성하고 사용자는 작동 결과에 관심을 기울이는 형태의 프로그래밍(?) 방식입니다. 만약, 작동 결과가 사용자의 의도와 맞지 않다면, 피드백을 통해 AI가 코드를 수정하는 방식이며 사용자는 코드에 관여하지 않습니다. 바이브 코딩의 장점은 다음과 같습니다. 뛰어난 접근성: 숙련자 뿐만 아니라 비숙련자도 AI를 통해 작업물을 생성할...","categories": ["ai-agent"],
         "tags": ["ai-agent"],
         "url": "/ai-agent/vibe-coding-vs-augmented-coding/",
+        "teaser": null
+      },{
+        "title": "Langchain GPT-OSS 구조화된 출력 트러블슈팅",
+        "excerpt":"Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다. from databricks_langchain import ChatDatabricks llm = ChatDatabricks( model='databricks-gpt-oss-20b', temperature=0., extra_params={\"reasoning_effort\": \"low\"} ) llm.invoke(\"hello?\") v1 이전 Structured...","categories": ["ai-agent"],
+        "tags": ["ai-agent"],
+        "url": "/ai-agent/gpt-oss-structed-output/",
         "teaser": null
       }]
