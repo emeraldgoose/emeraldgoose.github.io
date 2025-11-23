@@ -207,6 +207,30 @@ Output
 }
 ```
 
+또는 아래와 같은 프롬프트로 출력을 제어할 수도 있습니다.
+
+```python
+class ResponseFormat(BaseModel):
+    answer: str = Field("Answer for the question")
+    reason: str = Field("Reason for the answer")
+    search: str = Field("Search result")
+
+json_schema = ResponseFormat.model_json_schema()
+
+prompt = """You are helpful agent and your output should be in korean.
+...
+### Output Format
+The output should be a Markdown code snippet formatted in the following schema, including the leading and trailing:
+{{
+    "type": "object",
+    "properties": {json_schema},
+    "required": {required}
+}}""".format(
+    json_schema=json_schema["properties"], 
+    required=list(json_schema["properties"])
+)
+```
+
 ## Reference
 - [Langchain Docs - Structured output](https://docs.langchain.com/oss/javascript/langchain/structured-output#structured-output)
 - [[LangChain 번역] Structured output](https://rudaks.tistory.com/entry/LangChain-%EB%B2%88%EC%97%AD-Structured-output)
