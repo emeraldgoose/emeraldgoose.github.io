@@ -209,6 +209,7 @@ Output
 
 또는 아래와 같은 프롬프트로 출력을 제어할 수도 있습니다.
 
+{% raw %}
 ```python
 class ResponseFormat(BaseModel):
     answer: str = Field("Answer for the question")
@@ -230,6 +231,7 @@ The output should be a Markdown code snippet formatted in the following schema, 
     required=list(json_schema["properties"])
 )
 ```
+{% endraw %}
 
 ## Reference
 - [Langchain Docs - Structured output](https://docs.langchain.com/oss/javascript/langchain/structured-output#structured-output)

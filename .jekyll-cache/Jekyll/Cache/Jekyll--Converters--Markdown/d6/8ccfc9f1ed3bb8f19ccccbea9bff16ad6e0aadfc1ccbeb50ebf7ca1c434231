@@ -1,4 +1,4 @@
-I"IP<h2 id="databricks-gpt-oss">Databricks-gpt-oss</h2>
+I"�X<h2 id="databricks-gpt-oss">Databricks-gpt-oss</h2>
 <p>사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks_langchain</span> <span class="kn">import</span> <span class="n">ChatDatabricks</span>
@@ -173,7 +173,9 @@
     <span class="n">system_prompt</span><span class="o">=</span><span class="p">(</span>
         <span class="s">"You are helpful agent and your output should be in korean."</span>
         <span class="s">"you should to use structed format."</span> 
-        <span class="s">"output should be respected:</span><span class="se">\n</span><span class="s">{response_format}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">response_format</span><span class="o">=</span><span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">())</span>
+        <span class="s">"output should be respected:</span><span class="se">\n</span><span class="s">{response_format}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span>
+            <span class="n">response_format</span><span class="o">=</span><span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">()</span>
+        <span class="p">)</span>
     <span class="p">)</span>
 <span class="p">)</span>
 
@@ -188,6 +190,29 @@
     'reason': '검색 결과가 없었고, 해당 문자열이 특정 약어, 코드, 혹은 오타일 가능성이 높아 명확한 정의를 제공하기 어려웠습니다.',
     'search': 'Not found :('
 }
+</code></pre></div></div>
+
+<p>또는 아래와 같은 프롬프트로 출력을 제어할 수도 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ResponseFormat</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Answer for the question"</span><span class="p">)</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Reason for the answer"</span><span class="p">)</span>
+    <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Search result"</span><span class="p">)</span>
+
+<span class="n">json_schema</span> <span class="o">=</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">()</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="s">"""You are helpful agent and your output should be in korean.
+...
+### Output Format
+The output should be a Markdown code snippet formatted in the following schema, including the leading and trailing:
+{{
+    "type": "object",
+    "properties": {json_schema},
+    "required": {required}
+}}"""</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span>
+    <span class="n">json_schema</span><span class="o">=</span><span class="n">json_schema</span><span class="p">[</span><span class="s">"properties"</span><span class="p">],</span> 
+    <span class="n">required</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s">"properties"</span><span class="p">])</span>
+<span class="p">)</span>
 </code></pre></div></div>
 
 <h2 id="reference">Reference</h2>

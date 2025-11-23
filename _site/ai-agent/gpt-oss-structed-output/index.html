@@ -542,6 +542,29 @@
 }
 </code></pre></div></div>
 
+<p>또는 아래와 같은 프롬프트로 출력을 제어할 수도 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ResponseFormat</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">answer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Answer for the question"</span><span class="p">)</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Reason for the answer"</span><span class="p">)</span>
+    <span class="n">search</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s">"Search result"</span><span class="p">)</span>
+
+<span class="n">json_schema</span> <span class="o">=</span> <span class="n">ResponseFormat</span><span class="p">.</span><span class="n">model_json_schema</span><span class="p">()</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="s">"""You are helpful agent and your output should be in korean.
+...
+### Output Format
+The output should be a Markdown code snippet formatted in the following schema, including the leading and trailing:
+{{
+    "type": "object",
+    "properties": {json_schema},
+    "required": {required}
+}}"""</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span>
+    <span class="n">json_schema</span><span class="o">=</span><span class="n">json_schema</span><span class="p">[</span><span class="s">"properties"</span><span class="p">],</span> 
+    <span class="n">required</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s">"properties"</span><span class="p">])</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
 <h2 id="reference">Reference</h2>
 <ul>
   <li><a href="https://docs.langchain.com/oss/javascript/langchain/structured-output#structured-output">Langchain Docs - Structured output</a></li>
