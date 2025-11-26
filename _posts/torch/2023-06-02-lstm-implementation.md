@@ -15,7 +15,7 @@ LSTM(Long-Short Term Memory)은 RNN의 long-term dependencies 문제를 해결�
 LSTM은 이러한 문제를 cell state를 추가하여 해결합니다. LSTM은 cell state에 정보를 저장하거나 삭제할 수 있는데 cell state를 제어하기 위한 Gate들을 가지고 있습니다.
 
 ## Forward
-pytorch 문서에 있는 수식을 사용했고 선언한 weight 크기 때문에 조금 변형하여 사용했습니다. 사용되는 weight는 $W_{ih},\ W_{hh},\ b_{ih},\ b_{hh}$ 입니다.
+pytorch 문서에 있는 수식을 사용했고 선언한 weight는 $W_{ih},\ W_{hh},\ b_{ih},\ b_{hh}$ 입니다.
 
 $W_{ih}$는 각각 (hidden_size, input_size) 크기를 가진 ($W_{ii}, W_{if}, W_{ig}, W_{io}$)로 구성되며 (4 * hidden_size, input_size) 크기를 가집니다. 만약 멀티레이어 LSTM이라면 두 번째 레이어의 $W_{ih}$ 크기는 (4 * hidden_size, hidden_size)입니다.
 
