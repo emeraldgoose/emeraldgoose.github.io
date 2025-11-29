@@ -72,7 +72,7 @@ agent = create_agent(
 ```
 
 ## gpt-oss의 구조화된 출력 문제
-위의 예시처럼 response_format을 구성하면 모델의 출력을 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.
+타 모델의 경우 위의 예시처럼 response_format을 이용해 모델의 출력을 쉽게 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.
 
 랭체인에선 구조화된 출력을 제어할 수 있도록 langchain.agents.structured_output.ToolStrategy라는 것을 제공하고 있지만 gpt-oss에선 오히려 아래와 같은 에러가 발생하여 제대로 출력되지 않습니다.
 ```
