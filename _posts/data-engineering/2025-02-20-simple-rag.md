@@ -208,7 +208,7 @@ def normalization(response):
     response['hits']['hits'] = hits
     return response
 
-def get_ensemble_results(doc_lists: List[List[Document]], weights, k, c=60):
+def get_ensemble_results(doc_lists: List[List[Document]], weights, k=60):
     # Weighted RRF
     # 동점자 처리에 가중치를 주는 것으로 해결할 수 있습니다
     documents = set() # unique docs
@@ -223,7 +223,7 @@ def get_ensemble_results(doc_lists: List[List[Document]], weights, k, c=60):
     for doc_list, weight in zip(doc_lists,weights):
         for rank, (doc, _) in enumerate(doc_list,start=1):
             content = doc.page_content
-            score = weight * (1 / (rank + c))
+            score = weight * (1 / (rank + k))
             results[content] += score
 
     sorted_results = sorted(results.items(), key=lambda x: -x[1])
