@@ -81,13 +81,17 @@ def get_cc_ensemble_results(lexical_results, semantic_results, alpha, beta):
         lexical_results['result']['data_array'][0][1], 
         semantic_results['result']['data_array'][0][1]
     )
+    min_scores = (
+        lexical_results['result']['data_array'][-1][1], 
+        semantic_results['result']['data_array'][-1][1]
+    )
 
     documents = {}
     for doc, score in lexical_results['result']['data_array']:
-        documents.setdefault(doc, [0, 0])[0] = score / max_scores[0]
+        documents.setdefault(doc, [0, 0])[0] = (score - min_scores[0]) / (max_scores[0] - min_scores[0])
     
     for doc, score in semantic_results['result']['data_array']:
-        documents.setdefault(doc, [0, 0])[1] = score / max_scores[1]
+        documents.setdefault(doc, [0, 0])[1] = (score - min_scores[1]) / (max_scores[1] - min_scores[1])
 
     ensemble_results = [
         [doc, alpha * lex_score + beta * sem_score] 
