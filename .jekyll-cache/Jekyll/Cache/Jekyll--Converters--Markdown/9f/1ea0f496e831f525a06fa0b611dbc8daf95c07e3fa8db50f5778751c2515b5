@@ -1,0 +1,197 @@
+I"l<h2 id="databricks-vector-search">Databricks Vector Search</h2>
+<p>Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인덱스를 생성하고 사용할 수 있습니다. Databricks의 Unity Catalog에 등록되었으며 ChangeDataFeed가 활성화된 테이블에 대해서만 인덱스를 생성할 수 있고 Sync를 통해 테이블 업데이트시 인덱스도 같이 업데이트가 가능합니다.</p>
+
+<p>Semantic 검색을 지원하고 있지만 BM25와 같은 Lexical Search도 함께 지원하고 있다는 점도 강점이지만 잘 알려지지 않는 것 같습니다. 그래서 이 글에선 Vector search에 대해 정리해보려고 합니다.</p>
+
+<h2 id="vector-search-endpoint">Vector Search Endpoint</h2>
+<p>벡터 서치 엔드포인트는 인덱스를 관리할 수 있는 인스턴스 같은 개념입니다. 워크스페이스 왼쪽 항목에서 Compute에 Vector Search 탭이 있고 여기에 생성한 엔드포인트 목록이 보이게 되고 각 엔드포인트에는 생성한 인덱스 목록도 함께 보이게 됩니다.</p>
+
+<h2 id="vector-search-index">Vector Search Index</h2>
+<p>벡터 서치 인덱스는 임베딩 벡터가 포함된 인덱스를 말합니다. 기존 테이블에서 임베딩 대상이 되는 컬럼에 대한 임베딩 벡터를 생성해서 <code class="language-plaintext highlighter-rouge">__db_review_vector</code>라는 이름의 컬럼에 삽입됩니다. 인덱스도 Unity Catalog의 관리를 받게 되고 테이블 목록과 함께 나타납니다.</p>
+
+<h3 id="databricks-vectorsearch">databricks-vectorsearch</h3>
+<p>Databricks에선 워크스페이스 환경에서 벡터 서치를 이용할 수 있는 파이썬 기반의 라이브러리를 제공 중에 있습니다. 아래 명령어를 통해 설치하고 사용할 수 있습니다.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%pip install databricks-vectorsearch
+</code></pre></div></div>
+
+<p>사용법은 간단합니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks.vector_search.client</span> <span class="kn">import</span> <span class="n">VectorSearchClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">VectorSearchClient</span><span class="p">()</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s">"vector_search_endpoint"</span><span class="p">,</span> <span class="n">index_name</span><span class="o">=</span><span class="s">"{catalog}.{schema}.{index_name}"</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">similarity_search</span><span class="p">(</span>
+    <span class="n">query_text</span><span class="o">=</span><span class="s">"Their Outback Oatmeal and Austin Almond Biscotti were dry and flavorless."</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"review"</span><span class="p">],</span>
+    <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Output
+{
+    'manifest': {'column_count': 2, 'columns': [{'name': 'review'}, {'name': 'score'}]},
+    'result': {
+        'row_count': 5,
+        'data_array': [
+            ["Bakehouse in Wynwood, Miami, has disappointed me. ... I expected more from a renowned cookie company.", 0.9040976460331299],
+            ...
+        ]
+    }
+}
+</code></pre></div></div>
+<p>similarity_search의 기본값은 ANN이기 때문에 <code class="language-plaintext highlighter-rouge">query_type</code>에 아무런 값을 주진 않았다면 Semantic Search가 자동으로 적용됩니다.</p>
+
+<p>이름이 벡터 서치이기 때문에 Semantic Search만 지원하는 건가 싶지만 사실 그렇지는 않습니다. Lexical Search만 이용할 수도 있고 Semantic Search와 함께 사용하는 Hybrid Search도 지원하고 있습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks.vector_search.client</span> <span class="kn">import</span> <span class="n">VectorSearchClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">VectorSearchClient</span><span class="p">()</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s">"vector_search_endpoint"</span><span class="p">,</span> <span class="n">index_name</span><span class="o">=</span><span class="s">"{catalog}.{schema}.{index_name}"</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">similarity_search</span><span class="p">(</span>
+    <span class="n">query_text</span><span class="o">=</span><span class="s">"Their Outback Oatmeal and Austin Almond Biscotti were dry and flavorless."</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"review"</span><span class="p">],</span>
+    <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">query_type</span><span class="o">=</span><span class="s">"FULL_TEXT"</span><span class="p">,</span> <span class="c1"># bm25
+</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">similarity_search</span><span class="p">(</span>
+    <span class="n">query_text</span><span class="o">=</span><span class="s">"Their Outback Oatmeal and Austin Almond Biscotti were dry and flavorless."</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"review"</span><span class="p">],</span>
+    <span class="n">num_results</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">query_type</span><span class="o">=</span><span class="s">"hybrid"</span><span class="p">,</span> <span class="c1"># hybrid
+</span><span class="p">)</span>
+</code></pre></div></div>
+<p>단, Hybrid Search의 경우 RRF(Reciprocal Rank Fusion) 알고리즘으로 계산됩니다. 만약, CC(Convex Combination)를 적용하고 싶다면 <code class="language-plaintext highlighter-rouge">query_type</code>을 <code class="language-plaintext highlighter-rouge">FULL_TEXT</code>와 <code class="language-plaintext highlighter-rouge">ANN</code>으로 각각 검색하여 스코어 정규화를 거쳐 계산하는 함수를 작성해야 합니다.</p>
+
+<p>CC는 간단하게 다음과 같이 구현했습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical</span><span class="p">,</span> <span class="n">semantic</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="n">max_scores</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> 
+        <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">lexical_search</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> 
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="n">semantic_search</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> 
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="k">assert</span> <span class="n">lexical_search</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">semantic_search</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span>
+
+    <span class="n">ensemble_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">lexical_doc</span><span class="p">,</span> <span class="n">semantic_doc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lexical</span><span class="p">,</span> <span class="n">semantic</span><span class="p">):</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">lexical_doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">semantic_doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ensemble_results</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">lexical_doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">score</span><span class="p">])</span>
+    <span class="n">ensemble_results</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ensemble_results</span>
+
+<span class="n">cc_ensemble_results</span> <span class="o">=</span> <span class="n">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical_search</span><span class="p">,</span> <span class="n">semantic_search</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cc_ensemble_results</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>추가적으로, debug_level=1을 넣어주면 debug_info라는 필드가 추가되면서 처리 시간이 나타는데 <code class="language-plaintext highlighter-rouge">query_type</code>에 따라 달라지는 것을 볼 수 있습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># query_type=ann
+</span><span class="s">'debug_info'</span><span class="p">:</span> <span class="p">{</span><span class="s">'response_time'</span><span class="p">:</span> <span class="mf">321.0</span><span class="p">,</span> <span class="s">'ann_time'</span><span class="p">:</span> <span class="mf">98.0</span><span class="p">,</span> <span class="s">'embedding_gen_time'</span><span class="p">:</span> <span class="mf">215.0</span><span class="p">}</span>
+
+<span class="c1"># query_type=FULL_TEXT
+</span><span class="s">'debug_info'</span><span class="p">:</span> <span class="p">{</span><span class="s">'response_time'</span><span class="p">:</span> <span class="mf">22.0</span><span class="p">,</span> <span class="s">'ann_time'</span><span class="p">:</span> <span class="mf">16.0</span><span class="p">}</span>
+
+<span class="c1"># query_type=hybrid
+</span><span class="s">'debug_info'</span><span class="p">:</span> <span class="p">{</span><span class="s">'response_time'</span><span class="p">:</span> <span class="mf">364.0</span><span class="p">,</span> <span class="s">'ann_time'</span><span class="p">:</span> <span class="mf">96.0</span><span class="p">,</span> <span class="s">'embedding_gen_time'</span><span class="p">:</span> <span class="mf">260.0</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>이 debug_info를 보면 lexical search에서 ann_time이라는 필드가 나오는 것으로 봐서 bm25 알고리즘이 아닐 수 있냐는 의문이 들 수도 있습니다. 내부 처리 로직을 볼 수는 없어서 자세히는 알 수 없지만 제 생각으로는 응답 시간 자체가 매우 짧아서 bm25 알고리즘은 맞고 출력에 같은 필드를 사용해서 저런 결과가 나온 것 같습니다.</p>
+
+<h3 id="reranker">Reranker</h3>
+<p>databricks-vectorsearch에선 reranker를 사용할 수 있는 옵션도 제공하고 있습니다. 문서에도 설명되어 있고 사용할 수 있는 줄로 알고 있는데 Databricks Free-edition 워크스페이스에선 지원하지 않아 확인하지 못했습니다. Private Preview라던가 하는 안내도 없어서 아마 엔터프라이즈 워크스페이스에선 가능할 수도 있습니다.</p>
+
+<p>사용법은 아래와 같습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks.vector_search.client</span> <span class="kn">import</span> <span class="n">VectorSearchClient</span>
+<span class="kn">from</span> <span class="nn">databricks.vector_search.reranker</span> <span class="kn">import</span> <span class="n">DatabricksReranker</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">VectorSearchClient</span><span class="p">()</span>
+<span class="n">index</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get_index</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s">"vector_search_endpoint"</span><span class="p">,</span> <span class="n">index_name</span><span class="o">=</span><span class="s">"{catalog}.{schema}.{index_name}"</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">index</span><span class="p">.</span><span class="n">similarity_search</span><span class="p">(</span>
+  <span class="n">query_text</span><span class="o">=</span><span class="s">"Their Outback Oatmeal and Austin Almond Biscotti were dry and flavorless."</span><span class="p">,</span>
+  <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">"review"</span><span class="p">],</span>
+  <span class="n">num_results</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+  <span class="n">query_type</span><span class="o">=</span><span class="s">"full_text"</span><span class="p">,</span>
+  <span class="n">reranker</span><span class="o">=</span><span class="n">DatabricksReranker</span><span class="p">(</span>
+      <span class="n">columns_to_rerank</span><span class="o">=</span><span class="p">[</span><span class="s">"review"</span><span class="p">]</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p>만약, 위와 같은 기능을 엔터프라이즈 워크스페이스에서도 사용이 불가하다면 Reranker 모델을 직접 MLflow 모델로 등록하고 Serving Endpoint로 배포하여 사용해야 합니다. 사용한 모델은 ‘cross-encoder/ms-marco-MiniLM-L6-v2’입니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="kn">import</span> <span class="nn">mlflow.pyfunc</span>
+<span class="kn">from</span> <span class="nn">mlflow.models.signature</span> <span class="kn">import</span> <span class="n">infer_signature</span>
+
+<span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">CrossEncoder</span>
+
+<span class="k">def</span> <span class="nf">_patch_stream_isatty</span><span class="p">():</span> <span class="c1"># isatty 에러를 방지하기 위해 사용했지만 피하는 법을 모르겠습니다
+</span>    <span class="k">for</span> <span class="n">stream_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s">"stdout"</span><span class="p">,</span> <span class="s">"stderr"</span><span class="p">):</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">stream_name</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="s">"isatty"</span><span class="p">):</span>
+            <span class="n">stream</span><span class="p">.</span><span class="n">isatty</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">False</span>
+
+<span class="k">class</span> <span class="nc">CrossEncoderModel</span><span class="p">(</span><span class="n">mlflow</span><span class="p">.</span><span class="n">pyfunc</span><span class="p">.</span><span class="n">PythonModel</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+
+    <span class="k">def</span> <span class="nf">load_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">_patch_stream_isatty</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">model_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">model_input</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">model_input</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="n">input_example</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s">"How many people live in Berlin?"</span><span class="p">,</span> <span class="s">"Berlin had a population of 3,520,031 registered inhabitants in an area of 891.82 square kilometers."</span><span class="p">],</span>
+    <span class="p">[</span><span class="s">"How many people live in Berlin?"</span><span class="p">,</span> <span class="s">"Berlin is well known for its museums."</span><span class="p">],</span>
+<span class="p">]</span>
+
+<span class="n">output_example</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">8.1875</span><span class="p">,</span> <span class="mf">5.26171875</span><span class="p">]</span>
+<span class="n">signature</span> <span class="o">=</span> <span class="n">infer_signature</span><span class="p">(</span><span class="n">input_example</span><span class="p">,</span> <span class="n">output_example</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">mlflow</span><span class="p">.</span><span class="n">start_run</span><span class="p">()</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+    <span class="n">mlflow</span><span class="p">.</span><span class="n">pyfunc</span><span class="p">.</span><span class="n">log_model</span><span class="p">(</span>
+        <span class="n">python_model</span><span class="o">=</span><span class="n">CrossEncoderModel</span><span class="p">(</span><span class="s">"cross-encoder/ms-marco-MiniLM-L6-v2"</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s">"ms-marco-MiniLM-L6-v2"</span><span class="p">,</span>
+        <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span>
+        <span class="n">input_example</span><span class="o">=</span><span class="n">input_example</span><span class="p">,</span>
+        <span class="n">registered_model_name</span><span class="o">=</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s">.</span><span class="si">{</span><span class="n">schema</span><span class="si">}</span><span class="s">.ms-marco-MiniLM-L6-v2"</span> <span class="p">,</span>
+        <span class="n">pip_requirements</span><span class="o">=</span><span class="p">[</span>
+            <span class="s">"sentence-transformers==5.2.2"</span><span class="p">,</span>
+            <span class="s">"torch==2.10.0"</span><span class="p">,</span>
+            <span class="s">"transformers==5.1.0"</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+</code></pre></div></div>
+
+<p>MLflow Model로 등록한 뒤 Serving Endpoint로 등록하면 생성된 엔드포인트로 입력을 보내 Score를 받아볼 수 있습니다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">mlflow.deployments</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]]</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">mlflow</span><span class="p">.</span><span class="n">deployments</span><span class="p">.</span><span class="n">get_deploy_client</span><span class="p">(</span><span class="s">"databricks"</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="n">endpoint</span><span class="o">=</span><span class="s">"ms-marco-MiniLM-L6-v2"</span><span class="p">,</span>
+    <span class="n">inputs</span><span class="o">=</span><span class="p">{</span><span class="s">"inputs"</span><span class="p">:</span> <span class="p">[[</span><span class="s">"Their Outback Oatmeal was dry and flavorless."</span><span class="p">,</span> <span class="n">doc</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]}</span>
+<span class="p">)</span>
+
+<span class="n">reranked</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([[</span><span class="n">doc</span><span class="p">,</span> <span class="n">score</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">response</span><span class="p">[</span><span class="s">'predictions'</span><span class="p">])],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">reranked</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>마지막으로, Databricks는 Vector Search라는 강력한 검색 기능을 제공하고 실제로 사용할 수 있습니다.</p>
+:ET

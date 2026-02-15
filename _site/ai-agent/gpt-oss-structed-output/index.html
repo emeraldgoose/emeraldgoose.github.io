@@ -11,7 +11,7 @@
 
 <!-- begin _includes/seo.html --><title>Langchain GPT-OSS 구조화된 출력 트러블슈팅 - gooooooooooose</title>
 <meta name="title" content="Langchain GPT-OSS 구조화된 출력 트러블슈팅">
-<meta name="description" content="Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
+<meta name="description" content="Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
 
 
   <meta name="author" content="goooose">
@@ -28,7 +28,7 @@
 <meta property="og:url" content="http://localhost:4000/ai-agent/gpt-oss-structed-output/">
 
 
-  <meta property="og:description" content="Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
+  <meta property="og:description" content="Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
 
 
 
@@ -319,7 +319,7 @@
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
     <meta itemprop="headline" content="Langchain GPT-OSS 구조화된 출력 트러블슈팅">
-    <meta itemprop="description" content="Databricks-gpt-oss사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
+    <meta itemprop="description" content="Databricks-gpt-oss사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.">
     <meta itemprop="datePublished" content="2025-11-22T00:00:00+09:00">
     
 
@@ -349,7 +349,7 @@
       <section class="page__content" itemprop="text">
         
         <h2 id="databricks-gpt-oss">Databricks-gpt-oss</h2>
-<p>사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.</p>
+<p>사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks_langchain</span> <span class="kn">import</span> <span class="n">ChatDatabricks</span>
 
@@ -413,7 +413,7 @@
 </code></pre></div></div>
 
 <h2 id="gpt-oss의-구조화된-출력-문제">gpt-oss의 구조화된 출력 문제</h2>
-<p>위의 예시처럼 response_format을 구성하면 모델의 출력을 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.</p>
+<p>타 모델의 경우 위의 예시처럼 response_format을 이용해 모델의 출력을 쉽게 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.</p>
 
 <p>랭체인에선 구조화된 출력을 제어할 수 있도록 langchain.agents.structured_output.ToolStrategy라는 것을 제공하고 있지만 gpt-oss에선 오히려 아래와 같은 에러가 발생하여 제대로 출력되지 않습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BadRequestError: Error code: 400 - {'error_code': 'BAD_REQUEST', 'message': 'Model output is not in expected format, adjust parameters or prompt and try again.\n'}
@@ -623,7 +623,8 @@ The output should be a Markdown code snippet formatted in the following schema, 
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/databricks/databricks-vector-search-index/" class="pagination--pager" title="Databricks Vector Search Index
+">Next</a>
     
   </nav>
 
@@ -637,6 +638,31 @@ The output should be a Markdown code snippet formatted in the following schema, 
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/databricks/databricks-vector-search-index/" rel="permalink">Databricks Vector Search Index
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 15 2026</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Databricks Vector Search
+Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인덱스를 생성하고 사용할 수 있습니다. Databricks의 Unity Catalog에 등록되었으며 ChangeDataFeed가 활성화된 테이블에 대해서만 인덱스를 생성할...</p>
+  </article>
+</div>
+
         
           
 
@@ -715,32 +741,6 @@ Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scal
 </div>
 
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/text-to-image-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock)
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 20 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Text-to-Image
-최근 Stable Diffusion이라는 모델이 발전하면서 많은 사람들이 이미지 생성 AI를 사용하고 있습니다. Diffusion 모델은 노이즈를 기존 이미지에 더한 뒤에 노이즈를 예측하고 지워가며 복원하는 학습과정을 거치게 됩니다.
-</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
   
@@ -790,7 +790,7 @@ Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scal
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2025 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2026 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

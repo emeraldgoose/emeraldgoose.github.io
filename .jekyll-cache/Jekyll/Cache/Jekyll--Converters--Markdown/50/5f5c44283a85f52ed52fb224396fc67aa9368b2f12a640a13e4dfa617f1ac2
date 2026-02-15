@@ -1,4 +1,4 @@
-I"b�<h2 id="rag">RAG</h2>
+I"6�<h2 id="rag">RAG</h2>
 <p>RAG (Retrieval Augmented Generation)란, LLM이 학습한 데이터로부터 답변하지 않고 외부 문서(Context)를 참조할 수 있도록 하는 시스템을 말합니다. RAG는 LLM이 자신이 학습한 데이터가 아닌 외부의 최신 정보를 참조하여 답변의 부정확성이나 환각(Hallucination)을 줄일 수 있습니다.</p>
 
 <h2 id="retriever">Retriever</h2>
@@ -25,7 +25,7 @@
   <li>$score(doc) = \frac{1}{k + rank_{lex}(doc)} + \frac{1}{k + rank_{sem}(doc)}$</li>
 </ul>
 
-<p>RRF는 가중치가 아닌 문서의 순위를 이용하는 방식입니다. 가중치를 이용하지 않기 때문에 Normalization 과정이 필요하지 않고 순위가 낮은 문서를 위해 조정하는 임의의 값입니다.</p>
+<p>RRF는 가중치가 아닌 문서의 순위를 이용하는 방식입니다. 가중치를 이용하지 않기 때문에 Normalization 과정이 필요하지 않고 k는 순위가 낮은 문서를 위해 조정하는 임의의 값입니다.</p>
 
 <h3 id="cross-encoder">Cross-Encoder</h3>
 <p>Cross-Encoder는 하나의 언어모델에 Query와 Candidate를 같이 넣어 유사도를 계산하는 방식입니다. Bi-Encoder 대비 예측 성능이 괜찮지만 Cross-Encoder를 Retreiver로 사용한다면 매 질의마다 모든 문서와의 유사도를 계산해야 하기 때문에 단독으로 사용하기 어렵습니다.</p>
@@ -208,7 +208,7 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
 </span>    <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'hits'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits</span>
     <span class="k">return</span> <span class="n">response</span>
 
-<span class="k">def</span> <span class="nf">get_ensemble_results</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">]],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_ensemble_results</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">]],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
     <span class="c1"># Weighted RRF
 </span>    <span class="c1"># 동점자 처리에 가중치를 주는 것으로 해결할 수 있습니다
 </span>    <span class="n">documents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># unique docs
@@ -223,7 +223,7 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
     <span class="k">for</span> <span class="n">doc_list</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">,</span><span class="n">weights</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc_list</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">doc</span><span class="p">.</span><span class="n">page_content</span>
-            <span class="n">score</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="n">k</span><span class="p">))</span>
             <span class="n">results</span><span class="p">[</span><span class="n">content</span><span class="p">]</span> <span class="o">+=</span> <span class="n">score</span>
 
     <span class="n">sorted_results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>

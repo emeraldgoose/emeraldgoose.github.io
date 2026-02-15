@@ -1,5 +1,5 @@
-I".Y<h2 id="databricks-gpt-oss">Databricks-gpt-oss</h2>
-<p>사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.</p>
+I"�X<h2 id="databricks-gpt-oss">Databricks-gpt-oss</h2>
+<p>사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">databricks_langchain</span> <span class="kn">import</span> <span class="n">ChatDatabricks</span>
 
@@ -63,7 +63,7 @@
 </code></pre></div></div>
 
 <h2 id="gpt-oss의-구조화된-출력-문제">gpt-oss의 구조화된 출력 문제</h2>
-<p>위의 예시처럼 response_format을 구성하면 모델의 출력을 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.</p>
+<p>타 모델의 경우 위의 예시처럼 response_format을 이용해 모델의 출력을 쉽게 제어할 수 있어 편리한 점이 있었지만 gpt-oss의 경우 제대로 적용되지 않았습니다.</p>
 
 <p>랭체인에선 구조화된 출력을 제어할 수 있도록 langchain.agents.structured_output.ToolStrategy라는 것을 제공하고 있지만 gpt-oss에선 오히려 아래와 같은 에러가 발생하여 제대로 출력되지 않습니다.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BadRequestError: Error code: 400 - {'error_code': 'BAD_REQUEST', 'message': 'Model output is not in expected format, adjust parameters or prompt and try again.\n'}
@@ -205,7 +205,7 @@
 ...
 ### Output Format
 The output should be a Markdown code snippet formatted in the following schema, including the leading and trailing:
-/</span><span class="se">\\</span><span class="s">{</span><span class="se">\\</span><span class="s">{
+{{
     "type": "object",
     "properties": {json_schema},
     "required": {required}

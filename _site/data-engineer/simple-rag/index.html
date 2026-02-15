@@ -375,7 +375,7 @@
   <li>$score(doc) = \frac{1}{k + rank_{lex}(doc)} + \frac{1}{k + rank_{sem}(doc)}$</li>
 </ul>
 
-<p>RRF는 가중치가 아닌 문서의 순위를 이용하는 방식입니다. 가중치를 이용하지 않기 때문에 Normalization 과정이 필요하지 않고 순위가 낮은 문서를 위해 조정하는 임의의 값입니다.</p>
+<p>RRF는 가중치가 아닌 문서의 순위를 이용하는 방식입니다. 가중치를 이용하지 않기 때문에 Normalization 과정이 필요하지 않고 k는 순위가 낮은 문서를 위해 조정하는 임의의 값입니다.</p>
 
 <h3 id="cross-encoder">Cross-Encoder</h3>
 <p>Cross-Encoder는 하나의 언어모델에 Query와 Candidate를 같이 넣어 유사도를 계산하는 방식입니다. Bi-Encoder 대비 예측 성능이 괜찮지만 Cross-Encoder를 Retreiver로 사용한다면 매 질의마다 모든 문서와의 유사도를 계산해야 하기 때문에 단독으로 사용하기 어렵습니다.</p>
@@ -558,7 +558,7 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
 </span>    <span class="n">response</span><span class="p">[</span><span class="s">'hits'</span><span class="p">][</span><span class="s">'hits'</span><span class="p">]</span> <span class="o">=</span> <span class="n">hits</span>
     <span class="k">return</span> <span class="n">response</span>
 
-<span class="k">def</span> <span class="nf">get_ensemble_results</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">]],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_ensemble_results</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Document</span><span class="p">]],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
     <span class="c1"># Weighted RRF
 </span>    <span class="c1"># 동점자 처리에 가중치를 주는 것으로 해결할 수 있습니다
 </span>    <span class="n">documents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># unique docs
@@ -573,7 +573,7 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
     <span class="k">for</span> <span class="n">doc_list</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">doc_lists</span><span class="p">,</span><span class="n">weights</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc_list</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">doc</span><span class="p">.</span><span class="n">page_content</span>
-            <span class="n">score</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="n">c</span><span class="p">))</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="n">weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="n">k</span><span class="p">))</span>
             <span class="n">results</span><span class="p">[</span><span class="n">content</span><span class="p">]</span> <span class="o">+=</span> <span class="n">score</span>
 
     <span class="n">sorted_results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -742,6 +742,31 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
+        <a href="/databricks/databricks-vector-search-index/" rel="permalink">Databricks Vector Search Index
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> February 15 2026</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Databricks Vector Search
+Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인덱스를 생성하고 사용할 수 있습니다. Databricks의 Unity Catalog에 등록되었으며 ChangeDataFeed가 활성화된 테이블에 대해서만 인덱스를 생성할...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
         <a href="/ai-agent/gpt-oss-structed-output/" rel="permalink">Langchain GPT-OSS 구조화된 출력 트러블슈팅
 </a>
       
@@ -753,7 +778,7 @@ Langchain에서 Opensearch를 벡터 스토어로 사용할 수 있도록 구현
       <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> November 22 2025</p>
     
     <p class="archive__item-excerpt" itemprop="description">Databricks-gpt-oss
-사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일...</p>
+사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제...</p>
   </article>
 </div>
 
@@ -808,33 +833,6 @@ Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scal
 </div>
 
         
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/pytorch/unet-and-ddpm-implementation/" rel="permalink">Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> May 24 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Objective
-이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다.
-
-  Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, Upsampl...</p>
-  </article>
-</div>
-
-        
       </div>
     </div>
   
@@ -884,7 +882,7 @@ Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scal
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2025 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2026 emeraldgoose. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

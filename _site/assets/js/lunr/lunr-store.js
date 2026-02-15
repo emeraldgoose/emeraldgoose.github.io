@@ -768,8 +768,14 @@ var store = [{
         "teaser": null
       },{
         "title": "Langchain GPT-OSS 구조화된 출력 트러블슈팅",
-        "excerpt":"Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것 같습니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다. from databricks_langchain import ChatDatabricks llm = ChatDatabricks( model='databricks-gpt-oss-20b', temperature=0., extra_params={\"reasoning_effort\": \"low\"} ) llm.invoke(\"hello?\") v1 이전 Structured...","categories": ["ai-agent"],
+        "excerpt":"Databricks-gpt-oss 사용한 LLM은 gpt-oss-20b 모델이고 databricks workspace에 통합된 모델을 사용했습니다. huggingface에 업로드된 gpt-oss 모델을 사용해본 경험은 없지만 같은 에러가 발생할 것으로 예상됩니다. 만약 똑같은 문제가 일어났다면 아래 해결 방법이 도움될 수 있을 것 같습니다. from databricks_langchain import ChatDatabricks llm = ChatDatabricks( model='databricks-gpt-oss-20b', temperature=0., extra_params={\"reasoning_effort\": \"low\"} ) llm.invoke(\"hello?\") v1 이전 Structured...","categories": ["ai-agent"],
         "tags": ["ai-agent"],
         "url": "/ai-agent/gpt-oss-structed-output/",
+        "teaser": null
+      },{
+        "title": "Databricks Vector Search Index",
+        "excerpt":"Databricks Vector Search Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인덱스를 생성하고 사용할 수 있습니다. Databricks의 Unity Catalog에 등록되었으며 ChangeDataFeed가 활성화된 테이블에 대해서만 인덱스를 생성할 수 있고 Sync를 통해 테이블 업데이트시 인덱스도 같이 업데이트가 가능합니다. 이름처럼 Semantic 검색을 지원하고 있지만 BM25와 같은 Lexical Search도 함께 지원하고 있다는 점이 잘...","categories": ["databricks"],
+        "tags": ["data-engineering","databricks"],
+        "url": "/databricks/databricks-vector-search-index/",
         "teaser": null
       }]
