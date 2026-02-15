@@ -74,32 +74,29 @@ results = index.similarity_search(
 
 CC는 간단하게 다음과 같이 구현했습니다.
 ```python
-def get_cc_ensemble_results(lexical, semantic, alpha, beta):
+def get_cc_ensemble_results(lexical_results, semantic_results, alpha, beta):
     assert alpha + beta == 1
 
     max_scores = (
         lexical_results['result']['data_array'][0][1], 
         semantic_results['result']['data_array'][0][1]
     )
-    lexical_search = [
-        [doc[0], doc[1] / max_scores[0]] 
-        for doc in lexical_results['result']['data_array']
-    ]
-    semantic_search = [
-        [doc[0], doc[1] / max_scores[1]] 
-        for doc in semantic_results['result']['data_array']
-    ]
 
-    assert lexical_search[0][1] == semantic_search[0][1] == 1.0
+    documents = {}
+    for doc, score in lexical_results['result']['data_array']:
+        documents.setdefault(doc, [0, 0])[0] = score / max_scores[0]
+    
+    for doc, score in semantic_results['result']['data_array']:
+        documents.setdefault(doc, [0, 0])[1] = score / max_scores[1]
 
-    ensemble_results = []
-    for lexical_doc, semantic_doc in zip(lexical, semantic):
-        score = alpha * lexical_doc[1] + beta * semantic_doc[1]
-        ensemble_results.append([lexical_doc[0], score])
-    ensemble_results.sort(key=lambda x: x[1], reverse=True)
+    ensemble_results = [
+        [doc, alpha * lex_score + beta * sem_score] 
+        for doc, (lex_score, sem_score)in documents.items()
+    ]
+    ensemble_results.sort(key=lambda x: -x[1])
     return ensemble_results
 
-cc_ensemble_results = get_cc_ensemble_results(lexical_search, semantic_search, 0.8, 0.2)
+cc_ensemble_results = get_cc_ensemble_results(lexical_results, semantic_results, 0.8, 0.2)
 print(cc_ensemble_results)
 ```
 
