@@ -1,7 +1,7 @@
-I"Il<h2 id="databricks-vector-search">Databricks Vector Search</h2>
+I"�r<h2 id="databricks-vector-search">Databricks Vector Search</h2>
 <p>Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인덱스를 생성하고 사용할 수 있습니다. Databricks의 Unity Catalog에 등록되었으며 ChangeDataFeed가 활성화된 테이블에 대해서만 인덱스를 생성할 수 있고 Sync를 통해 테이블 업데이트시 인덱스도 같이 업데이트가 가능합니다.</p>
 
-<p>Semantic 검색을 지원하고 있지만 BM25와 같은 Lexical Search도 함께 지원하고 있다는 점도 강점이지만 잘 알려지지 않는 것 같습니다. 그래서 이 글에선 Vector search에 대해 정리해보려고 합니다.</p>
+<p>이름처럼 Semantic 검색을 지원하고 있지만 BM25와 같은 Lexical Search도 함께 지원하고 있다는 점이 잘 알려지지 않는 것 같습니다. 그래서 이 글에선 Vector search 활용에 대해 정리해보려고 합니다.</p>
 
 <h2 id="vector-search-endpoint">Vector Search Endpoint</h2>
 <p>벡터 서치 엔드포인트는 인덱스를 관리할 수 있는 인스턴스 같은 개념입니다. 워크스페이스 왼쪽 항목에서 Compute에 Vector Search 탭이 있고 여기에 생성한 엔드포인트 목록이 보이게 되고 각 엔드포인트에는 생성한 인덱스 목록도 함께 보이게 됩니다.</p>
@@ -63,32 +63,33 @@
 <p>단, Hybrid Search의 경우 RRF(Reciprocal Rank Fusion) 알고리즘으로 계산됩니다. 만약, CC(Convex Combination)를 적용하고 싶다면 <code class="language-plaintext highlighter-rouge">query_type</code>을 <code class="language-plaintext highlighter-rouge">FULL_TEXT</code>와 <code class="language-plaintext highlighter-rouge">ANN</code>으로 각각 검색하여 스코어 정규화를 거쳐 계산하는 함수를 작성해야 합니다.</p>
 
 <p>CC는 간단하게 다음과 같이 구현했습니다.</p>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical</span><span class="p">,</span> <span class="n">semantic</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical_results</span><span class="p">,</span> <span class="n">semantic_results</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">==</span> <span class="mi">1</span>
 
     <span class="n">max_scores</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> 
         <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
     <span class="p">)</span>
-    <span class="n">lexical_search</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> 
-        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]</span>
-    <span class="p">]</span>
-    <span class="n">semantic_search</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">max_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> 
-        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]</span>
-    <span class="p">]</span>
+    <span class="n">min_scores</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> 
+        <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">lexical_search</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">semantic_search</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span>
+    <span class="n">documents</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">doc</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">lexical_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]:</span>
+        <span class="n">documents</span><span class="p">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">score</span> <span class="o">-</span> <span class="n">min_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_scores</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="k">for</span> <span class="n">doc</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">semantic_results</span><span class="p">[</span><span class="s">'result'</span><span class="p">][</span><span class="s">'data_array'</span><span class="p">]:</span>
+        <span class="n">documents</span><span class="p">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">score</span> <span class="o">-</span> <span class="n">min_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="n">ensemble_results</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">lexical_doc</span><span class="p">,</span> <span class="n">semantic_doc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lexical</span><span class="p">,</span> <span class="n">semantic</span><span class="p">):</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">lexical_doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">semantic_doc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">ensemble_results</span><span class="p">.</span><span class="n">append</span><span class="p">([</span><span class="n">lexical_doc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">score</span><span class="p">])</span>
-    <span class="n">ensemble_results</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ensemble_results</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="n">doc</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">lex_score</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">sem_score</span><span class="p">]</span> 
+        <span class="k">for</span> <span class="n">doc</span><span class="p">,</span> <span class="p">(</span><span class="n">lex_score</span><span class="p">,</span> <span class="n">sem_score</span><span class="p">)</span><span class="ow">in</span> <span class="n">documents</span><span class="p">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="n">ensemble_results</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">ensemble_results</span>
 
-<span class="n">cc_ensemble_results</span> <span class="o">=</span> <span class="n">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical_search</span><span class="p">,</span> <span class="n">semantic_search</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="n">cc_ensemble_results</span> <span class="o">=</span> <span class="n">get_cc_ensemble_results</span><span class="p">(</span><span class="n">lexical_results</span><span class="p">,</span> <span class="n">semantic_results</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">cc_ensemble_results</span><span class="p">)</span>
 </code></pre></div></div>
 
@@ -193,5 +194,10 @@
 <span class="k">print</span><span class="p">(</span><span class="n">reranked</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>마지막으로, Databricks는 Vector Search라는 강력한 검색 기능을 제공하고 실제로 사용할 수 있습니다.</p>
+<p>마지막으로, Databricks는 Vector Search라는 강력한 검색 기능을 제공하고 실제로 사용할 수 있습니다. 또한, Search 기능을 적용하려는 도메인에 따라 검색 방향을 다르게 잡아야 원하는 성능에 도달할 수 있습니다.</p>
+<ul>
+  <li>예를 들어, 주로 검색 쿼리와 문서가 문맥 관계가 높다면 Semantic Search 비중을 크게 주어야 하고 전문적인 단어가 자주 등장하면 Lexical Search 비중을 크게 주어야 합니다.</li>
+</ul>
+
+<p>Databricks의 Vector Search는 다양한 도메인에 적용할 수 있도록 옵션을 제공하고 있으며 Reranker를 통해 검색 순위를 재정렬할 수도 있습니다. 또한, Reranker를 배포한 것처럼 Colbert나 다른 검색에 특화된 모델도 배포하여 사용할 수 있다는 장점도 있기 때문에 여러가지 방법을 두고 가장 좋은 전략을 찾을 수 있으면 좋겠습니다.</p>
 :ET

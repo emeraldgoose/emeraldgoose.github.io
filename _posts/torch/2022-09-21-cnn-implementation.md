@@ -37,7 +37,14 @@ CNN(
 - FFT를 이용하는 방법  
 
 FFT(Fast Fourier Transform)를 사용하는 방법은 수식과 구현방법이 어려워서 포기하고 첫 번째 방법인 Numpy를 사용하는 방법을 선택했습니다. 코드는 스택 오버플로우에 있는 코드를 가져와서 사용했습니다.
-<script src="https://gist.github.com/emeraldgoose/edd919bed30ae5ea2a1b021caaea33af.js"></script>
+```python
+def convolve2d(a, f):
+    a,f = np.array(a), np.array(f)
+    s = f.shape + tuple(np.subtract(a.shape, f.shape) + 1)
+    strd = np.lib.stride_tricks.as_strided
+    subM = strd(a, shape = s, strides = a.strides * 2)
+    return np.einsum('ij,ijkl->kl', f, subM)
+```
 
 동작방법은 다음과 같습니다.  
 - 적용할 이미지를 커널 크기의 맞게 잘라서 저장합니다.  
@@ -55,7 +62,31 @@ $o_{12} = k_{11}x_{12} + k_{12}x_{13} + k_{21}x_{22} + k_{22}x_{23}$
 $o_{21} = k_{11}x_{21} + k_{12}x_{22} + k_{21}x_{31} + k_{22}x_{32}$
 
 $o_{22} = k_{11}x_{22} + k_{12}x_{23} + k_{21}x_{32} + k_{22}x_{33}$
-<script src="https://gist.github.com/emeraldgoose/d816ef2fddecef83236316f9316dcde0.js"></script>
+```python
+def convolve2d(a: NDArray, f: NDArray) -> NDArray:
+    # Ref: https://stackoverflow.com/a/43087771
+    a,f = np.array(a), np.array(f)
+    s = f.shape + tuple(np.subtract(a.shape, f.shape) + 1)
+    strd = np.lib.stride_tricks.as_strided
+    subM = strd(a, shape = s, strides = a.strides * 2)
+    return np.einsum('ij,ijkl->kl', f, subM)
+
+def forward(self, x: np.ndarray):
+    self.X = x
+    image, kernel, B = x[0][0], self.weight[0][0], len(x)
+    hin, win = image.shape
+    hout = np.floor((hin + 2 * self.padding[0] - 1 * (len(kernel)-1) - 1) / self.stride[0] + 1).astype(int)
+    wout = np.floor((win + 2 * self.padding[1] - 1 * (len(kernel[0])-1) - 1) / self.stride[1] + 1).astype(int)
+    ret = np.zeros((B, self.out_channel, hout, wout))
+
+    for b in range(B):
+        for cout in range(self.out_channel):
+            for cin in range(self.in_channel):
+                ret[b][cout] += convolve2d(x[b][cin], self.weight[cout][cin])[::self.stride[0], ::self.stride[1]]
+            ret[b][cout] += self.bias[cout]
+      
+    return ret
+```
 
 ## Backward
 이제 Conv2d 레이어의 backward를 계산해보겠습니다. dout은 뒤의 레이어에서 들어오는 gradient를 의미합니다.  
@@ -153,7 +184,28 @@ $\frac{dL}{dx_{13}} = d_{12} \cdot k_{12}$
 
 파란색 테두리인 weight를 보시면 아시겠지만 왼쪽 상단이 k22로 시작합니다. 즉, weight를 뒤집은 형태로 convolution 연산을 진행합니다.  
 따라서, **dout을 적절하게 padding하고 weight를 뒤집어서 convolution을 진행한 결과가 입력에 대한 gradient입니다.**  
-<script src="https://gist.github.com/emeraldgoose/3458dac08e743c36beec99446fc3231f.js"></script>
+
+```python
+def backward(self, dz: NDArray) -> Tuple[NDArray, NDArray, NDArray]:
+    dw, db = np.zeros_like(self.weight), np.zeros_like(self.bias)
+    weight_h, weight_w = self.weight.shape[2:]
+    (B, Cout), Cin = dz.shape[:2], self.X.shape[1]
+
+    pad_h = weight_h - 1
+    pad_w = weight_w - 1
+    dz = self.Pad(dz, (pad_h // 2, pad_w // 2))
+    dx = np.zeros_like(self.X)
+
+    for b in range(B):
+        for cin in range(Cin):
+            for cout in range(Cout):
+                dw[cout][cin] += convolve2d(dz[b][cout],self.X[b][cin])
+                dx[b][cin] += convolve2d(dz[b][cout], np.flip(self.weight[cout][cin]))
+        for cout in range(Cout):
+            db[cout,np.newaxis] += np.sum(dz[b][cout], axis=None)
+
+    return dx, dw, db
+```
 
 ## CrossEntropyLoss
 Pytorch의 CrossEntropyLoss는 Softmax와 NLLLoss(Negative Log Likelihood)로 구성되어 있습니다. Softmax와 NLLLoss로 구현하게 되면 음수 입력에 대해서도 cross entropy 값을 구할 수 있습니다.
@@ -164,12 +216,58 @@ $\text{CrossEntropyLoss } L = -\sum^C_i t_i log(P(x)), P(x) = \text{softmax}(x)$
 
 > NLLLoss(Negative Log Likelihood Loss)의 함수는 $L(y) = -log(y)$입니다. -log(정답 라벨에 대해 모델이 예측한 확률값) 값의 합이 Loss이고 이를 줄이는 방향이 모델이 정답을 강하게 예측할 수 있도록 합니다. 예를들면, pred = [0.5, 0.4, 0.1], label = [1] 이라면 loss = -log(0.4) = [0.92]이 됩니다.
 
-<script src="https://gist.github.com/emeraldgoose/74d9ec6df399b257ae15348bea5299d7.js"></script>
+```python
+def cross_entropy_loss(y_pred: np.ndarray, y_true: np.ndarray):
+    """ 2d array에 대해서만 사용 """
+    if y_true.dtype == np.float_:
+        raise ValueError('expected long type, but found float')
+      
+    if y_pred.ndim == 1:
+        y_pred = y_pred.reshape(1,-1)
+
+    s = np.exp(y_pred) / np.sum(np.exp(y_pred), axis=1).reshape(-1,1)
+    return np.sum(-np.log(s)[range(y_pred.shape[0]),y], axis=None) / y_pred.shape[0]
+   
+y_pred = np.random.random((3,10))
+# [[0.17436643 0.69093774 0.38673535 0.93672999 0.13752094 0.34106635
+#  0.11347352 0.92469362 0.87733935 0.25794163]
+# [0.65998405 0.8172222  0.55520081 0.52965058 0.24185229 0.09310277
+#  0.89721576 0.90041806 0.63310146 0.33902979]
+# [0.34920957 0.72595568 0.89711026 0.88708642 0.77987555 0.64203165
+#  0.08413996 0.16162871 0.89855419 0.60642906]]
+
+y_true = np.random.randint(0,10,(3))
+# [2 8 2]
+
+cross_entropy_loss(y_pred, y_true)
+# 2.256273198996563
+```
 
 ## Result
 저번 포스팅과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트 데이터로 사용했습니다. 다음과 같이 (conv2d, relu, pooling) 구조를 2번 거치고 fc 레이어로 logits을 출력할 수 있도록 하는 모델을 사용했습니다.
 
-<script src="https://gist.github.com/emeraldgoose/d5198773511fc9da28517861b7df4160.js"></script>
+```python
+class CNN(layers.Module):
+    def __init__(self, num_classes=10):
+        super().__init__()
+        self.layer1 = layers.Sequential(
+            layers.Conv2d(1,5,5), 
+            layers.ReLU(), 
+            layers.MaxPool2d(2,2) # AvgPool2d(2,2)
+            )
+        self.layer2 = layers.Sequential(
+            layers.Conv2d(5,7,5), 
+            layers.ReLU(), 
+            layers.MaxPool2d(2,2) # AvgPool2d(2,2)
+            )
+        self.flatten = layers.Flatten()
+        self.fc = layers.Linear(112, num_classes)
+
+    def forward(self, x):
+        o = self.layer1(x)
+        o = self.layer2(o)
+        return self.fc(self.dropout(self.flatten(o)))
+```
 
 MaxPool2d를 사용한 결과입니다.  
 

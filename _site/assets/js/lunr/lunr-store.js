@@ -636,7 +636,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Byte Pair Encoding",
-        "excerpt":"Reference BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다. https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/ Get Vocabulary 토크나이징을 위해 문서내에 등장한 단어의 등장횟수가 기록된 dictionary를 사용하여 단어 집합인 vocabulary를 만들어야 합니다. 위 코드는 dictionary의 단어들을 구성하는 글자들만을 추출하여 vocabulary에 저장한 코드입니다. 알고리즘 내에서 vocabulary를 사용하고 다시 업데이트를...","categories": ["nlp"],
+        "excerpt":"Reference BPE 알고리즘에 대한 설명은 링크한 곳에 잘 설명되어 있습니다. 여기서는 참고한 곳의 내용을 바탕으로 직접 구현했습니다. https://ratsgo.github.io/nlpbook/docs/preprocess/bpe/ Get Vocabulary 토크나이징을 위해 문서내에 등장한 단어의 등장횟수가 기록된 dictionary를 사용하여 단어 집합인 vocabulary를 만들어야 합니다. dictionary = { 'hug':10, 'pug':5, 'pun':12, 'bun':4, 'hugs':5 } vocabulary = list(set(sum([list(word) for word in dictionary.keys()],[])))...","categories": ["nlp"],
         "tags": ["nlp"],
         "url": "/nlp/byte-pair-encoding/",
         "teaser": null
@@ -750,7 +750,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Python으로 Diffusion 바닥부터 구현하기[2] (im2col, UNet, DDPM)",
-        "excerpt":"Objective 이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다. Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock) 이 글에선 Conv2d의 개선, UNet, DDPMScheduler의 구현을 마무리하고 테스트 결과를 작성하겠습니다. Conv2d 기존 Conv2d의 컨볼루션 연산은 다음과 같았습니다. 이 코드는 나이브하게 구현한 컨볼루션 연산보단 빠르지만 UNet 구현 후 실제 테스트했을 때의 속도는 절망적이었습니다. 적어도...","categories": ["Pytorch"],
+        "excerpt":"Objective 이전 글에서 UNet의 구성요소인 ResidualBlock, AttentionBlock, UpsampleBlock을 구현했습니다. Python으로 Diffusion 바닥부터 구현하기[1] (ResidualBlock, AttentionBlock, UpsampleBlock) 이 글에선 Conv2d의 개선, UNet, DDPMScheduler의 구현을 마무리하고 테스트 결과를 작성하겠습니다. Conv2d 기존 Conv2d의 컨볼루션 연산은 다음과 같았습니다. def convolve2d(a: NDArray, f: NDArray) -&gt; NDArray: # Ref: https://stackoverflow.com/a/43087771 a,f = np.array(a), np.array(f) s =...","categories": ["Pytorch"],
         "tags": ["torch"],
         "url": "/pytorch/unet-and-ddpm-implementation/",
         "teaser": null

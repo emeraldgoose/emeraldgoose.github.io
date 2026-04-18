@@ -14,7 +14,14 @@ $\text{Softmax}(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$
 
 이 수식을 구현한 코드는 다음과 같습니다.
 
-<script src="https://gist.github.com/emeraldgoose/16326706b8cc37c31eb8da0ae27e97b1.js"></script>
+```python
+def forward(self, x: NDArray) -> NDArray:
+    eps = 1e-8
+    e_x = np.exp(x - np.max(x, axis=self.dim, keepdims=True))
+    e_x = np.nan_to_num(e_x, 0.) + eps
+    output = e_x / np.sum(e_x, axis=self.dim, keepdims=True)
+    return output
+```
 
 위와 같이 구현한 이유는 안정성때문입니다. x값이 너무 크면 오버플로우가 발생할 수 있기 때문에 최대값을 0으로(`np.exp(x) = 1`) 보정하는 작업을 수행합니다. `np.exp(x)`를 `np.exp(x - np.max(x))`로 구현하더라도 변화량은 같기 때문에 최종 소프트맥스 결과값은 같습니다.
 
@@ -42,7 +49,28 @@ S_{x_i}(1-S_{x_i}) & i = k \\\\
 
 Softmax 함수의 입력에 대한 기울기를 구하는 코드는 다음과 같습니다.
 
-<script src="https://gist.github.com/emeraldgoose/a1bb6f44b227ca37a451612f68213223.js"></script>
+```python
+def backward(self, dz: NDArray) -> NDArray:
+    dx = np.zeros_like(dz)
+    
+    transposed_axes = list(range(dz.ndim))
+    transposed_axes[self.dim], transposed_axes[-1] = transposed_axes[-1], transposed_axes[self.dim]
+    transposed_dout = np.transpose(dz, transposed_axes)
+    transposed_softmax = np.transpose(self.output, transposed_axes)
+    transposed_dx = np.transpose(dx, transposed_axes)
+
+    shape = transposed_dout.shape
+    batch_size = shape[:-1]
+
+    for idx in np.ndindex(batch_size):
+        s = transposed_softmax[idx].reshape(-1, 1)
+        jacobian = np.diagflat(s) - np.dot(s, s.T)
+        transposed_dx[idx] = np.dot(jacobian, transposed_dout[idx])
+
+    dx = np.transpose(transposed_dx, transposed_axes)
+
+    return dx
+```
 
 **축 변경**  
 아래처럼 계산을 용이하게 하기 위해 축을 변경합니다. 적용하고자 하는 축을 마지막 축과 바꿔줍니다. 
@@ -84,7 +112,13 @@ $L = - \sum_{i=1}^c y_i log(p(x_i))$
 
 $y_i$는 실제 데이터의 One-hot encoding이고 $p(x_i)$는 $\text{Softmax}(x_i)$를 의미합니다.
 
-<script src="https://gist.github.com/emeraldgoose/8917e4f3ab587bb59e53828cc8004b81.js"></script>
+```python
+def forward(self, y_pred: NDArray, y_true: NDArray) -> NDArray:
+    self.B = y_pred.shape[0]
+    self.enc = one_hot_encoding(y_pred, y_true)
+    self.s = softmax(y_pred)
+    return np.sum(-np.log(self.s) * self.enc) / self.B
+```
 
 ### Backward
 $y$는 정답 레이블인 경우 1, 아니면 0의 값을 가지고 있습니다. 
@@ -105,7 +139,10 @@ $\frac{\partial p(x_k)}{\partial x_k} = -p(x_k)p(x_i) \rightarrow -\frac{1}{p(x_
 
 유도된 식을 살펴보면 $p(x_i)$에 정답인 경우 1, 정답이 아닌 경우 0을 빼주고 있으므로 $y$로 치환할 수 있습니다. 따라서, CrossEntropyLoss의 기울기는 $p(x_i) - y_i$입니다.
 
-<script src="https://gist.github.com/emeraldgoose/139b6199df3edfa26a078bfb20712645.js"></script>
+```python
+def backward(self) -> NDArray:
+    return (self.s - self.enc) / self.B
+```
 
 ## Code
 - [Softmax Class](https://github.com/emeraldgoose/hcrot/blob/master/hcrot/layers/activation.py#L10)

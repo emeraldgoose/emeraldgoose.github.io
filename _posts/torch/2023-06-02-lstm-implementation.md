@@ -53,7 +53,53 @@ hidden state
 
 마지막으로, output은 입력에 sigmoid로 출력하여 cell state의 어느 부분을 출력으로 내보낼지 결정합니다.
 
-<script src="https://gist.github.com/emeraldgoose/09c0a19d39acd7e8fbc740263a26c02e.js"></script>
+```python
+def forward(
+        self, x: NDArray, 
+        h_0: Optional[NDArray] = None, 
+        c_0: Optional[NDArray] = None
+    ) -> Tuple[NDArray, NDArray, NDArray]:
+    """LSTM forward process"""
+    self.X = []
+    if self.batch_first:
+        x = np.transpose(x, (1,0,2))
+    (T, B, _), H = x.shape, self.hidden_size
+
+    if h_0 is None:
+        h_0 = np.zeros((self.num_layers, B, H))
+    if c_0 is None:
+        c_0 = np.zeros((self.num_layers, B, H))
+
+    self.h = [{-1:h_0[i]} for i in range(self.num_layers)] # hidden_state
+    self.c = [{-1:c_0[i]} for i in range(self.num_layers)] # cell_state
+
+    self.i = np.zeros((self.num_layers, T, B, H)) # input_gate
+    self.f = np.zeros((self.num_layers, T, B, H)) # forget_gate
+    self.g = np.zeros((self.num_layers, T, B, H)) # input_gate
+    self.o = np.zeros((self.num_layers, T, B, H)) # output_gate
+    out = np.zeros((T, B, H))
+
+    for l in range(self.num_layers):
+        x = x if l == 0 else out
+        self.X.append(x)
+        w_ih, w_hh = getattr(self, f'weight_ih_l{l}'), getattr(self, f'weight_hh_l{l}')
+        b_ih, b_hh = getattr(self, f'bias_ih_l{l}'), getattr(self, f'bias_hh_l{l}')
+
+        for t in range(T):
+            tmp = np.dot(x[t], w_ih.T) + b_ih + np.dot(self.h[l][t-1], w_hh.T) + b_hh
+            self.i[l][t] = sigmoid(tmp[:, :H])
+            self.f[l][t] = sigmoid(tmp[:, H:H*2])
+            self.g[l][t] = np.tanh(tmp[:, H*2:H*3])
+            self.o[l][t] = sigmoid(tmp[:, H*3:])
+            self.c[l][t] = self.f[l][t] * self.c[l][t-1] + self.i[l][t] * self.g[l][t]
+            self.h[l][t] = self.o[l][t] * np.tanh(self.c[l][t])
+            out[t] = self.h[l][t]
+
+    if self.batch_first:
+        out = np.transpose(out, (1,0,2))
+
+    return out, self.h, self.c
+```
 
 구현할때는 weight_ih_l[k]와 weight_hh_l[k]를 분리하지 말고 그대로 곱해도 상관없습니다.
 
@@ -124,12 +170,73 @@ ${dJ \over dx_t} = {dJ \over di_t} \ {di_t \over dx_t} + {dJ \over df_t} \ {df_t
 
 구현하기 위해 forward 과정과 마찬가지로 $W_{ih}$와 $W_{hh}$를 $W_{ii}, \ W_{hi}$부터 $W_{io}, \ W_{ho}$로 분리하지 말고 그대로 곱해줍니다. 
 
-<script src="https://gist.github.com/emeraldgoose/7214c6f3f48b2dd1cecd1887029ee6d5.js"></script>
+```python
+def layer_backward(self, layer, dz):
+    """
+    LSTM layer backward process
+    layer : multilayer LSTM인 경우 레이어 번호
+    dz : delta, upstream gradient
+    """
+    T = len(self.X[layer]) # time length
+    
+    # 마지막 cell에 들어오는 hidden state, cell state의 gradient, 0으로 초기화된 값을 넣어준다
+    dhnext = np.zeros_like(self.h[layer][0])
+    dcnext = np.zeros_like(self.c[layer][0])
+
+    w_ih = getattr(self, f'weight_ih_l{layer}')
+    w_hh = getattr(self, f'weight_hh_l{layer}')
+    b_ih = getattr(self, f'bias_ih_l{layer}')
+    b_hh = getattr(self, f'bias_hh_l{layer}')
+
+    dwih = np.zeros_like(w_ih)
+    dwhh = np.zeros_like(w_hh)
+    dbih = np.zeros_like(b_ih)
+    dbhh = np.zeros_like(b_hh)
+    dx = np.zeros_like(self.X[layer])
+    
+    for t in reversed(range(T)):
+        """LSTM cell backward process"""
+        dh = dhnext + dz[t]
+        dc = dcnext + dh * self.o[layer][t] * (1 - np.tanh(self.c[layer][t])**2)
+        
+        di = dc * self.g[layer][t] * self.i[layer][t] * (1 - self.i[layer][t]) # (batch_size, hidden_size)
+        df = dc * self.c[layer][t-1] * self.f[layer][t] * (1 - self.f[layer][t]) # (batch_size, hidden_size)
+        dg = dc * self.i[layer][t] * (1 - self.g[layer][t]**2) # (batch_size, hidden_size)
+        do = dh * np.tanh(self.c[layer][t]) * self.o[layer][t] * (1 - self.o[layer][t]) # (batch_size, hidden_size)
+        dgates = np.hstack((di, df, dg, do)) # (batch_size, 4 * hidden_size)
+
+        dx[t] = np.dot(dgates, w_ih) # (batch_size, input_size)
+        dwih += np.dot(dgates.T, self.X[layer][t]) # (4 * hidden_size, input_size or hidden_size)
+        dwhh += np.dot(dgates.T, self.h[layer][t-1]) # (4 * hidden_size, hidden_size)
+        dbih += np.sum(dgates, axis=0) # (4 * hidden_size,)
+        dbhh += np.sum(dgates, axis=0) # (4 * hidden_size,)
+        dhnext = np.dot(dgates, w_hh) # (batch_size, hidden_size)
+        dcnext = dc * self.f[layer][t] # (batch_size, hidden_size)
+
+    return dx, dwih, dwhh, dbih, dbhh
+```
 
 ## Result
 LSTM과 Linear레이어만으로 이루어진 모델을 사용했고 hidden size는 256으로 사용했습니다. LSTM의 마지막 output을 Linear로 출력했고 이전 포스트들과 똑같이 MNIST 5000장을 훈련 데이터로 사용하고 1000장을 테스트로 사용했습니다.
 
-<script src="https://gist.github.com/emeraldgoose/9d7422d7320ea5374ab8ffee4187af7b.js"></script>
+```python
+import hcrot
+
+class LSTM(hcrot.layers.Module):
+    def __init__(self):
+        super().__init__()
+        self.lstm = hcrot.layers.LSTM(
+            input_size=28,
+            hidden_size=256,
+            num_layers=1,
+            batch_first=False
+            )
+        self.fc = hcrot.layers.Linear(256, 10)
+    
+    def forward(self, x):
+        x,_,_ = self.lstm(x)
+        return self.fc(x[-1])
+```
 
 10 Epochs의 Loss와 Accuracy의 그래프는 다음과 같습니다.
 

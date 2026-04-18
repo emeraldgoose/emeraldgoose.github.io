@@ -24,7 +24,23 @@ Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-pr
 
 다음의 간단한 코드와 그래프로 스케일링 전후의 차이를 쉽게 이해할 수 있습니다.
 
-<script src="https://gist.github.com/emeraldgoose/0e868296f2d457d433b4b7cfbae6d45c.js"></script>
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+def softmax(x):
+    return np.exp(x) / np.sum(np.exp(x),axis=0)
+
+seq_len, d_k = 10, 64
+
+Q = np.random.randn(seq_len, d_k) # (seq_q_len, d_k)
+K = np.random.randn(1, d_k) # (seq_k_len, d_k)
+
+attn_score = softmax(np.dot(Q, K.T)).T[0]
+
+fig = plt.figure(figsize=(5,5))
+plt.bar(np.arange(seq_len), score)
+```
 
 간단하게 랜덤한 Query와 Key가 주어질 때 dot-product를 수행하고 softmax를 실행하면 다음의 왼쪽 그래프를 얻을 수 있습니다. 그러나 위 코드에서 `softmax(np.dot(Q, k.T) / np.sqrt(d_k))`로 수정하게 되면 다음의 오른쪽 그래프를 얻을 수 있습니다.
 
@@ -39,7 +55,20 @@ Query와 Key와의 유사도 연산 후에 Scale Down을 하는 이유는 Dot-pr
 
 Query와 Key가 가우시안 분포를 따른다고 가정하면 평균은 0, 분산은 1을 가지게 됩니다. $QK^{\top} = \sum_{i}^{d_k}Q_iK_i$이고 Query와 Key는 independent하므로 평균은 0, 분산은 $d_k$를 가지게 됩니다. 따라서 $\sqrt{d_k}$로 스케일링하여 분산을 1로 줄일 수 있게 됩니다.
 
-<script src="https://gist.github.com/emeraldgoose/a23756410bc023d518cabaef8e5e1945.js"></script>
+```python
+def scaled_dot_product_attention(self, query: NDArray, key: NDArray, value: NDArray, attn_mask: NDArray[np.bool_] = None) -> NDArray:
+  """
+  Query (B, seq_len_q, d_k)
+  Key (B, seq_len_k, d_k)
+  Value (B, seq_len_k, d_v)
+  """
+  self.scaled_factor = 1 / math.sqrt(query.shape[-1])
+  attn_weight = query @ key.swapaxes(-1,-2) * self.scaled_factor # (B, seq_len_q, seq_len_k)
+  if attn_mask is not None:
+    attn_weight = masked_fill(attn_weight, attn_mask, float('-inf'))
+  self.attn_weight = self.softmax(x=attn_weight)
+  return self.attn_weight @ value # (B, seq_len_q, d_v)
+```
 
 attention padding mask 처럼 어텐션 스코어에 마스킹을 위한 masked_fill 함수는 `numpy.ma.array`를 이용하여 구현했습니다.
 
@@ -72,7 +101,23 @@ $\frac{\partial L}{\partial Q} = \frac{\partial L}{\partial Z} \frac{\partial Z}
 
 $\frac{\partial L}{\partial K} = \frac{\partial L}{\partial Z} \frac{\partial Z}{\partial W} \frac{\partial W}{\partial A} \frac{\partial A}{\partial K} = dZ \cdot W(1-W) \cdot \frac{Q}{\sqrt{d_k}}$
 
-<script src="https://gist.github.com/emeraldgoose/4ff45c20339d57fef96c3206d66583b2.js"></script>
+```python
+def scaled_dot_product_attention_backward(self, dz: NDArray) -> Tuple[NDArray, NDArray, NDArray]:
+  """
+  dz (B, seq_len_q, d_v)
+  self.attn_weight (B, seq_len_q, seq_len_k)
+  self.q (B, seq_len_q, d_k)
+  self.k (B, seq_len_k, d_k)
+  self.v (B, seq_len_k, d_v)
+  """
+  dW = dz @ self.v.swapaxes(-1,-2) # (B, seq_len_q, seq_len_k)
+  dA = self.softmax.backward(dW)
+
+  dV = self.attn_weight.swapaxes(-1,-2) @ dz # (B, seq_len_k, d_v)
+  dQ = (dA @ (self.k * self.scaled_factor)) # (B, seq_len_q, d_k)
+  dK = np.einsum('...ik,...ij->...kj', dA, self.q * self.scaled_factor) # (B, seq_len_k, d_k)
+  return dQ, dK, dV
+```
 
 dK를 계산할 때는 사이즈를 맞추기 위해 einsum을 사용했습니다.
 
@@ -90,7 +135,85 @@ $\text{MultiHead}(Q, K, V) = \text{Concat}(head_1,...,head_h)W^O$, $head_i = \te
 
 MultiHead Attention 모듈의 `embed_dim`은 모델의 전체 차원을 말합니다. 이것을 head의 개수(`num_heads`)로 나눈 값을 각 head에서 사용될 차원 `head_dim`으로 사용하게 됩니다. 따라서, `embed_dim`은 `num_heads`의 배수로 설정해야 합니다.
 
-<script src="https://gist.github.com/emeraldgoose/b8d3081f5885ead2f962bdcd337fbd47.js"></script>
+```python
+class MultiHeadAttention(Module):
+    def __init__(
+            self,
+            embed_dim: int,
+            num_heads: int,
+            kdim: Optional[int] = None,
+            vdim: Optional[int] = None,
+            batch_first: bool = False
+            ) -> None:
+        super().__init__()
+        if embed_dim % num_heads != 0:
+            raise ValueError('embed_dim must be divisible by num_heads')
+
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.batch_first = batch_first
+        self.kdim = kdim if kdim is not None else embed_dim
+        self.vdim = vdim if vdim is not None else embed_dim
+        self.head_dim = self.embed_dim // num_heads
+        self.softmax = Softmax()
+
+        self.q_proj_weight = np.zeros((self.embed_dim, self.embed_dim))
+        self.k_proj_weight = np.zeros((self.embed_dim, self.kdim))
+        self.v_proj_weight = np.zeros((self.embed_dim, self.vdim))
+        self.q_proj_bias = np.zeros((self.embed_dim,))
+        self.k_proj_bias = np.zeros((self.embed_dim,))
+        self.v_proj_bias = np.zeros((self.embed_dim,))
+        self.out_proj_weight = np.zeros((self.embed_dim, self.embed_dim))
+        self.out_proj_bias = np.zeros((1, self.embed_dim))
+
+    def forward(
+            self, 
+            query: NDArray,
+            key: NDArray,
+            value: NDArray,
+            attn_mask: Optional[NDArray] = None
+            ) -> NDArray:
+        if self.batch_first:
+            query = query.swapaxes(0,1)
+            key = key.swapaxes(0,1)
+            value = value.swapaxes(0,1)
+
+        self.query = query
+        self.key = key
+        self.value = value
+
+        # variables
+        self.attn_mask = attn_mask
+        tgt_len, bsz, embed_dim = query.shape
+        src_len, _, _ = key.shape
+
+        # linear(query), linear(key), linear(value)
+        q = query @ self.q_proj_weight.T + self.q_proj_bias # (tgt_len, bsz, embed_dim)
+        k = key @ self.k_proj_weight.T + self.k_proj_bias # (src_len, bsz, kdim)
+        v = value @ self.v_proj_weight.T + self.v_proj_bias # (src_len, bsz, vdim)
+
+        # transpose batch_size, length
+        q = q.reshape(tgt_len, bsz * self.num_heads, self.head_dim).transpose((1,0,2)) # (bsz * num_heads, tgt_len, head_dim)
+        k = k.reshape(src_len, bsz * self.num_heads, self.head_dim).transpose((1,0,2)) # (bsz * num_heads, src_len, head_dim)
+        v = v.reshape(src_len, bsz * self.num_heads, self.head_dim).transpose((1,0,2)) # (bsz * num_heads, src_len, head_dim)
+
+        # reshape (bsz, num_heads, length, head_dim)
+        self.q = q.reshape(bsz, self.num_heads, tgt_len, self.head_dim) # (bsz, num_heads, tgt_len, head_dim)
+        self.k = k.reshape(bsz, self.num_heads, src_len, self.head_dim) # (bsz, num_heads, src_len, head_dim)
+        self.v = v.reshape(bsz, self.num_heads, src_len, self.head_dim) # (bsz, num_heads, src_len, head_dim)
+
+        # calculate attention score
+        self.attn_output = self.scaled_dot_product_attention(self.q, self.k, self.v, self.attn_mask)
+        self.attn_output_transposed = self.attn_output.transpose(2,0,1,3)
+        self.attn_output_reshaped = self.attn_output_transposed.reshape(bsz * tgt_len, embed_dim)
+
+        attn_output = self.attn_output_reshaped @ self.out_proj_weight.T + self.out_proj_bias
+        attn_output = attn_output.reshape(tgt_len, bsz, self.attn_output_reshaped.shape[1])
+        if self.batch_first:
+            attn_output = attn_output.swapaxes(0,1)
+
+        return attn_output
+```
 
 `attn_output_transpose`는 backward에서 shape가 필요하기 때문에 저장했고 `attn_output_reshaped`는 backward에서 `d_out_proj_weight`를 계산하기 위해 저장했습니다. 차원을 맞춰주는 것에 주의하면서 구현해야 했습니다.
 
@@ -99,7 +222,50 @@ backward 구현은 forward의 역순으로 구성하면 됩니다. 역시 차원
 
 MultiHeadAttention 모듈은 입력값으로 Query, Key, Value가 들어가므로 당연히 Query에 대한 기울기, Key에 대한 기울기, Value에 대한 기울기을 리턴해야 합니다. 만약 Self-attention이라면 세 리턴값을 더한 값이 입력에 대한 기울기가 됩니다.
 
-<script src="https://gist.github.com/emeraldgoose/ad345617843049ba9dee9fdfcb5536dc.js"></script>
+```python
+def backward(self, dz: NDArray) -> Tuple[Tuple[NDArray], Mapping[str, NDArray], Mapping[str, NDArray]]:
+      dw, db = {}, {}
+      if self.batch_first:
+          dz = dz.swapaxes(0,1)
+
+      _, bsz, _ = dz.shape
+      dz = dz.reshape(-1, dz.shape[-1])
+
+      d_out_proj_weight = dz.T @ self.attn_output_reshaped
+      d_out_proj_bias = np.sum(dz,axis=0)
+      dw['out_proj_weight'] = d_out_proj_weight
+      db['out_proj_bias'] = d_out_proj_bias
+
+      d_attn_output = dz @ self.out_proj_weight
+      d_attn_output = d_attn_output.reshape(self.attn_output_transposed.shape).transpose(1,2,0,3)
+      dQ, dK, dV = self.scaled_dot_product_attention_backward(d_attn_output)
+
+      dQ = dQ.reshape(np.prod(dQ.shape[:2]), *dQ.shape[2:]).swapaxes(0,1) # (tgt_len, bsz * num_heads, head_dim)
+      dK = dK.reshape(np.prod(dK.shape[:2]), *dK.shape[2:]).swapaxes(0,1) # (src_len, bsz * num_heads, head_dim)
+      dV = dV.reshape(np.prod(dV.shape[:2]), *dV.shape[2:]).swapaxes(0,1) # (src_len, bsz * num_heads, head_dim)
+
+      dQ = dQ.reshape(-1, bsz, self.embed_dim) # (tgt_len, bsz, embed_dim)
+      dK = dK.reshape(-1, bsz, self.embed_dim) # (src_len, bsz, embed_dim)
+      dV = dV.reshape(-1, bsz, self.embed_dim) # (src_len, bsz, embed_dim)
+
+      dw['q_proj_weight'] = np.einsum('ijk,ijl->kl', dQ, self.query)
+      dw['k_proj_weight'] = np.einsum('ijk,ijl->kl', dK, self.key)
+      dw['v_proj_weight'] = np.einsum('ijk,ijl->kl', dV, self.value)
+      db['q_proj_bias'] = np.sum(dQ, axis=(0,1))
+      db['k_proj_bias'] = np.sum(dK, axis=(0,1))
+      db['v_proj_bias'] = np.sum(dV, axis=(0,1))
+
+      dx_q = dQ @ self.q_proj_weight
+      dx_k = dK @ self.k_proj_weight
+      dx_v = dV @ self.v_proj_weight
+
+      if self.batch_first:
+          dx_q = dx_q.swapaxes(0,1)
+          dx_k = dx_k.swapaxes(0,1)
+          dx_v = dx_v.swapaxes(0,1)
+
+      return (dx_q, dx_k, dx_v), dw, db
+```
 
 # LayerNorm
 Normalization은 입력값에 대해 정규화하기 위한 과정입니다. 학습 데이터를 배치 단위로 학습할 때, 랜덤하게 샘플링된 배치들의 데이터 분포가 다를 수 있습니다. 이러한 배치를 그대로 학습하게 되면 그에 맞게 네트워크는 가중치를 조절하게 되는데 이로 인해 학습에 들이는 시간이 증가될 수 있습니다. 따라서, 정규화를 통해 데이터 분포를 조정하여 안정적이고 학습이 빠르게 이루어지도록 하는 기법이 Normalization입니다.
@@ -118,7 +284,17 @@ $y = \frac{x - E[x]}{\sqrt{Var[x] + \epsilon}} * \gamma + \beta$
 $\gamma$와 $\beta$는 학습가능한 파라미터입니다. $\gamma$와 $\beta$를 사용하는 이유는 Normalization으로 인해 데이터 특성이 사라지는데 이것이 학습하는데 그리 좋지 못합니다. 그래서 파라미터를 추가하여 네트워크가 학습하기 좋도록 스케일링, 시프트 작업을 수행하기 위해 $\gamma$
 와 $\beta$가 추가되었습니다.
 
-<script src="https://gist.github.com/emeraldgoose/819c446042184f37fd2a7086286a1061.js"></script>
+```python
+def forward(self, input: NDArray) -> NDArray:
+    self.input = input
+    dims = tuple(range(-len(self.normalized_shape), 0)) # dim=3 -> (2,1,0)
+    normalized = (input - input.mean(axis=dims, keepdims=True)) / np.sqrt(input.var(dims, keepdims=True) + self.eps)
+    if self.elementwise_affine:
+        normalized *= self.weight
+        if self.bias is not None:
+            normalized += self.bias
+    return normalized
+```
 
 ## Backward
 먼저, 수식을 다음과 같이 분리하여 생각해보겠습니다.
@@ -157,7 +333,30 @@ $\frac{\partial L}{\partial x} = \frac{\partial L}{\partial \hat{x}} \cdot \frac
 
 $\frac{\partial L}{\partial x} = \frac{\partial L}{\partial \hat{x}} \cdot \frac{1}{\sqrt{\sigma^2 + \epsilon}} + \frac{\partial L}{\partial \sigma^2} \cdot \frac{2}{N}(x - \mu) + \frac{\partial L}{\partial \mu} \cdot \frac{1}{N}$
 
-<script src="https://gist.github.com/emeraldgoose/7d25c8808ddbbe96eab4e348ed8ef020.js"></script>
+```python
+def backward(self, dz: NDArray) -> Tuple[NDArray, NDArray, NDArray]:
+    E = dz.shape[-1]
+    x_flat = self.input.reshape(-1, E)
+
+    mean = np.mean(x_flat, axis=-1, keepdims=True)
+    variance = np.var(x_flat, axis=-1, keepdims=True)
+    std = np.sqrt(variance + self.eps)
+
+    x_hat = (x_flat - mean) / std
+
+    grad_xhat = dz * self.weight
+    grad_xhat_flat = grad_xhat.reshape(-1, E)
+    grad_var = np.sum(grad_xhat_flat * (x_flat - mean) * -0.5 * (std ** -3), axis=-1, keepdims=True)
+    grad_mean = np.sum(grad_xhat_flat * -1 / std, axis=-1, keepdims=True) + grad_var * np.mean(-2 * (x_flat - mean), axis=-1, keepdims=True)
+
+    dx_flat = grad_xhat_flat / std + grad_var * 2 * (x_flat - mean) / E + grad_mean / E
+    dx = dx_flat.reshape(self.input.shape)
+
+    dw = np.sum(dz * x_hat.reshape(self.input.shape), axis=(0,1))
+    db = np.sum(dz, axis=(0,1))
+
+    return dx, dw, db
+```
 
 코드로 구현할 때는 epsilon 값을 0으로 가정하여 구현되었습니다.
 
@@ -184,7 +383,11 @@ $\text{GELU}(x) = x \cdot \Phi(x)$
 
 $\text{GELU}(x) = 0.5 * x * (1 + \text{tanh}(\sqrt{2/\pi} * (x + 0.044715 * x^3)))$
 
-<script src="https://gist.github.com/emeraldgoose/400eedea60daf0c9ecfd7854b0c1e3db.js"></script>
+```python
+def forward(self, x: NDArray) -> NDArray:
+    self.x = x
+    return x * 0.5 * (1 + np.tanh(np.sqrt(2 / np.pi) * (x + 0.044715 * x**3)))
+```
 
 ## Backward
 미분을 하기 위해 수식을 두개로 나누어 생각해보겠습니다.
@@ -207,7 +410,13 @@ $\frac{\partial y}{\partial x} = \sqrt{\frac{2}{\pi}}(1 + 0.044715 * 3 * x^2)$
 
 $\frac{\partial \text{GELU}}{\partial x} = 0.5(1 + \text{tanh}(y)) + 0.5x(1 - \text{tanh}^2(y))\sqrt{\frac{2}{\pi}}(1 + 0.044715 * 3 * x^2)$
 
-<script src="https://gist.github.com/emeraldgoose/aaa360c241799e50ea55448c9026a9dc.js"></script>
+```python
+def backward(self, dz: NDArray) -> NDArray:
+    tanh_y = np.tanh(np.sqrt(2 / np.pi) * (self.x + 0.044715 * self.x**3))
+    dy_dx = np.sqrt(2 / np.pi) * (1 + 3 * 0.044715 * self.x**2)
+    dx = 0.5 * (1 + tanh_y) + 0.5 * self.x * (1 - tanh_y**2) * dy_dx
+    return dz * dx
+```
 
 # Reference
 - [torch.nn.functional.scaled_dot_product_attention.html](https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention)

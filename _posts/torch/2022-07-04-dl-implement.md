@@ -20,7 +20,36 @@ Linear의 수식은 간단합니다.
 
 $y = xW + b$
 
-<script src="https://gist.github.com/emeraldgoose/bf998f275c9582e38d80d9a3f20d78e3.js"></script>
+```python
+import numpy as np
+from typing_extensions import Tuple
+from numpy.typing import NDArray
+
+from hcrot.layers import Module
+
+class Linear(Module):
+    def __init__(self, in_features: int, out_features: int) -> None:
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.weight = np.zeros((self.in_features, self.out_features))
+        self.bias = np.zeros((1, self.out_features))
+        self.X = None
+        self.reset_parameters()
+
+    def reset_parameters(self) -> None:
+        sqrt_k = np.sqrt(1 / self.in_features)
+        for key in self.param_names:
+            setattr(self, key, np.random.uniform(-sqrt_k, sqrt_k, getattr(self,key).shape))
+
+    def forward(self, x: NDArray) -> NDArray:
+        # x: (bsz, ..., in_features)
+        # weight: (in_features, out_features)
+        # bias: (1, out_features)
+        self.X = x
+        mat = np.matmul(x, self.weight) # (bsz, ..., out_features)
+        return mat + self.bias # (bsz, ..., out_features)
+```
 
 ### Backward
 먼저, forward 수식에 대해 편미분을 하여 다음의 수식들을 얻을 수 있습니다.
@@ -47,7 +76,15 @@ $\frac{\partial L}{\partial b} = \sum dz$
 
 $\frac{\partial L}{\partial x} = dzW^\top$
 
-<script src="https://gist.github.com/emeraldgoose/0e2d30464acae480545d5e98a1cfd4dc.js"></script>
+```python
+def backward(self, dz: NDArray) -> Tuple[NDArray, NDArray, NDArray]:
+    dw = np.matmul(self.X.swapaxes(-1,-2), dz)
+    if dw.ndim == 3:
+        dw = np.sum(dw, axis=0)
+    db = np.sum(dz, axis=tuple(np.arange(len(dz.shape))[:-1]))
+    dx = np.matmul(dz, self.weight.swapaxes(-1,-2))
+    return dx, dw, db
+```
 
 ## Sigmoid
 Sigmoid는 입력값을 0과 1사이의 값으로 변환하는 활성화 함수입니다. 매우 큰 값은 1로 근사하고 매우 작은 값은 0으로 근사하는 특징을 가집니다.
@@ -59,7 +96,15 @@ Sigmoid의 수식은 다음과 같습니다.
 
 $\sigma(x) = \frac{1}{1 + e^{-x}}$
 
-<script src="https://gist.github.com/emeraldgoose/647edf09aec3d969ab65bf76808e9dcb.js"></script>
+```python
+class Sigmoid(Module):
+    def __init__(self) -> None:
+        super().__init__()
+    
+    def forward(self, x: NDArray) -> NDArray:
+        self.X = x
+        return 1/(1+np.exp(-x))
+```
 
 ### Backward
 Sigmoid를 미분하게 되면 다음과 같습니다.
@@ -68,12 +113,34 @@ $\frac{\partial \sigma}{\partial x} = \sigma(x)(1 - \sigma(x))$
 
 위에서 설명한대로 backward시 element-wise 연산이 필요하므로 numpy.multiply를 사용해야 합니다.
 
-<script src="https://gist.github.com/emeraldgoose/449960a17ab916d2d36d3657e900f143.js"></script>
+```python
+def backward(self, dz: NDArray) -> NDArray:
+    x = self.forward(self.X)
+    return x * (1 - x) * dz
+```
 
 ## 결과
 MNIST 5000장을 훈련데이터로 사용하고 1000장을 테스트데이터로 사용했습니다.
 
-<script src="https://gist.github.com/emeraldgoose/d11ab0c99747c51f0050001749de89a4.js"></script>
+```python
+class Model(layers.Module):
+    def __init__(self, input_len=28*28, hidden=512, num_classes=10):
+        super().__init__()
+        self.net1 = layers.Sequential(
+            layers.Linear(in_features=input_len, out_features=hidden),
+            layers.Sigmoid()
+            )
+        self.dropout = layers.Dropout(p=0.3)
+        self.net2 = layers.Sequential(
+            layers.Linear(in_features=hidden, out_features=hidden),
+            layers.Sigmoid()
+            )
+        self.fc = layers.Linear(in_features=hidden, out_features=num_classes)
+        
+    def forward(self, x):
+        o = self.dropout(self.net1(x))
+        return self.fc(self.net2(o))
+```
 
 모델은 Linear -> Sigmoid -> Dropout(0.3) -> Linear -> Sigmoid -> Linear으로 이어지도록 구현했습니다.
 
