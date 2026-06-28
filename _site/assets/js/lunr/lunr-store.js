@@ -778,4 +778,10 @@ var store = [{
         "tags": ["data-engineering","databricks"],
         "url": "/databricks/databricks-vector-search-index/",
         "teaser": null
+      },{
+        "title": "AI 하네스 엔지니어링: symbolic-search-runtime",
+        "excerpt":"Motivation Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다. 특히, 모호하거나 복잡한 요청의 경우 반환된 SQL 쿼리가 이해가지 않는 경우가 존재했습니다. 예를 들면, “각 도시마다 날씨의 특징은?”이라는 문제를 해결하는데 하나의 SQL로 해결하기는 어렵습니다. 기온, 풍량 등 여러 관점의 분석이 필요하기 때문입니다. 이전에는 Langchain, Langgraph를 이용해 단일 에이전트, 멀티...","categories": ["ai-agent"],
+        "tags": ["ai-agent"],
+        "url": "/ai-agent/syrch/",
+        "teaser": null
       }]

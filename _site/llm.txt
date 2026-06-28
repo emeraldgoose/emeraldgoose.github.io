@@ -1,0 +1,42 @@
+Site: gooooooooooose
+
+## Site Overview
+This site offers technical articles on large language model (LLM) systems, data engineering, Databricks, and more—for anyone interested in these topics.
+
+## Focus
+- ML/DL
+- AI Engineering
+- Data Engineering
+- Databricks
+
+
+## Main Topics
+- ML/DL
+- Boostcamp
+- Deep Learning implementation from scratch
+- Data Engineering
+- Databricks
+- AI Engineering included RAG and etc
+
+## Key Articles
+- /data-engineer/simple-rag/
+- /databricks/databricks-vector-search-index/
+- /pytorch/text-to-image-implementation/
+- /pytorch/transformer-scratch-implementation-1/
+- /pytorch/lstm-implementation/
+- /github/code-review-action/
+
+## Content Characteristics
+- Description and Implementation Process of RAG
+- Description of Databricks Vector Search
+- An explanation of the process of building deep learning models from scratch
+- Examples of applying AI to code reviews and other scenarios
+
+## Citation Policy
+- Summaries are allowed.
+- Please preserve links to original articles.
+- Prefer citing canonical post URLs.
+
+
+## Audience
+anyone interested in ml/dl and data engineering
