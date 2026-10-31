@@ -779,9 +779,15 @@ var store = [{
         "url": "/databricks/databricks-vector-search-index/",
         "teaser": null
       },{
-        "title": "AI 하네스 엔지니어링: symbolic-search-runtime",
-        "excerpt":"Motivation Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다. 특히, 모호하거나 복잡한 요청의 경우 반환된 SQL 쿼리가 이해가지 않는 경우가 존재했습니다. 예를 들면, “각 도시마다 날씨의 특징은?”이라는 문제를 해결하는데 하나의 SQL로 해결하기는 어렵습니다. 기온, 풍량 등 여러 관점의 분석이 필요하기 때문입니다. 이전에는 Langchain, Langgraph를 이용해 단일 에이전트, 멀티...","categories": ["ai-agent"],
+        "title": "AI 엔지니어링: symbolic-search-runtime",
+        "excerpt":"Motivation Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다. 특히, 모호하거나 복잡한 요청의 경우 반환된 SQL 쿼리가 이해가지 않는 경우가 종종 존재했습니다. 예를 들면, “각 도시마다 날씨의 특징은?”이라는 문제를 해결하는데 하나의 SQL로 해결하기는 어렵습니다. 기온, 풍량 등 여러 관점의 분석이 필요하기 때문입니다. LLM이 파악할 수 있는 정보는 한정적인데...","categories": ["ai-agent"],
         "tags": ["ai-agent"],
         "url": "/ai-agent/syrch/",
+        "teaser": null
+      },{
+        "title": "rakazo 에이전트 설정 및 3일 사용 후기",
+        "excerpt":"rakazo The open source Grok Bot alternative you actually own https://github.com/elie222/rakazo rakazo는 Grok Bot의 기능들을 구현한 오픈소스 프로젝트로 Grok Bot, OpenAI Dots처럼 봇이 컴퓨터를 가지고 장기적으로 동작할 수 있는 환경을 가지고 있는 것이 특징입니다. rakazo가 오픈소스 프로젝트이기 때문에 Self-hosted라는 점도 앞에 내새우고 있으며 각자 자신의 컴퓨터에 직접 설치하여 사용할 수...","categories": ["ai-agent"],
+        "tags": ["ai-agent"],
+        "url": "/ai-agent/rakazo-review/",
         "teaser": null
       }]

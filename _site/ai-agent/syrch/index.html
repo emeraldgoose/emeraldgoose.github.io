@@ -9,9 +9,9 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>AI 하네스 엔지니어링: symbolic-search-runtime - gooooooooooose</title>
-<meta name="title" content="AI 하네스 엔지니어링: symbolic-search-runtime">
-<meta name="description" content="Motivation Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다.">
+<!-- begin _includes/seo.html --><title>AI 엔지니어링: symbolic-search-runtime - gooooooooooose</title>
+<meta name="title" content="AI 엔지니어링: symbolic-search-runtime">
+<meta name="description" content="Motivation">
 
 
   <meta name="author" content="goooose">
@@ -24,11 +24,11 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:site_name" content="gooooooooooose">
-<meta property="og:title" content="AI 하네스 엔지니어링: symbolic-search-runtime">
+<meta property="og:title" content="AI 엔지니어링: symbolic-search-runtime">
 <meta property="og:url" content="http://localhost:4000/ai-agent/syrch/">
 
 
-  <meta property="og:description" content="Motivation Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다.">
+  <meta property="og:description" content="Motivation">
 
 
 
@@ -186,7 +186,7 @@
     
       
       
-        <li class="current">AI 하네스 엔지니어링: symbolic-search-runtime</li>
+        <li class="current">AI 엔지니어링: symbolic-search-runtime</li>
       
     
   </ol>
@@ -318,15 +318,15 @@
 
 
   <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
-    <meta itemprop="headline" content="AI 하네스 엔지니어링: symbolic-search-runtime">
-    <meta itemprop="description" content="MotivationText-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다.">
+    <meta itemprop="headline" content="AI 엔지니어링: symbolic-search-runtime">
+    <meta itemprop="description" content="Motivation">
     <meta itemprop="datePublished" content="2026-06-28T00:00:00+09:00">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">AI 하네스 엔지니어링: symbolic-search-runtime
+          <h1 id="page-title" class="page__title" itemprop="headline">AI 엔지니어링: symbolic-search-runtime
 </h1>
           
 <!--
@@ -349,20 +349,17 @@
       <section class="page__content" itemprop="text">
         
         <h3 id="motivation">Motivation</h3>
+
 <p>Text-to-SQL은 데이터 분야에서 꾸준히 언급이 되어왔고 지금도 관심이 많은 태스크입니다.</p>
 
-<p>특히, 모호하거나 복잡한 요청의 경우 반환된 SQL 쿼리가 이해가지 않는 경우가 존재했습니다. 예를 들면, “각 도시마다 날씨의 특징은?”이라는 문제를 해결하는데 하나의 SQL로 해결하기는 어렵습니다. 기온, 풍량 등 여러 관점의 분석이 필요하기 때문입니다.</p>
+<p>특히, 모호하거나 복잡한 요청의 경우 반환된 SQL 쿼리가 이해가지 않는 경우가 종종 존재했습니다. 예를 들면, “각 도시마다 날씨의 특징은?”이라는 문제를 해결하는데 하나의 SQL로 해결하기는 어렵습니다. 기온, 풍량 등 여러 관점의 분석이 필요하기 때문입니다. LLM이 파악할 수 있는 정보는 한정적인데 반면에 사용자는 LLM이 취득할 수 있는 정보의 수준을 알기 어렵기 때문입니다.</p>
 
-<p>이전에는 Langchain, Langgraph를 이용해 단일 에이전트, 멀티 에이전트 기반으로 구현을 해왔습니다. 에이전트는 쿼리 생성, Tool Calling 등 여러 방식을 사용하지만, 생성된 쿼리 결과물에 대해 왜 이렇게 구현했는지 설명하기 어려운 경우가 다소 존재했습니다.</p>
+<p>이전에는 Langchain, Langgraph를 이용해 단일 에이전트, 멀티 에이전트 기반으로 구현을 해왔습니다. 에이전트는 쿼리 생성, Tool Calling 등 여러 방식을 사용하고 예전보다 좋은 쿼리를 생성했었지만 쿼리 결과물에 대해 왜 이렇게 구현했는지 설명하기 어려운 경우가 존재했습니다.</p>
 
-<p>복잡한 최적화 문제, 다양한 경로를 탐색해야 하는 문제의 경우, 분할 정복 방식을 적용해 작은 문제들로 분해하고 RLM(Recursive Language Model)의 REPL 아이디어를 SQL로 잘 이용하는 방향으로 Opencode를 이용해 하네스 엔지니어링을 시작하게 되었습니다.</p>
-
-<blockquote>
-  <p><strong>AI 하네스(AI Harness)</strong><br />
-AI가 작업을 수행할 수 있도록 실행 환경(Runtime)을 설계하고 오케스트레이션하는 AI 엔지니어링입니다.</p>
-</blockquote>
+<p>그래서 복잡한 최적화 문제, 다양한 경로를 탐색해야 하는 문제의 경우, 분할 정복 방식을 적용해 작은 문제들로 분해하고 RLM(Recursive Language Model)의 REPL 아이디어를 이용하는 방향으로 Opencode를 이용해 구현을 시작하게 되었습니다.</p>
 
 <h3 id="overall-architecture">Overall Architecture</h3>
+
 <p><code class="language-plaintext highlighter-rouge">symbolic-search-runtime</code>은 사용자 요청을 하위 문제(sub-task)로 분해하고, 독립적으로 해결하여 결과를 병합하는 분할 정복 방식에 기반합니다. 하위 문제들은 DAG로 표현되며 여러 경로를 탐색하여 가장 좋은 결과를 선택하여 사용자에게 반환합니다.</p>
 
 <p><strong>Flow</strong><br />
@@ -457,13 +454,12 @@ flowchart TD
     Result --&gt; End([Return])
 </pre>
 
-<p>플로우가 많아보이지만 결국 SQL 문법, 실행 결과들을 기반으로 결과 및 점수를 계산합니다.</p>
+<p>플로우가 많아보이지만 결국 SQL 문법, 실행 결과들을 기반으로 결과 및 점수를 계산합니다. SQL을 생성한 뒤 실행하고, 실행 결과를 새로운 Context로 사용하여 SQL을 다시 생성합니다.</p>
 
-<p>RLMAgent는 RLM의 REPL 아이디어를 SQL 실행에 적용했습니다. SQL을 생성한 뒤 실행하고, 실행 결과를 새로운 Context로 사용하여 SQL을 다시 생성합니다.</p>
-
-<p>즉, “Generate → Execute → Observe → Repair” 루프를 반복하며 SQL을 점진적으로 개선합니다.</p>
+<p>즉, “Generate → Execute → Observe → Repair” 루프를 반복하며 SQL을 개선합니다.</p>
 
 <h3 id="confidence">Confidence</h3>
+
 <p>처음 구현때는 Confidence와 같은 스코어링에 대해 생각을 하지 않았지만 모든 경로에 대해 탐색을 하는 것은 비효율적이기 때문에 해당 경로에 대한 평가가 필요했습니다.</p>
 
 <p>초기 Confidence는 LLM이 스스로 평가한 값으로 시작하지만, 실행 과정에서 얻은 신호를 이용해 지속적으로 보정됩니다.</p>
@@ -480,6 +476,7 @@ flowchart TD
 <p>이렇게 계산된 Confidence는 단순한 신뢰도 지표를 넘어 탐색 경로를 계속 유지할지, 해당 경로를 종료할지, 또는 사용자에게 추가 질문을 요청할지를 결정하는 기준으로 활용됩니다.</p>
 
 <h3 id="end-to-end-example">End-to-End Example</h3>
+
 <p>아래 코드는 Databricks 환경에서 실행되었습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">syrch</span> <span class="kn">import</span> <span class="n">query</span>
@@ -630,18 +627,93 @@ Token Cost: 4933
 
 <p>포괄적인 질문을 요청했고 syrch는 다양한 경로를 탐색하면서 정보를 취합하고 그 중 필요한 정보를 기반으로 답변을 생성하여 사용자에게 반환했습니다.</p>
 
+<h3 id="use">Use</h3>
+
+<p>CLI 및 Python 라이브러리 방식으로 이용할 수 있도록 구현되었습니다.</p>
+
+<h4 id="installation">Installation</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Core (CLI + SQLite)</span>
+pip <span class="nb">install </span>syrch
+
+<span class="c"># Databricks SQL Warehouse (external connection)</span>
+pip <span class="nb">install</span> <span class="s2">"syrch[databricks-sql]"</span>
+
+<span class="c"># Spark executor (Databricks Runtime, EMR, standalone)</span>
+pip <span class="nb">install</span> <span class="s2">"syrch[spark]"</span>
+
+<span class="c"># Everything</span>
+pip <span class="nb">install</span> <span class="s2">"syrch[all]"</span>
+</code></pre></div></div>
+
+<h4 id="python-api-library-mode">Python API (Library Mode)</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">syrch</span> <span class="kn">import</span> <span class="n">query</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span>
+    <span class="n">question</span><span class="o">=</span><span class="s">"What discount × shipping combo maximizes revenue?"</span><span class="p">,</span>
+    <span class="n">executor_type</span><span class="o">=</span><span class="s">"databricks-sql"</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s">"gpt-4o"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">answer</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">sql</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">confidence</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="cli-usage">CLI Usage</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install</span>
+pip <span class="nb">install </span>syrch
+
+<span class="c"># Inspect database schema</span>
+syrch schema wikipedia_clickstream.sqlite
+syrch schema orders_10dim.sqlite <span class="nt">-t</span> orders_10dim
+
+<span class="c"># Show default config</span>
+syrch config
+
+<span class="c"># Solve a problem (requires LLM API key)</span>
+<span class="nb">export </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">"sk-..."</span>
+syrch search <span class="nt">-q</span> <span class="s2">"What discount × shipping combo maximizes revenue for top 10% customers?"</span>
+
+<span class="c"># With config file</span>
+syrch search <span class="nt">-q</span> <span class="s2">"..."</span> <span class="nt">--config</span> syrch.yml
+
+<span class="c"># With options</span>
+syrch search <span class="nt">-q</span> <span class="s2">"Which click type generates the most traffic?"</span> <span class="se">\</span>
+  <span class="nt">--db</span> wikipedia_clickstream.sqlite <span class="se">\</span>
+  <span class="nt">--max-depth</span> 3 <span class="se">\</span>
+  <span class="nt">--high-conf</span> 0.85 <span class="se">\</span>
+  <span class="nt">--max-attempts</span> 3 <span class="se">\</span>
+  <span class="nt">--verbose</span>
+
+<span class="c"># Grid search over hyperparameters (54 cells)</span>
+syrch search <span class="nt">-q</span> <span class="s2">"..."</span> <span class="nt">--db</span> orders_10dim.sqlite <span class="nt">--grid</span>
+
+<span class="c"># Benchmark against expected results</span>
+syrch <span class="nb">eval</span> <span class="nt">-q</span> <span class="s2">"..."</span> <span class="nt">--db</span> orders_10dim.sqlite <span class="nt">--expected</span> expected.csv
+
+<span class="c"># Run benchmark suite</span>
+syrch benchmark benchmarks/orders.jsonl
+</code></pre></div></div>
+
 <h3 id="discussion">Discussion</h3>
+
 <h4 id="한계점">한계점</h4>
-<p>실제 비즈니스 데이터를 가지고 실험해본 것은 아니기 때문에 추가 검증이 필요합니다. 특히, 비즈니스에는 굉장히 많은 테이블을 조인하고 비즈니스 도메인 지식이 반영되어야 하기 때문에 이에 대한 개선이 필요한 상황입니다.</p>
 
-<p>또한, Planner는 테이블 스키마 정보를 사용하지않고 ProblemSpec만 보고 태스크 분해를 시작하기 때문에 막상 execution 단계에서 SQL 쿼리를 생성하지 못할 수도 있습니다. Planner에게 스키마 정보를 주는 것이 이점인지 확인이 필요합니다.</p>
+<p>실제 비즈니스 데이터를 가지고 실험해본 것은 아니기 때문에 추가 검증이 필요합니다. 특히, 비즈니스에는 굉장히 많은 테이블을 조인하고 비즈니스 도메인 지식이 반영되어야 하기 때문에 이에 대한 검증이 필요합니다.</p>
 
-<p>마지막으로, Clarification의 위치입니다. Clarification는 플로우 마지막에 위치해있기 때문에 추가 질문 요청을 마지막에서야 파악할 수 있습니다. 이를 Planner 위치로 올리는 것이 맞는 판단인지도 파악해봐야 합니다.</p>
+<p>또한, Planner는 테이블 스키마 정보를 사용하지않고 ProblemSpec만 보고 태스크 분해를 시작하기 때문에 막상 execution 단계에서 SQL 쿼리를 생성하지 못할 수도 있습니다. Planner에게 스키마 정보를 주는 것이 이점인지 확인이 필요합니다. 그리고 Clarification은 플로우 마지막에 위치해있기 때문에 추가 질문 요청을 마지막에서야 파악할 수 있습니다. 이를 Planner 위치로 올리는 것이 맞는 판단인지도 파악해봐야 합니다.</p>
+
+<p>마지막으로, Planner 단계에서 Decopmosition이 일어나고 있지만 RLM의 내용대로라면 runtime 도중 발생해야 합니다. RLM의 장점을 이용할 수 있도록 플로우 개선이 필요합니다.</p>
 
 <h4 id="향후-계획">향후 계획</h4>
+
 <p>일단, 현재 수준에선 플로우를 수정하는 것보다는 작은 수정을 진행하려고 합니다. 프로덕션 환경에서 사용하려면 100개 이상의 테이블로부터 필요한 테이블만 고를 수 있는 기능이 필요하다고 생각되며 Execution도 다양한 DB를 지원할 수 있도록 개선할 생각입니다.</p>
 
 <h3 id="references">References</h3>
+
 <ul>
   <li><a href="https://github.com/emeraldgoose/symbolic-search-runtime">symbolic-search-runtime</a></li>
 </ul>
@@ -698,7 +770,8 @@ Token Cost: 4933
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/ai-agent/rakazo-review/" class="pagination--pager" title="rakazo 에이전트 설정 및 3일 사용 후기
+">Next</a>
     
   </nav>
 
@@ -712,6 +785,34 @@ Token Cost: 4933
     <div class="page__related">
       <h4 class="page__related-title">You May Also Enjoy</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/ai-agent/rakazo-review/" rel="permalink">rakazo 에이전트 설정 및 3일 사용 후기
+</a>
+      
+    </h2>
+    
+
+
+    
+      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> October 31 2026</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">rakazo
+
+  The open source Grok Bot alternative you actually own
+
+</p>
+  </article>
+</div>
+
         
           
 
@@ -784,31 +885,6 @@ Databricks에는 벡터 검색을 위한 벡터 검색 엔드포인트 및 인�
     
     <p class="archive__item-excerpt" itemprop="description">Vibe Coding
 바이브 코딩은 자연어 프롬프트를 이용해 AI가 코드를 작성하고 사용자는 작동 결과에 관심을 기울이는 형태의 프로그래밍(?) 방식입니다. 만약, 작동 결과가 사용자의 의도와 맞지 않다면, 피드백을 통해 AI가 코드를 수정하는 방식이며 사용자는 코드에 관여하지 않...</p>
-  </article>
-</div>
-
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title no_toc" itemprop="headline">
-      
-        <a href="/data-engineer/spark-on-kubernetes/" rel="permalink">Spark on Kubernetes
-</a>
-      
-    </h2>
-    
-
-
-    
-      <p class="page__meta"><i class="far fa-fw fa-calendar-alt" aria-hidden="true"></i> July 27 2025</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Apache Spark
-Spark는 대규모 데이터 처리를 위한 분석 엔진입니다. Java, Scala, Python 등의 언어를 지원하고 정형 데이터를 처리할 수 있는 SparkSQL, 머신러닝을 위한 MLlib, 스트리밍 처리를 위한 Spark Streaming 등을 포함한 많은...</p>
   </article>
 </div>
 
