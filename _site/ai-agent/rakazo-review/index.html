@@ -495,6 +495,17 @@ nbash install-images.sh
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose -f docker-compose.images.yml up -d
 </code></pre></div></div>
 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>➜  ~ docker ps
+CONTAINER ID   IMAGE                             COMMAND                   CREATED      STATUS                PORTS                          NAMES
+0134e39ca09d   ghcr.io/elie222/rakazo/app:edge   "docker-entrypoint.s…"   2 days ago   Up 2 days             3100/tcp, 5173/tcp, 7091/tcp   rakazo-web-1
+b15972d0ed45   ghcr.io/elie222/rakazo/app:edge   "docker-entrypoint.s…"   2 days ago   Up 2 days (healthy)   3100/tcp, 5173/tcp, 7091/tcp   rakazo-worker-1
+e91f6f3f7d87   ghcr.io/elie222/rakazo/app:edge   "docker-entrypoint.s…"   2 days ago   Up 2 days (healthy)   3100/tcp, 5173/tcp, 7091/tcp   rakazo-api-1
+3aa9aa88a553   ghcr.io/elie222/rakazo/app:edge   "docker-entrypoint.s…"   2 days ago   Up 2 days (healthy)   3100/tcp, 5173/tcp, 7091/tcp   rakazo-supervisor-1
+08094b91be8e   postgres:16                       "docker-entrypoint.s…"   2 days ago   Up 2 days (healthy)   5432/tcp                       rakazo-postgres-1
+70f31f5be093   tailscale/tailscale:latest        "/usr/local/bin/cont…"   2 days ago   Up 2 days                                            ts-sidecar
+➜  ~
+</code></pre></div></div>
+
 <p>도커 컨테이너 내부가 아닌 tailscale 망에서 에서 tailscale을 통해 제대로 접속할 수 있는지 아래 명령어를 통해 테스트해봅니다.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nslookup rakazo.tail*******.ts.net
